@@ -10,35 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a77651c98eb177748a49241e377f4457, type: 3}
-  m_Name: BlueShell
+  m_Name: JumpSuit
   m_EditorClassIdentifier: 
   Identifier:
-    Path: QuantumUser/Resources/AssetObjects/Powerups/BlueShell
+    Path: QuantumUser/Resources/AssetObjects/Powerups/JumpSuit
     Guid:
-      Value: 279725308049324760
+      Value: 510231202214200206
   Type: 0
-  State: 6
+  State: 10
   Prefab:
     Id:
-      Value: 1466930856010351358
+      Value: 1379033945070876476
   SoundPlaysEverywhere: 0
   SoundEffect: 16
   BlockSpawnSoundEffect: 69
   SpawnChance:
-    RawValue: 98304
+    RawValue: 32768
   LosingSpawnBonus:
-    RawValue: 65536
+    RawValue: 32768
   BigPowerup: 0
   VerticalPowerup: 0
-  CustomPowerup: 0
+  CustomPowerup: 1
   LivesOnlyPowerup: 0
-  ReserveSprite: {fileID: 2664608197882872095, guid: a87d3b028baa82640b06b88398a8c4f0,
-    type: 3}
-  AvoidPlayers: 0
+  ReserveSprite: {fileID: 21300000, guid: e64cca18721d2d14e95065a64ba3f71c, type: 3}
+  AvoidPlayers: 1
   Speed:
-    RawValue: 0
+    RawValue: -262144
   BounceStrength:
-    RawValue: 0
+    RawValue: 720896
   TerminalVelocity:
     RawValue: -524288
   FollowAnimationCurve: 0

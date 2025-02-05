@@ -10,30 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a77651c98eb177748a49241e377f4457, type: 3}
-  m_Name: BlueShell
+  m_Name: CatSuit
   m_EditorClassIdentifier: 
   Identifier:
-    Path: QuantumUser/Resources/AssetObjects/Powerups/BlueShell
+    Path: QuantumUser/Resources/AssetObjects/Powerups/CatSuit
     Guid:
-      Value: 279725308049324760
+      Value: 364021269222737905
   Type: 0
-  State: 6
+  State: 8
   Prefab:
     Id:
-      Value: 1466930856010351358
+      Value: 1321601655837568403
   SoundPlaysEverywhere: 0
   SoundEffect: 16
   BlockSpawnSoundEffect: 69
   SpawnChance:
-    RawValue: 98304
+    RawValue: 0
   LosingSpawnBonus:
-    RawValue: 65536
+    RawValue: 0
   BigPowerup: 0
   VerticalPowerup: 0
-  CustomPowerup: 0
+  CustomPowerup: 1
   LivesOnlyPowerup: 0
-  ReserveSprite: {fileID: 2664608197882872095, guid: a87d3b028baa82640b06b88398a8c4f0,
-    type: 3}
+  ReserveSprite: {fileID: 21300000, guid: e64cca18721d2d14e95065a64ba3f71c, type: 3}
   AvoidPlayers: 0
   Speed:
     RawValue: 0

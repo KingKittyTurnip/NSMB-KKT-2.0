@@ -1240,7 +1240,7 @@ namespace Quantum {
 
             if (!(inputs.PowerupAction.WasPressed 
                 || (state == PowerupState.PropellerMushroom && inputs.PropellerPowerupAction.WasPressed && !physicsObject->IsTouchingGround && !mario->IsWallsliding) 
-                || ((state == PowerupState.FireFlower || state == PowerupState.IceFlower || state == PowerupState.HammerSuit) && inputs.FireballPowerupAction.WasPressed))) {
+                || ((state == PowerupState.FireFlower || state == PowerupState.IceFlower || state == PowerupState.HammerSuit || state == PowerupState.CatSuit) && inputs.FireballPowerupAction.WasPressed))) {
                 return;
             }
 
@@ -1250,6 +1250,7 @@ namespace Quantum {
             }
 
             switch (mario->CurrentPowerupState) {
+            case PowerupState.CatSuit:
             case PowerupState.IceFlower:
             case PowerupState.FireFlower:
             case PowerupState.HammerSuit: {
@@ -1284,6 +1285,8 @@ namespace Quantum {
                     ? f.SimulationConfig.IceballPrototype
                     : mario->CurrentPowerupState == PowerupState.HammerSuit
                     ? f.SimulationConfig.HammerPrototype
+                    : mario->CurrentPowerupState == PowerupState.CatSuit
+                    ? f.SimulationConfig.ScratchPrototype
                     : f.SimulationConfig.FireballPrototype);
 
                 if (f.Unsafe.TryGetPointer(newEntity, out Projectile* projectile)) {
@@ -1416,7 +1419,7 @@ namespace Quantum {
                 && (mario->IsCrouching || inputs.Down.IsDown)
                 && !mario->IsInShell /* && mario->CurrentPowerupState != PowerupState.MegaMushroom*/
                 && !physicsObject->IsUnderwater
-                && mario->CurrentPowerupState != PowerupState.HammerSuit) { //Hammer Can't Slide, But Can gp To Slide (Weird Interaction But Works)
+                && mario->CurrentPowerupState != PowerupState.HammerSuit) {
 
                 mario->IsSliding = true;
                 mario->IsCrouching = false;
@@ -1482,6 +1485,7 @@ namespace Quantum {
             physicsObject->Velocity = mario->PipeDirection;
             physicsObject->DisableCollision = true;
 
+QuantumUtils.Decrement(ref mario->PipeFrames);
             if (QuantumUtils.Decrement(ref mario->PipeFrames)) {
                 if (mario->PipeEntering) {
                     // Teleport to other pipe
@@ -1492,7 +1496,7 @@ namespace Quantum {
                         mario->PipeDirection *= -1;
                     }
 
-                    FPVector2 offset = mario->PipeDirection * ((physics.PipeEnterDuration - 3) / (FP) 60);
+                    FPVector2 offset = mario->PipeDirection * ((physics.PipeEnterDuration - 3) / (FP) 120);//(FP 60)
                     if (otherPipe->IsCeilingPipe) {
                         offset.Y += filter.PhysicsCollider->Shape.Box.Extents.Y * 2;
                     }
@@ -1844,7 +1848,7 @@ namespace Quantum {
             if (!mario->IsInKnockback
                 && mario->CurrentPowerupState != PowerupState.MegaMushroom
                 && mario->IsDamageable
-                && !((mario->IsCrouchedInShell || mario->IsInShell) && projectileAsset.DoesntEffectBlueShell)) { 
+                && !((mario->IsCrouchedInShell || mario->IsInShell) && projectileAsset.DoesntEffectBlueShell)) {
 
                 switch (projectileAsset.Effect) {
                 case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
@@ -1996,11 +2000,11 @@ namespace Quantum {
             }
 
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-            // Crouched in shell stomps
-            if (marioA->IsCrouchedInShell && marioAPhysics->IsTouchingGround && marioBAbove && !marioB->IsGroundpoundActive && !marioB->IsDrilling) {
+            //Shell Stomps
+            if (((marioA->CurrentPowerupState == PowerupState.HammerSuit && marioA->IsCrouching) || marioA->IsCrouchedInShell) && marioAPhysics->IsTouchingGround && marioBAbove && !marioB->IsGroundpoundActive && !marioB->IsDrilling) {
                 MarioMarioBlueShellStomp(f, stage, marioBEntity, marioAEntity, fromRight);
                 return;
-            } else if (marioB->IsCrouchedInShell && marioBPhysics->IsTouchingGround && marioAAbove && !marioA->IsGroundpoundActive && !marioA->IsDrilling) {
+            } else if (((marioB->CurrentPowerupState == PowerupState.HammerSuit && marioB->IsCrouching) || marioB->IsCrouchedInShell) && marioBPhysics->IsTouchingGround && marioAAbove && !marioA->IsGroundpoundActive && !marioA->IsDrilling) {
                 MarioMarioBlueShellStomp(f, stage, marioAEntity, marioBEntity, fromRight);
                 return;
             }
