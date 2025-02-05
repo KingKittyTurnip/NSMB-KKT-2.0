@@ -65,7 +65,7 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(item, out Holdable* holdable)) {
                 aboveHead = holdable->HoldAboveHead;
                 if (aboveHead) {
-                    forceHold = (f.Number - HoldStartFrame) < 25;
+                    forceHold = (f.Number - HoldStartFrame) < 5; //25;
                 }
             }
 
@@ -449,7 +449,7 @@ namespace Quantum {
         public void ResetKnockback(Frame f, EntityRef entity) {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(entity);
             KnockbackGetupFrames = (byte) (IsInWeakKnockback || physicsObject->IsUnderwater ? 0 : 25);
-            DamageInvincibilityFrames = (byte) (60 + KnockbackGetupFrames);
+            DamageInvincibilityFrames = (byte) (120 + KnockbackGetupFrames);
             ////DoEntityBounce = false;
             IsInKnockback = false;
             IsInWeakKnockback = false;
