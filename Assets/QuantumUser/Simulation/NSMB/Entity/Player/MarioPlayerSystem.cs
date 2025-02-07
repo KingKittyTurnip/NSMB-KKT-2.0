@@ -405,7 +405,7 @@ namespace Quantum {
             }
 
             bool topSpeed = FPMath.Abs(physicsObject->Velocity.X) >= (physics.WalkMaxVelocity[physics.RunSpeedStage] - FP._0_10);
-            bool canSpecialJump = topSpeed && !inputs.Down.IsDown && (doJump || (mario->DoEntityBounce && inputs.Jump.IsDown)) && mario->JumpState != JumpState.None && !mario->IsSpinnerFlying && !mario->IsPropellerFlying && ((f.Number - mario->LandedFrame < 12) || mario->DoEntityBounce) && !mario->HeldEntity.IsValid && mario->JumpState != JumpState.TripleJump && !mario->IsCrouching && !mario->IsInShell && (physicsObject->Velocity.X < 0 != mario->FacingRight) /* && !Runner.GetPhysicsScene2D().Raycast(body.Position + new Vector2(0, 0.1f), Vector2.up, 1f, Layers.MaskSolidGround) */;
+            bool canSpecialJump = (topSpeed && !inputs.Down.IsDown && (doJump || (mario->DoEntityBounce && inputs.Jump.IsDown)) && mario->JumpState != JumpState.None && !mario->IsSpinnerFlying && !mario->IsPropellerFlying && ((f.Number - mario->LandedFrame < 12) || mario->DoEntityBounce) && !mario->HeldEntity.IsValid && mario->JumpState != JumpState.TripleJump && !mario->IsCrouching && !mario->IsInShell && (physicsObject->Velocity.X < 0 != mario->FacingRight) /* && !Runner.GetPhysicsScene2D().Raycast(body.Position + new Vector2(0, 0.1f), Vector2.up, 1f, Layers.MaskSolidGround) */) || (mario->CurrentPowerupState == PowerupState.JumpSuit && !mario->HeldEntity.IsValid && !mario->IsCrouching && !mario->IsInShell);
 
             mario->IsSkidding = false;
             mario->IsTurnaround = false;
@@ -446,7 +446,7 @@ namespace Quantum {
             } else if (canSpecialJump && mario->JumpState == JumpState.DoubleJump) {
                 // Triple Jump
                 mario->JumpState = JumpState.TripleJump;
-                newY += physics.JumpTripleBonusVelocity;
+                newY += mario->CurrentPowerupState == PowerupState.JumpSuit ? physics.JumpTripleBonusVelocity * 6 : physics.JumpTripleBonusVelocity;
             } else {
                 // Normal jump
                 mario->JumpState = JumpState.SingleJump;
@@ -1293,7 +1293,11 @@ namespace Quantum {
                 mario->ProjectileVolleyFrames = physics.ProjectileVolleyFrames;
 
                 Projectile* projectile;
-                if (mario->CurrentPowerupState == PowerupState.HammerSuit) {
+                //if (mario->CurrentPowerupState == PowerupState.CatSuit) {
+               //     mario->MeleeStartFrame = f.Number;
+               //     break;
+                //} else 
+if (mario->CurrentPowerupState == PowerupState.HammerSuit) {
                     projectile = ShootHammerProjectile(f, ref filter, physics);
                 } else {
                     projectile = ShootNormalProjectile(f, ref filter, physics);

@@ -259,7 +259,7 @@ namespace NSMB.Entities.Player {
             }
 
             SetParticleEmission(drillParticle, !disableParticles && mario->IsDrilling);
-            SetParticleEmission(sparkles, !disableParticles && mario->IsStarmanInvincible);
+            SetParticleEmission(sparkles, !disableParticles && (mario->IsStarmanInvincible || (mario->CurrentPowerupState == PowerupState.JumpSuit && mario->JumpState == JumpState.TripleJump)));
             SetParticleEmission(iceSkiddingParticle, !disableParticles && physicsObject->IsOnSlipperyGround && ((mario->IsSkidding && physicsObject->Velocity.SqrMagnitude.AsFloat > 0.25f) || mario->FastTurnaroundFrames > 0));
             SetParticleEmission(waterSkiddingParticle, !disableParticles && onWater && ((mario->IsSkidding && physicsObject->Velocity.SqrMagnitude.AsFloat > 0.25f) || mario->FastTurnaroundFrames > 0));
             SetParticleEmission(waterRunningParticle, !disableParticles && !waterSkiddingParticle.isPlaying && onWater && FPMath.Abs(physicsObject->Velocity.X) > FP._0_10);
