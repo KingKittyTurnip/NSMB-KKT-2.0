@@ -14,7 +14,6 @@ public class ProjectileAsset : AssetObject {
     public bool InheritShooterVelocity;
     public bool HasCollision = true;
     public bool DoesntEffectBlueShell = true;
-    public bool BounceOnStart = false;
 
     public ParticleEffect DestroyParticleEffect = ParticleEffect.None;
     public SoundEffect ShootSound = SoundEffect.Powerup_Fireball_Shoot;
