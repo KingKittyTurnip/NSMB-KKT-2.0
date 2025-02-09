@@ -164,12 +164,6 @@ MonoBehaviour:
     - rid: 8615452345620234241
     - rid: 8615452345620234242
     - rid: 8615452345620234243
-  - Components:
-    - rid: 2200740374887006208
-    - rid: 2200740374887006209
-    - rid: 2200740374887006210
-    - rid: 2200740374887006211
-    - rid: 2200740374887006212
   SerializedTriangleDataUncompressedSize: 8
   references:
     version: 2
@@ -554,80 +548,6 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 2200740374887006208
-      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
-      data:
-        Position:
-          X:
-            RawValue: 49152
-          Y:
-            RawValue: 163840
-        Rotation:
-          RawValue: 0
-    - rid: 2200740374887006209
-      type: {class: PhysicsCollider2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
-      data:
-        ShapeConfig:
-          ShapeType: 4
-          PolygonCollider:
-            Id:
-              Value: 0
-          CircleRadius:
-            RawValue: 0
-          CapsuleSize:
-            X:
-              RawValue: 0
-            Y:
-              RawValue: 0
-          EdgeExtent:
-            RawValue: 0
-          BoxExtents:
-            X:
-              RawValue: 16384
-            Y:
-              RawValue: 32768
-          PositionOffset:
-            X:
-              RawValue: 0
-            Y:
-              RawValue: 32768
-          RotationOffset:
-            RawValue: 0
-          UserTag: 0
-          IsPersistent: 1
-          CompoundShapes: []
-        Layer: 0
-        IsTrigger: 0
-        PhysicsMaterial:
-          Id:
-            Value: 0
-    - rid: 2200740374887006210
-      type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
-      data:
-        CallbackFlags:
-          Value: 4095
-    - rid: 2200740374887006211
-      type: {class: BreakableObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        OriginalHeight:
-          RawValue: 131072
-        MinimumHeight:
-          RawValue: 0
-        IsStompable:
-          Value: 1
-    - rid: 2200740374887006212
-      type: {class: BulletBillLauncherPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        BulletBillPrototype:
-          Id:
-            Value: 1440373003412769203
-        TimeToShoot: 240
-        MinimumShootRadius:
-          RawValue: 39322
-        MaximumShootRadius:
-          RawValue: 65470464
-        BulletBillCount: 30
-        TimeToShootFrames: 0
     - rid: 2409801962468933632
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
