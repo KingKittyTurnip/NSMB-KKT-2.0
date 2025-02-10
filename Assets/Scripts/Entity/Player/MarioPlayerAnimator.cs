@@ -138,6 +138,7 @@ namespace NSMB.Entities.Player {
             QuantumEvent.Subscribe<EventMarioPlayerCollectedCoin>(this, OnMarioPlayerCollectedCoin, NetworkHandler.FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventMarioPlayerWalljumped>(this, OnMarioPlayerWalljumped, NetworkHandler.FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventMarioPlayerShotProjectile>(this, OnMarioPlayerShotProjectile, NetworkHandler.FilterOutReplayFastForward);
+            QuantumEvent.Subscribe<EventMarioPlayerCatSwipe>(this, OnMarioPlayerCatSwipe, NetworkHandler.FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventMarioPlayerUsedPropeller>(this, OnMarioPlayerUsedPropeller, NetworkHandler.FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventMarioPlayerPropellerSpin>(this, OnMarioPlayerPropellerSpin, NetworkHandler.FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventMarioPlayerCollectedStar>(this, OnMarioPlayerCollectedStar, NetworkHandler.FilterOutReplayFastForward);
@@ -935,6 +936,15 @@ namespace NSMB.Entities.Player {
             animator.SetTrigger("fireball");
             ProjectileAsset projectile = e.Frame.FindAsset(e.Projectile.Asset);
             PlaySound(projectile.ShootSound);
+        }
+
+        private void OnMarioPlayerCatSwipe(EventMarioPlayerCatSwipe e) {
+            if (e.Entity != EntityRef) {
+                return;
+            }
+
+            animator.SetTrigger("fireball");
+            PlaySound(SoundEffect.Powerup_PropellerMushroom_Spin);
         }
 
         private void OnMarioPlayerWalljumped(EventMarioPlayerWalljumped e) {

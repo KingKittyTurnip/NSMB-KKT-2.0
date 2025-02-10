@@ -9,6 +9,7 @@
 #define _0_09 0.09
 #define _0_66 0.66666
 #define _0_075 0.075
+#define _0_20 0.2
 
 input {
 	button Up;
@@ -117,10 +118,11 @@ component MarioPlayer {
 	[ExcludeFromPrototype] byte CurrentProjectiles;
 	[ExcludeFromPrototype] byte CurrentVolley;
 
-        //Melee
-    [ExcludeFromPrototype] byte MeleeStartFrame;
-    [ExcludeFromPrototype] byte MeleeFrames;
-    [ExcludeFromPrototype] bool Pounce;
+        //Cat
+    [ExcludeFromPrototype] bool Pouncing;
+    [ExcludeFromPrototype] bool SwipeStall;
+    [ExcludeFromPrototype] bool WeakClimb;
+    [ExcludeFromPrototype] byte ClimbFrames;
 
     [ExcludeFromPrototype] bool IsInShell;
     [ExcludeFromPrototype] byte ShellSlowdownFrames;
@@ -193,6 +195,11 @@ event MarioPlayerShotProjectile {
 	nothashed Frame Frame;
 	entity_ref Entity;
 	nothashed Projectile Projectile;
+}
+
+event MarioPlayerCatSwipe {
+	nothashed Frame Frame;
+	entity_ref Entity;
 }
 
 event MarioPlayerUsedPropeller {

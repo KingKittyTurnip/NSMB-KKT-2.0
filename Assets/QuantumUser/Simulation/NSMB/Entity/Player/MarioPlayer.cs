@@ -6,6 +6,7 @@ namespace Quantum {
 
         public bool IsStarmanInvincible => InvincibilityFrames > 0;
         public bool IsWallsliding => WallslideLeft || WallslideRight;
+        public bool CanWallClimb => CurrentPowerupState == PowerupState.CatSuit && ClimbFrames > 0;
         public bool IsCrouchedInShell => CurrentPowerupState == PowerupState.BlueShell && IsCrouching && !IsInShell;
         public bool IsDamageable => !IsStarmanInvincible && DamageInvincibilityFrames == 0;
 
@@ -230,7 +231,16 @@ namespace Quantum {
                 SpawnStars(f, entity, 1);
                 break;
             }
-            case PowerupState.CatSuit:
+            case PowerupState.CatSuit: {
+                if (Pouncing) { //Cancel Pounce, We Don't Want Players Going Flying!
+                  var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(entity);
+                  physicsObject->Velocity.X = FacingRight ? 3 : -3;
+                  Pouncing = false;
+                }
+                CurrentPowerupState = PowerupState.Mushroom;
+                SpawnStars(f, entity, 1);
+                break;
+            }
             case PowerupState.HammerSuit:
             case PowerupState.FireFlower:
             case PowerupState.IceFlower:
@@ -248,6 +258,7 @@ namespace Quantum {
             PropellerLaunchFrames = 0;
             PropellerSpinFrames = 0;
             UsedPropellerThisJump = false;
+            ClimbFrames = 180;
 
             if (!IsDead) {
                 DamageInvincibilityFrames = 2 * 60;
@@ -332,6 +343,7 @@ namespace Quantum {
             WalljumpFrames = 0;
             IsPropellerFlying = false;
             UsedPropellerThisJump = false;
+            ClimbFrames = 180;
             IsSpinnerFlying = false;
             PropellerLaunchFrames = 0;
             PropellerSpinFrames = 0;
@@ -457,6 +469,8 @@ namespace Quantum {
             FacingRight = KnockbackWasOriginallyFacingRight;
             
             physicsObject->Velocity.X = 0;
+
+            Pouncing = false;
         }
 
         public void EnterPipe(Frame f, EntityRef mario, EntityRef pipe) {
@@ -481,6 +495,7 @@ namespace Quantum {
             IsSliding = false;
             IsPropellerFlying = false;
             UsedPropellerThisJump = false;
+            ClimbFrames = 180;
             PropellerLaunchFrames = 0;
             PropellerSpinFrames = 0;
             IsSpinnerFlying = false;
