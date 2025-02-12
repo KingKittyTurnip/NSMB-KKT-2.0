@@ -1846,32 +1846,34 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Koopa : Quantum.IComponent {
-    public const Int32 SIZE = 88;
+    public const Int32 SIZE = 96;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(24)]
+    [FieldOffset(32)]
     public AssetRef<PowerupAsset> SpawnPowerupWhenStomped;
     [FieldOffset(4)]
     public QBoolean DontWalkOfLedges;
-    [FieldOffset(20)]
+    [FieldOffset(24)]
     public QBoolean IsSpiny;
-    [FieldOffset(48)]
-    public FP Speed;
-    [FieldOffset(40)]
-    public FP KickSpeed;
+    [FieldOffset(8)]
+    public QBoolean IsFireImmune;
     [FieldOffset(56)]
+    public FP Speed;
+    [FieldOffset(48)]
+    public FP KickSpeed;
+    [FieldOffset(64)]
     public FPVector2 IceBlockInShellSize;
-    [FieldOffset(72)]
+    [FieldOffset(80)]
     public FPVector2 IceBlockOutShellSize;
-    [FieldOffset(32)]
+    [FieldOffset(40)]
     [ExcludeFromPrototype()]
     public FP CurrentSpeed;
-    [FieldOffset(12)]
+    [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public QBoolean IsInShell;
-    [FieldOffset(8)]
+    [FieldOffset(12)]
     [ExcludeFromPrototype()]
     public QBoolean IsFlipped;
-    [FieldOffset(16)]
+    [FieldOffset(20)]
     [ExcludeFromPrototype()]
     public QBoolean IsKicked;
     [FieldOffset(2)]
@@ -1886,6 +1888,7 @@ namespace Quantum {
         hash = hash * 31 + SpawnPowerupWhenStomped.GetHashCode();
         hash = hash * 31 + DontWalkOfLedges.GetHashCode();
         hash = hash * 31 + IsSpiny.GetHashCode();
+        hash = hash * 31 + IsFireImmune.GetHashCode();
         hash = hash * 31 + Speed.GetHashCode();
         hash = hash * 31 + KickSpeed.GetHashCode();
         hash = hash * 31 + IceBlockInShellSize.GetHashCode();
@@ -1904,6 +1907,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->TurnaroundWaitFrames);
         serializer.Stream.Serialize(&p->WakeupFrames);
         QBoolean.Serialize(&p->DontWalkOfLedges, serializer);
+        QBoolean.Serialize(&p->IsFireImmune, serializer);
         QBoolean.Serialize(&p->IsFlipped, serializer);
         QBoolean.Serialize(&p->IsInShell, serializer);
         QBoolean.Serialize(&p->IsKicked, serializer);
@@ -2086,10 +2090,10 @@ namespace Quantum {
     [FieldOffset(72)]
     [ExcludeFromPrototype()]
     public QBoolean DoEntityBounce;
-    [FieldOffset(168)]
+    [FieldOffset(172)]
     [ExcludeFromPrototype()]
     public QBoolean WallslideLeft;
-    [FieldOffset(172)]
+    [FieldOffset(176)]
     [ExcludeFromPrototype()]
     public QBoolean WallslideRight;
     [FieldOffset(36)]
@@ -2182,10 +2186,13 @@ namespace Quantum {
     [FieldOffset(156)]
     [ExcludeFromPrototype()]
     public QBoolean Pouncing;
+    [FieldOffset(164)]
+    [ExcludeFromPrototype()]
+    public QBoolean UsedPounceThisJump;
     [FieldOffset(160)]
     [ExcludeFromPrototype()]
     public QBoolean SwipeStall;
-    [FieldOffset(176)]
+    [FieldOffset(180)]
     [ExcludeFromPrototype()]
     public QBoolean WeakClimb;
     [FieldOffset(0)]
@@ -2206,7 +2213,7 @@ namespace Quantum {
     [FieldOffset(27)]
     [ExcludeFromPrototype()]
     public Byte PropellerSpinFrames;
-    [FieldOffset(164)]
+    [FieldOffset(168)]
     [ExcludeFromPrototype()]
     public QBoolean UsedPropellerThisJump;
     [FieldOffset(24)]
@@ -2306,6 +2313,7 @@ namespace Quantum {
         hash = hash * 31 + CurrentProjectiles.GetHashCode();
         hash = hash * 31 + CurrentVolley.GetHashCode();
         hash = hash * 31 + Pouncing.GetHashCode();
+        hash = hash * 31 + UsedPounceThisJump.GetHashCode();
         hash = hash * 31 + SwipeStall.GetHashCode();
         hash = hash * 31 + WeakClimb.GetHashCode();
         hash = hash * 31 + ClimbFrames.GetHashCode();
@@ -2402,6 +2410,7 @@ namespace Quantum {
         QBoolean.Serialize(&p->PipeEntering, serializer);
         QBoolean.Serialize(&p->Pouncing, serializer);
         QBoolean.Serialize(&p->SwipeStall, serializer);
+        QBoolean.Serialize(&p->UsedPounceThisJump, serializer);
         QBoolean.Serialize(&p->UsedPropellerThisJump, serializer);
         QBoolean.Serialize(&p->WallslideLeft, serializer);
         QBoolean.Serialize(&p->WallslideRight, serializer);

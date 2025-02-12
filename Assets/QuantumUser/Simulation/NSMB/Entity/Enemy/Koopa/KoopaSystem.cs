@@ -368,12 +368,17 @@ namespace Quantum {
         }
 
         public static void OnKoopaProjectileInteraction(Frame f, EntityRef koopaEntity, EntityRef projectileEntity) {
+            var koopa = f.Unsafe.GetPointer<Koopa>(koopaEntity);
             var projectileAsset = f.FindAsset(f.Unsafe.GetPointer<Projectile>(projectileEntity)->Asset);
 
             switch (projectileAsset.Effect) {
-            case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
-            case ProjectileEffectType.Fire: {
+            case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers: {
                 f.Unsafe.GetPointer<Koopa>(koopaEntity)->Kill(f, koopaEntity, projectileEntity, true);
+                break;
+            }
+            case ProjectileEffectType.Fire: {
+                if (!koopa->IsFireImmune)
+                  f.Unsafe.GetPointer<Koopa>(koopaEntity)->Kill(f, koopaEntity, projectileEntity, true);
                 break;
             }
             case ProjectileEffectType.Freeze: {

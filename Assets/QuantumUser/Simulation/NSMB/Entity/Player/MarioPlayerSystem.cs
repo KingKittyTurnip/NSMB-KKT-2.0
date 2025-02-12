@@ -344,6 +344,7 @@ namespace Quantum {
                 mario->CoyoteTimeFrames = physics.CoyoteTimeFrames;
                 mario->ClimbFrames = 90;
                 mario->SwipeStall = true;
+                mario->UsedPounceThisJump = true;
             }
 
             if (!physicsObject->WasTouchingGround && physicsObject->IsTouchingGround) {
@@ -744,8 +745,8 @@ namespace Quantum {
 
 
             if (mario->Pouncing) {
-              physicsObject->Velocity.X = mario->FacingRight ? 9 : -9;
-              physicsObject->Velocity.Y = -9;
+              physicsObject->Velocity.X = mario->FacingRight ? 8 : -8;
+              physicsObject->Velocity.Y = -8;
               return;
             }
 
@@ -864,6 +865,7 @@ namespace Quantum {
                     mario->IsPropellerFlying = false;
                     mario->ClimbFrames = 90;
                     mario->SwipeStall = true;
+                    mario->UsedPounceThisJump = true;
                     mario->IsDrilling = false;
                 }
             } else if (mario->IsGroundpounding) {
@@ -1005,7 +1007,7 @@ namespace Quantum {
             mario->IsGroundpoundActive &= continueGroundpound;
 
             if (mario->Pouncing) {
-                physicsObject->Velocity.X = mario->FacingRight ? 3 : -3;
+                physicsObject->Velocity.X = mario->FacingRight ? 2 : -2;
                 mario->Pouncing = false;
             }
 
@@ -1116,6 +1118,7 @@ namespace Quantum {
                 mario->IsPropellerFlying = false;
                 mario->ClimbFrames = 90;
                 mario->SwipeStall = true;
+                mario->UsedPounceThisJump = true;
                 mario->IsCrouching = false;
                 mario->IsSkidding = false;
                 mario->IsInShell = false;
@@ -1287,8 +1290,9 @@ namespace Quantum {
                 return;
               }
             //DiveAttack
-              if (!mario->Pouncing && inputs.PowerupAction.WasPressed && !physicsObject->IsTouchingGround && !mario->IsGroundpounding && !mario->IsWallsliding) {
+              if (!mario->Pouncing && mario->UsedPounceThisJump && inputs.PowerupAction.WasPressed && !physicsObject->IsTouchingGround && !mario->IsGroundpounding && !mario->IsWallsliding) {
                   mario->Pouncing = true;
+                  mario->UsedPounceThisJump = false;
                   f.Events.MarioPlayerCatSwipe(f, filter.Entity); //TODO: Anims & Sound
             //ScratchAttack
               } else if (inputs.FireballPowerupAction.WasPressed || inputs.PowerupAction.WasPressed) {
@@ -1511,6 +1515,7 @@ namespace Quantum {
             mario->UsedPropellerThisJump = false;
             mario->ClimbFrames = 90;
             mario->SwipeStall = true;
+            mario->UsedPounceThisJump = true;
             mario->IsInShell = false;
             mario->JumpState = JumpState.None;
 
@@ -1742,6 +1747,7 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             mario->IsPropellerFlying = false;
             mario->ClimbFrames = 90;
             mario->SwipeStall = true;
+            mario->UsedPounceThisJump = true;
             mario->IsDrilling = false;
             mario->IsSpinnerFlying = false;
             physicsObject->IsTouchingGround = false;

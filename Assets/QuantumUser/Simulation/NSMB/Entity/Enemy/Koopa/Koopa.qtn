@@ -2,6 +2,7 @@ component Koopa {
 	asset_ref<PowerupAsset> SpawnPowerupWhenStomped;
 	bool DontWalkOfLedges;
 	bool IsSpiny;
+	bool IsFireImmune;
 	FP Speed;
 	FP KickSpeed;
 	FPVector2 IceBlockInShellSize;

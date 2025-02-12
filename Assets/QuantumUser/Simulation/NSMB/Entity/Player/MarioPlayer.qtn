@@ -120,6 +120,7 @@ component MarioPlayer {
 
         //Cat
     [ExcludeFromPrototype] bool Pouncing;
+    [ExcludeFromPrototype] bool UsedPounceThisJump;
     [ExcludeFromPrototype] bool SwipeStall;
     [ExcludeFromPrototype] bool WeakClimb;
     [ExcludeFromPrototype] byte ClimbFrames;

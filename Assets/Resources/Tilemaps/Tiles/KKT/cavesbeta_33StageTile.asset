@@ -10,17 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d97847a2693b724f89fe1384eaa00a4, type: 3}
-  m_Name: cavesbeta_34StageTile
+  m_Name: cavesbeta_33StageTile
   m_EditorClassIdentifier: 
   Identifier:
-    Path: Resources/Tilemaps/Tiles/BetaCaves/cavesbeta_34StageTile
+    Path: Resources/Tilemaps/Tiles/KKT/cavesbeta_33StageTile
     Guid:
-      Value: 312631938463718471
-  Tile: {fileID: 11400000, guid: 4d67eaf3bc294d346873aaaecee0834a, type: 2}
+      Value: 271754241123997536
+  Tile: {fileID: 11400000, guid: 357d2134679b00f4f8d34c2ba7d5cf2f, type: 2}
   CollisionData:
     Shapes:
     - Vertices:
       - X:
+          RawValue: -32768
+        Y:
+          RawValue: -32768
+      - X:
           RawValue: 32768
         Y:
           RawValue: 32768
@@ -28,14 +32,6 @@ MonoBehaviour:
           RawValue: 32768
         Y:
           RawValue: -32768
-      - X:
-          RawValue: -32768
-        Y:
-          RawValue: -32768
-      - X:
-          RawValue: -32768
-        Y:
-          RawValue: 32768
   IsSlipperyGround: 0
   IsSlideableGround: 1
   IsPolygon: 1
