@@ -40,6 +40,9 @@ namespace Quantum {
             } else {
                 filter.Inputs = default;
             }
+            if (!player.IsValid) {
+                filter.Inputs.Left.onButtonDown = true;
+            }
 
             if (f.GetPlayerCommand(player) is CommandSpawnReserveItem) {
                 SpawnReserveItem(f, ref filter);
@@ -1986,6 +1989,12 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
 
                 switch (projectileAsset.Effect) {
                 case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
+                    if (dropStars && mario->CurrentPowerupState == PowerupState.MiniMushroom) {
+                        mario->Death(f, marioEntity, false);
+                    } else if (mario->DamageInvincibilityFrames <= 0) {
+                        mario->DoKnockback(f, marioEntity, !projectile->FacingRight, dropStars ? 1 : 0, true, projectileEntity);
+                    }
+                    break;
                 case ProjectileEffectType.Fire:
                     if (dropStars && mario->CurrentPowerupState == PowerupState.MiniMushroom) {
                         mario->Death(f, marioEntity, false);
