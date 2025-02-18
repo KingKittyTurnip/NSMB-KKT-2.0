@@ -13,7 +13,10 @@ namespace Quantum {
         public byte GetTeam(Frame f) {
             var data = QuantumUtils.GetPlayerData(f, PlayerRef);
             if (data == null) {
-                return 0;
+                if (GenerateRandomTeam == 0)
+                  GenerateRandomTeam = (byte) f.RNG->Next(11, 99999999);
+                return GenerateRandomTeam;
+                //return 0;
             } else {
                 return data->RealTeam;
             }

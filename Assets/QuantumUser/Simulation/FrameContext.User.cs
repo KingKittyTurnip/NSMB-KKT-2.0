@@ -7,7 +7,7 @@ namespace Quantum {
 
         //---Physics
         public LayerMask ExcludeEntityAndPlayerMask, PlayerOnlyMask;
-        public Shape2D CircleRadiusTwo;
+        public Shape2D CircleRadiusTwo, CircleRadiusLarge;
 
         public delegate void PreContactCallback(FrameThreadSafe f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts);
         public readonly List<PreContactCallback> PreContactCallbacks = new();

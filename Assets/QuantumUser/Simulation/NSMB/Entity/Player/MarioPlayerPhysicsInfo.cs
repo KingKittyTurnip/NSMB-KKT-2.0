@@ -125,7 +125,7 @@ public class MarioPlayerPhysicsInfo : AssetObject {
     public byte PropellerSpinFrames = 30;
     public FP PropellerLaunchVelocity = 6;
     public byte PropellerLaunchFrames = 60;
-
+    
     private static FP FF(float x) {
         return FP.FromFloat_UNSAFE(x);
     }

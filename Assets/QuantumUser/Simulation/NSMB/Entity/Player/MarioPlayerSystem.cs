@@ -4,6 +4,10 @@ using Quantum.Profiling;
 using System;
 using static IInteractableTile;
 
+using UnityEngine;
+using System.Collections.Generic;
+using Quantum.Physics2D;
+
 namespace Quantum {
     public unsafe class MarioPlayerSystem : SystemMainThreadFilterStage<MarioPlayerSystem.Filter>, ISignalOnComponentRemoved<Projectile>, 
         ISignalOnGameStarting, ISignalOnBobombExplodeEntity, ISignalOnTryLiquidSplash, ISignalOnEntityBumped, ISignalOnBeforeInteraction,
@@ -41,7 +45,7 @@ namespace Quantum {
                 filter.Inputs = default;
             }
             if (!player.IsValid) {
-                filter.Inputs.Left.onButtonDown = true;
+                mario->IsBot = true;
             }
 
             if (f.GetPlayerCommand(player) is CommandSpawnReserveItem) {
@@ -76,6 +80,9 @@ namespace Quantum {
                 filter.Inputs = default;
             }
 
+            if (mario->IsBot) {
+              HandleAi(f, ref filter, physics, stage);
+            }
             HandlePowerups(f, ref filter, physics, stage);
             HandleBreakingBlocks(f, ref filter, physics, stage);
             HandleCrouching(f, ref filter, physics);
@@ -93,6 +100,182 @@ namespace Quantum {
             HandlePipes(f, ref filter, physics, stage);
             HandleHitbox(f, ref filter, physics);
         }
+
+
+
+//AI Plans:
+//TOTEST: It Will Not Target Powerups If It Already Has Powerups
+  //TODO: Be Able To Properly Use Shell
+//Other Powerup Later
+//TODO: Allow Current Placement In The Game To Influence The Game
+//TODO: Advanced AI, When Idling Make Them not Overlap A Star Space
+//TODO: Tile Detection To Get Powerups
+//TODO: Add Advanced Vertical Navigation
+//TODO: Restrict Actions When Above A Pit (Ex: Don't Change Directional Inputs)
+   //TODO: Take Advantage Of Slopes & Slope Speed (Check Tiles Bellow The Player)
+//TODO: Walljumps (like in pipes)
+
+//TODO: Swimming
+//TODO: Pipe Entering
+//TODO: Spinner Usage
+//TODO: Constantly Jump On Ice
+//TODO: Enemy Avoidence
+//TODO: Carryables Functionality
+
+    private void HandleAi(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, VersusStageData stage) {
+        using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleAi");
+        ref var inputs = ref filter.Inputs;
+        var mario = filter.MarioPlayer;
+        var physicsObject = filter.PhysicsObject;
+        var Reserve = f.FindAsset(mario->ReserveItem);
+
+      //Loose Values
+        bool Attack = false, Turnaround = false; //, SnappyBack = false;
+        bool LackingPowerups = mario->CurrentPowerupState <= PowerupState.Mushroom || (Reserve != null && Reserve.StatePriority < 2);
+        FPVector2 marioPos = filter.Transform->Position;
+        FP TargetFoeStars = 0;
+
+     //Get The Target Location
+        if (true) {
+          FP distance = 9999;
+          FP distanceModifier = 0;
+          FPVector2 Spot = new FPVector2(mario->FacingRight ? 999999 : -999999, 999999), posA = Spot, posB = Spot;
+          mario->Target = Spot;
+
+        //Check For Nearby Stars
+          var stars = f.Filter<BigStar>();
+          while (stars.NextUnsafe(out EntityRef entity, out BigStar* bigStar)) {
+            Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
+            QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot, out posA, out posB);
+            FP tempDistance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+            if (tempDistance < distance) {
+              distance = tempDistance;
+              mario->Target = Spot;
+              distanceModifier = FPMath.Min(3 - distance);
+            }
+          }
+
+        //Check For Nearby Players
+        //TODO: Add Interactions With Foes Current Powerup
+          if (mario->CurrentPowerupState > PowerupState.Mushroom) {
+            var players = f.Filter<MarioPlayer>();
+            while (players.NextUnsafe(out EntityRef entity, out MarioPlayer* marioPlayer)) {
+              Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
+              QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot, out posA, out posB);
+              FP tempDistance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+              if (tempDistance < distance - (distanceModifier / 2)) {
+                FP vel = f.Unsafe.GetPointer<PhysicsObject>(entity)->Velocity.X;
+                var marioFoe = f.Unsafe.GetPointer<MarioPlayer>(entity);
+                if ((TargetFoeStars < marioFoe->Stars) && mario->GetTeam(f) != marioFoe->GetTeam(f) && ((vel > 0 && posA.X - posB.X > 0) || (vel < 0 && posA.X - posB.X < 0) || distanceModifier <= (posA.Y + 2 > posB.Y ? -2 : 0)) ) { // && tempDistance < distance + (marioFoe->Stars - mario->Stars)) {
+                    TargetFoeStars = marioFoe->Stars;
+                    distance = tempDistance;
+                    mario->Target = Spot;
+                    Attack = true;
+                }
+              }
+            }
+          }
+
+        //Check For Powerups & Coins
+        //TODO: Give Massive Priority Increase To Catchup Powerups
+          if (LackingPowerups) {
+            var powerups = f.Filter<Powerup>();
+            while (powerups.NextUnsafe(out EntityRef entity, out Powerup* powerup)) {
+              Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
+              QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot, out posA, out posB);
+              FP tempDistance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+              if (tempDistance < distance + (mario->CurrentPowerupState <= PowerupState.Mushroom ? distanceModifier : -2) && distance < 3) {
+                  distance = tempDistance;
+                  mario->Target = Spot;
+                  Attack = false;
+              }
+            }
+            var coins = f.Filter<Coin>();
+            while (coins.NextUnsafe(out EntityRef entity, out Coin* coin)) {
+              Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
+              QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot, out posA, out posB);
+              FP tempDistance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+              if (tempDistance < distance && FPMath.Abs(posA.Y - posB.Y) < 1 && !f.Unsafe.GetPointer<Coin>(entity)->IsCollected) {
+                  distance = tempDistance;
+                  mario->Target = Spot;
+              }
+            }
+          }
+        //Check For Tiles
+        //TODO: Checking For Tiles
+        //TODO: Allow Powerup & Coin Block Tiles To Gain Some Priority If Lacking Powerups
+        //TODO: Check For Tiles In Front Of The Player To Jump Early
+        //TODO: If Target Bellow Tiles But The Tiles Bellow Aren't Bricks Then Don't gp, Tell it To Walk Around
+
+        //Determine Target Priority
+          //mario->Target = StarSpot;
+          QuantumUtils.UnwrapWorldLocations(stage, marioPos, mario->Target, out posA, out posB);
+
+        //LeftRightInputs
+          if (mario->WalljumpFrames > 0 || mario->IsWallsliding) { //Keep Controls
+            inputs.Left = (bool) !mario->PressingRight;
+            inputs.Right = (bool) mario->PressingRight;
+          }
+          if (FPMath.Abs(physicsObject->Velocity.X) <= 7) { //Input Nothing For Slope Speed
+            inputs.Left = posB.X < posA.X;
+            inputs.Right = !inputs.Left;
+            mario->PressingRight = !inputs.Left;
+          }
+        }
+
+        FPVector2 Diffrence = new FPVector2(marioPos.X - mario->Target.X, marioPos.Y - mario->Target.Y);
+
+        //Gp To Turn Around Quickly If Target is In Opposite Direction Far Away Enough
+          Turnaround = (physicsObject->Velocity.X > 3 && Diffrence.X > 1) || (physicsObject->Velocity.X < -3 && Diffrence.X < -1);
+
+      //Handle Jump
+        if (physicsObject->IsTouchingGround || physicsObject->Velocity.Y < 0)
+            inputs.Jump = false;
+        if ((!physicsObject->IsTouchingGround && physicsObject->WasTouchingGround && Diffrence.Y < Constants._0_40) 
+            || (mario->IsWallsliding && Diffrence.Y < Constants._0_40) || physicsObject->Velocity.Y > -1
+            || (physicsObject->IsTouchingGround && ((FPMath.Abs(Diffrence.X) > Diffrence.Y) || (mario->FacingRight && physicsObject->IsTouchingRightWall) || (!mario->FacingRight && physicsObject->IsTouchingLeftWall)))
+            )
+            inputs.Jump = true;
+
+      //Up Input
+        if ((mario->IsGroundpounding && Diffrence.Y < Constants._0_20) 
+         || (mario->CurrentPowerupState == PowerupState.HammerSuit && Diffrence.Y < -1)
+         || (Turnaround && mario->IsGroundpounding && physicsObject->Velocity.Y < -Constants._0_40))
+          inputs.Up = true;
+
+      //Gp If Bellow
+        if ((Diffrence.Y > 1 && (FPMath.Abs(Diffrence.X) < Constants._0_40)
+          && physicsObject->Velocity.Y < 3 && !physicsObject->IsTouchingGround)
+          || (Turnaround && !inputs.Up)) {
+            inputs.Left = false;
+            inputs.Right = false;
+            inputs.Down = true;
+            //mario->GroundpoundCooldownFrames = 1;
+        }
+      //Crouch/Slide
+        if (physicsObject->IsTouchingGround && physicsObject->Velocity.X != 0 && (physicsObject->IsOnSlideableGround || FPMath.Abs(physicsObject->Velocity.X) > 7)) {
+          inputs.Down = true;
+          inputs.Jump = FPMath.Abs(physicsObject->Velocity.X) > 7;
+        }
+
+      //Projectile Powerups
+        if (Attack && true //TODO: Add A Cooldown Using The Projectile Delay As A Base
+          && ((mario->CurrentPowerupState == PowerupState.FireFlower && Diffrence.Y > -2) 
+          || (mario->CurrentPowerupState == PowerupState.IceFlower && Diffrence.Y > -2)
+          || (mario->CurrentPowerupState == PowerupState.HammerSuit && Diffrence.Y < 2)
+          || (mario->CurrentPowerupState == PowerupState.PropellerMushroom && Diffrence.Y < 0)
+          || (mario->CurrentPowerupState == PowerupState.CatSuit)))
+          inputs.PowerupAction = true;
+
+      //Always Sprint
+        inputs.Sprint = true;
+
+      //Take out Reserve
+      //TODO: Get Rid Of Bad Powerups (Ex: Mini & Jumpsuit)
+        if (mario->CurrentPowerupState <= PowerupState.Mushroom || mario->CurrentPowerupState == PowerupState.JumpSuit)
+            if (Reserve != null)
+                SpawnReserveItem(f, ref filter);
+    }
 
         public void HandleWalkingRunning(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics) {
             using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleWalkingRunning");
@@ -1368,7 +1551,7 @@ namespace Quantum {
                 }
 
                 byte activeProjectiles = mario->CurrentProjectiles;
-                if (activeProjectiles >= physics.MaxProjecitles) {
+                if (activeProjectiles >= (mario->CurrentPowerupState == PowerupState.HammerSuit ? 3 : physics.MaxProjecitles)) {
                     return;
                 }
 

@@ -27,7 +27,7 @@ namespace NSMB.UI.Game {
         private VersusStageData stage;
 
         private PlayerElements elements;
-        private string cachedNickname = "noname";
+        private string cachedNickname = "Luiginoid"; //"noname";
         private string nicknameColor = "#FFFFFF";
         private bool constantNicknameColor = true;
         private QuantumGame game;

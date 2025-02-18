@@ -145,6 +145,12 @@ component MarioPlayer {
 	[ExcludeFromPrototype] byte PipeCooldownFrames;
 
 	[ExcludeFromPrototype] entity_ref CurrentSpinner;
+
+  //Bot
+    [ExcludeFromPrototype] bool IsBot;
+    [ExcludeFromPrototype] FPVector2 Target;
+    [ExcludeFromPrototype] bool PressingRight;
+    [ExcludeFromPrototype] byte GenerateRandomTeam;
 }
 
 signal OnMarioPlayerDied(EntityRef entity);
