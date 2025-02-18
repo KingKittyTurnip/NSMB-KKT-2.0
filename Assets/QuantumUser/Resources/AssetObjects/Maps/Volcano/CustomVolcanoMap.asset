@@ -152,6 +152,7 @@ MonoBehaviour:
     - rid: 3678451543402610696
     - rid: 3678451543402610697
     - rid: 3678451543402610698
+    - rid: 3678451543402610699
   - Components:
     - rid: 68130286679883776
     - rid: 68130286679883777
@@ -164,6 +165,7 @@ MonoBehaviour:
     - rid: 68130286679883784
     - rid: 68130286679883785
     - rid: 68130286679883786
+    - rid: 68130286679883787
   - Components:
     - rid: 8246143707158413312
     - rid: 8246143707158413313
@@ -176,6 +178,7 @@ MonoBehaviour:
     - rid: 8246143707158413320
     - rid: 8246143707158413321
     - rid: 8246143707158413322
+    - rid: 8246143707158413323
   - Components:
     - rid: 6753430655964545024
     - rid: 6753430655964545025
@@ -213,6 +216,54 @@ MonoBehaviour:
     - rid: 9186332453642436609
     - rid: 9186332453642436610
     - rid: 9186332453642436611
+  - Components:
+    - rid: 1688158703389245440
+    - rid: 1688158703389245441
+    - rid: 1688158703389245442
+    - rid: 1688158703389245443
+    - rid: 1688158703389245444
+    - rid: 1688158703389245445
+    - rid: 1688158703389245446
+    - rid: 1688158703389245447
+    - rid: 1688158703389245448
+    - rid: 1688158703389245449
+    - rid: 1688158703389245450
+  - Components:
+    - rid: 8821071624288600064
+    - rid: 8821071624288600065
+    - rid: 8821071624288600066
+    - rid: 8821071624288600067
+    - rid: 8821071624288600068
+    - rid: 8821071624288600069
+    - rid: 8821071624288600070
+    - rid: 8821071624288600071
+    - rid: 8821071624288600072
+    - rid: 8821071624288600073
+    - rid: 8821071624288600074
+  - Components:
+    - rid: 1621783769843236864
+    - rid: 1621783769843236865
+    - rid: 1621783769843236866
+    - rid: 1621783769843236867
+    - rid: 1621783769843236868
+    - rid: 1621783769843236869
+    - rid: 1621783769843236870
+    - rid: 1621783769843236871
+    - rid: 1621783769843236872
+    - rid: 1621783769843236873
+    - rid: 1621783769843236874
+  - Components:
+    - rid: 6712388959948767232
+    - rid: 6712388959948767233
+    - rid: 6712388959948767234
+    - rid: 6712388959948767235
+    - rid: 6712388959948767236
+    - rid: 6712388959948767237
+    - rid: 6712388959948767238
+    - rid: 6712388959948767239
+    - rid: 6712388959948767240
+    - rid: 6712388959948767241
+    - rid: 6712388959948767242
   SerializedTriangleDataUncompressedSize: 8
   references:
     version: 2
@@ -270,6 +321,10 @@ MonoBehaviour:
         CallbackFlags:
           Value: 4095
     - rid: 68130286679883779
+      type: {class: ComboKeeperPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Combo: 0
+    - rid: 68130286679883780
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Offset:
@@ -279,7 +334,7 @@ MonoBehaviour:
             RawValue: 0
         BroadRadius:
           RawValue: 32768
-    - rid: 68130286679883780
+    - rid: 68130286679883781
       type: {class: EnemyPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Spawnpoint:
@@ -291,7 +346,7 @@ MonoBehaviour:
           Value: 0
         DisableRespawning:
           Value: 0
-    - rid: 68130286679883781
+    - rid: 68130286679883782
       type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         IceBlockSize:
@@ -312,17 +367,17 @@ MonoBehaviour:
           Value: 1
         IsFlying:
           Value: 0
-    - rid: 68130286679883782
+    - rid: 68130286679883783
       type: {class: HoldablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         HoldAboveHead:
           Value: 0
-    - rid: 68130286679883783
+    - rid: 68130286679883784
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 68130286679883784
+    - rid: 68130286679883785
       type: {class: KoopaPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         SpawnPowerupWhenStomped:
@@ -332,6 +387,8 @@ MonoBehaviour:
           Value: 1
         IsSpiny:
           Value: 1
+        IsFireImmune:
+          Value: 0
         Speed:
           RawValue: 57344
         KickSpeed:
@@ -346,7 +403,7 @@ MonoBehaviour:
             RawValue: 39322
           Y:
             RawValue: 65536
-    - rid: 68130286679883785
+    - rid: 68130286679883786
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Gravity:
@@ -366,7 +423,7 @@ MonoBehaviour:
           Value: 0
         BreakMegaObjects:
           Value: 0
-    - rid: 68130286679883786
+    - rid: 68130286679883787
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -401,7 +458,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -477,7 +534,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -576,6 +633,270 @@ MonoBehaviour:
           Value: 0
     - rid: 1436104441634750467
       type: {class: MarioBrosPlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        _empty_prototype_dummy_field_: 0
+    - rid: 1621783769843236864
+      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        Position:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        Rotation:
+          RawValue: 0
+    - rid: 1621783769843236865
+      type: {class: PhysicsCollider2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        ShapeConfig:
+          ShapeType: 4
+          PolygonCollider:
+            Id:
+              Value: 0
+          CircleRadius:
+            RawValue: 0
+          CapsuleSize:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          EdgeExtent:
+            RawValue: 0
+          BoxExtents:
+            X:
+              RawValue: 11468
+            Y:
+              RawValue: 13763
+          PositionOffset:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 13763
+          RotationOffset:
+            RawValue: 0
+          UserTag: 0
+          IsPersistent: 1
+          CompoundShapes: []
+        Layer: 6
+        IsTrigger: 0
+        PhysicsMaterial:
+          Id:
+            Value: 0
+    - rid: 1621783769843236866
+      type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        CallbackFlags:
+          Value: 4095
+    - rid: 1621783769843236867
+      type: {class: CameraControllerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        OrthographicSize:
+          RawValue: 458752
+        SizeChangePerSecond:
+          RawValue: 21627
+    - rid: 1621783769843236868
+      type: {class: ComboKeeperPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Combo: 0
+    - rid: 1621783769843236869
+      type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 147456
+        BroadRadius:
+          RawValue: 196608
+    - rid: 1621783769843236870
+      type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        IceBlockSize:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        AutoBreakFrames: 90
+        AutoBreakGrabAdditionalFrames: 60
+        AutoBreakWhileHeld:
+          Value: 1
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        IsCarryable:
+          Value: 1
+        IsFlying:
+          Value: 0
+    - rid: 1621783769843236871
+      type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        ColliderDisabled:
+          Value: 0
+    - rid: 1621783769843236872
+      type: {class: MarioPlayerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        PhysicsAsset:
+          Id:
+            Value: 429607978212108660
+        CharacterAsset:
+          Id:
+            Value: 485289843648077326
+    - rid: 1621783769843236873
+      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Gravity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        TerminalVelocity:
+          RawValue: 0
+        IsFrozen:
+          Value: 0
+        DisableCollision:
+          Value: 0
+        SlowInLiquids:
+          Value: 0
+        IsWaterSolid:
+          Value: 0
+        BreakMegaObjects:
+          Value: 0
+    - rid: 1621783769843236874
+      type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        _empty_prototype_dummy_field_: 0
+    - rid: 1688158703389245440
+      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        Position:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        Rotation:
+          RawValue: 0
+    - rid: 1688158703389245441
+      type: {class: PhysicsCollider2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        ShapeConfig:
+          ShapeType: 4
+          PolygonCollider:
+            Id:
+              Value: 0
+          CircleRadius:
+            RawValue: 0
+          CapsuleSize:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          EdgeExtent:
+            RawValue: 0
+          BoxExtents:
+            X:
+              RawValue: 11468
+            Y:
+              RawValue: 13763
+          PositionOffset:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 13763
+          RotationOffset:
+            RawValue: 0
+          UserTag: 0
+          IsPersistent: 1
+          CompoundShapes: []
+        Layer: 6
+        IsTrigger: 0
+        PhysicsMaterial:
+          Id:
+            Value: 0
+    - rid: 1688158703389245442
+      type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        CallbackFlags:
+          Value: 4095
+    - rid: 1688158703389245443
+      type: {class: CameraControllerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        OrthographicSize:
+          RawValue: 458752
+        SizeChangePerSecond:
+          RawValue: 21627
+    - rid: 1688158703389245444
+      type: {class: ComboKeeperPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Combo: 0
+    - rid: 1688158703389245445
+      type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 147456
+        BroadRadius:
+          RawValue: 196608
+    - rid: 1688158703389245446
+      type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        IceBlockSize:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        AutoBreakFrames: 90
+        AutoBreakGrabAdditionalFrames: 60
+        AutoBreakWhileHeld:
+          Value: 1
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        IsCarryable:
+          Value: 1
+        IsFlying:
+          Value: 0
+    - rid: 1688158703389245447
+      type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        ColliderDisabled:
+          Value: 0
+    - rid: 1688158703389245448
+      type: {class: MarioPlayerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        PhysicsAsset:
+          Id:
+            Value: 429607978212108660
+        CharacterAsset:
+          Id:
+            Value: 485289843648077326
+    - rid: 1688158703389245449
+      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Gravity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        TerminalVelocity:
+          RawValue: 0
+        IsFrozen:
+          Value: 0
+        DisableCollision:
+          Value: 0
+        SlowInLiquids:
+          Value: 0
+        IsWaterSolid:
+          Value: 0
+        BreakMegaObjects:
+          Value: 0
+    - rid: 1688158703389245450
+      type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
     - rid: 2261435267871145984
@@ -751,7 +1072,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -827,7 +1148,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -903,7 +1224,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -1001,6 +1322,10 @@ MonoBehaviour:
         CallbackFlags:
           Value: 4095
     - rid: 3678451543402610691
+      type: {class: ComboKeeperPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Combo: 0
+    - rid: 3678451543402610692
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Offset:
@@ -1010,7 +1335,7 @@ MonoBehaviour:
             RawValue: 0
         BroadRadius:
           RawValue: 32768
-    - rid: 3678451543402610692
+    - rid: 3678451543402610693
       type: {class: EnemyPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Spawnpoint:
@@ -1022,7 +1347,7 @@ MonoBehaviour:
           Value: 0
         DisableRespawning:
           Value: 0
-    - rid: 3678451543402610693
+    - rid: 3678451543402610694
       type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         IceBlockSize:
@@ -1043,17 +1368,17 @@ MonoBehaviour:
           Value: 1
         IsFlying:
           Value: 0
-    - rid: 3678451543402610694
+    - rid: 3678451543402610695
       type: {class: HoldablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         HoldAboveHead:
           Value: 0
-    - rid: 3678451543402610695
+    - rid: 3678451543402610696
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 3678451543402610696
+    - rid: 3678451543402610697
       type: {class: KoopaPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         SpawnPowerupWhenStomped:
@@ -1063,6 +1388,8 @@ MonoBehaviour:
           Value: 1
         IsSpiny:
           Value: 1
+        IsFireImmune:
+          Value: 0
         Speed:
           RawValue: 57344
         KickSpeed:
@@ -1077,7 +1404,7 @@ MonoBehaviour:
             RawValue: 39322
           Y:
             RawValue: 65536
-    - rid: 3678451543402610697
+    - rid: 3678451543402610698
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Gravity:
@@ -1097,7 +1424,7 @@ MonoBehaviour:
           Value: 0
         BreakMegaObjects:
           Value: 0
-    - rid: 3678451543402610698
+    - rid: 3678451543402610699
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -1132,7 +1459,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -1208,7 +1535,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -1336,7 +1663,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -1468,7 +1795,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -1513,6 +1840,138 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+    - rid: 6712388959948767232
+      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        Position:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        Rotation:
+          RawValue: 0
+    - rid: 6712388959948767233
+      type: {class: PhysicsCollider2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        ShapeConfig:
+          ShapeType: 4
+          PolygonCollider:
+            Id:
+              Value: 0
+          CircleRadius:
+            RawValue: 0
+          CapsuleSize:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          EdgeExtent:
+            RawValue: 0
+          BoxExtents:
+            X:
+              RawValue: 11468
+            Y:
+              RawValue: 13763
+          PositionOffset:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 13763
+          RotationOffset:
+            RawValue: 0
+          UserTag: 0
+          IsPersistent: 1
+          CompoundShapes: []
+        Layer: 6
+        IsTrigger: 0
+        PhysicsMaterial:
+          Id:
+            Value: 0
+    - rid: 6712388959948767234
+      type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        CallbackFlags:
+          Value: 4095
+    - rid: 6712388959948767235
+      type: {class: CameraControllerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        OrthographicSize:
+          RawValue: 458752
+        SizeChangePerSecond:
+          RawValue: 21627
+    - rid: 6712388959948767236
+      type: {class: ComboKeeperPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Combo: 0
+    - rid: 6712388959948767237
+      type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 147456
+        BroadRadius:
+          RawValue: 196608
+    - rid: 6712388959948767238
+      type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        IceBlockSize:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        AutoBreakFrames: 90
+        AutoBreakGrabAdditionalFrames: 60
+        AutoBreakWhileHeld:
+          Value: 1
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        IsCarryable:
+          Value: 1
+        IsFlying:
+          Value: 0
+    - rid: 6712388959948767239
+      type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        ColliderDisabled:
+          Value: 0
+    - rid: 6712388959948767240
+      type: {class: MarioPlayerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        PhysicsAsset:
+          Id:
+            Value: 429607978212108660
+        CharacterAsset:
+          Id:
+            Value: 485289843648077326
+    - rid: 6712388959948767241
+      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Gravity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        TerminalVelocity:
+          RawValue: 0
+        IsFrozen:
+          Value: 0
+        DisableCollision:
+          Value: 0
+        SlowInLiquids:
+          Value: 0
+        IsWaterSolid:
+          Value: 0
+        BreakMegaObjects:
+          Value: 0
+    - rid: 6712388959948767242
+      type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        _empty_prototype_dummy_field_: 0
     - rid: 6753430655964545024
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -1600,7 +2059,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -1676,7 +2135,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -1774,6 +2233,10 @@ MonoBehaviour:
         CallbackFlags:
           Value: 4095
     - rid: 8246143707158413315
+      type: {class: ComboKeeperPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Combo: 0
+    - rid: 8246143707158413316
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Offset:
@@ -1783,7 +2246,7 @@ MonoBehaviour:
             RawValue: 0
         BroadRadius:
           RawValue: 32768
-    - rid: 8246143707158413316
+    - rid: 8246143707158413317
       type: {class: EnemyPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Spawnpoint:
@@ -1795,7 +2258,7 @@ MonoBehaviour:
           Value: 0
         DisableRespawning:
           Value: 0
-    - rid: 8246143707158413317
+    - rid: 8246143707158413318
       type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         IceBlockSize:
@@ -1816,17 +2279,17 @@ MonoBehaviour:
           Value: 1
         IsFlying:
           Value: 0
-    - rid: 8246143707158413318
+    - rid: 8246143707158413319
       type: {class: HoldablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         HoldAboveHead:
           Value: 0
-    - rid: 8246143707158413319
+    - rid: 8246143707158413320
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 8246143707158413320
+    - rid: 8246143707158413321
       type: {class: KoopaPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         SpawnPowerupWhenStomped:
@@ -1836,6 +2299,8 @@ MonoBehaviour:
           Value: 1
         IsSpiny:
           Value: 1
+        IsFireImmune:
+          Value: 0
         Speed:
           RawValue: 57344
         KickSpeed:
@@ -1850,7 +2315,7 @@ MonoBehaviour:
             RawValue: 39322
           Y:
             RawValue: 65536
-    - rid: 8246143707158413321
+    - rid: 8246143707158413322
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Gravity:
@@ -1870,7 +2335,7 @@ MonoBehaviour:
           Value: 0
         BreakMegaObjects:
           Value: 0
-    - rid: 8246143707158413322
+    - rid: 8246143707158413323
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -1905,7 +2370,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -1981,7 +2446,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0
@@ -2026,6 +2491,138 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+    - rid: 8821071624288600064
+      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        Position:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        Rotation:
+          RawValue: 0
+    - rid: 8821071624288600065
+      type: {class: PhysicsCollider2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        ShapeConfig:
+          ShapeType: 4
+          PolygonCollider:
+            Id:
+              Value: 0
+          CircleRadius:
+            RawValue: 0
+          CapsuleSize:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          EdgeExtent:
+            RawValue: 0
+          BoxExtents:
+            X:
+              RawValue: 11468
+            Y:
+              RawValue: 13763
+          PositionOffset:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 13763
+          RotationOffset:
+            RawValue: 0
+          UserTag: 0
+          IsPersistent: 1
+          CompoundShapes: []
+        Layer: 6
+        IsTrigger: 0
+        PhysicsMaterial:
+          Id:
+            Value: 0
+    - rid: 8821071624288600066
+      type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        CallbackFlags:
+          Value: 4095
+    - rid: 8821071624288600067
+      type: {class: CameraControllerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        OrthographicSize:
+          RawValue: 458752
+        SizeChangePerSecond:
+          RawValue: 21627
+    - rid: 8821071624288600068
+      type: {class: ComboKeeperPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Combo: 0
+    - rid: 8821071624288600069
+      type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 147456
+        BroadRadius:
+          RawValue: 196608
+    - rid: 8821071624288600070
+      type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        IceBlockSize:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        AutoBreakFrames: 90
+        AutoBreakGrabAdditionalFrames: 60
+        AutoBreakWhileHeld:
+          Value: 1
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        IsCarryable:
+          Value: 1
+        IsFlying:
+          Value: 0
+    - rid: 8821071624288600071
+      type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        ColliderDisabled:
+          Value: 0
+    - rid: 8821071624288600072
+      type: {class: MarioPlayerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        PhysicsAsset:
+          Id:
+            Value: 429607978212108660
+        CharacterAsset:
+          Id:
+            Value: 485289843648077326
+    - rid: 8821071624288600073
+      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Gravity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        TerminalVelocity:
+          RawValue: 0
+        IsFrozen:
+          Value: 0
+        DisableCollision:
+          Value: 0
+        SlowInLiquids:
+          Value: 0
+        IsWaterSolid:
+          Value: 0
+        BreakMegaObjects:
+          Value: 0
+    - rid: 8821071624288600074
+      type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        _empty_prototype_dummy_field_: 0
     - rid: 8932072812080791552
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -2057,7 +2654,7 @@ MonoBehaviour:
             X:
               RawValue: 14336
             Y:
-              RawValue: 14746
+              RawValue: 16384
           PositionOffset:
             X:
               RawValue: 0

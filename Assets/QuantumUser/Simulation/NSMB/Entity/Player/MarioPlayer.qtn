@@ -151,6 +151,9 @@ component MarioPlayer {
     [ExcludeFromPrototype] FPVector2 Target;
     [ExcludeFromPrototype] bool PressingRight;
     [ExcludeFromPrototype] byte GenerateRandomTeam;
+    [ExcludeFromPrototype] FPVector2 Avoid;
+    [ExcludeFromPrototype] byte AvoidType;
+    [ExcludeFromPrototype] byte BotWallJumping;
 }
 
 signal OnMarioPlayerDied(EntityRef entity);
