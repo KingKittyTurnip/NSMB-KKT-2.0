@@ -16,7 +16,7 @@ MonoBehaviour:
     Path: Resources/Tilemaps/Tiles/Invisible
     Guid:
       Value: 282924479522535788
-  Tile: {fileID: 0}
+  Tile: {fileID: 11400000, guid: 76e835e6ff9f012488a8457909f1c59a, type: 2}
   CollisionData:
     Shapes:
     - Vertices:
@@ -38,3 +38,6 @@ MonoBehaviour:
           RawValue: -32768
   IsSlipperyGround: 0
   IsSlideableGround: 0
+  IsPolygon: 1
+  FootstepSound: 31
+  FootstepParticle: 0

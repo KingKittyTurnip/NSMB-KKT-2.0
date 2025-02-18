@@ -23,6 +23,8 @@ public unsafe class CameraAnimator : ResizingCamera {
     private VersusStageData stage;
     private float screenshakeTimer;
 
+    private bool DidEDCheck = false;
+
     public override void OnValidate() {
         base.OnValidate();
         GetComponentsInChildren(secondaryPositioners);
@@ -55,6 +57,12 @@ public unsafe class CameraAnimator : ResizingCamera {
                 BackgroundLoop.Instance.Reposition(ourCamera);
             }
             return;
+        }
+
+        if (!DidEDCheck) {
+          ourCamera.orthographic = !f.FindAsset<VersusStageData>(f.Map.UserAsset).EDStage;
+          //mainCamera.orthographic = !f.FindAsset<VersusStageData>(f.Map.UserAsset).EDStage;
+          DidEDCheck = true;
         }
 
         var cameraControllerCurrent = f.Unsafe.GetPointer<CameraController>(Target);

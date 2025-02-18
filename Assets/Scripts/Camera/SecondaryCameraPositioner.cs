@@ -9,7 +9,7 @@ public class SecondaryCameraPositioner : MonoBehaviour {
     [SerializeField] private Camera ourCamera;
 
     //---Private Variables
-    private bool destroyed;
+    private bool destroyed, DidEDCheck;
     private VersusStageData stage;
 
     public void OnValidate() {
@@ -18,6 +18,12 @@ public class SecondaryCameraPositioner : MonoBehaviour {
 
     public void Start() {
         stage = (VersusStageData) QuantumUnityDB.GetGlobalAsset(FindObjectOfType<QuantumMapData>().Asset.UserAsset);
+
+        if (!DidEDCheck) {
+          ourCamera.orthographic = !stage.EDStage;
+          mainCamera.orthographic = !stage.EDStage;
+          DidEDCheck = true;
+        }
     }
 
     public void UpdatePosition() {

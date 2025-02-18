@@ -10,70 +10,69 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87a21947f7668244a99163d214ccc8c0, type: 3}
-  m_Name: DefaultFortressStageData
+  m_Name: SkyLandsStageData
   m_EditorClassIdentifier: 
   Identifier:
-    Path: QuantumUser/Resources/AssetObjects/Maps/Fortress/DefaultFortressStageData
+    Path: QuantumUser/Resources/AssetObjects/Maps/KKTSkyLands/SkyLandsStageData
     Guid:
-      Value: 373777738286135472
-  StageAuthor: 
-  MusicComposer: 
-  TranslationKey: level.default.fortress
-  DiscordStageImage: level-fortress
-  Icon: {fileID: 21300000, guid: c8510af529294be40a5f09eeddf3d764, type: 3}
+      Value: 493460423916748869
+  StageAuthor: KingKittyTurnip
+  MusicComposer: -_-
+  TranslationKey: level.kkt.SkyLands
+  DiscordStageImage: level-sky
+  Icon: {fileID: 21300000, guid: d65bece2d20a7eb49bb91fd73710962e, type: 3}
   OverrideAutomaticTilemapSettings: 0
   TileDimensions:
-    x: 64
-    y: 8
+    x: 62
+    y: 9
   TileOrigin:
-    x: -38
+    x: -30
     y: -13
   TilemapWorldPosition:
     X:
-      RawValue: 196608
+      RawValue: -65536
     Y:
-      RawValue: 327680
+      RawValue: 196608
   IsWrappingLevel: 1
   ExtendCeilingHitboxes: 0
   Spawnpoint:
     X:
-      RawValue: -950272
+      RawValue: 49152
     Y:
-      RawValue: 114688
+      RawValue: 147456
   SpawnpointArea:
     X:
       RawValue: 91750
     Y:
-      RawValue: 26214
+      RawValue: 52429
   OverrideAutomaticCameraSettings: 1
   CameraMinPosition:
     X:
       RawValue: -65536000
     Y:
-      RawValue: 0
+      RawValue: -131072
   CameraMaxPosition:
     X:
       RawValue: 65536000
     Y:
-      RawValue: 163840
-  EDStage: 0
+      RawValue: 393216
+  EDStage: 1
   UIColor:
-    R: 24
-    G: 178
-    B: 170
+    R: 209
+    G: 159
+    B: 35
     A: 255
   HidePlayersOnMinimap: 0
-  SpawnBigPowerups: 0
-  SpawnVerticalPowerups: 0
+  SpawnBigPowerups: 1
+  SpawnVerticalPowerups: 1
   MainMusic:
-  - {fileID: 11400000, guid: 853814253b9d46741895bfc7bc7b2972, type: 2}
-  - {fileID: 11400000, guid: 9eb9732611977644eb2ab4a290238ad6, type: 2}
+  - {fileID: 11400000, guid: 2b27fe3ac66c1a74993246bcb0e2cda0, type: 2}
   InvincibleMusic: {fileID: 11400000, guid: 628804e165b231243abe39caa050a76c, type: 2}
   MegaMushroomMusic: {fileID: 11400000, guid: d2c80d3a80e82cb4b988278210db3bb9, type: 2}
   TileData:
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -83,7 +82,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -93,7 +92,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -103,7 +102,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -113,7 +112,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -123,7 +122,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -253,7 +252,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -263,7 +262,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -273,7 +272,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -283,7 +282,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -293,7 +292,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -303,7 +302,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -313,7 +312,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -323,7 +322,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -333,7 +332,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -363,7 +362,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -373,7 +372,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -383,7 +382,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -393,7 +392,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -403,7 +402,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -413,7 +412,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -423,7 +422,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -433,7 +432,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -443,7 +442,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -513,7 +512,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -523,7 +522,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -533,7 +532,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -543,7 +542,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -553,7 +552,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -563,7 +562,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -573,7 +572,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -583,7 +582,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -593,7 +592,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -603,7 +602,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -613,7 +612,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -623,7 +622,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -633,7 +632,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -643,7 +642,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -683,7 +682,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -693,7 +692,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -703,7 +702,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -713,7 +712,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -723,7 +722,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -733,7 +732,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -743,7 +742,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -873,7 +872,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -883,7 +882,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -893,7 +892,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -903,7 +902,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -913,7 +912,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -923,7 +922,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -933,7 +932,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -943,7 +942,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -953,7 +952,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -983,7 +982,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -993,7 +992,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1003,7 +1002,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1013,7 +1012,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1023,7 +1022,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1033,7 +1032,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1043,7 +1042,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1053,7 +1052,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1063,7 +1062,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1133,7 +1132,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1143,7 +1142,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1153,7 +1152,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1163,7 +1162,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1173,7 +1172,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1183,7 +1182,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1193,7 +1192,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1203,7 +1202,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1213,7 +1212,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1223,7 +1222,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1233,7 +1232,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1243,7 +1242,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1253,7 +1252,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1263,7 +1262,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1303,7 +1302,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1313,7 +1312,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1323,7 +1322,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1333,7 +1332,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1343,7 +1342,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1353,7 +1352,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1363,7 +1362,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1373,7 +1372,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1383,7 +1382,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1393,7 +1392,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1403,7 +1402,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1413,7 +1412,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1423,7 +1422,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1433,7 +1432,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1443,7 +1442,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1453,7 +1452,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1463,7 +1462,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1473,7 +1472,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1483,7 +1482,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1493,7 +1492,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1503,7 +1502,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1513,7 +1512,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1523,7 +1522,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1533,7 +1532,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1543,7 +1542,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1553,7 +1552,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1563,7 +1562,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1573,7 +1572,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1583,7 +1582,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1593,7 +1592,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1603,7 +1602,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1613,7 +1612,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1623,7 +1622,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1633,7 +1632,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1643,7 +1642,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1653,7 +1652,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1663,7 +1662,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1673,7 +1672,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1683,7 +1682,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1703,7 +1702,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1713,7 +1712,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1723,7 +1722,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1733,7 +1732,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1743,7 +1742,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1753,7 +1752,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1763,7 +1762,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1773,7 +1772,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1783,7 +1782,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1793,7 +1792,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1803,7 +1802,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1813,7 +1812,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1823,7 +1822,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1833,7 +1832,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1843,7 +1842,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1853,7 +1852,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1863,7 +1862,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1873,7 +1872,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1883,7 +1882,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1913,7 +1912,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -1923,7 +1922,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1933,7 +1932,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1943,7 +1942,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1953,7 +1952,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1963,7 +1962,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1973,7 +1972,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1983,7 +1982,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -1993,7 +1992,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2003,7 +2002,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2013,7 +2012,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2023,7 +2022,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2033,7 +2032,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2043,7 +2042,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2053,7 +2052,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2063,7 +2062,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2073,7 +2072,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2083,17 +2082,17 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
-      RawValue: -3
+      RawValue: 0
     Scale:
       X:
-        RawValue: -65536
+        RawValue: 65536
       Y:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2103,7 +2102,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2113,7 +2112,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2123,7 +2122,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2133,7 +2132,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2143,7 +2142,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2153,7 +2152,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2163,7 +2162,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2173,7 +2172,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2183,7 +2182,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2193,7 +2192,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2203,7 +2202,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2213,7 +2212,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2223,7 +2222,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2233,7 +2232,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2243,7 +2242,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2253,7 +2252,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2263,7 +2262,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2273,7 +2272,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2283,7 +2282,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2293,7 +2292,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2303,7 +2302,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2313,7 +2312,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2343,7 +2342,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2353,7 +2352,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2363,7 +2362,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2373,7 +2372,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2383,7 +2382,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2393,7 +2392,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2403,7 +2402,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2413,7 +2412,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2423,7 +2422,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2433,7 +2432,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2443,7 +2442,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2453,7 +2452,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2463,7 +2462,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2473,7 +2472,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2483,7 +2482,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2493,7 +2492,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2503,7 +2502,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2513,7 +2512,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2523,7 +2522,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2543,7 +2542,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2553,7 +2552,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2563,7 +2562,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2573,7 +2572,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2583,7 +2582,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2593,7 +2592,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2603,17 +2602,17 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
-      RawValue: -3
+      RawValue: 0
     Scale:
       X:
-        RawValue: -65536
+        RawValue: 65536
       Y:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2623,7 +2622,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2713,7 +2712,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2723,7 +2722,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2733,7 +2732,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2743,7 +2742,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2753,7 +2752,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2763,7 +2762,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2773,7 +2772,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2783,7 +2782,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2793,7 +2792,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2803,7 +2802,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2813,7 +2812,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2843,7 +2842,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2853,7 +2852,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2863,7 +2862,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2873,7 +2872,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 457925946796763614
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2883,7 +2882,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2893,7 +2892,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2903,7 +2902,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2913,7 +2912,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2923,7 +2922,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -2933,7 +2932,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2943,7 +2942,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2953,7 +2952,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2983,7 +2982,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -2993,7 +2992,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3003,7 +3002,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3013,7 +3012,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3023,17 +3022,17 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
-      RawValue: -3
+      RawValue: 0
     Scale:
       X:
-        RawValue: -65536
+        RawValue: 65536
       Y:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3043,7 +3042,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3053,7 +3052,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3063,7 +3062,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3073,7 +3072,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3083,7 +3082,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3093,7 +3092,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3103,7 +3102,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3113,7 +3112,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3123,7 +3122,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3133,7 +3132,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3143,7 +3142,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3153,7 +3152,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3163,7 +3162,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3173,7 +3172,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3183,7 +3182,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3193,7 +3192,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3203,7 +3202,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3213,7 +3212,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3223,7 +3222,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3233,7 +3232,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3243,7 +3242,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3383,7 +3382,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3393,17 +3392,17 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
-      RawValue: -3
+      RawValue: 0
     Scale:
       X:
-        RawValue: -65536
+        RawValue: 65536
       Y:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3413,7 +3412,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3423,7 +3422,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3433,7 +3432,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3443,7 +3442,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3453,7 +3452,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3463,7 +3462,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3473,7 +3472,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3483,7 +3482,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3493,7 +3492,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3503,7 +3502,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3513,7 +3512,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3523,7 +3522,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3533,7 +3532,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3543,7 +3542,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3583,7 +3582,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3593,7 +3592,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3613,7 +3612,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3623,7 +3622,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3633,7 +3632,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3643,7 +3642,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3653,7 +3652,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3663,7 +3662,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3673,7 +3672,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3683,7 +3682,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3693,7 +3692,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3703,7 +3702,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3713,7 +3712,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3723,17 +3722,17 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
-      RawValue: -3
+      RawValue: 0
     Scale:
       X:
-        RawValue: -65536
+        RawValue: 65536
       Y:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3743,7 +3742,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3753,7 +3752,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3763,7 +3762,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3773,7 +3772,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3783,7 +3782,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3793,7 +3792,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3803,7 +3802,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3813,7 +3812,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3823,7 +3822,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3833,7 +3832,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3843,7 +3842,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -3853,7 +3852,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3863,7 +3862,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3873,7 +3872,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -3883,7 +3882,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4023,7 +4022,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4033,7 +4032,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4083,7 +4082,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4093,7 +4092,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4103,7 +4102,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4113,7 +4112,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4123,7 +4122,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4133,7 +4132,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4143,7 +4142,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4153,7 +4152,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4163,7 +4162,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4263,7 +4262,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4273,7 +4272,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4283,7 +4282,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4293,7 +4292,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4303,7 +4302,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4313,7 +4312,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4323,7 +4322,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4333,7 +4332,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4343,7 +4342,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4353,7 +4352,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4363,7 +4362,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4403,7 +4402,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4413,7 +4412,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4423,7 +4422,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4433,7 +4432,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4443,7 +4442,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4473,7 +4472,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4483,7 +4482,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4493,7 +4492,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4503,7 +4502,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4513,7 +4512,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4523,7 +4522,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4533,7 +4532,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 517106687263014972
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4663,7 +4662,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4673,7 +4672,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4703,7 +4702,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4713,7 +4712,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4723,7 +4722,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4733,7 +4732,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4743,7 +4742,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 326340869363163953
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4753,7 +4752,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 326340869363163953
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4763,7 +4762,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 326340869363163953
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4773,7 +4772,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 326340869363163953
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4783,7 +4782,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4793,7 +4792,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 497604942922666550
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4803,7 +4802,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 517106687263014972
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4813,7 +4812,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 492425210941159355
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4893,7 +4892,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4903,7 +4902,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4913,7 +4912,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4923,7 +4922,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4933,7 +4932,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4943,7 +4942,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4953,7 +4952,37 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 0
+        Value: 282924479522535788
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 282924479522535788
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 282924479522535788
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 282924479522535788
     Rotation:
       RawValue: 0
     Scale:
@@ -4973,7 +5002,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 372209327834354533
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4983,7 +5012,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -4993,7 +5022,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5003,7 +5032,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5053,7 +5082,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5063,7 +5092,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5073,7 +5102,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5083,7 +5112,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5113,7 +5142,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5123,7 +5152,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5133,7 +5162,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5143,7 +5172,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5153,7 +5182,7 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5163,7 +5192,437 @@ MonoBehaviour:
         RawValue: 65536
   - Tile:
       Id:
-        Value: 319909369411498505
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 362633902293829697
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 477683130632991220
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 362633902293829697
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
+    Rotation:
+      RawValue: 0
+    Scale:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+  - Tile:
+      Id:
+        Value: 0
     Rotation:
       RawValue: 0
     Scale:
@@ -5193,38 +5652,30 @@ MonoBehaviour:
         RawValue: 65536
   BigStarSpawnpoints:
   - X:
-      RawValue: 688128
-    Y:
       RawValue: 294912
-  - X:
-      RawValue: 753664
     Y:
-      RawValue: 65536
+      RawValue: -32768
   - X:
-      RawValue: 65536
+      RawValue: 720896
     Y:
-      RawValue: 262144
+      RawValue: 131072
   - X:
-      RawValue: -589824
+      RawValue: 884736
     Y:
-      RawValue: 294912
+      RawValue: -16384
   - X:
-      RawValue: -950272
-    Y:
-      RawValue: 262144
-  - X:
-      RawValue: -130416
-    Y:
-      RawValue: 327680
-  - X:
-      RawValue: 491520
-    Y:
-      RawValue: 229376
-  - X:
-      RawValue: -163840
+      RawValue: -688128
     Y:
       RawValue: 98304
   - X:
-      RawValue: 327680
+      RawValue: -131072
     Y:
-      RawValue: 98304
+      RawValue: -98304
+  - X:
+      RawValue: -393216
+    Y:
+      RawValue: 0
+  - X:
+      RawValue: -966656
+    Y:
+      RawValue: 49152

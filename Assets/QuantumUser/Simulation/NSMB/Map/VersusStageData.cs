@@ -35,6 +35,7 @@ public unsafe class VersusStageData : AssetObject {
     public bool OverrideAutomaticCameraSettings;
     public FPVector2 CameraMinPosition;
     public FPVector2 CameraMaxPosition;
+    public bool EDStage;
 
     [Header("-- UI")]
     public ColorRGBA UIColor = new(24, 178, 170);

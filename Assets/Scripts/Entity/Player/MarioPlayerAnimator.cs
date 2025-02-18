@@ -584,7 +584,9 @@ namespace NSMB.Entities.Player {
 
 
             float newZ = -4;
-            if (mario->IsDead) {
+            if (f.FindAsset<VersusStageData>(f.Map.UserAsset).EDStage) {
+              newZ = 0;
+            } else if (mario->IsDead) {
                 if (physicsObject->IsUnderwater) {
                     newZ = -2;
                 } else {
