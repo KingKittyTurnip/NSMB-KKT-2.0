@@ -50,6 +50,9 @@ public class NumberChangeableRule : ChangeableRule {
         case CommandChangeRules.Rules.TimerSeconds:
             cmd.TimerMinutes = (int) value;
             break;
+        case CommandChangeRules.Rules.Bots:
+            cmd.Bots = (int) value;
+            break;
         }
 
         QuantumGame game = NetworkHandler.Game;

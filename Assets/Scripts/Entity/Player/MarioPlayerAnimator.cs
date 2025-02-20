@@ -522,6 +522,7 @@ namespace NSMB.Entities.Player {
                 PowerupState.PropellerMushroom => 2,
                 PowerupState.IceFlower => 3,
                 PowerupState.HammerSuit => 4,
+                PowerupState.CatSuit => 4,
                 PowerupState.JumpSuit => 2,
                 _ => 0
             };

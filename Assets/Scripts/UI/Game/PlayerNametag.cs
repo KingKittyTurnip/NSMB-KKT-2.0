@@ -120,6 +120,19 @@ namespace NSMB.UI.Game {
 
             stringBuilder.Append(Utils.Utils.GetSymbolString("Sx" + mario->Stars));
 
+            var player = mario->PlayerRef;
+
+            if (mario->IsBot) {
+              string Personality = mario->Personality switch {
+                   1 => "Meh",
+                   2 => "Agro",
+                   3 => "Plead",
+                   4 => "Freind",
+                   _ => "Null",
+              };
+              stringBuilder.Append(Utils.Utils.GetSymbolString((mario->Mix ? " (Mix)" : " ") + Personality));
+            }
+
             text.text = stringBuilder.ToString();
         }
 

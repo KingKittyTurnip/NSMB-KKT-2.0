@@ -37,6 +37,7 @@ struct GameRules {
 	bool TeamsEnabled;
 	bool CustomPowerupsEnabled;
 	bool DrawOnTimeUp;
+        int Bots;
 }
 
 enum GameState : Byte {

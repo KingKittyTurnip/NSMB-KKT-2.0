@@ -44,9 +44,6 @@ namespace Quantum {
             } else {
                 filter.Inputs = default;
             }
-            if (!player.IsValid) {
-                mario->IsBot = true;
-            }
 
             if (f.GetPlayerCommand(player) is CommandSpawnReserveItem) {
                 SpawnReserveItem(f, ref filter);
@@ -174,13 +171,16 @@ namespace Quantum {
                 var marioFoe = f.Unsafe.GetPointer<MarioPlayer>(entity);
                 if (mario == marioFoe) //Hey... That's Me!
                   continue;
-                if (distance < 9 && (marioFoe->CurrentPowerupState == PowerupState.MegaMushroom || marioFoe->IsStarmanInvincible)) { //Avoid Mega Players At All Costs
+                if (mario->Personality == 3) {
+                  SetAvoid(ref filter, Spot, 4);
+                  Attack = distance < 7;
+                } else if (distance < 9 && (marioFoe->CurrentPowerupState == PowerupState.MegaMushroom || marioFoe->IsStarmanInvincible)) { //Avoid Mega Players At All Costs
                   SetAvoid(ref filter, Spot, 4);
                 } else if (marioFoe->IsPropellerFlying || marioFoe->IsSpinnerFlying) { //Man Darn Propeller Spammers, Avoid Them
                   SetAvoid(ref filter, Spot, 2);
                 } else if (marioFoe->Stars == 0) { //This Player Isn't Worth The Hassle
                   SetAvoid(ref filter, Spot, 3);
-                } else if ((TargetFoeStars < marioFoe->Stars) && mario->GetTeam(f) != marioFoe->GetTeam(f) && ((vel > 0 && posA.X - posB.X > 0) || (vel < 0 && posA.X - posB.X < 0) || distanceModifier <= (posA.Y + 2 > posB.Y ? -2 : 0)) ) { // && tempDistance < distance + (marioFoe->Stars - mario->Stars)) {
+                } else if ((TargetFoeStars < marioFoe->Stars) && mario->GetTeam(f) != marioFoe->GetTeam(f) && ((vel > 0 && posA.X - posB.X > 0) || (vel < 0 && posA.X - posB.X < 0) || mario->Personality == 2 || distanceModifier <= (posA.Y + 2 > posB.Y ? -2 : 0)) ) { // && tempDistance < distance + (marioFoe->Stars - mario->Stars)) {
                   ATargetBellow = posA.Y - posB.Y > 1 && FPMath.Abs(posA.X - posB.X) < Constants._0_40;
                   if (mario->CurrentPowerupState > PowerupState.Mushroom) {
                     TargetFoeStars = marioFoe->Stars;
@@ -295,13 +295,16 @@ namespace Quantum {
         }
 
       //Projectile Powerups
-        if (Attack && true //TODO: Add A Cooldown Using The Projectile Delay As A Base
+        QuantumUtils.Decrement(ref mario->BotAtkCooldown);
+        if (Attack && mario->BotAtkCooldown <= 0
           && ((mario->CurrentPowerupState == PowerupState.FireFlower && Diffrence.Y > -2) 
           || (mario->CurrentPowerupState == PowerupState.IceFlower && Diffrence.Y > -2)
           || (mario->CurrentPowerupState == PowerupState.HammerSuit && Diffrence.Y < 2)
           || (mario->CurrentPowerupState == PowerupState.PropellerMushroom && Diffrence.Y < 0)
-          || (mario->CurrentPowerupState == PowerupState.CatSuit)))
+          || (mario->CurrentPowerupState == PowerupState.CatSuit && Diffrence.Y > -2))) {
           inputs.PowerupAction = true;
+          mario->BotAtkCooldown = (byte) f.RNG->Next(3, 45);
+        }
 
       //Always Sprint
         inputs.Sprint = true;
@@ -309,7 +312,8 @@ namespace Quantum {
       //Take out Reserve
       //TODO: Get Rid Of Bad Powerups (Ex: Mini & Jumpsuit)
         if (mario->CurrentPowerupState <= PowerupState.Mushroom || mario->CurrentPowerupState == PowerupState.JumpSuit 
-          || mario->CurrentPowerupState == PowerupState.BlueShell)
+          || (mario->Personality == 2 && (mario->CurrentPowerupState == PowerupState.BlueShell || mario->CurrentPowerupState == PowerupState.PropellerMushroom))
+          || (mario->Personality == 3 && (mario->CurrentPowerupState == PowerupState.FireFlower || mario->CurrentPowerupState == PowerupState.IceFlower)))
             if (Reserve != null)
                 SpawnReserveItem(f, ref filter);
     }
@@ -1592,8 +1596,8 @@ namespace Quantum {
                     return;
                 }
 
-                if (activeProjectiles < 2) {
-                    // Always allow if < 2
+                if (activeProjectiles < 1) {
+                    // Always allow if < 1 //2
                     mario->CurrentVolley = (byte) (activeProjectiles + 1);
                 } else if (mario->CurrentVolley < physics.ProjectileVolleySize) {
                     // Allow in this volley
@@ -2198,6 +2202,9 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             var projectileAsset = f.FindAsset(projectile->Asset);
             bool dropStars = true;
 
+            if (mario->DamageInvincibilityFrames > 0)
+                return;
+
             if (f.Unsafe.TryGetPointer(projectile->Owner, out MarioPlayer* ownerMario)) {
                 dropStars = ownerMario->GetTeam(f) != mario->GetTeam(f);
             }
@@ -2209,12 +2216,6 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
 
                 switch (projectileAsset.Effect) {
                 case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
-                    if (dropStars && mario->CurrentPowerupState == PowerupState.MiniMushroom) {
-                        mario->Death(f, marioEntity, false);
-                    } else if (mario->DamageInvincibilityFrames <= 0) {
-                        mario->DoKnockback(f, marioEntity, !projectile->FacingRight, dropStars ? 1 : 0, true, projectileEntity);
-                    }
-                    break;
                 case ProjectileEffectType.Fire:
                     if (dropStars && mario->CurrentPowerupState == PowerupState.MiniMushroom) {
                         mario->Death(f, marioEntity, false);

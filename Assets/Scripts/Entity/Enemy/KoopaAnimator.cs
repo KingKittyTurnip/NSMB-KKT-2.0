@@ -97,7 +97,7 @@ public class KoopaAnimator : QuantumEntityViewComponent {
 
         Vector3 modifiedZ = transform.position;
         if (f.Exists(holdable->Holder)) {
-            modifiedZ.z = -4.1f;
+            modifiedZ.z = f.FindAsset<VersusStageData>(f.Map.UserAsset).EDStage ? -0.1f : -4.1f;
         }
         transform.position = modifiedZ;
     }

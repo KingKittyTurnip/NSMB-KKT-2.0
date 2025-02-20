@@ -394,6 +394,20 @@ namespace Quantum {
                     Team = data->RealTeam,
                 };
             }
+            for (int i = 0; i < f.Global->Rules.Bots; i++) {
+              EntityRef newAiPlayer = f.Create(config.AiCharacter.Prototype);
+              var mario = f.Unsafe.GetPointer<MarioPlayer>(newAiPlayer);
+              mario->IsBot = true;
+
+            //Personality, 0->null, 1->Standard, 2->Offensive, 3->ScardyCat, 4->Switchup
+              if (mario->Personality == 0) {
+                mario->Personality = (byte) f.RNG->Next(0, 5);
+                if (mario->Personality == 4) { //Activate Mix Mode
+                  mario->Personality = (byte) f.RNG->Next(0, 4);
+                  mario->Mix = true;
+                }
+              }
+            }
 
             // Assign random spawnpoints
             f.Global->TotalMarios = (byte) f.ComponentCount<MarioPlayer>();

@@ -61,14 +61,15 @@ namespace Quantum {
             transform->Position = spawnpoint;
 
             if (playerHoldingUp) {
-                Speed /= 2;
+                //Speed /= 2;
                 physicsObject->Velocity.Y = asset.Speed * 2;
             } else {
                 physicsObject->Velocity.Y = asset.Speed;
             }
             physicsObject->Velocity.X = Speed * (FacingRight ? 1 : -1);
             if (ownerPhysicsObject != null) {
-                physicsObject->Velocity.Y += FPMath.Max(0, ownerPhysicsObject->Velocity.Y);
+                physicsObject->Velocity.Y += FPMath.Clamp(ownerPhysicsObject->Velocity.Y, 0, 15);
+                Speed -= FPMath.Clamp(physicsObject->Velocity.Y - asset.Speed, 0, 8) / 3;
             }
         }
     }

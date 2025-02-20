@@ -19,7 +19,7 @@ MonoBehaviour:
   ObjectPath:
   - Position:
       X:
-        RawValue: 0
+        RawValue: -32768
       Y:
         RawValue: 0
     TravelDuration:
@@ -32,14 +32,14 @@ MonoBehaviour:
       Y:
         RawValue: 65536
     TravelDuration:
-      RawValue: 16384
+      RawValue: 58982
     EaseIn: 1
     EaseOut: 1
   - Position:
       X:
-        RawValue: 0
+        RawValue: 32768
       Y:
-        RawValue: 65536
+        RawValue: 0
     TravelDuration:
       RawValue: 65536
     EaseIn: 1
@@ -48,18 +48,9 @@ MonoBehaviour:
       X:
         RawValue: 0
       Y:
-        RawValue: 0
+        RawValue: 65536
     TravelDuration:
-      RawValue: 32768
-    EaseIn: 1
-    EaseOut: 1
-  - Position:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    TravelDuration:
-      RawValue: 0
+      RawValue: 58982
     EaseIn: 1
     EaseOut: 1
   LoopMode: 1

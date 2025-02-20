@@ -30,7 +30,7 @@ public unsafe class IceBlockAnimator : QuantumEntityViewComponent {
         sRenderer.size = cube->Size.ToUnityVector2() * 2;
 
         Vector3 position = transform.position;
-        position.z = -4.25f;
+        position.z = f.FindAsset<VersusStageData>(f.Map.UserAsset).EDStage ? -0.25f : -4.25f;
         transform.position = position;
     }
 

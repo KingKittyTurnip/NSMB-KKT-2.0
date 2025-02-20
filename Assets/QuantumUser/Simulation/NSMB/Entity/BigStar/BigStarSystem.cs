@@ -133,6 +133,10 @@ namespace Quantum {
             }
 
             mario->Stars++;
+
+            if (mario->Mix)
+              mario->Personality = (byte) f.RNG->Next(0, 4);
+
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
 
             if (star->IsStationary) {

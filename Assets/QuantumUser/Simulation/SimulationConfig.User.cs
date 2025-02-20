@@ -7,6 +7,7 @@
         public Map[] AllStages;
         public PowerupAsset FallbackPowerup;
         public CharacterAsset[] CharacterDatas;
+        public CharacterAsset AiCharacter;
         public TeamAsset[] Teams;
 
         public EntityPrototype FireballPrototype, IceballPrototype, HammerPrototype, ScratchPrototype, BigStarPrototype, BlockBumpPrototype, LooseCoinPrototype, IceBlockPrototype;
