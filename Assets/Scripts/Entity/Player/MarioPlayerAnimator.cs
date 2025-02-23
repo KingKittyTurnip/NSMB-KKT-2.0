@@ -84,9 +84,9 @@ namespace NSMB.Entities.Player {
         [SerializeField] private PlayerElements playerElementsPrefab;
         [SerializeField] private GameObject coinNumberParticle, coinFromBlockParticle, respawnParticle, starCollectParticle;
         [SerializeField] private Animator animator;
-        [SerializeField] private Avatar smallAvatar, largeAvatar;
+        [SerializeField] private Avatar smallAvatar, largeAvatar, catAvatar;
         [SerializeField] private ParticleSystem dust, sparkles, drillParticle, giantParticle, fireParticle, bubblesParticle, iceSkiddingParticle, waterRunningParticle, waterSkiddingParticle;
-        [SerializeField] private GameObject smallModel, largeModel, largeShellExclude, blueShell, propellerHelmet, propeller, HammerHelm, HammerShell, HammerTuck;
+        [SerializeField] private GameObject smallModel, largeModel, catModel, largeShellExclude, blueShell, propellerHelmet, propeller, HammerHelm, HammerShell, HammerTuck;
         [SerializeField] private AudioClip normalDrill, propellerDrill;
         [SerializeField] private LoopingSoundPlayer dustPlayer, drillPlayer;
         [SerializeField] private LoopingSoundData wallSlideData, shellSlideData, spinnerDrillData, propellerDrillData;
@@ -548,9 +548,11 @@ namespace NSMB.Entities.Player {
             models.SetActive(f.Global->GameState >= GameState.Playing && (mario->KnockbackGetupFrames > 0 || mario->MegaMushroomStartFrames > 0 || (!mario->IsRespawning && (mario->IsDead || !(remainingDamageInvincibility > 0 && remainingDamageInvincibility * (remainingDamageInvincibility <= 0.75f ? 5 : 2) % 0.2f < 0.1f)))));
 
             // Model changing
+            bool cat = mario->CurrentPowerupState == PowerupState.CatSuit;
             bool large = mario->CurrentPowerupState >= PowerupState.Mushroom;
 
-            largeModel.SetActive(large);
+            catModel.SetActive(cat);
+            largeModel.SetActive(large && !cat);
             smallModel.SetActive(!large);
             blueShell.SetActive(mario->CurrentPowerupState == PowerupState.BlueShell);
             propellerHelmet.SetActive(mario->CurrentPowerupState == PowerupState.PropellerMushroom);
@@ -558,7 +560,7 @@ namespace NSMB.Entities.Player {
             HammerShell.SetActive(mario->CurrentPowerupState == PowerupState.HammerSuit && !mario->IsCrouching);
             HammerTuck.SetActive(mario->CurrentPowerupState == PowerupState.HammerSuit && mario->IsCrouching);
 
-            Avatar targetAvatar = large ? largeAvatar : smallAvatar;
+            Avatar targetAvatar = large ? cat ? catAvatar : largeAvatar : smallAvatar;
             bool changedAvatar = animator.avatar != targetAvatar;
 
             if (changedAvatar) {
@@ -570,7 +572,7 @@ namespace NSMB.Entities.Player {
                 }
 
                 animator.avatar = targetAvatar;
-                animator.runtimeAnimatorController = large ? character.LargeOverrides : character.SmallOverrides;
+                animator.runtimeAnimatorController = large ? cat ? character.CatOverrides: character.LargeOverrides : character.SmallOverrides;
 
                 // Push back state 
                 animator.Update(0);

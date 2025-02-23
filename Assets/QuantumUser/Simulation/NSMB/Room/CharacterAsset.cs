@@ -16,5 +16,6 @@ public class CharacterAsset : AssetObject {
 
     public RuntimeAnimatorController SmallOverrides;
     public RuntimeAnimatorController LargeOverrides;
+    public RuntimeAnimatorController CatOverrides;
 #endif 
 }

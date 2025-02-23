@@ -68,14 +68,18 @@ public class HazardMenuManager : MonoBehaviour {
           ("Check", "Is This All A Joke To Showcase Scrollability?", 1),
       }),
     };
-
     public List<(string, List<(string, string, int)>)> Items = new List<(string, List<(string, string, int)>)>() {};
 
+// ------ General Raw Update
+//TODO: Properly Update The Values
+
+// ------ New Hazard Prompt
+//TODO: Add Hazard Menu Automated Buttons
     public void OpenHazardPrompt() {
       NewHazardPrompt.SetActive(true);
     }
 
-  //Adds A hazard From The Add Hazard Prompt
+// ------ List Ui Buttons
     public void AddHazard(int i) {
       NewHazardPrompt.SetActive(false);
       GameObject newTemplate = Instantiate(ButtonTemplate);
@@ -86,10 +90,11 @@ public class HazardMenuManager : MonoBehaviour {
         trans.name = "" + Items.Count;
       }
       newTemplate.GetComponentInChildren<TMP_Text>().text = DefaultValue[i].Item1;
-      //SetIcon, HeftyIcon
       Items.Add(DefaultValue[i]);
     }
     public void DeleteHazard(GameObject btnMaster) {
+      foreach (GameObject Kill in DataListContents)
+        Destroy(Kill);
       int.TryParse(btnMaster.gameObject.name, out int o);
       int i = o;
       foreach(Transform f in ButtonList) {
@@ -99,19 +104,23 @@ public class HazardMenuManager : MonoBehaviour {
           f.gameObject.name = "" + (j - 1);
       }
       Items.RemoveAt(i);
+      ResetDataButtons();
     }
 
     public void SetValue() {
     }
 
-  //Creates The Extra Data Buttons For Each hazard
+// ------ Data Ui Elements
+    public void ResetDataButtons() {
+        //Reset preview
+        foreach (GameObject Kill in DataListContents)
+          Destroy(Kill);
+    }
+
     public void CreateButtonsFrom(GameObject btnMaster) {
         int ItemID = int.Parse(btnMaster.name);
 
-        //spawn object
-        //if (DataListContents != null)
-          foreach (GameObject Kill in DataListContents)
-            Destroy(Kill);
+        ResetDataButtons();
 
         GameObject newTemplate = null;
         for (int i = 0; i < Items[ItemID].Item2.Count; i++) {
