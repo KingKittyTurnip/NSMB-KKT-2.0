@@ -27,6 +27,8 @@ namespace Quantum {
                 physicsObject->TerminalVelocity = -Speed;
             }
 
+            LifeTime = asset.LifeTime;
+
             // Physics
             transform->Position = spawnpoint;
             physicsObject->Velocity = new(Speed * (FacingRight ? 1 : -1), -Speed);

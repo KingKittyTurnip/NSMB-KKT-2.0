@@ -6,6 +6,7 @@ public class ProjectileAsset : AssetObject {
     public ProjectileEffectType Effect;
     public bool Bounce = true;
     public FP Speed;
+    public byte LifeTime;
     public FP BounceStrength;
     public FPVector2 Gravity;
     public bool DestroyOnSecondBounce;
@@ -14,6 +15,7 @@ public class ProjectileAsset : AssetObject {
     public bool InheritShooterVelocity;
     public bool HasCollision = true;
     public bool DoesntEffectBlueShell = true;
+    public bool IsMelee = true;
 
     public ParticleEffect DestroyParticleEffect = ParticleEffect.None;
     public SoundEffect ShootSound = SoundEffect.Powerup_Fireball_Shoot;

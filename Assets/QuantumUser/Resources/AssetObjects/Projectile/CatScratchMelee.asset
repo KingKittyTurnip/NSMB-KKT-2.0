@@ -20,6 +20,7 @@ MonoBehaviour:
   Bounce: 1
   Speed:
     RawValue: 0
+  LifeTime: 15
   BounceStrength:
     RawValue: 0
   Gravity:
@@ -33,8 +34,6 @@ MonoBehaviour:
   InheritShooterVelocity: 0
   HasCollision: 0
   DoesntEffectBlueShell: 0
-  BlueShellSlowdownFrames: 0
-  BounceOnStart: 0
-  IsMelee: 0
-  DestroyParticleEffect: 5
+  IsMelee: 1
+  DestroyParticleEffect: 1
   ShootSound: 7

@@ -31,6 +31,11 @@ namespace Quantum {
                 }
                 projectile->CheckedCollision = true;
             }
+            if (projectile->LifeTime > 0) {
+                QuantumUtils.Decrement(ref projectile->LifeTime); 
+                if (projectile->LifeTime <= 0)
+                  Destroy(f, filter.Entity, asset.DestroyParticleEffect);
+            }
 
             HandleTileCollision(f, ref filter, asset);
 
@@ -70,6 +75,14 @@ namespace Quantum {
         }
 
         public static void Destroy(Frame f, EntityRef entity, ParticleEffect particle) {
+            var projectile = f.Unsafe.GetPointer<Projectile>(entity);
+            var asset = f.FindAsset(projectile->Asset);
+          //Remove From Player If Melee
+            if (asset.IsMelee) {
+              var mario = f.Unsafe.GetPointer<MarioPlayer>(projectile->Owner);
+              mario->MeleeAttack = EntityRef.None;
+            }
+
             var transform = f.Unsafe.GetPointer<Transform2D>(entity);
             f.Events.ProjectileDestroyed(f, entity, particle, transform->Position);
             f.Destroy(entity);

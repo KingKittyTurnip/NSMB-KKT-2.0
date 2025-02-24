@@ -971,7 +971,7 @@ namespace Quantum {
             var physicsObject = filter.PhysicsObject;
 
 
-            if (mario->Pouncing) {
+            if (mario->IsPouncing) {
               physicsObject->Velocity.X = mario->FacingRight ? 8 : -8;
               physicsObject->Velocity.Y = -8;
               return;
@@ -1121,7 +1121,7 @@ namespace Quantum {
             if (physicsObject->IsTouchingGround || mario->IsInKnockback || mario->IsGroundpounding || mario->IsDrilling
                 || mario->HeldEntity.IsValid || mario->IsCrouching || mario->IsSliding || mario->IsInShell
                 || mario->IsWallsliding || mario->GroundpoundCooldownFrames > 0 || physicsObject->IsUnderwater
-                || f.Exists(mario->CurrentPipe) || mario->Pouncing) {
+                || f.Exists(mario->CurrentPipe) || mario->IsPouncing) {
                 return;
             }
 
@@ -1190,7 +1190,7 @@ namespace Quantum {
             var mario = filter.MarioPlayer;
             var physicsObject = filter.PhysicsObject;
 
-            if (!(physicsObject->IsTouchingGround && ((mario->IsGroundpounding && mario->IsGroundpoundActive) || mario->IsDrilling || mario->Pouncing))) {
+            if (!(physicsObject->IsTouchingGround && ((mario->IsGroundpounding && mario->IsGroundpoundActive) || mario->IsDrilling || mario->IsPouncing))) {
                 return;
             }
 
@@ -1233,8 +1233,8 @@ namespace Quantum {
             continueGroundpound &= interactedAny;
             mario->IsGroundpoundActive &= continueGroundpound;
 
-            if (mario->Pouncing) {
-                physicsObject->Velocity.X = mario->FacingRight ? 2 : -2;
+            if (mario->IsPouncing) {
+                physicsObject->Velocity.X = mario->FacingRight ? 3 : -3;
                 mario->Pouncing = false;
             }
 
@@ -1486,6 +1486,12 @@ namespace Quantum {
             var mario = filter.MarioPlayer;
             var physicsObject = filter.PhysicsObject;
 
+            if (mario->MeleeAttack != EntityRef.None) {
+              var atktransform = f.Unsafe.GetPointer<Transform2D>(mario->MeleeAttack);
+              FPVector2 Offset = filter.Transform->Position + new FPVector2(mario->FacingRight ? Constants._0_40 : -Constants._0_40, Constants._0_40);
+              atktransform->Position = Offset;
+            }
+
             if (QuantumUtils.Decrement(ref mario->InvincibilityFrames)) {
                 f.Unsafe.GetPointer<ComboKeeper>(filter.Entity)->Combo = 0;
             }
@@ -1508,35 +1514,15 @@ namespace Quantum {
             }
 
             if (mario->CurrentPowerupState == PowerupState.CatSuit) {
-            //Cancel Pounce
-              if (mario->Pouncing && (inputs.PowerupAction.WasPressed /* || physicsObject->IsTouchingGround */)) {
-                physicsObject->Velocity.X = mario->FacingRight ? 3 : -3;
-                mario->Pouncing = false;
-                //if (physicsObject->IsTouchingGround)
-                //  f.Events.MarioPlayerGroundpounded(f, filter.Entity);
-                return;
+            //AirStall
+              if (mario->SwipeStall && !mario->IsPouncing && mario->ProjectileDelayFrames > 0) {
+                physicsObject->Velocity.Y = physicsObject->Velocity.Y > 0 ? physicsObject->Velocity.Y : physicsObject->Velocity.Y / Constants._1_18;
+                mario->SwipeStall = mario->ProjectileDelayFrames > 1;
               }
-            //DiveAttack
-              if (!mario->Pouncing && mario->UsedPounceThisJump && inputs.PowerupAction.WasPressed && !physicsObject->IsTouchingGround && !mario->IsGroundpounding && !mario->IsWallsliding) {
-                  mario->Pouncing = true;
+              if (mario->IsPouncing)
                   mario->UsedPounceThisJump = false;
-                  f.Events.MarioPlayerCatSwipe(f, filter.Entity); //TODO: Anims & Sound
-            //ScratchAttack
-              } else if (inputs.FireballPowerupAction.WasPressed || inputs.PowerupAction.WasPressed) {
-                if (mario->ProjectileDelayFrames > 0)
-                  return;
-
-                mario->ProjectileDelayFrames = physics.ProjectileDelayFrames;
-                mario->ProjectileVolleyFrames = physics.ProjectileVolleyFrames;
-
-                if (mario->SwipeStall && !mario->Pouncing) {
-                  physicsObject->Velocity.Y = physicsObject->Velocity.Y > 0 ? physicsObject->Velocity.Y : 0;
-                  mario->SwipeStall = false;
-                }
-                f.Events.MarioPlayerCatSwipe(f, filter.Entity); //TODO: Anims & Sound
-                //TODO: Add Scratch Attack (How Tho...)
-              }
-              return;
+              if (mario->Pouncing && !mario->IsPouncing && !inputs.PowerupAction.IsDown && !mario->IsGroundpounding && !mario->IsWallsliding && !physicsObject->IsTouchingGround)
+                  mario->Pouncing = false;
             }
 
             mario->UsedPropellerThisJump &= !physicsObject->IsTouchingGround;
@@ -1596,7 +1582,35 @@ namespace Quantum {
                     return;
                 }
 
-                if (activeProjectiles < 1) {
+                if (mario->CurrentPowerupState == PowerupState.CatSuit) {
+                //Cancel Pounce
+                  if (mario->IsPouncing && (inputs.PowerupAction.WasPressed /* || physicsObject->IsTouchingGround */)) {
+                    physicsObject->Velocity.X = mario->FacingRight ? 3 : -3;
+                    mario->Pouncing = false;
+                    return;
+                //StopBuildupToPounce
+                  }
+                //Scratch/Dive Attack
+                  if (inputs.FireballPowerupAction.WasPressed || inputs.PowerupAction.WasPressed) {
+                    if (mario->ProjectileDelayFrames > 0) //TODO: Use This Value For Pounce Delay
+                      return;
+
+                    physicsObject->Velocity.Y = physicsObject->Velocity.Y > 0 || !mario->SwipeStall ? physicsObject->Velocity.Y : 0;
+                    mario->SwipeStall &= mario->ProjectileDelayFrames <= 0;
+
+                    if (!mario->Pouncing && mario->UsedPounceThisJump && inputs.PowerupAction.WasPressed && !physicsObject->IsTouchingGround && !mario->IsGroundpounding && !mario->IsWallsliding) {
+                      mario->Pouncing = true;
+                    }
+
+                    mario->ProjectileDelayFrames = 15;
+                    mario->ProjectileVolleyFrames = physics.ProjectileVolleyFrames;
+
+                    f.Events.MarioPlayerCatSwipe(f, filter.Entity); //TODO: Anims & Sound
+                  } else
+                    return;
+                }
+
+                if (activeProjectiles < 1 && mario->CurrentPowerupState != PowerupState.CatSuit) {
                     // Always allow if < 1 //2
                     mario->CurrentVolley = (byte) (activeProjectiles + 1);
                 } else if (mario->CurrentVolley < physics.ProjectileVolleySize) {
@@ -1607,12 +1621,14 @@ namespace Quantum {
                     return;
                 }
 
-                mario->ProjectileDelayFrames = physics.ProjectileDelayFrames;
+                mario->ProjectileDelayFrames = mario->CurrentPowerupState != PowerupState.CatSuit ? physics.ProjectileDelayFrames : (byte) 15;
                 mario->ProjectileVolleyFrames = physics.ProjectileVolleyFrames;
                 mario->CurrentProjectiles++;
 
                 Projectile* projectile;
-                if (mario->CurrentPowerupState == PowerupState.HammerSuit) {
+                if (mario->CurrentPowerupState == PowerupState.CatSuit) {
+                    projectile = ShootMeleeProjectile(f, ref filter, physics);
+                } else if (mario->CurrentPowerupState == PowerupState.HammerSuit) {
                     projectile = ShootHammerProjectile(f, ref filter, physics);
                 } else {
                     projectile = ShootNormalProjectile(f, ref filter, physics);
@@ -1650,6 +1666,24 @@ namespace Quantum {
                 break;
             }
             }
+        }
+
+        private Projectile* ShootMeleeProjectile(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics) {
+            var mario = filter.MarioPlayer;
+            var physicsObject = filter.PhysicsObject;
+
+          /*Remove Last Melee
+            if (mario->MeleeAttack != EntityRef.None) {
+              var destroydis = f.Unsafe.GetPointer<Projectile>(mario->MeleeAttack);
+              destroydis.Destroy(f, mario->MeleeAttack, asset.DestroyParticleEffect);
+            }*/
+
+            FPVector2 spawnPos = filter.Transform->Position + new FPVector2(mario->FacingRight ? Constants._0_40 : -Constants._0_40, Constants._0_35);
+            EntityRef newEntity = mario->MeleeAttack = f.Create(f.SimulationConfig.ScratchPrototype);
+
+            var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
+            projectile->Initialize(f, newEntity, filter.Entity, spawnPos, mario->FacingRight);
+            return projectile;
         }
 
         private Projectile* ShootHammerProjectile(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics) {
@@ -2377,16 +2411,16 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             }
 
             //Pounce Stomp
-            bool marioAPounce = dot > Constants._0_20;
-            bool marioBPounce = dot < -Constants._0_20;
-            if (marioA->Pouncing && marioB->Pouncing) {
+            bool marioAPounce = dot > Constants._0_90;
+            bool marioBPounce = dot < -Constants._0_90;
+            if (marioA->IsPouncing && marioB->IsPouncing) {
                 marioA->DoKnockback(f, marioAEntity, fromRight, dropStars ? 1 : 0, true, marioBEntity);
                 marioB->DoKnockback(f, marioBEntity, !fromRight, dropStars ? 1 : 0, true, marioAEntity);
                 return;
-            } else if (marioA->Pouncing && marioAPounce) {
+            } else if (marioA->IsPouncing && marioAPounce) {
                 MarioMarioStomp(f, marioAEntity, marioBEntity, fromRight, dropStars);
                 return;
-            } else if (marioB->Pouncing && marioBPounce) {
+            } else if (marioB->IsPouncing && marioBPounce) {
                 MarioMarioStomp(f, marioBEntity, marioAEntity, !fromRight, dropStars);
                 return;
             }

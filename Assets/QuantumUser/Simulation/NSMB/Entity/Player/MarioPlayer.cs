@@ -7,6 +7,7 @@ namespace Quantum {
         public bool IsStarmanInvincible => InvincibilityFrames > 0;
         public bool IsWallsliding => WallslideLeft || WallslideRight;
         public bool CanWallClimb => CurrentPowerupState == PowerupState.CatSuit && ClimbFrames > 0;
+        public bool IsPouncing => Pouncing && ProjectileDelayFrames <= 0;
         public bool IsCrouchedInShell => CurrentPowerupState == PowerupState.BlueShell && IsCrouching && !IsInShell;
         public bool IsDamageable => !IsStarmanInvincible && DamageInvincibilityFrames == 0;
 

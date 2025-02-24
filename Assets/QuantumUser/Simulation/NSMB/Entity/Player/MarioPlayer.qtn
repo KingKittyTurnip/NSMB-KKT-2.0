@@ -124,6 +124,7 @@ component MarioPlayer {
     [ExcludeFromPrototype] bool SwipeStall;
     [ExcludeFromPrototype] bool WeakClimb;
     [ExcludeFromPrototype] byte ClimbFrames;
+    [ExcludeFromPrototype] entity_ref MeleeAttack;
 
     [ExcludeFromPrototype] bool IsInShell;
     [ExcludeFromPrototype] byte ShellSlowdownFrames;

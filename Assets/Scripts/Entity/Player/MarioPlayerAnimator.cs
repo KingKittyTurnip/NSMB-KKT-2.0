@@ -90,6 +90,7 @@ namespace NSMB.Entities.Player {
         [SerializeField] private AudioClip normalDrill, propellerDrill;
         [SerializeField] private LoopingSoundPlayer dustPlayer, drillPlayer;
         [SerializeField] private LoopingSoundData wallSlideData, shellSlideData, spinnerDrillData, propellerDrillData;
+        private bool cat;
 
         [SerializeField] private AudioSource sfx;
 
@@ -197,7 +198,7 @@ namespace NSMB.Entities.Player {
         }
 
         public void LateUpdate() {
-            largeShellExclude.SetActive(!animator.GetCurrentAnimatorStateInfo(0).IsName("in-shell"));
+            largeShellExclude.SetActive(!animator.GetCurrentAnimatorStateInfo(0).IsName("in-shell") && !cat);
         }
 
         public override void OnUpdateView() {
@@ -548,8 +549,8 @@ namespace NSMB.Entities.Player {
             models.SetActive(f.Global->GameState >= GameState.Playing && (mario->KnockbackGetupFrames > 0 || mario->MegaMushroomStartFrames > 0 || (!mario->IsRespawning && (mario->IsDead || !(remainingDamageInvincibility > 0 && remainingDamageInvincibility * (remainingDamageInvincibility <= 0.75f ? 5 : 2) % 0.2f < 0.1f)))));
 
             // Model changing
-            bool cat = mario->CurrentPowerupState == PowerupState.CatSuit;
             bool large = mario->CurrentPowerupState >= PowerupState.Mushroom;
+            cat = mario->CurrentPowerupState == PowerupState.CatSuit;
 
             catModel.SetActive(cat);
             largeModel.SetActive(large && !cat);
@@ -559,6 +560,8 @@ namespace NSMB.Entities.Player {
             HammerHelm.SetActive(mario->CurrentPowerupState == PowerupState.HammerSuit && !mario->IsCrouching);
             HammerShell.SetActive(mario->CurrentPowerupState == PowerupState.HammerSuit && !mario->IsCrouching);
             HammerTuck.SetActive(mario->CurrentPowerupState == PowerupState.HammerSuit && mario->IsCrouching);
+
+            cat = !(large && !cat);
 
             Avatar targetAvatar = large ? cat ? catAvatar : largeAvatar : smallAvatar;
             bool changedAvatar = animator.avatar != targetAvatar;

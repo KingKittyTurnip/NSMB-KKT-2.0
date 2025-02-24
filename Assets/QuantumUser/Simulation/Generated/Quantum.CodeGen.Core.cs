@@ -2020,7 +2020,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct MarioPlayer : Quantum.IComponent {
-    public const Int32 SIZE = 296;
+    public const Int32 SIZE = 304;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(208)]
     public AssetRef<MarioPlayerPhysicsInfo> PhysicsAsset;
@@ -2224,6 +2224,9 @@ namespace Quantum {
     [FieldOffset(3)]
     [ExcludeFromPrototype()]
     public Byte ClimbFrames;
+    [FieldOffset(248)]
+    [ExcludeFromPrototype()]
+    public EntityRef MeleeAttack;
     [FieldOffset(116)]
     [ExcludeFromPrototype()]
     public QBoolean IsInShell;
@@ -2257,7 +2260,7 @@ namespace Quantum {
     [FieldOffset(224)]
     [ExcludeFromPrototype()]
     public EntityRef CurrentPipe;
-    [FieldOffset(264)]
+    [FieldOffset(272)]
     [ExcludeFromPrototype()]
     public FPVector2 PipeDirection;
     [FieldOffset(164)]
@@ -2284,10 +2287,10 @@ namespace Quantum {
     [FieldOffset(160)]
     [ExcludeFromPrototype()]
     public QBoolean Mix;
-    [FieldOffset(280)]
+    [FieldOffset(288)]
     [ExcludeFromPrototype()]
     public FPVector2 Target;
-    [FieldOffset(248)]
+    [FieldOffset(256)]
     [ExcludeFromPrototype()]
     public FPVector2 Avoid;
     [FieldOffset(0)]
@@ -2373,6 +2376,7 @@ namespace Quantum {
         hash = hash * 31 + SwipeStall.GetHashCode();
         hash = hash * 31 + WeakClimb.GetHashCode();
         hash = hash * 31 + ClimbFrames.GetHashCode();
+        hash = hash * 31 + MeleeAttack.GetHashCode();
         hash = hash * 31 + IsInShell.GetHashCode();
         hash = hash * 31 + ShellSlowdownFrames.GetHashCode();
         hash = hash * 31 + IsPropellerFlying.GetHashCode();
@@ -2495,6 +2499,7 @@ namespace Quantum {
         EntityRef.Serialize(&p->CurrentPipe, serializer);
         EntityRef.Serialize(&p->CurrentSpinner, serializer);
         EntityRef.Serialize(&p->HeldEntity, serializer);
+        EntityRef.Serialize(&p->MeleeAttack, serializer);
         FPVector2.Serialize(&p->Avoid, serializer);
         FPVector2.Serialize(&p->PipeDirection, serializer);
         FPVector2.Serialize(&p->Target, serializer);
@@ -2848,6 +2853,9 @@ namespace Quantum {
     public AssetRef<ProjectileAsset> Asset;
     [FieldOffset(32)]
     public FP Speed;
+    [FieldOffset(1)]
+    [ExcludeFromPrototype()]
+    public Byte LifeTime;
     [FieldOffset(24)]
     [ExcludeFromPrototype()]
     public EntityRef Owner;
@@ -2868,6 +2876,7 @@ namespace Quantum {
         var hash = 16141;
         hash = hash * 31 + Asset.GetHashCode();
         hash = hash * 31 + Speed.GetHashCode();
+        hash = hash * 31 + LifeTime.GetHashCode();
         hash = hash * 31 + Owner.GetHashCode();
         hash = hash * 31 + FacingRight.GetHashCode();
         hash = hash * 31 + HasBounced.GetHashCode();
@@ -2879,6 +2888,7 @@ namespace Quantum {
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Projectile*)ptr;
         serializer.Stream.Serialize(&p->Combo);
+        serializer.Stream.Serialize(&p->LifeTime);
         QBoolean.Serialize(&p->CheckedCollision, serializer);
         QBoolean.Serialize(&p->FacingRight, serializer);
         QBoolean.Serialize(&p->HasBounced, serializer);
