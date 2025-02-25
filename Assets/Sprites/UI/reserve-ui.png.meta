@@ -406,7 +406,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -414,6 +414,27 @@ TextureImporter:
       bones: []
       spriteID: 0f43a2c651bf5944da377a90a97fd44b
       internalID: -645946170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: reserve-SuperBell
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c14acb4caa143024fa0b24c6f02fa809
+      internalID: -127615838
       vertices: []
       indices: 
       edges: []
@@ -430,6 +451,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       reserve-Hammer: -645946170
+      reserve-SuperBell: -127615838
       reserve-bg: -6080119536613256813
       reserve-blueshell: 2664608197882872095
       reserve-empty: -4773353537684922170

@@ -10,8 +10,13 @@ public class VolumeWithDistance : MonoBehaviour {
     //---Serialized Variables
     [SerializeField] private AudioSource[] audioSources;
     [SerializeField] private Transform soundOrigin;
+
+    //---Volume w/Dist
     [SerializeField] private float soundRange = 12f;
     [SerializeField] private float maxPanning = 0.8f;
+
+    //---Echo Effect
+    [SerializeField] private bool UsesEcho = true;
 
     //---Private Variables
     private float soundRangeInverse;
@@ -31,6 +36,12 @@ public class VolumeWithDistance : MonoBehaviour {
         }
 
         stage = (VersusStageData) QuantumUnityDB.GetGlobalAsset(FindObjectOfType<QuantumMapData>().Asset.UserAsset);
+
+        if (UsesEcho && stage.EchoEffect != AudioReverbPreset.Off) {
+          gameObject.AddComponent(typeof(AudioReverbZone));
+          AudioReverbZone Echo = gameObject.GetComponent<AudioReverbZone>();
+          Echo.reverbPreset = stage.EchoEffect;
+        }
     }
 
     public void LateUpdate() {

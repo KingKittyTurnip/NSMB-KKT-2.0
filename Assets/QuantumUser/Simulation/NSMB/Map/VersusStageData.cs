@@ -50,6 +50,9 @@ public unsafe class VersusStageData : AssetObject {
     public LoopingMusicData InvincibleMusic;
     public LoopingMusicData MegaMushroomMusic;
 
+    [Header("-- Audio")]
+    public AudioReverbPreset EchoEffect;
+
 
     [HideInInspector] public StageTileInstance[] TileData;
     [HideInInspector] public FPVector2[] BigStarSpawnpoints;
