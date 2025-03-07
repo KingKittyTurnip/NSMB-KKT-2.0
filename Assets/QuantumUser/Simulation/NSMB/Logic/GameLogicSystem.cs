@@ -401,9 +401,9 @@ namespace Quantum {
 
             //Personality, 0->null, 1->Standard, 2->Offensive, 3->ScardyCat, 4->Switchup
               if (mario->Personality == 0) {
-                mario->Personality = (byte) f.RNG->Next(0, 5);
+                mario->Personality = (byte) 4;//f.RNG->Next(0, 5);
                 if (mario->Personality == 4) { //Activate Mix Mode
-                  mario->Personality = (byte) f.RNG->Next(0, 4);
+                  //mario->Personality = (byte) f.RNG->Next(0, 4);
                   mario->Mix = true;
                 }
               }

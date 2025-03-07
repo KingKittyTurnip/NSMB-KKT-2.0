@@ -316,8 +316,8 @@ namespace Quantum {
                 starDirection++;
             }
 
-            if (mario->Mix)
-              mario->Personality = (byte) f.RNG->Next(0, 4);
+            if (Mix)
+              Personality = (byte) f.RNG->Next(0, 4);
 
             if (droppedStars > 0) {
                 f.Events.MarioPlayerDroppedStar(f, entity);

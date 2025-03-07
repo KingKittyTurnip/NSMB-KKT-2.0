@@ -6,7 +6,7 @@ using TMPro;
 using Quantum;
 
 public class HazardMenuManager : MonoBehaviour {
-    [SerializeField] private GameObject NewHazardPrompt;
+    [SerializeField] private GameObject NewHazardPrompt, HazardDataMenu;
 
   //My Best Friend Variables
     [SerializeField] private Transform ButtonList;
@@ -22,9 +22,10 @@ public class HazardMenuManager : MonoBehaviour {
   //Default Values (Temporary)
     public List<(string, List<(string, string, int)>)> DefaultValue = new List<(string, List<(string, string, int)>)>() {
 /*    ("Template", new List<(string, string, int)>(
-        ("Check", "Name", 0),
-        ("Slider", "Name", 0),
-        ("Option", "Name|OptionA|OptionB|OptionC", 0),
+        ("Check", "Name", 0), //Toggle Value
+        ("Slider", "Name", 0), //Slider Value
+        ("Option", "Name|OptionA|OptionB|OptionC", 0), //A List Of Options
+        ("ObjectPool", "Name|MainOption", 0), //A Single Option Choice OR Any Item From The List
         ("Barrier", "Name", 0),
       )),*/
       ("Coinbunch", new List<(string, string, int)>() {
@@ -91,6 +92,7 @@ public class HazardMenuManager : MonoBehaviour {
       }
       newTemplate.GetComponentInChildren<TMP_Text>().text = DefaultValue[i].Item1;
       Items.Add(DefaultValue[i]);
+      ResetDataButtons();
     }
     public void DeleteHazard(GameObject btnMaster) {
       foreach (GameObject Kill in DataListContents)
@@ -115,12 +117,14 @@ public class HazardMenuManager : MonoBehaviour {
         //Reset preview
         foreach (GameObject Kill in DataListContents)
           Destroy(Kill);
+        HazardDataMenu.SetActive(false);
     }
 
     public void CreateButtonsFrom(GameObject btnMaster) {
         int ItemID = int.Parse(btnMaster.name);
 
         ResetDataButtons();
+        HazardDataMenu.SetActive(true);
 
         GameObject newTemplate = null;
         for (int i = 0; i < Items[ItemID].Item2.Count; i++) {
