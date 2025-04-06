@@ -2281,8 +2281,8 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
                 return;
             }
 
-            // Or with invincibility frames
-            if (marioA->DamageInvincibilityFrames > 0 || marioB->DamageInvincibilityFrames > 0) {
+            // Or with invincibility frames (Ignore Knockback Frames)
+            if ((marioA->DamageInvincibilityFrames > 0 && marioA->KnockbackGetupFrames <= 0) || (marioB->DamageInvincibilityFrames > 0 && marioB->KnockbackGetupFrames <= 0)) {
                 return;
             }
 
@@ -2328,8 +2328,8 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             }
 
             FP dot = FPVector2.Dot((marioAPosition - marioBPosition).Normalized, FPVector2.Up);
-            bool marioAAbove = dot > Constants._0_66;
-            bool marioBAbove = dot < -Constants._0_66;
+            bool marioAAbove = dot > Constants._0_66 && !marioA->IsInKnockback;
+            bool marioBAbove = dot < -Constants._0_66 && !marioB->IsInKnockback;
 
             // Mega mushroom cases
             bool marioAMega = marioA->CurrentPowerupState == PowerupState.MegaMushroom;
@@ -2437,60 +2437,61 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             // Pushing
             bool marioAMini = marioA->CurrentPowerupState == PowerupState.MiniMushroom;
             bool marioBMini = marioB->CurrentPowerupState == PowerupState.MiniMushroom;
-            if (!marioA->IsInKnockback && !marioB->IsInKnockback) {
-                // Collided with them
-                var marioAPhysicsInfo = f.FindAsset(marioA->PhysicsAsset);
-                var marioBPhysicsInfo = f.FindAsset(marioB->PhysicsAsset);
+            bool collidable = marioA->KnockbackGetupFrames <= 0 && marioB->KnockbackGetupFrames <= 0;
+            //if (!marioA->IsInKnockback && !marioB->IsInKnockback) {
+            // Collided with them
+            var marioAPhysicsInfo = f.FindAsset(marioA->PhysicsAsset);
+            var marioBPhysicsInfo = f.FindAsset(marioB->PhysicsAsset);
 
-                if (marioAMini ^ marioBMini) {
-                    // Minis
-                    if (marioAMini) {
+            if (marioAMini ^ marioBMini && collidable) {
+                // Minis
+                if (marioAMini) {
                         marioA->DoKnockback(f, marioAEntity, fromRight, dropStars ? 1 : 0, false, marioBEntity);
-                    }
-                    if (marioBMini) {
+                }
+                if (marioBMini) {
                         marioB->DoKnockback(f, marioBEntity, !fromRight, dropStars ? 1 : 0, false, marioAEntity);
-                    }
-                } else if (FPMath.Abs(marioAPhysics->Velocity.X) > marioAPhysicsInfo.WalkMaxVelocity[marioAPhysicsInfo.WalkSpeedStage]
-                           || FPMath.Abs(marioBPhysics->Velocity.X) > marioBPhysicsInfo.WalkMaxVelocity[marioBPhysicsInfo.WalkSpeedStage]) {
-                    
-                    // Bump
-                    if (marioAPhysics->IsTouchingGround) {
+                }
+            } else if (FPMath.Abs(marioAPhysics->Velocity.X) > marioAPhysicsInfo.WalkMaxVelocity[marioAPhysicsInfo.WalkSpeedStage]
+                       || FPMath.Abs(marioBPhysics->Velocity.X) > marioBPhysicsInfo.WalkMaxVelocity[marioBPhysicsInfo.WalkSpeedStage]) {
+
+                // Bump
+                if (marioAPhysics->IsTouchingGround) {
                         marioA->DoKnockback(f, marioAEntity, fromRight, dropStars ? 1 : 0, true, marioBEntity);
-                    } else {
-                        marioAPhysics->Velocity.X = marioAPhysicsInfo.WalkMaxVelocity[marioAPhysicsInfo.RunSpeedStage] * (fromRight ? -1 : 1);
-                    }
-
-                    if (marioBPhysics->IsTouchingGround) {
-                        marioB->DoKnockback(f, marioBEntity, !fromRight, dropStars ? 1 : 0, true, marioAEntity);
-                    } else {
-                        marioBPhysics->Velocity.X = marioBPhysicsInfo.WalkMaxVelocity[marioBPhysicsInfo.RunSpeedStage] * (fromRight ? 1 : -1);
-                    }
                 } else {
-                    // Collide
-                    int directionToOtherPlayer = fromRight ? -1 : 1;
-                    var marioACollider = f.Unsafe.GetPointer<PhysicsCollider2D>(marioAEntity);
-                    var marioBCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(marioBEntity);
-                    FP overlap = (marioACollider->Shape.Box.Extents.X + marioBCollider->Shape.Box.Extents.X - FPMath.Abs(marioAPosition.X - marioBPosition.X)) / 2;
+                    marioAPhysics->Velocity.X = marioAPhysicsInfo.WalkMaxVelocity[marioAPhysicsInfo.RunSpeedStage] * (fromRight ? -1 : 1);
+                }
 
-                    if (overlap > 0) {
-                        // Move 
+                if (marioBPhysics->IsTouchingGround) {
+                        marioB->DoKnockback(f, marioBEntity, !fromRight, dropStars ? 1 : 0, true, marioAEntity);
+                } else {
+                    marioBPhysics->Velocity.X = marioBPhysicsInfo.WalkMaxVelocity[marioBPhysicsInfo.RunSpeedStage] * (fromRight ? 1 : -1);
+                }
+            } else if (collidable) {
+                // Collide
+                int directionToOtherPlayer = fromRight ? -1 : 1;
+                var marioACollider = f.Unsafe.GetPointer<PhysicsCollider2D>(marioAEntity);
+                var marioBCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(marioBEntity);
+                FP overlap = (marioACollider->Shape.Box.Extents.X + marioBCollider->Shape.Box.Extents.X - FPMath.Abs(marioAPosition.X - marioBPosition.X)) / 2;
+
+                if (overlap > 0) {
+                    // Move 
                         PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(overlap * directionToOtherPlayer * f.UpdateRate, 0), marioAEntity, stage);
                         PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(overlap * -directionToOtherPlayer * f.UpdateRate, 0), marioBEntity, stage);
 
-                        // Transfer velocity
-                        FP avgVelocityX = (marioAPhysics->Velocity.X + marioBPhysics->Velocity.X) * FP._0_75;
+                    // Transfer velocity
+                    FP avgVelocityX = (marioAPhysics->Velocity.X + marioBPhysics->Velocity.X) * FP._0_75;
 
-                        if (FPMath.Abs(marioAPhysics->Velocity.X) > 1) {
-                            marioA->LastPushingFrame = f.Number;
-                            marioAPhysics->Velocity.X = avgVelocityX;
-                        }
-                        if (FPMath.Abs(marioBPhysics->Velocity.X) > 1) {
-                            marioB->LastPushingFrame = f.Number;
-                            marioBPhysics->Velocity.X = avgVelocityX;
-                        }
+                    if (FPMath.Abs(marioAPhysics->Velocity.X) > 1) {
+                        marioA->LastPushingFrame = f.Number;
+                        marioAPhysics->Velocity.X = avgVelocityX;
+                    }
+                    if (FPMath.Abs(marioBPhysics->Velocity.X) > 1) {
+                        marioB->LastPushingFrame = f.Number;
+                        marioBPhysics->Velocity.X = avgVelocityX;
                     }
                 }
             }
+            //}
         }
 
         private static void MarioMarioAttackStarman(Frame f, EntityRef attacker, EntityRef defender, bool fromRight, bool dropStars) {

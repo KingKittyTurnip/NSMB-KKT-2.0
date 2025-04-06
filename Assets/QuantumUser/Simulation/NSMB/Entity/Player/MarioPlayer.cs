@@ -401,9 +401,12 @@ namespace Quantum {
                 weak = false;
             }
 
-            if (IsInKnockback && ((IsInWeakKnockback && weak) || !IsInWeakKnockback)) {
+            if (IsInKnockback && !weak && !IsInWeakKnockback) //Stop Stomp Combos If Stomping A Already Stomped Foe
                 return;
-            }
+
+            //if (IsInKnockback && ((IsInWeakKnockback && weak) || !IsInWeakKnockback)) {
+            //    return;
+            //}
 
             var freezable = f.Unsafe.GetPointer<Freezable>(entity);
             if (DamageInvincibilityFrames > 0 || f.Exists(CurrentPipe) || (freezable->IsFrozen(f) && freezable->FrozenCubeEntity != attacker) || IsDead || MegaMushroomStartFrames > 0 || MegaMushroomEndFrames > 0) {
@@ -448,6 +451,8 @@ namespace Quantum {
                 f.Has<Projectile>(attacker) ? 0 : Constants._4_50
             );
 
+            physicsObject->WasTouchingGround = false;
+            physicsObject->IsTouchingGround = false;
             //IsOnGround = false;
             //PreviousTickIsOnGround = false;
             IsInShell = false;
@@ -464,7 +469,6 @@ namespace Quantum {
             //HandleLayerState();
             f.Events.MarioPlayerReceivedKnockback(f, entity, attacker, weak);
         }
-
         public void ResetKnockback(Frame f, EntityRef entity) {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(entity);
             KnockbackGetupFrames = (byte) (IsInWeakKnockback || physicsObject->IsUnderwater ? 0 : 25);
