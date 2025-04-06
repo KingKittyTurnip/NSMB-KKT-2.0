@@ -2,6 +2,8 @@ using Photon.Deterministic;
 using Quantum.Collections;
 using Quantum.Profiling;
 using System;
+using UnityEditor.Search;
+using UnityEngine;
 using static IInteractableTile;
 
 using UnityEngine;
@@ -37,6 +39,9 @@ namespace Quantum {
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var mario = filter.MarioPlayer;
             var player = mario->PlayerRef;
+            
+            // Shuffle RNG.
+            _ = mario->RNG.Next();
 
             Input* inputPtr;
             if (player.IsValid && (inputPtr = f.GetPlayerInput(player)) != null) {
@@ -544,10 +549,10 @@ namespace Quantum {
                                 && (physicsObject->Velocity.X > 0) == mario->FacingRight;
 
             mario->IsCrouching &= !mario->IsSliding;
-
+            /*
             if (!wasInShell && mario->IsInShell) {
-                f.Events.MarioPlayerCrouched(f, filter.Entity);
-            }
+                f.Events.MarioPlayerCrouched(filter.Entity, mario->CurrentPowerupState);
+            }*/
         }
 
         private static FP CalculateSlopeMaxSpeedOffset(FP floorAngle) {
@@ -579,7 +584,7 @@ namespace Quantum {
                 mario->LandedFrame = f.Number;
                 if (mario->JumpState == JumpState.TripleJump && (!inputs.Left.IsDown && !inputs.Right.IsDown)) {
                     physicsObject->Velocity.X = 0;
-                    f.Events.MarioPlayerLandedWithAnimation(f, filter.Entity);
+                    f.Events.MarioPlayerLandedWithAnimation(filter.Entity);
                 }
                 if (mario->PreviousJumpState != JumpState.None && mario->PreviousJumpState == mario->JumpState) {
                     mario->JumpState = JumpState.None;
@@ -631,7 +636,7 @@ namespace Quantum {
                 // Disable koyote time
                 mario->CoyoteTimeFrames = 0;
 
-                f.Events.MarioPlayerUsedSpinner(f, filter.Entity, mario->CurrentSpinner);
+                f.Events.MarioPlayerUsedSpinner(filter.Entity, mario->CurrentSpinner);
 
                 mario->CurrentSpinner = EntityRef.None;
                 return;
@@ -687,7 +692,7 @@ namespace Quantum {
 
             physicsObject->Velocity.Y = newY;
 
-            f.Events.MarioPlayerJumped(f, filter.Entity, mario->JumpState, mario->DoEntityBounce);
+            f.Events.MarioPlayerJumped(filter.Entity, mario->CurrentPowerupState, mario->JumpState, mario->DoEntityBounce, false);
             if (mario->DoEntityBounce) {
                 mario->IsCrouching = false;
                 mario->PropellerDrillCooldown = 30;
@@ -699,7 +704,7 @@ namespace Quantum {
                 var contacts = f.ResolveList(physicsObject->Contacts);
                 foreach (var contact in contacts) {
                     if (f.Has<Liquid>(contact.Entity)) {
-                        f.Events.LiquidSplashed(f, contact.Entity, filter.Entity, -1, filter.Transform->Position, true);
+                        f.Events.LiquidSplashed(contact.Entity, filter.Entity, -1, filter.Transform->Position, true);
                         break;
                     }
                 }
@@ -855,7 +860,7 @@ namespace Quantum {
                     mario->DoEntityBounce = false;
                     // timeSinceLastBumpSound = 0;
 
-                    f.Events.MarioPlayerWalljumped(f, filter.Entity, filter.Transform->Position, mario->WallslideRight);
+                    f.Events.MarioPlayerWalljumped(filter.Entity, filter.Transform->Position, mario->WallslideRight, filter.PhysicsCollider->Shape.Box.Extents);
                     mario->WalljumpFrames = 16;
                     mario->WallslideRight = false;
                     mario->WallslideLeft = false;
@@ -1048,8 +1053,8 @@ namespace Quantum {
                 }
             }
 
-            if (!wasCrouching && mario->IsCrouching) {
-                f.Events.MarioPlayerCrouched(f, filter.Entity);
+            if (!wasCrouching && mario->IsCrouching && !mario->IsInShell) {
+                f.Events.MarioPlayerCrouched(filter.Entity, mario->CurrentPowerupState);
             }
         }
 
@@ -1125,6 +1130,13 @@ namespace Quantum {
                 return;
             }
 
+            var liquidContacts = f.ResolveHashSet(physicsObject->LiquidContacts);
+            foreach (var contact in liquidContacts) {
+                if (f.Unsafe.TryGetPointer(contact, out Liquid* liquid) && liquid->LiquidType == LiquidType.Water) {
+                    return;
+                }
+            }
+
             /// * intentional: remove left/right requirement when groundpounding
             if (!mario->IsPropellerFlying && !mario->IsSpinnerFlying && (inputs.Left.IsDown || inputs.Right.IsDown)) {
                 return;
@@ -1161,7 +1173,7 @@ namespace Quantum {
                 physicsObject->Velocity = physics.GroundpoundStartVelocity;
                 mario->GroundpoundStartFrames = mario->CurrentPowerupState == PowerupState.MegaMushroom ? physics.GroundpoundStartMegaFrames : physics.GroundpoundStartFrames;
 
-                f.Events.MarioPlayerGroundpoundStarted(f, filter.Entity);
+                f.Events.MarioPlayerGroundpoundStarted(filter.Entity);
             }
         }
 
@@ -1195,7 +1207,7 @@ namespace Quantum {
             }
 
             if (!mario->IsDrilling) {
-                f.Events.MarioPlayerGroundpounded(f, filter.Entity);
+                f.Events.MarioPlayerGroundpounded(filter.Entity, mario->CurrentPowerupState);
             }
 
             bool interactedAny = false;
@@ -1227,7 +1239,7 @@ namespace Quantum {
             }
 
             if (playBumpSound ?? false) {
-                f.Events.PlayBumpSound(f, filter.Entity);
+                f.Events.PlayBumpSound(filter.Entity);
             }
 
             continueGroundpound &= interactedAny;
@@ -1321,7 +1333,7 @@ namespace Quantum {
                 }
                 
                 mario->FacingRight = physicsObject->IsTouchingLeftWall;
-                f.Events.PlayBumpSound(f, filter.Entity);
+                f.Events.PlayBumpSound(filter.Entity);
             }
 
             physicsObject->Velocity.X = physics.WalkMaxVelocity[physics.RunSpeedStage] * physics.WalkBlueShellMultiplier * (mario->FacingRight ? 1 : -1) * (1 - (((FP) mario->ShellSlowdownFrames) / 60));
@@ -1333,6 +1345,7 @@ namespace Quantum {
             var physicsObject = filter.PhysicsObject;
             var transform = filter.Transform;
             var collider = filter.PhysicsCollider;
+            var entity = filter.Entity;
 
             if (mario->MegaMushroomStartFrames > 0) {
                 mario->WallslideLeft = false;
@@ -1369,7 +1382,7 @@ namespace Quantum {
                         }
                     }
 
-                    f.Events.MarioPlayerMegaStart(f, filter.Entity);
+                    f.Events.MarioPlayerMegaStart(filter.Entity);
                 } else {
                     // Still growing...
                     if ((f.Number + filter.Entity.Index) % 4 == 0 && PhysicsObjectSystem.BoxInGround((FrameThreadSafe) f, transform->Position, collider->Shape, false, stage)) {
@@ -1382,7 +1395,7 @@ namespace Quantum {
                         mario->MegaMushroomStationaryEnd = true;
                         mario->SetReserveItem(f, QuantumUtils.FindPowerupAsset(f, PowerupState.MegaMushroom));
 
-                        f.Events.MarioPlayerMegaEnd(f, filter.Entity, true);
+                        f.Events.MarioPlayerMegaEnd(filter.Entity, true, mario->MegaMushroomEndFrames);
                     }
                     return true;
                 }
@@ -1435,19 +1448,23 @@ namespace Quantum {
 
                     StageTileInstance tileInstance = stage.GetTileRelative(f, contact.TileX, contact.TileY);
                     StageTile tile = f.FindAsset(tileInstance.Tile);
-                    if (tile is IInteractableTile it) {
-                        if (it.Interact(f, filter.Entity, direction, new Vector2Int(contact.TileX, contact.TileY), tileInstance, out bool _)) {
-                            // Block broke, preserve velocity.
-                            if (direction == InteractionDirection.Left || direction == InteractionDirection.Right) {
-                                physicsObject->Velocity.X = physicsObject->PreviousFrameVelocity.X;
-                                FP leftoverVelocity = (FPMath.Abs(physicsObject->Velocity.X) - (contact.Distance * f.UpdateRate)) * (physicsObject->Velocity.X > 0 ? 1 : -1);
-                                PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(leftoverVelocity, 0), filter.Entity, f.FindAsset<VersusStageData>(f.Map.UserAsset));
-                            } else if (direction == InteractionDirection.Up) {
-                                physicsObject->Velocity.Y = physicsObject->PreviousFrameVelocity.Y;
-                                FP leftoverVelocity = (FPMath.Abs(physicsObject->Velocity.Y) - (contact.Distance * f.UpdateRate)) * (physicsObject->Velocity.Y > 0 ? 1 : -1);
-                                PhysicsObjectSystem.MoveVertically((FrameThreadSafe) f, new FPVector2(0, leftoverVelocity), filter.Entity, f.FindAsset<VersusStageData>(f.Map.UserAsset));
-                            }
-                        }
+                    if (tile is not IInteractableTile it) {
+                        continue;
+                    }
+
+                    if (!it.Interact(f, entity, direction, new Vector2Int(contact.TileX, contact.TileY), tileInstance, out bool _)) {
+                        continue;
+                    }
+
+                    // Block broke, preserve velocity.
+                    if (direction == InteractionDirection.Left || direction == InteractionDirection.Right) {
+                        physicsObject->Velocity.X = physicsObject->PreviousFrameVelocity.X;
+                        FP leftoverVelocity = (FPMath.Abs(physicsObject->Velocity.X) - (contact.Distance * f.UpdateRate)) * (physicsObject->Velocity.X > 0 ? 1 : -1);
+                        PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(leftoverVelocity, 0), entity, stage, contacts, out _);
+                    } else if (direction == InteractionDirection.Up) {
+                        physicsObject->Velocity.Y = physicsObject->PreviousFrameVelocity.Y;
+                        FP leftoverVelocity = (FPMath.Abs(physicsObject->Velocity.Y) - (contact.Distance * f.UpdateRate)) * (physicsObject->Velocity.Y > 0 ? 1 : -1);
+                        PhysicsObjectSystem.MoveVertically((FrameThreadSafe) f, new FPVector2(0, leftoverVelocity), entity, stage, contacts, out _);
                     }
                 }
 
@@ -1464,7 +1481,7 @@ namespace Quantum {
                         physicsObject->Velocity.Y *= FP._0_33;
                     }
 
-                    f.Events.MarioPlayerMegaEnd(f, filter.Entity, false);
+                    f.Events.MarioPlayerMegaEnd(filter.Entity, false, mario->MegaMushroomEndFrames);
                 }
             }
             if (mario->MegaMushroomEndFrames > 0 && QuantumUtils.Decrement(ref mario->MegaMushroomEndFrames) && mario->MegaMushroomStationaryEnd) {
@@ -1507,7 +1524,7 @@ namespace Quantum {
                 var contacts = f.ResolveList(physicsObject->Contacts);
                 foreach (var contact in contacts) {
                     if (f.Has<Liquid>(contact.Entity)) {
-                        f.Events.LiquidSplashed(f, contact.Entity, filter.Entity, 2, filter.Transform->Position, false);
+                        f.Events.LiquidSplashed(contact.Entity, filter.Entity, 2, filter.Transform->Position, false);
                         break;
                     }
                 }
@@ -1545,7 +1562,7 @@ namespace Quantum {
                         }
                     } else if (inputs.PowerupAction.IsDown && !mario->IsDrilling && physicsObject->Velocity.Y < -FP._0_10 && mario->PropellerSpinFrames < physics.PropellerSpinFrames / 4) {
                         mario->PropellerSpinFrames = physics.PropellerSpinFrames;
-                        f.Events.MarioPlayerPropellerSpin(f, filter.Entity);
+                        f.Events.MarioPlayerPropellerSpin(filter.Entity);
                     }
                 }
             }
@@ -1562,7 +1579,7 @@ namespace Quantum {
             }
 
             if (mario->IsDead || filter.Freezable->IsFrozen(f) || mario->IsGroundpounding || mario->IsInKnockback || f.Exists(mario->CurrentPipe)
-                || mario->HeldEntity.IsValid || mario->IsCrouching || mario->IsSliding) {
+                || f.Exists(mario->HeldEntity) || mario->IsCrouching || mario->IsSliding) {
                 return;
             }
 
@@ -1633,7 +1650,7 @@ namespace Quantum {
                 } else {
                     projectile = ShootNormalProjectile(f, ref filter, physics);
                 }
-                f.Events.MarioPlayerShotProjectile(f, filter.Entity, *projectile);
+                f.Events.MarioPlayerShotProjectile(filter.Entity, *projectile);
 
                 // Weird interaction in the main game...
                 mario->WalljumpFrames = 0;
@@ -1660,9 +1677,9 @@ namespace Quantum {
                 physicsObject->WasTouchingGround = false;
                 physicsObject->IsTouchingGround = false;
                 physicsObject->HoverFrames = 0;
-                PhysicsObjectSystem.MoveVertically((FrameThreadSafe) f, FPVector2.Up * FP._0_05 * f.UpdateRate, filter.Entity, stage);
+                PhysicsObjectSystem.MoveVertically((FrameThreadSafe) f, FPVector2.Up * FP._0_05 * f.UpdateRate, filter.Entity, stage, default, out _);
 
-                f.Events.MarioPlayerUsedPropeller(f, filter.Entity);
+                f.Events.MarioPlayerUsedPropeller(filter.Entity);
                 break;
             }
             }
@@ -1752,18 +1769,17 @@ namespace Quantum {
                 }
 
                 var hitboxShape = filter.PhysicsCollider->Shape;
-                FP hitboxCenter = filter.Transform->Position.Y + hitboxShape.Centroid.Y + FP._0_10;
+                FP hitboxCenter = filter.Transform->Position.Y + hitboxShape.Centroid.Y + FP._0_25;
                 FP distanceToSurface = maxSurface - hitboxCenter;
 
-                if (distanceToSurface > 0) {
-                    FP original = physicsObject->Velocity.Y;
-                    if (physicsObject->IsTouchingGround && physicsObject->Velocity.Y < 0) {
-                        physicsObject->Velocity.Y = 1;
-                    }
-                    physicsObject->Velocity.Y = FPMath.Min(physicsObject->Velocity.Y + (physics.SwimAcceleration[^1] * FPMath.Clamp01(distanceToSurface * (1 - FPMath.Clamp01(physicsObject->Velocity.Y / physics.SwimJumpVelocity)))), physics.SwimJumpVelocity);
-                    physicsObject->IsTouchingGround = false;
-                    physicsObject->WasTouchingGround = false;
+                FP original = physicsObject->Velocity.Y;
+                if (physicsObject->IsTouchingGround && physicsObject->Velocity.Y < 0) {
+                    physicsObject->Velocity.Y = 1;
                 }
+
+                physicsObject->Velocity.Y = FPMath.Min(physicsObject->Velocity.Y + (physics.SwimAcceleration[^1] * FPMath.Min(distanceToSurface * (1 - FPMath.Clamp01(physicsObject->Velocity.Y / physics.SwimJumpVelocity)), 1)), physics.SwimJumpVelocity);
+                physicsObject->IsTouchingGround = false;
+                physicsObject->WasTouchingGround = false;
             }
 
             mario->WallslideLeft = false;
@@ -1790,7 +1806,7 @@ namespace Quantum {
                 mario->JumpBufferFrames = 0;
                 mario->IsCrouching = false;
 
-                f.Events.MarioPlayerJumped(f, filter.Entity, JumpState.None, false);
+                f.Events.MarioPlayerJumped(filter.Entity, mario->CurrentPowerupState, JumpState.None, mario->DoEntityBounce, true);
             }
         }
 
@@ -1853,7 +1869,7 @@ namespace Quantum {
 
                 // End sliding
                 mario->IsSliding = false;
-                f.Events.MarioPlayerStoppedSliding(f, filter.Entity, stationary);
+                f.Events.MarioPlayerStoppedSliding(filter.Entity, stationary);
             }
         }
 
@@ -1901,7 +1917,7 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
                     mario->PipeEntering = false;
                     mario->CurrentPipe = currentPipe->OtherPipe;
 
-                    f.Events.MarioPlayerEnteredPipe(f, filter.Entity, mario->CurrentPipe);
+                    f.Events.MarioPlayerEnteredPipe(filter.Entity, mario->CurrentPipe);
                 } else {
                     // End pipe animation
                     mario->CurrentPipe = EntityRef.None;
@@ -1983,6 +1999,15 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             var transform = filter.Transform;
             Shape2D shape = filter.PhysicsCollider->Shape;
 
+            if (physicsObject->IsBeingCrushed) {
+                // In a ceiling crusher
+                if (mario->CrushDamageInvincibilityFrames == 0) {
+                    mario->CrushDamageInvincibilityFrames = 30;
+                    mario->Powerdown(f, filter.Entity, true);
+                }
+                return false;
+            }
+
             if (!PhysicsObjectSystem.BoxInGround((FrameThreadSafe) f, transform->Position, shape, stage: stage, entity: filter.Entity, includeCeilingCrushers: !physicsObject->IsTouchingGround && (!physicsObject->WasTouchingGround || physicsObject->IsTouchingGround))) {
                 if (mario->IsStuckInBlock) {
                     physicsObject->DisableCollision = false;
@@ -1990,13 +2015,6 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
                     mario->IsStuckInBlock = false;
                 } 
 
-                if (physicsObject->IsBeingCrushed) {
-                    // In a ceiling crusher
-                    if (mario->CrushDamageInvincibilityFrames == 0) {
-                        mario->CrushDamageInvincibilityFrames = 30;
-                        mario->Powerdown(f, filter.Entity, true);
-                    }
-                }
                 return false;
             }
 
@@ -2062,7 +2080,7 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
                 physicsObject->Velocity.Y = -2;
             }
             if (playBumpSound ?? true) {
-                f.Events.PlayBumpSound(f, filter.Entity);
+                f.Events.PlayBumpSound(filter.Entity);
             }
         }
 
@@ -2104,7 +2122,7 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             FP moveVelocity = QuantumUtils.MoveTowards(transform->Position.X, spinnerTransform->Position.X, 4) - transform->Position.X;
 
             if (FPMath.Abs(moveVelocity) > 0) {
-                PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(moveVelocity, 0), filter.Entity, stage, contacts);
+                PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(moveVelocity, 0), filter.Entity, stage, contacts, out _);
             }
         }
 
@@ -2162,7 +2180,7 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
                         physicsObject->Velocity = DeathUpForce;
                         physicsObject->IsFrozen = false;
                         physicsObject->DisableCollision = true;
-                        f.Events.MarioPlayerDeathUp(f, filter.Entity);
+                        f.Events.MarioPlayerDeathUp(filter.Entity, mario->FireDeath);
                     }
                     if (!doRespawn) {
                         mario->PreRespawnFrames = 144;
@@ -2189,13 +2207,13 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             var reserveItem = f.FindAsset(mario->ReserveItem);
 
             if (reserveItem == null || mario->IsDead || mario->MegaMushroomStartFrames > 0 || (mario->MegaMushroomStationaryEnd && mario->MegaMushroomEndFrames > 0)) {
-                f.Events.MarioPlayerUsedReserveItem(f, filter.Entity, false);
+                f.Events.MarioPlayerUsedReserveItem(filter.Entity, false);
                 return;
             }
 
             SpawnItem(f, filter.Entity, mario, reserveItem.Prefab);
             mario->ReserveItem = default;
-            f.Events.MarioPlayerUsedReserveItem(f, filter.Entity, true);
+            f.Events.MarioPlayerUsedReserveItem(filter.Entity, true);
         }
 
         #region Interactions
@@ -2210,8 +2228,6 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             }
 
             StageTileInstance result = new StageTileInstance {
-                Rotation = 0,
-                Scale = FPVector2.One,
                 Tile = invisibleBlock->Tile,
             };
             f.Signals.OnMarioPlayerCollectedCoin(marioEntity, mario, transform->Position, true, false);
@@ -2382,7 +2398,7 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
                         marioB->DoKnockback(f, marioBEntity, !fromRight, 0, true, marioAEntity);
                     }
                     marioA->FacingRight = !marioA->FacingRight;
-                    f.Events.PlayBumpSound(f, marioAEntity);
+                    f.Events.PlayBumpSound(marioAEntity);
                     return;
                 }
             } else if (marioBShell) {
@@ -2395,7 +2411,7 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
                         marioA->DoKnockback(f, marioAEntity, !fromRight, 0, true, marioBEntity);
                     }
                     marioB->FacingRight = !marioB->FacingRight;
-                    f.Events.PlayBumpSound(f, marioBEntity);
+                    f.Events.PlayBumpSound(marioBEntity);
                     return;
                 }
             }
@@ -2457,13 +2473,13 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
                 // Bump
                 if (marioAPhysics->IsTouchingGround) {
                         marioA->DoKnockback(f, marioAEntity, fromRight, dropStars ? 1 : 0, true, marioBEntity);
-                } else {
+                } else if (collidable) {
                     marioAPhysics->Velocity.X = marioAPhysicsInfo.WalkMaxVelocity[marioAPhysicsInfo.RunSpeedStage] * (fromRight ? -1 : 1);
                 }
 
                 if (marioBPhysics->IsTouchingGround) {
                         marioB->DoKnockback(f, marioBEntity, !fromRight, dropStars ? 1 : 0, true, marioAEntity);
-                } else {
+                } else if (collidable) {
                     marioBPhysics->Velocity.X = marioBPhysicsInfo.WalkMaxVelocity[marioBPhysicsInfo.RunSpeedStage] * (fromRight ? 1 : -1);
                 }
             } else if (collidable) {
@@ -2475,8 +2491,8 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
 
                 if (overlap > 0) {
                     // Move 
-                        PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(overlap * directionToOtherPlayer * f.UpdateRate, 0), marioAEntity, stage);
-                        PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(overlap * -directionToOtherPlayer * f.UpdateRate, 0), marioBEntity, stage);
+                        PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(overlap * directionToOtherPlayer * f.UpdateRate, 0), marioAEntity, stage, default, out _);
+                        PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(overlap * -directionToOtherPlayer * f.UpdateRate, 0), marioBEntity, stage, default, out _);
 
                     // Transfer velocity
                     FP avgVelocityX = (marioAPhysics->Velocity.X + marioBPhysics->Velocity.X) * FP._0_75;
@@ -2560,7 +2576,7 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
                 } else {
                     if (!groundpounded && !dropStars) {
                         // Bounce
-                        f.Events.MarioPlayerStompedByTeammate(f, defender);
+                        f.Events.MarioPlayerStompedByTeammate(defender);
                     } else {
                         if (attackerMario->IsPropellerFlying && attackerMario->IsDrilling) {
                             attackerMario->IsDrilling = false;
@@ -2586,7 +2602,6 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             var filter = f.Filter<MarioPlayer>();
             filter.UseCulling = false;
             while (filter.NextUnsafe(out EntityRef entity, out MarioPlayer* mario)) {
-                mario->Lives = (byte) f.Global->Rules.Lives;
                 mario->PreRespawn(f, entity, stage);
             }
         }

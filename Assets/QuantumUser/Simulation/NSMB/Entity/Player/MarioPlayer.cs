@@ -213,7 +213,7 @@ namespace Quantum {
             physicsObject->CurrentData = default;
 
             f.Signals.OnMarioPlayerDied(entity);
-            f.Events.MarioPlayerDied(f, entity, fire);
+            f.Events.MarioPlayerDied(entity, fire);
         }
 
         public bool Powerdown(Frame f, EntityRef entity, bool ignoreInvincible) {
@@ -266,7 +266,7 @@ namespace Quantum {
 
             if (!IsDead) {
                 DamageInvincibilityFrames = 2 * 60;
-                f.Events.MarioPlayerTookDamage(f, entity);
+                f.Events.MarioPlayerTookDamage(entity);
             }
             return true;
         }
@@ -320,7 +320,7 @@ namespace Quantum {
               Personality = (byte) f.RNG->Next(0, 4);
 
             if (droppedStars > 0) {
-                f.Events.MarioPlayerDroppedStar(f, entity);
+                f.Events.MarioPlayerDroppedStar(entity);
                 GameLogicSystem.CheckForGameEnd(f);
             }
         }
@@ -377,7 +377,7 @@ namespace Quantum {
             physicsObject->Velocity = FPVector2.Zero;
             f.Unsafe.GetPointer<Interactable>(entity)->ColliderDisabled = false;
 
-            f.Events.MarioPlayerPreRespawned(f, entity);
+            f.Events.MarioPlayerPreRespawned(entity, spawnpoint);
         }
 
         public void Respawn(Frame f, EntityRef entity) {
@@ -392,7 +392,7 @@ namespace Quantum {
             physicsObject->IsFrozen = false;
             physicsObject->DisableCollision = false;
 
-            f.Events.MarioPlayerRespawned(f, entity);
+            f.Events.MarioPlayerRespawned(entity);
         }
 
         public void DoKnockback(Frame f, EntityRef entity, bool fromRight, int starsToDrop, bool weak, EntityRef attacker) {
@@ -467,7 +467,11 @@ namespace Quantum {
 
             SpawnStars(f, entity, starsToDrop);
             //HandleLayerState();
-            f.Events.MarioPlayerReceivedKnockback(f, entity, attacker, weak);
+            FPVector2 attackerPosition = default;
+            if (f.Unsafe.TryGetPointer(attacker, out Transform2D* attackerTransform)) {
+                attackerPosition = attackerTransform->Position;
+            }
+            f.Events.MarioPlayerReceivedKnockback(entity, attacker, weak, attackerPosition);
         }
         public void ResetKnockback(Frame f, EntityRef entity) {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(entity);
@@ -517,7 +521,7 @@ namespace Quantum {
                 InvincibilityFrames += (ushort) (PipeFrames * 2);
             }
 
-            f.Events.MarioPlayerEnteredPipe(f, mario, CurrentPipe);
+            f.Events.MarioPlayerEnteredPipe(mario, CurrentPipe);
         }
     }
 }

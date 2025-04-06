@@ -57,9 +57,13 @@ public class TilemapAnimator : MonoBehaviour {
 
         var tile = QuantumUnityDB.GetGlobalAsset(tileInstance.Tile);
         TileBase unityTile = tile ? tile.Tile : null;
-        Matrix4x4 mat = Matrix4x4.TRS(default, Quaternion.Euler(0, 0, tileInstance.Rotation.AsFloat), new Vector3(tileInstance.Scale.X.AsFloat, tileInstance.Scale.Y.AsFloat, 1));
+        Vector2 scale = new Vector2 {
+            x = tileInstance.Flags.HasFlag(StageTileFlags.MirrorX) ? -1 : 1,
+            y = tileInstance.Flags.HasFlag(StageTileFlags.MirrorY) ? -1 : 1,
+        };
+        Matrix4x4 mat = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, tileInstance.Rotation / (float) (ushort.MaxValue / 360f)), scale);
 
-        Debug.Log($"tile event cancelled at {coords}. Was {tilemap.GetTile(coords)?.name}, changing back to {unityTile}");
+        // Debug.Log($"tile event cancelled at {coords}. Was {tilemap.GetTile(coords)?.name}, changing back to {unityTile}");
 
         tilemap.SetTile(coords, unityTile);
         tilemap.SetTransformMatrix(coords, mat);
@@ -70,23 +74,27 @@ public class TilemapAnimator : MonoBehaviour {
 
     private void OnEventConfirmed(CallbackEventConfirmed e) {
         if (tileEventPositions.TryGetValue(e.EventKey, out Vector3Int coords)) {
-            Debug.Log($"tile event CONFIRMED at {coords}.");
+            // Debug.Log($"tile event CONFIRMED at {coords}.");
         }
         tileEventPositions.Remove(e.EventKey);
     }
 
     private void OnTileChanged(EventTileChanged e) {
         Vector3Int coords = new(e.TileX, e.TileY, 0);
+        Vector2 scale = new Vector2 {
+            x = e.NewTile.Flags.HasFlag(StageTileFlags.MirrorX) ? -1 : 1,
+            y = e.NewTile.Flags.HasFlag(StageTileFlags.MirrorY) ? -1 : 1,
+        };
 
         var tile = QuantumUnityDB.GetGlobalAsset(e.NewTile.Tile);
         TileBase unityTile = tile ? tile.Tile : null;
-        Matrix4x4 mat = Matrix4x4.TRS(default, Quaternion.Euler(0, 0, e.NewTile.Rotation.AsFloat), new Vector3(e.NewTile.Scale.X.AsFloat, e.NewTile.Scale.Y.AsFloat, 1));
+        Matrix4x4 mat = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, e.NewTile.Rotation / (float) (ushort.MaxValue / 360f)), scale);
 
         tilemap.SetTile(coords, unityTile);
         tilemap.SetTransformMatrix(coords, mat);
         tilemap.RefreshTile(coords);
         
-        tileEventPositions[(EventKey) e] = coords;
+        tileEventPositions[e] = coords;
     }
 
     private unsafe void OnTileBroken(EventTileBroken e) {
@@ -103,11 +111,7 @@ public class TilemapAnimator : MonoBehaviour {
                 audio.Stop();
             }
 
-            sfx.PlayOneShot(
-                e.Frame.Unsafe.TryGetPointer(e.Entity, out MarioPlayer* mario) && mario->CurrentPowerupState == PowerupState.MegaMushroom
-                    ? SoundEffect.Powerup_MegaMushroom_Break_Block
-                    : SoundEffect.World_Block_Break);
-
+            sfx.PlayOneShot(e.BrokenByMega ? SoundEffect.Powerup_MegaMushroom_Break_Block : SoundEffect.World_Block_Break);
             entityBreakBlockSounds[e.Entity] = sfx;
         }
 
@@ -130,8 +134,13 @@ public class TilemapAnimator : MonoBehaviour {
                 StageTile stageTile = QuantumUnityDB.GetGlobalAsset(tileInstance.Tile);
                 TileBase unityTile = stageTile ? stageTile.Tile : null;
 
+                Vector2 scale = new Vector2 {
+                    x = tileInstance.Flags.HasFlag(StageTileFlags.MirrorX) ? -1 : 1,
+                    y = tileInstance.Flags.HasFlag(StageTileFlags.MirrorY) ? -1 : 1,
+                };
+
                 tilemap.SetTile(coords, unityTile);
-                Matrix4x4 mat = Matrix4x4.TRS(default, Quaternion.Euler(0, 0, tileInstance.Rotation.AsFloat), new Vector3(tileInstance.Scale.X.AsFloat, tileInstance.Scale.Y.AsFloat, 1));
+                Matrix4x4 mat = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, tileInstance.Rotation / (float) (ushort.MaxValue / 360f)), scale);
                 tilemap.SetTransformMatrix(coords, mat);
             }
         }
