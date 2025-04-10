@@ -377,11 +377,6 @@ namespace Quantum {
                 f.Unsafe.GetPointer<Koopa>(koopaEntity)->Kill(f, koopaEntity, projectileEntity, KillReason.Special);
                 break;
             }
-            case ProjectileEffectType.Fire: {
-                if (!koopa->IsFireImmune)
-                  f.Unsafe.GetPointer<Koopa>(koopaEntity)->Kill(f, koopaEntity, projectileEntity, true);
-                break;
-            }
             case ProjectileEffectType.Freeze: {
                 IceBlockSystem.Freeze(f, koopaEntity);
                 break;

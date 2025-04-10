@@ -2252,7 +2252,9 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             var projectileAsset = f.FindAsset(projectile->Asset);
             bool dropStars = true;
 
-            if (mario->DamageInvincibilityFrames > 0)
+            if (projectileAsset.DoesntEffectBlueShell && mario->DamageInvincibilityFrames > 0)
+                return;
+            if (!projectileAsset.DoesntEffectBlueShell && mario->KnockbackGetupFrames <= 0)
                 return;
 
             if (f.Unsafe.TryGetPointer(projectile->Owner, out MarioPlayer* ownerMario)) {
@@ -2308,14 +2310,14 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
             }
 
             // Or if a player just got damaged
-            if ((f.Number - marioA->KnockbackTick) < 12 || (f.Number - marioB->KnockbackTick) < 12) {
-                return;
-            }
+            //if ((f.Number - marioA->KnockbackTick) < 12 || (f.Number - marioB->KnockbackTick) < 12) {
+            //    return;
+            //}
 
             // Or if a player just got knockbacked
-            if (marioA->IsInKnockback || marioB->IsInKnockback) {
-                return;
-            }
+            //if (marioA->IsInKnockback || marioB->IsInKnockback) {
+            //    return;
+            //}
 
             var marioATransform = f.Unsafe.GetPointer<Transform2D>(marioAEntity);
             var marioBTransform = f.Unsafe.GetPointer<Transform2D>(marioBEntity);
@@ -2642,7 +2644,10 @@ QuantumUtils.Decrement(ref mario->PipeFrames);
 
         public void OnEntityBumped(Frame f, EntityRef entity, FPVector2 tileWorldPosition, EntityRef bumper) {
             if (f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)) {
-                if (mario->IsInKnockback) {
+                //if (mario->IsInKnockback) {
+                //    return;
+                //}            // Or with invincibility frames (Ignore Knockback Frames)
+                if (mario->DamageInvincibilityFrames > 0 && mario->KnockbackGetupFrames <= 0) {
                     return;
                 }
 
