@@ -7,6 +7,7 @@
         public AssetRef<Map>[] AllStages;
         public AssetRef<PowerupAsset >FallbackPowerup;
         public AssetRef<CharacterAsset>[] CharacterDatas;
+        public AssetRef<CharacterAsset> AiCharacter;
         public AssetRef<TeamAsset>[] Teams;
 
         public AssetRef<EntityPrototype> FireballPrototype, IceballPrototype, HammerPrototype, ScratchPrototype, BigStarPrototype, BlockBumpPrototype, LooseCoinPrototype, IceBlockPrototype;

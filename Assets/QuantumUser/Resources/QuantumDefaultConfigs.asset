@@ -257,6 +257,9 @@ MonoBehaviour:
       Value: 532063855470386108
   - Id:
       Value: 485289843648077326
+  AiCharacter:
+    Id:
+      Value: 477066977454933573
   Teams:
   - Id:
       Value: 382742106279861433
@@ -277,6 +280,9 @@ MonoBehaviour:
   HammerPrototype:
     Id:
       Value: 1406353302584805307
+  ScratchPrototype:
+    Id:
+      Value: 0
   BigStarPrototype:
     Id:
       Value: 1295981493910502871
@@ -294,7 +300,7 @@ MonoBehaviour:
       Id:
         Value: 438935048561577377
     StarsToWin: 10
-    CoinsForPowerup: 8
+    CoinsForPowerup: 4
     Lives: 0
     TimerSeconds: 0
     TeamsEnabled:
@@ -303,6 +309,7 @@ MonoBehaviour:
       Value: 1
     DrawOnTimeUp:
       Value: 0
+    Bots: 1
 --- !u!114 &-100545808229499591
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -410,7 +410,7 @@ namespace Quantum {
                 };
             }
             for (int i = 0; i < f.Global->Rules.Bots; i++) {
-              EntityRef newAiPlayer = f.Create(config.AiCharacter.Prototype);
+              EntityRef newAiPlayer = f.Create(f.FindAsset(config.AiCharacter).Prototype);
               var mario = f.Unsafe.GetPointer<MarioPlayer>(newAiPlayer);
               mario->IsBot = true;
 
