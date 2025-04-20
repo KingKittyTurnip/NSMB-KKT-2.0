@@ -165,7 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 61731049}
   - component: {fileID: 61731050}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Backgrounds
   m_TagString: Backgrounds
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ GameObject:
   m_Component:
   - component: {fileID: 133657843}
   - component: {fileID: 133657842}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 144288127}
   - component: {fileID: 144288128}
   - component: {fileID: 144288129}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: Foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1115,7 +1115,7 @@ GameObject:
   - component: {fileID: 493282737}
   - component: {fileID: 493282739}
   - component: {fileID: 493282738}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: SmallClouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1244,7 +1244,7 @@ GameObject:
   - component: {fileID: 498601909}
   - component: {fileID: 498601911}
   - component: {fileID: 498601910}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: BigClouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2050,7 +2050,7 @@ GameObject:
   - component: {fileID: 1146816020}
   - component: {fileID: 1146816021}
   - component: {fileID: 1146816022}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2237,7 +2237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1353505711}
   m_Layer: 0
-  m_Name: Clouds
+  m_Name: CloudPlatforms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3178,7 +3178,7 @@ GameObject:
   - component: {fileID: 1816989173}
   - component: {fileID: 1816989172}
   - component: {fileID: 1816989174}
-  m_Layer: 8
+  m_Layer: 20
   m_Name: Tilemap_Ground
   m_TagString: MainTilemap
   m_Icon: {fileID: 0}
@@ -7023,8 +7023,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 1410910066}
   - {fileID: 8587725865119912785}
-  - {fileID: 61731049}
   - {fileID: 133657843}
+  - {fileID: 61731049}
   - {fileID: 859204837}
   - {fileID: 1462023791}
   - {fileID: 1292545025}

@@ -153,16 +153,6 @@ PrefabInstance:
       propertyPath: Prototype.Spawnpoint.Y.RawValue
       value: 32768
       objectReference: {fileID: 0}
-    - target: {fileID: 2072787540995169967, guid: 1ce5864bde999014a92015b065520add,
-        type: 3}
-      propertyPath: frame
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5669064217863857783, guid: 1ce5864bde999014a92015b065520add,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7523289063499453450, guid: 1ce5864bde999014a92015b065520add,
         type: 3}
       propertyPath: m_Name
@@ -223,12 +213,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7821411591339125535, guid: 1ce5864bde999014a92015b065520add,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -2665958366948368982, guid: b455056ca00f84e48a8040f94ae8170d,
-        type: 3}
     - target: {fileID: 8059900885248764230, guid: 1ce5864bde999014a92015b065520add,
         type: 3}
       propertyPath: Flags
@@ -717,7 +701,7 @@ GameObject:
   - component: {fileID: 407379217}
   - component: {fileID: 407379219}
   - component: {fileID: 407379220}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: BigClouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -847,7 +831,7 @@ GameObject:
   - component: {fileID: 643464986}
   - component: {fileID: 643464985}
   - component: {fileID: 643464987}
-  m_Layer: 8
+  m_Layer: 20
   m_Name: Tilemap_Ground
   m_TagString: MainTilemap
   m_Icon: {fileID: 0}
@@ -3800,7 +3784,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1227227469}
   - component: {fileID: 1227227468}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3999,7 +3983,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1542081886}
   - component: {fileID: 1542081887}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Backgrounds
   m_TagString: Backgrounds
   m_Icon: {fileID: 0}
@@ -4050,7 +4034,7 @@ GameObject:
   - component: {fileID: 1550383124}
   - component: {fileID: 1550383126}
   - component: {fileID: 1550383127}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: SmallClouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4404,7 +4388,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1831778354}
   - component: {fileID: 1831778353}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4806,7 +4790,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1959336206}
   - component: {fileID: 1959336205}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: Foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5478,8 +5462,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 4834808755216373431}
   - {fileID: 1532757892}
-  - {fileID: 1542081886}
   - {fileID: 1227227469}
+  - {fileID: 1542081886}
   - {fileID: 1674679211}
   - {fileID: 1761972580}
   - {fileID: 4425110964215584584}

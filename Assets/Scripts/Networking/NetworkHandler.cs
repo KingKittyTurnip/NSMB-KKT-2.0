@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using static BinaryReplayFile;
+using static ReplayListManager;
 
 public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, IConnectionCallbacks {
 
@@ -34,14 +35,15 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
     public static QuantumGame Game => Runner?.Game ?? QuantumRunner.DefaultGame;
     public static IEnumerable<Region> Regions => Client.RegionHandler.EnabledRegions.OrderBy(r => r.Code);
     public static string Region => Client?.CurrentRegion ?? Instance.lastRegion;
-    public static bool IsReplay { get; private set; }
-    public static int ReplayStart { get; private set; }
-    public static int ReplayLength { get; private set; }
+    public static bool IsReplay => CurrentReplay != null;
+    public static int ReplayStart => CurrentReplay?.InitialFrameNumber ?? -1;
+    public static int ReplayLength => CurrentReplay?.ReplayLengthInFrames ?? -1;
     public static int ReplayEnd => ReplayStart + ReplayLength;
     public static bool IsReplayFastForwarding { get; set; }
     public static string SavedRecordingPath { get; set; }
     public static List<byte[]> ReplayFrameCache => Instance.replayFrameCache;
     public static bool WasDisconnectedViaError { get; set; }
+    public static BinaryReplayFile CurrentReplay { get; private set; }
 
     //---Private Variables
     private RealtimeClient realtimeClient;
@@ -388,7 +390,7 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
             Communicator = new QuantumNetworkCommunicator(Client),
         };
 
-        IsReplay = false;
+        CurrentReplay = null;
         try {
             Runner = await QuantumRunner.StartGameAsync(sessionRunnerArguments);
             Runner.Game.AddPlayer(new RuntimePlayer {
@@ -439,6 +441,7 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
 
     private void OnGameDestroyed(CallbackGameDestroyed e) {
         SaveReplay(e.Game, -1);
+        CurrentReplay = null;
     }
 
     private unsafe void OnRulesChanged(EventRulesChanged e) {
@@ -502,12 +505,16 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
             await Runner.ShutdownAsync();
         }
 
-        IsReplay = true;
-        ReplayStart = replay.InitialFrameNumber;
-        ReplayLength = replay.ReplayLengthInFrames;
+        CurrentReplay = replay;
 
         var serializer = new QuantumUnityJsonSerializer();
-        var runtimeConfig = serializer.ConfigFromByteArray<RuntimeConfig>(replay.DecompressedRuntimeConfigData, compressed: true);
+        RuntimeConfig runtimeConfig;
+        try {
+            runtimeConfig = serializer.ConfigFromByteArray<RuntimeConfig>(replay.DecompressedRuntimeConfigData, compressed: false);
+        } catch {
+            // Bodge: support old 1.8 replays that double compressed.
+            runtimeConfig = serializer.ConfigFromByteArray<RuntimeConfig>(replay.DecompressedRuntimeConfigData, compressed: true);
+        }
         var deterministicConfig = DeterministicSessionConfig.FromByteArray(replay.DecompressedDeterministicConfigData);
         var inputStream = new Photon.Deterministic.BitStream(replay.DecompressedInputData);
         var replayInputProvider = new BitStreamReplayInputProvider(inputStream, ReplayEnd);
@@ -537,9 +544,13 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
 
     private unsafe void OnGameStarted(CallbackGameStarted e) {
         Frame f = e.Game.Frames.Verified;
-        if (f.ResolveList(f.Global->BannedPlayerIds).Contains(Client.UserId)) {
-            QuantumRunner.Default.Shutdown(ShutdownCause.SessionError);
-            ThrowError("ui.error.join.banned", true);
+        var bans = f.ResolveList(f.Global->BannedPlayerIds);
+        foreach (var ban in bans) {
+            if (ban.UserId == Client.UserId) {
+                QuantumRunner.Default.Shutdown(ShutdownCause.SessionError);
+                ThrowError("ui.error.join.banned", true);
+                return;
+            }
         }
     }
 

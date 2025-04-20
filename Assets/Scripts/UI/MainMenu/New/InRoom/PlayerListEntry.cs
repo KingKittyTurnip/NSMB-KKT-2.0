@@ -25,6 +25,7 @@ namespace NSMB.UI.MainMenu {
         public PlayerRef player;
         public float typingCounter;
         public Button button;
+        public Image lockImage;
         [NonSerialized] public int joinTick = int.MaxValue;
 
         //---Serialized Variables
@@ -116,6 +117,7 @@ namespace NSMB.UI.MainMenu {
             userId = default;
             joinTick = int.MaxValue;
             playerExistsGameObject.SetActive(false);
+            constantNicknameColor = true;
             dropdownOptions.SetActive(false);
         }
 
@@ -156,11 +158,13 @@ namespace NSMB.UI.MainMenu {
             }
 
             int characterIndex = playerData->Character;
-            characterIndex %= GlobalController.Instance.config.CharacterDatas.Length;
-            builder.Append(GlobalController.Instance.config.CharacterDatas[characterIndex].UiString);
+            var allCharacters = f.SimulationConfig.CharacterDatas;
+            characterIndex %= allCharacters.Length;
+            CharacterAsset character = f.FindAsset(allCharacters[characterIndex]);
+            builder.Append(character.UiString);
 
             if (f.Global->Rules.TeamsEnabled && Settings.Instance.GraphicsColorblind && !playerData->ManualSpectator) {
-                TeamAsset team = f.SimulationConfig.Teams[playerData->RequestedTeam];
+                TeamAsset team = f.FindAsset(f.SimulationConfig.Teams[playerData->RequestedTeam]);
                 builder.Append(team.textSpriteColorblindBig);
             }
 

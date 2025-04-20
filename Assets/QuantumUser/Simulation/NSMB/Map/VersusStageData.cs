@@ -46,9 +46,9 @@ public unsafe class VersusStageData : AssetObject {
     public bool SpawnVerticalPowerups = true;
 
     [Header("-- Music")]
-    public LoopingMusicData[] MainMusic;
-    public LoopingMusicData InvincibleMusic;
-    public LoopingMusicData MegaMushroomMusic;
+    public AssetRef<LoopingMusicData>[] MainMusic;
+    public AssetRef<LoopingMusicData> InvincibleMusic;
+    public AssetRef<LoopingMusicData> MegaMushroomMusic;
 
     [Header("-- Audio")]
     public AudioReverbPreset EchoEffect;

@@ -2,7 +2,6 @@ using Photon.Deterministic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Quantum {
     public unsafe class GameLogicSystem : SystemMainThread, ISignalOnPlayerAdded, ISignalOnPlayerRemoved, ISignalOnMarioPlayerDied,
@@ -246,9 +245,12 @@ namespace Quantum {
         public void OnPlayerAdded(Frame f, PlayerRef player, bool firstTime) {
             RuntimePlayer runtimePlayer = f.GetPlayerData(player);
 
-            if (f.ResolveList(f.Global->BannedPlayerIds).Contains(runtimePlayer.UserId)) {
-                // banned user- ignore them.
-                return;
+            var bans = f.ResolveList(f.Global->BannedPlayerIds);
+            foreach (var ban in bans) {
+                if (ban.UserId == runtimePlayer.UserId) {
+                    // banned user- ignore them.
+                    return;
+                }
             }
 
             EntityRef newEntity = f.Create();
@@ -386,7 +388,7 @@ namespace Quantum {
                 }
 
                 int characterIndex = FPMath.Clamp(data->Character, 0, config.CharacterDatas.Length - 1);
-                CharacterAsset character = config.CharacterDatas[characterIndex];
+                CharacterAsset character = f.FindAsset(config.CharacterDatas[characterIndex]);
 
                 EntityRef newPlayer = f.Create(character.Prototype);
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(newPlayer);

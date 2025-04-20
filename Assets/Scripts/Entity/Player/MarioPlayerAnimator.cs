@@ -1,4 +1,5 @@
 using NSMB.Extensions;
+using NSMB.Sound;
 using NSMB.UI.Game;
 using Photon.Deterministic;
 using Quantum;
@@ -99,7 +100,7 @@ namespace NSMB.Entities.Player {
 
         //---Properties
         public Color GlowColor { get; private set; }
-
+        
         //---Private Variables
         private Enums.PlayerEyeState eyeState;
         private float propellerVelocity;

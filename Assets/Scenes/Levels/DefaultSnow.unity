@@ -616,7 +616,7 @@ GameObject:
   m_Component:
   - component: {fileID: 89162346}
   - component: {fileID: 89162347}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1314,7 +1314,7 @@ PrefabInstance:
     - target: {fileID: 7020551328166419880, guid: df38f39e18bbdcf4b9b2ee15b49f1bb2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.4000001
+      value: -0.4
       objectReference: {fileID: 0}
     - target: {fileID: 7020551328166419880, guid: df38f39e18bbdcf4b9b2ee15b49f1bb2,
         type: 3}
@@ -1406,7 +1406,7 @@ GameObject:
   m_Component:
   - component: {fileID: 594640269}
   - component: {fileID: 594640270}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Backgrounds
   m_TagString: Backgrounds
   m_Icon: {fileID: 0}
@@ -1745,7 +1745,7 @@ GameObject:
   m_Component:
   - component: {fileID: 896736414}
   - component: {fileID: 896736413}
-  m_Layer: 1
+  m_Layer: 21
   m_Name: Foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2289,7 +2289,7 @@ GameObject:
   - component: {fileID: 1377143479}
   - component: {fileID: 1377143478}
   - component: {fileID: 1377143477}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Snow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8307,7 +8307,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1811538750}
   - component: {fileID: 1811538749}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9038,7 +9038,7 @@ GameObject:
   - component: {fileID: 2137834378}
   - component: {fileID: 2137834377}
   - component: {fileID: 2137834379}
-  m_Layer: 8
+  m_Layer: 20
   m_Name: Tilemap_Ground
   m_TagString: MainTilemap
   m_Icon: {fileID: 0}
@@ -17412,10 +17412,10 @@ SceneRoots:
   m_Roots:
   - {fileID: 70735786}
   - {fileID: 8587725864782649039}
-  - {fileID: 594640269}
   - {fileID: 1811538750}
+  - {fileID: 594640269}
+  - {fileID: 1377143479}
   - {fileID: 284082369}
   - {fileID: 603985984}
-  - {fileID: 1377143479}
   - {fileID: 1681203918}
   - {fileID: 491309552}

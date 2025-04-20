@@ -22,7 +22,8 @@ public class ReplayListManager : Selectable {
     public static string ReplayDirectory => Path.Combine(Application.persistentDataPath, "replays");
 
     //---Properties
-    public ReplayListEntry Selected { get; private set; }
+    public ReplayListEntry Selected { get; set; }
+    public List<Replay> Replays => replays;
 
     //---Serialized Variables
     [SerializeField] private MainMenuCanvas canvas;
@@ -35,6 +36,7 @@ public class ReplayListManager : Selectable {
     [SerializeField] private SpriteChangingToggle ascendingToggle;
     [SerializeField] private TMP_InputField searchField;
     [SerializeField] private TMP_Text replayInformation;
+    [SerializeField] private GameObject importButton;
 
     //---Private Variables
     private readonly List<Replay> replays = new();
@@ -129,7 +131,7 @@ public class ReplayListManager : Selectable {
             builder.Append("<width=85%>");
             if (file.Rules.TeamsEnabled) {
                 var allTeams = GlobalController.Instance.config.Teams;
-                TeamAsset team = allTeams[info.Team % allTeams.Length];
+                TeamAsset team = QuantumUnityDB.GetGlobalAsset(allTeams[info.Team % allTeams.Length]);
                 builder.Append("<nobr>");
                 builder.Append("<color=#").Append(Utils.ColorToHex(team.color, false)).Append(">").Append(Settings.Instance.GraphicsColorblind ? team.textSpriteColorblind : team.textSpriteNormal);
             } else {
@@ -179,6 +181,9 @@ public class ReplayListManager : Selectable {
         }
         if (replay.ListEntry) {
             Destroy(replay.ListEntry.gameObject);
+            if (replays.Count == 0) {
+                noReplaysText.text = GlobalController.Instance.translationManager.GetTranslation(Settings.Instance.GeneralReplaysEnabled ? "ui.extras.replays.none" : "ui.extras.replays.disabled");
+            }
         }
         replays.Remove(replay);
     }
@@ -233,7 +238,13 @@ public class ReplayListManager : Selectable {
 
         ReplayListEntry firstReplay = GetFirstReplayEntry();
         if (gameObject.activeInHierarchy) {
-            Select(firstReplay ? firstReplay.Replay : null);
+            Select(null);
+            if (firstReplay) {
+                Selected = firstReplay;
+                EventSystem.current.SetSelectedGameObject(firstReplay.button.gameObject);
+            } else {
+                EventSystem.current.SetSelectedGameObject(importButton);
+            }
         }
     }
 
@@ -272,6 +283,8 @@ public class ReplayListManager : Selectable {
                 newReplay.ListEntry.Initialize(this, newReplay);
                 replays.Add(newReplay);
                 newReplay.ListEntry.UpdateText();
+
+                noReplaysText.text = "";
             } else {
                 Debug.LogWarning($"[Replay] Failed to parse {filepath} as a replay: {parseResult}");
             }

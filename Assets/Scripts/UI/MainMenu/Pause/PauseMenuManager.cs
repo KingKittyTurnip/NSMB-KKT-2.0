@@ -12,6 +12,9 @@ namespace NSMB.UI.Pause {
 
     public class PauseMenuManager : MonoBehaviour {
 
+        //---Properties
+        public bool IsPaused => isPaused;
+
         //---Serialized Variables
         [SerializeField] private PlayerElements playerElements;
         [SerializeField] private InputCollector inputCollector;
@@ -171,7 +174,7 @@ namespace NSMB.UI.Pause {
                 return;
             }
 
-            if (GlobalController.Instance.optionsManager.gameObject.activeSelf) {
+            if (GlobalController.Instance.optionsManager.gameObject.activeSelf || playerElements.ReplayUi.TabOpen) {
                 return;
             }
 
