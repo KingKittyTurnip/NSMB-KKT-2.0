@@ -1,5 +1,6 @@
 using Photon.Deterministic;
 using System;
+using System.Diagnostics;
 
 namespace Quantum {
     public unsafe partial struct MarioPlayer {
@@ -264,6 +265,12 @@ namespace Quantum {
             UsedPropellerThisJump = false;
             ClimbFrames = 180;
 
+            //Combo'd, Stop knockback IG
+            IsInKnockback = false;
+            InKnockback = PreviousKnockback = KbType.None;
+            KnockbackTick = 0;
+            KnockbackGetupFrames = 0;
+
             if (!IsDead) {
                 DamageInvincibilityFrames = 2 * 60;
                 f.Events.MarioPlayerTookDamage(entity);
@@ -395,38 +402,43 @@ namespace Quantum {
             f.Events.MarioPlayerRespawned(entity);
         }
 
-        public void DoKnockback(Frame f, EntityRef entity, bool fromRight, int starsToDrop, bool weak, EntityRef attacker) {
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(entity);
-            if (physicsObject->IsUnderwater) {
-                weak = false;
-            }
 
-            if (IsInKnockback && !weak && !IsInWeakKnockback) //Stop Stomp Combos If Stomping A Already Stomped Foe
+        public void DoKnockback(Frame f, EntityRef entity, bool fromRight, int starsToDrop, KbType Type, EntityRef attacker) {
+            //Don't Allow Stomped Players Combo By Stomps
+            if (Type == KbType.Stomp && ((IsInKnockback || KnockbackGetupFrames > 0) && PreviousKnockback == KbType.Stomp))
                 return;
 
-            //if (IsInKnockback && ((IsInWeakKnockback && weak) || !IsInWeakKnockback)) {
-            //    return;
-            //}
-
+            //Don't Allow Knockback In This State
             var freezable = f.Unsafe.GetPointer<Freezable>(entity);
             if ((DamageInvincibilityFrames > 0 && KnockbackGetupFrames <= 0) || f.Exists(CurrentPipe) || (freezable->IsFrozen(f) && freezable->FrozenCubeEntity != attacker) || IsDead || MegaMushroomStartFrames > 0 || MegaMushroomEndFrames > 0) {
                 return;
             }
 
+            //Mini
             if (CurrentPowerupState == PowerupState.MiniMushroom && starsToDrop > 1) {
                 SpawnStars(f, entity, starsToDrop - 1);
                 Powerdown(f, entity, false);
                 return;
             }
+            //if (IsInKnockback || IsInWeakKnockback) { // ??
+            //    starsToDrop = Math.Min(1, starsToDrop);
+            //}
 
-            if (IsInKnockback || IsInWeakKnockback) {
-                starsToDrop = Math.Min(1, starsToDrop);
+            //Convert Knockbacks
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(entity);
+            if (physicsObject->IsUnderwater) {
+                Type = KbType.Stomp;
             }
 
+            if (Type == KbType.Fireball && (physicsObject->IsTouchingGround || physicsObject->WasTouchingGround))
+                Type = KbType.Weak;
+
+            UnityEngine.Debug.Log(Type);
             IsInKnockback = true;
-            IsInWeakKnockback = weak;
+            PreviousKnockback = InKnockback = Type;
             KnockbackWasOriginallyFacingRight = FacingRight;
-            KnockbackTick = f.Number;
+            KnockbackTick = f.Number - (InKnockback <= KbType.Fireball ? 4 : 0); //Lower Intangability Frames If In These Fragil knockbacks
+            KnockbackGetupFrames = 64; //Don't Play Blink Animation
 
             //IsInForwardsKnockback = FacingRight != fromRight;
             //KnockbackAttacker = attacker;
@@ -435,17 +447,18 @@ namespace Quantum {
             var transform = f.Unsafe.GetPointer<Transform2D>(entity);
             var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(entity);
 
-            if (!weak && PhysicsObjectSystem.Raycast((FrameThreadSafe) f, null, transform->Position + collider->Shape.Centroid, fromRight ? FPVector2.Left : FPVector2.Right, FP._0_33, out _)) {
+            if (InKnockback > KbType.Fireball && PhysicsObjectSystem.Raycast((FrameThreadSafe) f, null, transform->Position + collider->Shape.Centroid, fromRight ? FPVector2.Left : FPVector2.Right, FP._0_33, out _)) {
                 fromRight = !fromRight;
             }
 
             physicsObject->Velocity = new FPVector2(
                 (fromRight ? -1 : 1) *
-                    ((starsToDrop + 2) / (FP) 3) *
-                    FP._1_50 *
+                    //((starsToDrop + 2) / (FP) 3) * FP._1_50 *
+                    //(starsToDrop) * 2 * //1 = 2, 3 = 6
+                    (starsToDrop + FP._0_50) * FP._1_50 * //1 = 2, 3 = 4.5
                     (CurrentPowerupState == PowerupState.MegaMushroom ? 3 : 1) *
                     (CurrentPowerupState == PowerupState.MiniMushroom ? FP._1_50 : 1) *
-                    (weak ? FP._0_50 : 1),
+                    (Type != KbType.Stomp ? FP._0_50 : 1),
 
                 // Don't go upwards if we got hit by a fireball
                 f.Has<Projectile>(attacker) ? 0 : Constants._4_50
@@ -471,22 +484,22 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(attacker, out Transform2D* attackerTransform)) {
                 attackerPosition = attackerTransform->Position;
             }
-            f.Events.MarioPlayerReceivedKnockback(entity, attacker, weak, attackerPosition);
+            f.Events.MarioPlayerReceivedKnockback(entity, attacker, InKnockback, attackerPosition);
         }
+
         public void ResetKnockback(Frame f, EntityRef entity) {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(entity);
-            KnockbackGetupFrames = (byte) (IsInWeakKnockback || physicsObject->IsUnderwater ? 0 : 25);
+            KnockbackGetupFrames = (byte) ((InKnockback == KbType.Weak || physicsObject->IsUnderwater) ? 12 : 35);
             DamageInvincibilityFrames = (byte) (120 + KnockbackGetupFrames);
             ////DoEntityBounce = false;
             IsInKnockback = false;
-            IsInWeakKnockback = false;
+            InKnockback = KbType.None;
             //IsForwardsKnockback = false;
             FacingRight = KnockbackWasOriginallyFacingRight;
-            
-            physicsObject->Velocity.X = 0;
 
-            Pouncing = false;
+            physicsObject->Velocity.X = 0;
         }
+
 
         public void EnterPipe(Frame f, EntityRef mario, EntityRef pipe) {
             if (f.Exists(CurrentPipe)

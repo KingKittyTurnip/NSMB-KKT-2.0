@@ -543,11 +543,11 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventMarioPlayerReceivedKnockback MarioPlayerReceivedKnockback(EntityRef Entity, EntityRef Attacker, QBoolean Weak, FPVector2 AttackerPosition) {
+      public EventMarioPlayerReceivedKnockback MarioPlayerReceivedKnockback(EntityRef Entity, EntityRef Attacker, KbType Knockback, FPVector2 AttackerPosition) {
         var ev = _f.Context.AcquireEvent<EventMarioPlayerReceivedKnockback>(EventMarioPlayerReceivedKnockback.ID);
         ev.Entity = Entity;
         ev.Attacker = Attacker;
-        ev.Weak = Weak;
+        ev.Knockback = Knockback;
         ev.AttackerPosition = AttackerPosition;
         _f.AddEvent(ev);
         return ev;
@@ -2150,7 +2150,7 @@ namespace Quantum {
     public new const Int32 ID = 57;
     public EntityRef Entity;
     public EntityRef Attacker;
-    public QBoolean Weak;
+    public KbType Knockback;
     public FPVector2 AttackerPosition;
     protected EventMarioPlayerReceivedKnockback(Int32 id, EventFlags flags) : 
         base(id, flags) {
@@ -2171,7 +2171,7 @@ namespace Quantum {
         var hash = 347;
         hash = hash * 31 + Entity.GetHashCode();
         hash = hash * 31 + Attacker.GetHashCode();
-        hash = hash * 31 + Weak.GetHashCode();
+        hash = hash * 31 + Knockback.GetHashCode();
         return hash;
       }
     }

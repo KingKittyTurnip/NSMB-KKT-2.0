@@ -65,6 +65,7 @@ namespace NSMB.Entities.Player {
         private static readonly int ParamSwimming = Animator.StringToHash("swimming");
         private static readonly int ParamAHeld = Animator.StringToHash("a_held");
         private static readonly int ParamFireDeath = Animator.StringToHash("firedeath");
+        private static readonly int ParamWeakKnockback = Animator.StringToHash("weakKnockback");
         private static readonly int ParamFireballKnockback = Animator.StringToHash("fireballKnockback");
         private static readonly int ParamKnockforwards = Animator.StringToHash("knockforwards");
         private static readonly int ParamPushing = Animator.StringToHash("pushing");
@@ -349,7 +350,7 @@ namespace NSMB.Entities.Player {
 
             if (mario->IsInKnockback || freezable->IsFrozen(f)) {
                 bool right = mario->FacingRight;
-                if (mario->IsInKnockback && (physicsObject->IsUnderwater || mario->IsInWeakKnockback)) {
+                if (mario->IsInKnockback && (physicsObject->IsUnderwater || mario->InKnockback <= KbType.Fireball)) {
                     right = mario->KnockbackWasOriginallyFacingRight;
                 }
                 modelRotationTarget = Quaternion.Euler(0, right ? 110 : 250, 0);
@@ -460,7 +461,8 @@ namespace NSMB.Entities.Player {
             animator.SetBool(ParamTurnaround, mario->IsTurnaround);
             animator.SetBool(ParamSwimming, physicsObject->IsUnderwater && !mario->IsGroundpounding && !mario->IsDrilling && !freezable->IsFrozen(f));
             animator.SetBool(ParamAHeld, inputs.Jump.IsDown);
-            animator.SetBool(ParamFireballKnockback, mario->IsInWeakKnockback);
+            animator.SetBool(ParamWeakKnockback, mario->InKnockback == KbType.Weak);
+            animator.SetBool(ParamFireballKnockback, mario->InKnockback == KbType.Fireball);
             animator.SetBool(ParamFireDeath, mario->FireDeath);
             animator.SetBool(ParamPushing, mario->LastPushingFrame + 5 >= f.Number);
             animator.SetBool(ParamFrozen, freezable->IsFrozen(f));
@@ -762,10 +764,10 @@ namespace NSMB.Entities.Player {
                 SpawnParticle("Prefabs/Particle/PlayerBounce", e.AttackerPosition.ToUnityVector3());
             }
 
-            PlaySound(e.Weak ? SoundEffect.Player_Sound_Collision_Fireball : SoundEffect.Player_Sound_Collision);
+            PlaySound(e.Knockback <= KbType.Fireball ? SoundEffect.Player_Sound_Collision_Fireball : SoundEffect.Player_Sound_Collision);
 
             if (Utils.Utils.IsMarioLocal(e.Entity)) {
-                GlobalController.Instance.rumbleManager.RumbleForSeconds(0.3f, 0.6f, e.Weak ? 0.3f : 0.5f, RumbleManager.RumbleSetting.Low);
+                GlobalController.Instance.rumbleManager.RumbleForSeconds(0.3f, 0.6f, e.Knockback <= KbType.Fireball ? 0.3f : 0.5f, RumbleManager.RumbleSetting.Low);
             }
         }
 
