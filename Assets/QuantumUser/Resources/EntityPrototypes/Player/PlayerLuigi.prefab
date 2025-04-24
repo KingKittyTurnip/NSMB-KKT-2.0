@@ -981,6 +981,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8279152070748857899}
+  - {fileID: 6835720790422879568}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4214075614837938018
@@ -1165,6 +1166,7 @@ MonoBehaviour:
   animator: {fileID: 2254935152879088866}
   smallAvatar: {fileID: 9000000, guid: e0d3ef6bcff32414dbd34fc6ac031292, type: 3}
   largeAvatar: {fileID: 9000000, guid: 024ceb223bceebd488dbc425555f4df0, type: 3}
+  catAvatar: {fileID: 0}
   dust: {fileID: 1460410883163997951}
   sparkles: {fileID: 5963455921799810843}
   drillParticle: {fileID: 7930333926607988691}
@@ -1176,6 +1178,7 @@ MonoBehaviour:
   waterSkiddingParticle: {fileID: 1964018508897355012}
   smallModel: {fileID: 2072365581859336409}
   largeModel: {fileID: 80071378837978286}
+  catModel: {fileID: 5474331868042930148}
   largeShellExclude: {fileID: 6171234210930250631}
   blueShell: {fileID: 3096914711367548223}
   propellerHelmet: {fileID: 3809911092661993688}
@@ -1537,6 +1540,7 @@ MonoBehaviour:
   soundOrigin: {fileID: 4824223341387914440}
   soundRange: 12
   maxPanning: 0.8
+  UsesEcho: 1
 --- !u!114 &987974179557327879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6784,6 +6788,38 @@ MonoBehaviour:
   soundOrigin: {fileID: 1978530160244900907}
   soundRange: 12
   maxPanning: 0.8
+  UsesEcho: 1
+--- !u!1 &5474331868042930148
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6835720790422879568}
+  m_Layer: 0
+  m_Name: Placeholderobject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6835720790422879568
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474331868042930148}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.09697421, y: 0.6531892, z: -0.04591672}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4824223341387914440}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5592187561535883535
 GameObject:
   m_ObjectHideFlags: 0
