@@ -1,40 +1,7 @@
 fileFormatVersion: 2
-guid: 7106739f8e0e4624e9000ae112c65a71
+guid: ac2bb62c18b2375439c16abe7c1c29bc
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 3410918491446568398
-    second: powerups_0
-  - first:
-      213: -7415331047110381915
-    second: powerups_1
-  - first:
-      213: 621560852509794982
-    second: powerups_2
-  - first:
-      213: 4928671260392873470
-    second: powerups_3
-  - first:
-      213: 4536303970436761004
-    second: powerups_4
-  - first:
-      213: -499814844998443567
-    second: powerups_5
-  - first:
-      213: -6090384608550177697
-    second: powerups_6
-  - first:
-      213: -4108787663010400821
-    second: powerups_7
-  - first:
-      213: 2834573260081099437
-    second: powerups_8
-  - first:
-      213: -2004970489635254543
-    second: powerups_9
-  - first:
-      213: 3366297153455892705
-    second: powerups_10
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -81,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -98,23 +65,10 @@ TextureImporter:
   ignorePngGamma: 0
   applyGammaDecoding: 0
   swizzle: 50462976
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -131,7 +85,20 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -144,33 +111,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -182,11 +123,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mushroom
+      name: POWS_Red_1
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
+        y: 37
         width: 16
         height: 16
       alignment: 7
@@ -196,59 +137,80 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec5eb70db44065f20800000000000000
-      internalID: 3410918491446568398
+      spriteID: 88f49a09827bcb64383b2f3688003b3e
+      internalID: 1130182511
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 1-Up
+      name: POWS_Red_2
       rect:
         serializedVersion: 2
         x: 16
-        y: 16
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        y: 33
+        width: 20
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5ae6f0563b3771990800000000000000
-      internalID: -7415331047110381915
+      spriteID: 0c332137cbd9b5c4a897643e75254d23
+      internalID: -330342055
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MiniMushroom
+      name: POWS_Red_3
       rect:
         serializedVersion: 2
-        x: 35
-        y: 19
-        width: 11
-        height: 10
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 36
+        y: 27
+        width: 26
+        height: 26
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1925}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a2a22c5d4a30a800800000000000000
-      internalID: 621560852509794982
+      spriteID: 1e654a4dfe64b9842b9d019dca5a2a88
+      internalID: 1839761188
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FireFlower
+      name: POWS_Red_4
       rect:
         serializedVersion: 2
-        x: 0
+        x: 62
+        y: 21
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b2c75415b5e8e34596979ae25acc2a8
+      internalID: 835418070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: POWS_Blue_1
+      rect:
+        serializedVersion: 2
+        x: 78
         y: 0
         width: 16
         height: 16
@@ -259,113 +221,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f543cdd777b9a7ba0800000000000000
-      internalID: -6090384608550177697
+      spriteID: 9f2d93c386d89084eaba1b8dc6842506
+      internalID: 1645395959
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Star
+      name: POWS_Blue_2
       rect:
         serializedVersion: 2
-        x: 16
-        y: 0
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 58
+        y: 1
+        width: 20
+        height: 20
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bc5f1c8c367aaf6c0800000000000000
-      internalID: -4108787663010400821
+      spriteID: 2ce72ac850d9eee42a79b84e0cfe1679
+      internalID: 704205309
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Shell
+      name: POWS_Blue_3
       rect:
         serializedVersion: 2
         x: 32
-        y: 0
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        y: 1
+        width: 26
+        height: 26
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1925}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: da274f0ac5d665720800000000000000
-      internalID: 2834573260081099437
+      spriteID: d2838b3e66aafa4489e126197cdae7fe
+      internalID: -1679174408
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IceFlower
+      name: POWS_Blue_4
       rect:
         serializedVersion: 2
-        x: 48
-        y: 0
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 0
+        y: 1
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 33e41dfc73ff8de47b595b9de634a78f
-      internalID: 4928671260392873470
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Star_2
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 16
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4681105f9cd66b640befbb601748a64e
-      internalID: -1073110140
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: HammerSuit
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 16
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 77ece1eb59cb24d4e9759108aa38fdd1
-      internalID: -1109677166
+      spriteID: 05a9fc4950274ba4d9f7886293369747
+      internalID: -75584859
       vertices: []
       indices: 
       edges: []
@@ -381,21 +301,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      1-Up: -7415331047110381915
-      CatSuit: -1629917848
-      FireFlower: -6090384608550177697
-      HammerSuit: -1109677166
-      IceFlower: 4928671260392873470
-      JumpSuit: 1662652401
-      MiniMushroom: 621560852509794982
-      Mushroom: 3410918491446568398
-      Shell: 2834573260081099437
-      Star: -4108787663010400821
-      Star_2: -1073110140
-      powerups_10: 3366297153455892705
-      powerups_4: 4536303970436761004
-      powerups_5: -499814844998443567
-      powerups_9: -2004970489635254543
+      POWS_Blue_1: 1645395959
+      POWS_Blue_2: 704205309
+      POWS_Blue_3: -1679174408
+      POWS_Blue_4: -75584859
+      POWS_Red_1: 1130182511
+      POWS_Red_2: -330342055
+      POWS_Red_3: 1839761188
+      POWS_Red_4: 835418070
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

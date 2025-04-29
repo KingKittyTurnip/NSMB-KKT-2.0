@@ -1,40 +1,7 @@
 fileFormatVersion: 2
-guid: 7106739f8e0e4624e9000ae112c65a71
+guid: 289f83cab01972f49857412de22de2fb
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 3410918491446568398
-    second: powerups_0
-  - first:
-      213: -7415331047110381915
-    second: powerups_1
-  - first:
-      213: 621560852509794982
-    second: powerups_2
-  - first:
-      213: 4928671260392873470
-    second: powerups_3
-  - first:
-      213: 4536303970436761004
-    second: powerups_4
-  - first:
-      213: -499814844998443567
-    second: powerups_5
-  - first:
-      213: -6090384608550177697
-    second: powerups_6
-  - first:
-      213: -4108787663010400821
-    second: powerups_7
-  - first:
-      213: 2834573260081099437
-    second: powerups_8
-  - first:
-      213: -2004970489635254543
-    second: powerups_9
-  - first:
-      213: 3366297153455892705
-    second: powerups_10
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -81,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 90
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -98,23 +65,10 @@ TextureImporter:
   ignorePngGamma: 0
   applyGammaDecoding: 0
   swizzle: 50462976
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -131,7 +85,20 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -144,33 +111,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -182,190 +123,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mushroom
+      name: Anglefish_0
       rect:
         serializedVersion: 2
         x: 0
         y: 16
         width: 16
         height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec5eb70db44065f20800000000000000
-      internalID: 3410918491446568398
+      spriteID: a3191260237c6f0438230389483b3d3b
+      internalID: -423847837
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 1-Up
+      name: Anglefish_1
       rect:
         serializedVersion: 2
         x: 16
         y: 16
         width: 16
         height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5ae6f0563b3771990800000000000000
-      internalID: -7415331047110381915
+      spriteID: 9f71a83eb7c80a5489415dd3c6aef49c
+      internalID: 1485724074
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: MiniMushroom
+      name: Anglefish_2
       rect:
         serializedVersion: 2
-        x: 35
-        y: 19
-        width: 11
-        height: 10
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a2a22c5d4a30a800800000000000000
-      internalID: 621560852509794982
+      spriteID: 8e56e9575cfe10d4485de8f94a5b84e3
+      internalID: 636251117
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: FireFlower
+      name: Anglefish_3
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 16
         height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f543cdd777b9a7ba0800000000000000
-      internalID: -6090384608550177697
+      spriteID: 523d6626a1baf26499b65f7a30d3b528
+      internalID: 932300269
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Star
+      name: Anglefish_4
       rect:
         serializedVersion: 2
         x: 16
         y: 0
         width: 16
         height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bc5f1c8c367aaf6c0800000000000000
-      internalID: -4108787663010400821
+      spriteID: d3c178d318ab337468473fbc9aa19d44
+      internalID: -426063601
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Shell
+      name: Anglefish_5
       rect:
         serializedVersion: 2
         x: 32
         y: 0
         width: 16
         height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: da274f0ac5d665720800000000000000
-      internalID: 2834573260081099437
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: IceFlower
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 0
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 33e41dfc73ff8de47b595b9de634a78f
-      internalID: 4928671260392873470
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Star_2
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 16
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4681105f9cd66b640befbb601748a64e
-      internalID: -1073110140
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: HammerSuit
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 16
-        width: 16
-        height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 77ece1eb59cb24d4e9759108aa38fdd1
-      internalID: -1109677166
+      spriteID: 419c225893ff1b948bb765c789bd0a64
+      internalID: -341251403
       vertices: []
       indices: 
       edges: []
@@ -381,21 +259,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      1-Up: -7415331047110381915
-      CatSuit: -1629917848
-      FireFlower: -6090384608550177697
-      HammerSuit: -1109677166
-      IceFlower: 4928671260392873470
-      JumpSuit: 1662652401
-      MiniMushroom: 621560852509794982
-      Mushroom: 3410918491446568398
-      Shell: 2834573260081099437
-      Star: -4108787663010400821
-      Star_2: -1073110140
-      powerups_10: 3366297153455892705
-      powerups_4: 4536303970436761004
-      powerups_5: -499814844998443567
-      powerups_9: -2004970489635254543
+      Anglefish_0: -423847837
+      Anglefish_1: 1485724074
+      Anglefish_2: 636251117
+      Anglefish_3: 932300269
+      Anglefish_4: -426063601
+      Anglefish_5: -341251403
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
