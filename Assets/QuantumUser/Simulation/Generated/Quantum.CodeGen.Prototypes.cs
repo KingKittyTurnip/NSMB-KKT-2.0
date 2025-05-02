@@ -425,6 +425,29 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Hazard))]
+  public unsafe partial class HazardPrototype : ComponentPrototype<Quantum.Hazard> {
+    public QBoolean IsHazard;
+    public QBoolean IsHefty;
+    public QBoolean IPWSUntilGround;
+    public Byte IPWSTime;
+    public FPVector2 SpawningVelocityRange;
+    partial void MaterializeUser(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Hazard component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context = default) {
+        result.IsHazard = this.IsHazard;
+        result.IsHefty = this.IsHefty;
+        result.IPWSUntilGround = this.IPWSUntilGround;
+        result.IPWSTime = this.IPWSTime;
+        result.SpawningVelocityRange = this.SpawningVelocityRange;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Holdable))]
   public unsafe partial class HoldablePrototype : ComponentPrototype<Quantum.Holdable> {
     public QBoolean HoldAboveHead;

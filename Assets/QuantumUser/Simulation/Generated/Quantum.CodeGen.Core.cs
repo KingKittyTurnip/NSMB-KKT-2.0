@@ -91,6 +91,11 @@ namespace Quantum {
     HammerSuit,
     MegaMushroom,
   }
+  public enum SpawnReason : byte {
+    Normal,
+    Bulb,
+    Fridge,
+  }
   public enum StageTileFlags : byte {
     MirrorX = 1,
     MirrorY = 2,
@@ -1813,6 +1818,45 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Hazard : Quantum.IComponent {
+    public const Int32 SIZE = 32;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(8)]
+    public QBoolean IsHazard;
+    [FieldOffset(12)]
+    public QBoolean IsHefty;
+    [FieldOffset(4)]
+    public QBoolean IPWSUntilGround;
+    [FieldOffset(0)]
+    public Byte IPWSTime;
+    [FieldOffset(16)]
+    public FPVector2 SpawningVelocityRange;
+    [FieldOffset(1)]
+    [ExcludeFromPrototype()]
+    public Byte Team;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 5591;
+        hash = hash * 31 + IsHazard.GetHashCode();
+        hash = hash * 31 + IsHefty.GetHashCode();
+        hash = hash * 31 + IPWSUntilGround.GetHashCode();
+        hash = hash * 31 + IPWSTime.GetHashCode();
+        hash = hash * 31 + SpawningVelocityRange.GetHashCode();
+        hash = hash * 31 + Team.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Hazard*)ptr;
+        serializer.Stream.Serialize(&p->IPWSTime);
+        serializer.Stream.Serialize(&p->Team);
+        QBoolean.Serialize(&p->IPWSUntilGround, serializer);
+        QBoolean.Serialize(&p->IsHazard, serializer);
+        QBoolean.Serialize(&p->IsHefty, serializer);
+        FPVector2.Serialize(&p->SpawningVelocityRange, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Holdable : Quantum.IComponent {
     public const Int32 SIZE = 24;
     public const Int32 ALIGNMENT = 8;
@@ -3426,6 +3470,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.GenericMover>();
       BuildSignalsArrayOnComponentAdded<Quantum.Goomba>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Goomba>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Hazard>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Hazard>();
       BuildSignalsArrayOnComponentAdded<Quantum.Holdable>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Holdable>();
       BuildSignalsArrayOnComponentAdded<Quantum.IceBlock>();
@@ -3840,6 +3886,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.GameState), 1);
       typeRegistry.Register(typeof(Quantum.GenericMover), Quantum.GenericMover.SIZE);
       typeRegistry.Register(typeof(Quantum.Goomba), Quantum.Goomba.SIZE);
+      typeRegistry.Register(typeof(Quantum.Hazard), Quantum.Hazard.SIZE);
       typeRegistry.Register(typeof(HingeJoint), HingeJoint.SIZE);
       typeRegistry.Register(typeof(HingeJoint3D), HingeJoint3D.SIZE);
       typeRegistry.Register(typeof(Hit), Hit.SIZE);
@@ -3909,6 +3956,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(RNGSession), RNGSession.SIZE);
       typeRegistry.Register(typeof(Shape2D), Shape2D.SIZE);
       typeRegistry.Register(typeof(Shape3D), Shape3D.SIZE);
+      typeRegistry.Register(typeof(Quantum.SpawnReason), 1);
       typeRegistry.Register(typeof(Quantum.Spinner), Quantum.Spinner.SIZE);
       typeRegistry.Register(typeof(SpringJoint), SpringJoint.SIZE);
       typeRegistry.Register(typeof(SpringJoint3D), SpringJoint3D.SIZE);
@@ -3923,7 +3971,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 34)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 35)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -3942,6 +3990,7 @@ namespace Quantum {
         .Add<Quantum.Freezable>(Quantum.Freezable.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.GenericMover>(Quantum.GenericMover.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Goomba>(Quantum.Goomba.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.Hazard>(Quantum.Hazard.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Holdable>(Quantum.Holdable.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.IceBlock>(Quantum.IceBlock.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Interactable>(Quantum.Interactable.Serialize, null, null, ComponentFlags.None)
@@ -3980,6 +4029,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.QString48>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.QStringUtf8_40>();
       FramePrinter.EnsurePrimitiveNotStripped<QueryOptions>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.SpawnReason>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.StageTileFlags>();
     }
   }

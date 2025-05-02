@@ -1,0 +1,19 @@
+component Hazard {
+	bool IsHazard;
+	bool IsHefty;
+
+	//IgnorePlayerWhenSpawning
+	bool IPWSUntilGround;
+	byte IPWSTime;
+
+	//Specificdata
+	FPVector2 SpawningVelocityRange;
+
+	[ExcludeFromPrototype] byte Team;
+}
+
+enum SpawnReason : Byte {
+	Normal,
+	Bulb,
+	Fridge,
+}
