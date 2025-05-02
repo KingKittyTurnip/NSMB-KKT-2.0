@@ -448,9 +448,25 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.HeavyStone))]
+  public unsafe partial class HeavyStonePrototype : ComponentPrototype<Quantum.HeavyStone> {
+    [HideInInspector()]
+    public Int32 _empty_prototype_dummy_field_;
+    partial void MaterializeUser(Frame frame, ref Quantum.HeavyStone result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.HeavyStone component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.HeavyStone result, in PrototypeMaterializationContext context = default) {
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Holdable))]
   public unsafe partial class HoldablePrototype : ComponentPrototype<Quantum.Holdable> {
     public QBoolean HoldAboveHead;
+    public QBoolean IsSolidCarryable;
     partial void MaterializeUser(Frame frame, ref Quantum.Holdable result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Holdable component = default;
@@ -459,6 +475,7 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Holdable result, in PrototypeMaterializationContext context = default) {
         result.HoldAboveHead = this.HoldAboveHead;
+        result.IsSolidCarryable = this.IsSolidCarryable;
         MaterializeUser(frame, ref result, in context);
     }
   }

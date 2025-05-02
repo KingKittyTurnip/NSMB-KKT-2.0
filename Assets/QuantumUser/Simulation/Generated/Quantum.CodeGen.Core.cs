@@ -1857,15 +1857,36 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct HeavyStone : Quantum.IComponent {
+    public const Int32 SIZE = 4;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public QBoolean Thrown;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 14771;
+        hash = hash * 31 + Thrown.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (HeavyStone*)ptr;
+        QBoolean.Serialize(&p->Thrown, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Holdable : Quantum.IComponent {
-    public const Int32 SIZE = 24;
+    public const Int32 SIZE = 32;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(4)]
     public QBoolean HoldAboveHead;
     [FieldOffset(8)]
+    public QBoolean IsSolidCarryable;
+    [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public EntityRef Holder;
-    [FieldOffset(16)]
+    [FieldOffset(24)]
     [ExcludeFromPrototype()]
     public EntityRef PreviousHolder;
     [FieldOffset(0)]
@@ -1875,6 +1896,7 @@ namespace Quantum {
       unchecked { 
         var hash = 6131;
         hash = hash * 31 + HoldAboveHead.GetHashCode();
+        hash = hash * 31 + IsSolidCarryable.GetHashCode();
         hash = hash * 31 + Holder.GetHashCode();
         hash = hash * 31 + PreviousHolder.GetHashCode();
         hash = hash * 31 + IgnoreOwnerFrames.GetHashCode();
@@ -1885,6 +1907,7 @@ namespace Quantum {
         var p = (Holdable*)ptr;
         serializer.Stream.Serialize(&p->IgnoreOwnerFrames);
         QBoolean.Serialize(&p->HoldAboveHead, serializer);
+        QBoolean.Serialize(&p->IsSolidCarryable, serializer);
         EntityRef.Serialize(&p->Holder, serializer);
         EntityRef.Serialize(&p->PreviousHolder, serializer);
     }
@@ -3472,6 +3495,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Goomba>();
       BuildSignalsArrayOnComponentAdded<Quantum.Hazard>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Hazard>();
+      BuildSignalsArrayOnComponentAdded<Quantum.HeavyStone>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.HeavyStone>();
       BuildSignalsArrayOnComponentAdded<Quantum.Holdable>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Holdable>();
       BuildSignalsArrayOnComponentAdded<Quantum.IceBlock>();
@@ -3887,6 +3912,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.GenericMover), Quantum.GenericMover.SIZE);
       typeRegistry.Register(typeof(Quantum.Goomba), Quantum.Goomba.SIZE);
       typeRegistry.Register(typeof(Quantum.Hazard), Quantum.Hazard.SIZE);
+      typeRegistry.Register(typeof(Quantum.HeavyStone), Quantum.HeavyStone.SIZE);
       typeRegistry.Register(typeof(HingeJoint), HingeJoint.SIZE);
       typeRegistry.Register(typeof(HingeJoint3D), HingeJoint3D.SIZE);
       typeRegistry.Register(typeof(Hit), Hit.SIZE);
@@ -3971,7 +3997,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 35)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 36)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -3991,6 +4017,7 @@ namespace Quantum {
         .Add<Quantum.GenericMover>(Quantum.GenericMover.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Goomba>(Quantum.Goomba.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Hazard>(Quantum.Hazard.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.HeavyStone>(Quantum.HeavyStone.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Holdable>(Quantum.Holdable.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.IceBlock>(Quantum.IceBlock.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Interactable>(Quantum.Interactable.Serialize, null, null, ComponentFlags.None)

@@ -1,5 +1,6 @@
 component Holdable {
 	bool HoldAboveHead;
+	bool IsSolidCarryable;
 
 	[ExcludeFromPrototype] EntityRef Holder;
 	[ExcludeFromPrototype] EntityRef PreviousHolder;

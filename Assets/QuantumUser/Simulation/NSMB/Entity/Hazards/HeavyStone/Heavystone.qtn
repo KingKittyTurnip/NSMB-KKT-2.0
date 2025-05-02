@@ -1,0 +1,8 @@
+component HeavyStone {
+	[ExcludeFromPrototype] bool Thrown;
+}
+
+event HeavyStoneLand {
+	EntityRef Entity;
+	FPVector2 pos;
+}

@@ -1035,11 +1035,16 @@ namespace Quantum {
                 if (hitShape->Type == Shape2DType.Edge || hit.Entity == entity || (mario != null && hit.Entity == mario->HeldEntity)) {
                     continue;
                 }
-
+                /* This Code Is For The Fancy Ice Collisions
                 if (f.TryGetPointer(hit.Entity, out IceBlock* iceBlock)) {
                     //if (!includeMegaBreakable || entity == iceBlock->Entity) {
                         continue;
                     //}
+                }
+                This Code is To Allow Any Carryable These Fancy Collisions */
+                if (f.TryGetPointer(hit.Entity, out Holdable* holdable)) {
+                    if (holdable->IsSolidCarryable)
+                        continue;
                 }
 
                 if (!includeCeilingCrushers && hitShape->UserTag == 1) {
