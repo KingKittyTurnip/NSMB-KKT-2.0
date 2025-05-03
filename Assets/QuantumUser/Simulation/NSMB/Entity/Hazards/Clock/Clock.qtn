@@ -1,0 +1,13 @@
+component Clock {
+	int Time;
+	bool TickTimeup;
+	bool ResetTime;
+
+	[ExcludeFromPrototype] bool Collected;
+	[ExcludeFromPrototype] byte TimeTillKill;
+}
+
+event ClockCollect {
+	EntityRef Entity;
+	FPVector2 pos;
+}

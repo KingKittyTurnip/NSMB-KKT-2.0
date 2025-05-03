@@ -1568,6 +1568,42 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Clock : Quantum.IComponent {
+    public const Int32 SIZE = 20;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(4)]
+    public Int32 Time;
+    [FieldOffset(16)]
+    public QBoolean TickTimeup;
+    [FieldOffset(12)]
+    public QBoolean ResetTime;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean Collected;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte TimeTillKill;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 13649;
+        hash = hash * 31 + Time.GetHashCode();
+        hash = hash * 31 + TickTimeup.GetHashCode();
+        hash = hash * 31 + ResetTime.GetHashCode();
+        hash = hash * 31 + Collected.GetHashCode();
+        hash = hash * 31 + TimeTillKill.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Clock*)ptr;
+        serializer.Stream.Serialize(&p->TimeTillKill);
+        serializer.Stream.Serialize(&p->Time);
+        QBoolean.Serialize(&p->Collected, serializer);
+        QBoolean.Serialize(&p->ResetTime, serializer);
+        QBoolean.Serialize(&p->TickTimeup, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Coin : Quantum.IComponent {
     public const Int32 SIZE = 20;
     public const Int32 ALIGNMENT = 4;
@@ -3493,6 +3529,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<CharacterController2D>();
       BuildSignalsArrayOnComponentAdded<CharacterController3D>();
       BuildSignalsArrayOnComponentRemoved<CharacterController3D>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Clock>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Clock>();
       BuildSignalsArrayOnComponentAdded<Quantum.Coin>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Coin>();
       BuildSignalsArrayOnComponentAdded<Quantum.ComboKeeper>();
@@ -3908,6 +3946,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.CameraController), Quantum.CameraController.SIZE);
       typeRegistry.Register(typeof(CharacterController2D), CharacterController2D.SIZE);
       typeRegistry.Register(typeof(CharacterController3D), CharacterController3D.SIZE);
+      typeRegistry.Register(typeof(Quantum.Clock), Quantum.Clock.SIZE);
       typeRegistry.Register(typeof(Quantum.Coin), Quantum.Coin.SIZE);
       typeRegistry.Register(typeof(ColorRGBA), ColorRGBA.SIZE);
       typeRegistry.Register(typeof(Quantum.ComboKeeper), Quantum.ComboKeeper.SIZE);
@@ -4022,7 +4061,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 36)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 37)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -4033,6 +4072,7 @@ namespace Quantum {
         .Add<Quantum.BulletBill>(Quantum.BulletBill.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.BulletBillLauncher>(Quantum.BulletBillLauncher.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.CameraController>(Quantum.CameraController.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.Clock>(Quantum.Clock.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Coin>(Quantum.Coin.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.ComboKeeper>(Quantum.ComboKeeper.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Cullable>(Quantum.Cullable.Serialize, null, null, ComponentFlags.None)
