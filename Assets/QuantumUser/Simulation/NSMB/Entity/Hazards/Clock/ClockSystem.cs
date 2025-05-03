@@ -10,11 +10,7 @@ namespace Quantum {
 
         public struct Filter {
             public EntityRef Entity;
-            public Transform2D* Transform;
             public Clock* clock;
-            public Holdable* holdable;
-            public PhysicsObject* PhysicsObject;
-            public PhysicsCollider2D* PhysicsCollider;
         }
 
         public override void OnInit(Frame f) {
@@ -25,6 +21,7 @@ namespace Quantum {
             var clock = filter.clock;
 
             if (clock->Collected) {
+                UnityEngine.Debug.Log("Kill Time!");
                 QuantumUtils.Decrement(ref clock->TimeTillKill);
                 if (clock->TimeTillKill <= 0) {
                     f.Destroy(filter.Entity);
@@ -34,26 +31,33 @@ namespace Quantum {
         }
 
         #region Interactions
-        public static void OnClockMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
+        public static void OnClockMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
             var clock = f.Unsafe.GetPointer<Clock>(thisEntity);
+            if (clock->Collected)
+                return;
 
             clock->Collected = true;
             clock->TimeTillKill = 30;
             // += clock->Time;
+            f.Events.ClockCollect(thisEntity, f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position, clock->Time, clock->ResetTime, clock->TickTimeup);
         }
         #endregion
 
         #region Signals
         public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason) {
-            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Clock* clock)) {
                 return;
             }
 
             //Set Timeup
+            clock->TickTimeup = false;
 
             //Set ResetTime
+            clock->ResetTime = false;
 
             //SetTime
+            clock->Time = 10;
 
             //SetColor
         }

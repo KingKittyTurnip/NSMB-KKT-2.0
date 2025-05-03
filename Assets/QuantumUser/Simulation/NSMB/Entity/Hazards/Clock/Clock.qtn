@@ -10,4 +10,7 @@ component Clock {
 event ClockCollect {
 	EntityRef Entity;
 	FPVector2 pos;
+	int Time;
+	bool ResetTime;
+	bool TickTimeup;
 }
