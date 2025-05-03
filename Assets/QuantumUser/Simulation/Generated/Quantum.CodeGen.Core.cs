@@ -1819,21 +1819,28 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Hazard : Quantum.IComponent {
-    public const Int32 SIZE = 32;
+    public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(8)]
-    public QBoolean IsHazard;
     [FieldOffset(12)]
+    [ExcludeFromPrototype()]
+    public QBoolean IsHazard;
+    [FieldOffset(16)]
     public QBoolean IsHefty;
     [FieldOffset(4)]
     public QBoolean IPWSUntilGround;
     [FieldOffset(0)]
     public Byte IPWSTime;
-    [FieldOffset(16)]
+    [FieldOffset(24)]
     public FPVector2 SpawningVelocityRange;
-    [FieldOffset(1)]
+    [FieldOffset(2)]
     [ExcludeFromPrototype()]
     public Byte Team;
+    [FieldOffset(1)]
+    [ExcludeFromPrototype()]
+    public Byte LifeTime;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean Inactive;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 5591;
@@ -1843,14 +1850,18 @@ namespace Quantum {
         hash = hash * 31 + IPWSTime.GetHashCode();
         hash = hash * 31 + SpawningVelocityRange.GetHashCode();
         hash = hash * 31 + Team.GetHashCode();
+        hash = hash * 31 + LifeTime.GetHashCode();
+        hash = hash * 31 + Inactive.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Hazard*)ptr;
         serializer.Stream.Serialize(&p->IPWSTime);
+        serializer.Stream.Serialize(&p->LifeTime);
         serializer.Stream.Serialize(&p->Team);
         QBoolean.Serialize(&p->IPWSUntilGround, serializer);
+        QBoolean.Serialize(&p->Inactive, serializer);
         QBoolean.Serialize(&p->IsHazard, serializer);
         QBoolean.Serialize(&p->IsHefty, serializer);
         FPVector2.Serialize(&p->SpawningVelocityRange, serializer);
@@ -3115,6 +3126,9 @@ namespace Quantum {
   public unsafe partial interface ISignalOnReturnToRoom : ISignal {
     void OnReturnToRoom(Frame f);
   }
+  public unsafe partial interface ISignalInitializeHazard : ISignal {
+    void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason);
+  }
   public unsafe partial interface ISignalOnThrowHoldable : ISignal {
     void OnThrowHoldable(Frame f, EntityRef entity, EntityRef mario, QBoolean crouching, QBoolean dropped);
   }
@@ -3403,6 +3417,7 @@ namespace Quantum {
     private ISignalOnGameStarting[] _ISignalOnGameStartingSystems;
     private ISignalOnGameEnding[] _ISignalOnGameEndingSystems;
     private ISignalOnReturnToRoom[] _ISignalOnReturnToRoomSystems;
+    private ISignalInitializeHazard[] _ISignalInitializeHazardSystems;
     private ISignalOnThrowHoldable[] _ISignalOnThrowHoldableSystems;
     private ISignalOnIceBlockBroken[] _ISignalOnIceBlockBrokenSystems;
     private ISignalOnBeforeInteraction[] _ISignalOnBeforeInteractionSystems;
@@ -3441,6 +3456,7 @@ namespace Quantum {
       _ISignalOnGameStartingSystems = BuildSignalsArray<ISignalOnGameStarting>();
       _ISignalOnGameEndingSystems = BuildSignalsArray<ISignalOnGameEnding>();
       _ISignalOnReturnToRoomSystems = BuildSignalsArray<ISignalOnReturnToRoom>();
+      _ISignalInitializeHazardSystems = BuildSignalsArray<ISignalInitializeHazard>();
       _ISignalOnThrowHoldableSystems = BuildSignalsArray<ISignalOnThrowHoldable>();
       _ISignalOnIceBlockBrokenSystems = BuildSignalsArray<ISignalOnIceBlockBroken>();
       _ISignalOnBeforeInteractionSystems = BuildSignalsArray<ISignalOnBeforeInteraction>();
@@ -3725,6 +3741,15 @@ namespace Quantum {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
             s.OnReturnToRoom(_f);
+          }
+        }
+      }
+      public void InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason) {
+        var array = _f._ISignalInitializeHazardSystems;
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
+            s.InitializeHazard(_f, thisEntity, owner, spawnpoint, spawnReason);
           }
         }
       }

@@ -427,7 +427,6 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Hazard))]
   public unsafe partial class HazardPrototype : ComponentPrototype<Quantum.Hazard> {
-    public QBoolean IsHazard;
     public QBoolean IsHefty;
     public QBoolean IPWSUntilGround;
     public Byte IPWSTime;
@@ -439,7 +438,6 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context = default) {
-        result.IsHazard = this.IsHazard;
         result.IsHefty = this.IsHefty;
         result.IPWSUntilGround = this.IPWSUntilGround;
         result.IPWSTime = this.IPWSTime;

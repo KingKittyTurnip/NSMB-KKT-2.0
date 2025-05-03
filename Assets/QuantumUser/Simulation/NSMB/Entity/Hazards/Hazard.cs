@@ -5,7 +5,7 @@ using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 using System;
 
-namespace Quantum {
+namespace Quantum {/*
     public unsafe partial struct Hazard {
 
         public static event Action<Frame, bool> HeftySpawned;
@@ -30,7 +30,7 @@ namespace Quantum {
 
             // Physics
             transform->Position = spawnpoint;
-            physicsObject->Velocity = new(SpawningVelocityRange.X /*Insert RNG Calculator*/, SpawningVelocityRange.Y);
+            physicsObject->Velocity = new(SpawningVelocityRange.X Insert RNG Calculator, SpawningVelocityRange.Y);
         }
 
         public void Despawned(Frame f) {
@@ -38,5 +38,5 @@ namespace Quantum {
                 HeftySpawned?.Invoke(f, false);
             }
         }
-    }
+    }*/
 }

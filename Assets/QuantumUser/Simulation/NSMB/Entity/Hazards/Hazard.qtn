@@ -1,15 +1,14 @@
 component Hazard {
-	bool IsHazard;
-	bool IsHefty;
+	[ExcludeFromPrototype] bool IsHazard;
 
-	//IgnorePlayerWhenSpawning
+	bool IsHefty;
 	bool IPWSUntilGround;
 	byte IPWSTime;
-
-	//Specificdata
 	FPVector2 SpawningVelocityRange;
 
 	[ExcludeFromPrototype] byte Team;
+	[ExcludeFromPrototype] byte LifeTime;
+	[ExcludeFromPrototype] bool Inactive;
 }
 
 enum SpawnReason : Byte {
@@ -17,3 +16,5 @@ enum SpawnReason : Byte {
 	Bulb,
 	Fridge,
 }
+
+signal InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason);

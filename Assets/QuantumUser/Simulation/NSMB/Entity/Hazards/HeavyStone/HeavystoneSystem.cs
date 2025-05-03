@@ -6,7 +6,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 namespace Quantum {
     
     public unsafe class HeavyStoneSystem : SystemMainThreadFilterStage<HeavyStoneSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEntityBumped, ISignalOnBeforeInteraction,
-        ISignalOnTryLiquidSplash {
+        ISignalOnTryLiquidSplash, ISignalInitializeHazard {
 
         public struct Filter {
             public EntityRef Entity;
@@ -193,6 +193,15 @@ namespace Quantum {
 
         public void OnTryLiquidSplash(Frame f, EntityRef entity, EntityRef liquidEntity, QBoolean exit, bool* doSplash) {
             *doSplash = true;
+        }
+
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
+                return;
+            }
+
+            //uhh i would put specific hazard spawn data here
+            //Like The Activate heavystone stuff so it hurts on spawn
         }
         #endregion
     }
