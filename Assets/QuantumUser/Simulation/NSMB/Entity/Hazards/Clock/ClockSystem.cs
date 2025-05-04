@@ -36,7 +36,7 @@ Make Timer UI Pulse And Blink When Time Changed - (Add An Animation And Event Fo
             if (f.Global->Timer == 0) {
                 //Clocks Can't be Collected During Overtime
             } else if (clock->TickTimeup) {
-                f.Global->Timer = 10;
+                f.Global->Timer = 10 + FP._0_10;
             } else if (clock->ResetTime) {
                 f.Global->Timer = clock->Time = f.Global->Rules.TimerSeconds * f.UpdateRate;
             } else {

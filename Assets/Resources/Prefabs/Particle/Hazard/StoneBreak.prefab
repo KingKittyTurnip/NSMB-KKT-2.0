@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5859651690888885883}
   - component: {fileID: 6006421557060995789}
   - component: {fileID: 3617870472148960368}
+  - component: {fileID: -5838582615377458367}
   m_Layer: 17
   m_Name: StoneBreak
   m_TagString: Untagged
@@ -5004,3 +5005,16 @@ MonoBehaviour:
   soundOrigin: {fileID: 5041573631698971161}
   soundRange: 12
   maxPanning: 0.8
+--- !u!114 &-5838582615377458367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6779589790155936114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5fbc103d533164493b7c7708d7d456, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onlyDisable: 0

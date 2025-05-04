@@ -1,6 +1,7 @@
 using NSMB.Extensions;
 using NSMB.Sound;
 using Photon.Deterministic;
+using Photon.Deterministic.Protocol;
 using Quantum;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ public unsafe class SfxManager : QuantumSceneViewComponent {
         QuantumCallback.Subscribe<CallbackGameResynced>(this, OnGameResynced);
         QuantumEvent.Subscribe<EventTimerExpired>(this, OnTimerExpired, NetworkHandler.FilterOutReplayFastForward);
         QuantumEvent.Subscribe<EventMarioPlayerPreRespawned>(this, OnMarioPlayerPreRespawned, NetworkHandler.FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventClockCollect>(this, ClockCollect, NetworkHandler.FilterOutReplayFastForward);
     }
 
     public override void OnUpdateView() {
@@ -36,9 +38,11 @@ public unsafe class SfxManager : QuantumSceneViewComponent {
             if (!playedHurryUp && timer <= 60) {
                 sfx.PlayOneShot(SoundEffect.UI_HurryUp);
                 playedHurryUp = true;
+            } else if (playedHurryUp && timer > 60) {
+                playedHurryUp = false;
             }
 
-            int timerHalfSeconds = Mathf.Max(0, FPMath.CeilToInt(timer * 2));
+                int timerHalfSeconds = Mathf.Max(0, FPMath.CeilToInt(timer * 2));
             if (timerHalfSeconds != previousTimer && timerHalfSeconds > 0) {
                 if (timerHalfSeconds <= 6) {
                     sfx.PlayOneShot(SoundEffect.UI_Countdown_0);
@@ -70,5 +74,11 @@ public unsafe class SfxManager : QuantumSceneViewComponent {
         if (Game.PlayerIsLocal(mario->PlayerRef) && !musicPlayer.IsPlaying) {
             sfx.PlayOneShot(SoundEffect.UI_StartGame);
         }
+    }
+
+    //Always Play This Sound When Orange Clock Collected
+    private unsafe void ClockCollect(EventClockCollect e) {
+        if (e.TickTimeup) // Always Play Sound When Orange Clock Collected
+            playedHurryUp = false;
     }
 }
