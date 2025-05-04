@@ -41,7 +41,7 @@ Make Timer UI Pulse And Blink When Time Changed - (Add An Animation And Event Fo
                 f.Global->Timer = clock->Time = f.Global->Rules.TimerSeconds * f.UpdateRate;
             } else {
                 f.Global->Timer += clock->Time;
-                f.Global->Timer = FPMath.Clamp(f.Global->Timer, 1, f.Global->Rules.TimerSeconds * f.UpdateRate);
+                f.Global->Timer = FPMath.Clamp(f.Global->Timer, FP._0_50, f.Global->Rules.TimerSeconds * f.UpdateRate);
             }
 
             f.Events.ClockCollect(thisEntity, f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position, clock->Time, clock->ResetTime, clock->TickTimeup, f.Global->Timer == 0);
