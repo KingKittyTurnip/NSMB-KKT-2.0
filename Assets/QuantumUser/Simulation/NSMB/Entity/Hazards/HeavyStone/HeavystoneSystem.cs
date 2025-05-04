@@ -1,5 +1,7 @@
 using Photon.Deterministic;
+using System;
 using System.Diagnostics;
+using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.EventTrigger;
 
@@ -7,7 +9,15 @@ namespace Quantum {
     
     public unsafe class HeavyStoneSystem : SystemMainThreadFilterStage<HeavyStoneSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEntityBumped, ISignalOnBeforeInteraction,
         ISignalOnTryLiquidSplash, ISignalInitializeHazard {
+/*
+---------------------------------------
 
+Add Tarnish Movement - (Playersystem script)
+
+Make Interactions Work From Bellow - (??????? ask ipod ig)
+
+---------------------------------------
+*/
         public struct Filter {
             public EntityRef Entity;
             public Transform2D* Transform;
@@ -23,16 +33,18 @@ namespace Quantum {
             f.Context.Interactions.Register<HeavyStone, Goomba>(f, OnHeavyStoneGoombaInteraction);
             f.Context.Interactions.Register<HeavyStone, Koopa>(f, OnHeavyStoneKoopaInteraction);
             f.Context.Interactions.Register<HeavyStone, Bobomb>(f, OnHeavyStoneBobombInteraction);
-            //f.Context.Interactions.Register<HeavyStone, BulletBill>(f, OnHeavyStoneBulletBillInteraction);
-            //f.Context.Interactions.Register<HeavyStone, PiranhaPlant>(f, OnHeavyStonePiranhaPlantInteraction);
-            //f.Context.Interactions.Register<HeavyStone, Boo>(f, OnHeavyStoneBooInteraction);
-            //f.Context.Interactions.Register<HeavyStone, IceBlock>(f, OnHeavyStoneIceBlockInteraction);
+            f.Context.Interactions.Register<HeavyStone, BulletBill>(f, OnHeavyStoneBulletBillInteraction);
+            f.Context.Interactions.Register<HeavyStone, PiranhaPlant>(f, OnHeavyStonePiranhaPlantInteraction);
+            f.Context.Interactions.Register<HeavyStone, Boo>(f, OnHeavyStoneBooInteraction);
+            f.Context.Interactions.Register<HeavyStone, IceBlock>(f, OnHeavyStoneIceBlockInteraction);
             //f.Context.Interactions.Register<HeavyStone, IceBlock>(f, OnHeavyStoneIceBlockInteractionStationary);
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var stone = filter.heavystone;
             var physicsObject = filter.PhysicsObject;
+            var transform = filter.Transform;
+            var collider = filter.PhysicsCollider;
 
             if (stone->Thrown && physicsObject->IsTouchingGround) {
                 stone->Thrown = false;
@@ -42,10 +54,14 @@ namespace Quantum {
                 var entity = filter.Entity;
                 f.Events.HeavyStoneLand(entity, f.Unsafe.GetPointer<Transform2D>(entity)->Position);
             }
-        }
 
-        public static void Destroy(Frame f, EntityRef thisEntity) {
-            f.Destroy(thisEntity);
+            // Despawn off bottom of stage
+            if (transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
+                physicsObject->IsFrozen = true;
+
+                f.Destroy(filter.Entity);
+                return;
+            }
         }
 
         #region Interactions
@@ -97,53 +113,86 @@ namespace Quantum {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
 
-            if (!f.Exists(holdable->PreviousHolder) || !stone->Thrown) {
+            if (!(f.Exists(holdable->PreviousHolder) && stone->Thrown)) {
                 return;
             }
 
             CoinSystem.TryCollectCoin(f, coinEntity, holdable->PreviousHolder);
         }
 
-        public static void OnHeavyStoneGoombaInteraction(Frame f, EntityRef thisEntity, EntityRef goombaEntity) {
+        public static void OnHeavyStoneGoombaInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
-            var goomba = f.Unsafe.GetPointer<Goomba>(goombaEntity);
+            var goomba = f.Unsafe.GetPointer<Goomba>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
             if (stone->Thrown || beingHeld) {
                 // Destroy them
-                goomba->Kill(f, goombaEntity, thisEntity, KillReason.Special);
-            } else {
-                //EnemySystem.EnemyBumpTurnaround(f, koopaEntity, goombaEntity);
+                goomba->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
         }
 
-        public static void OnHeavyStoneKoopaInteraction(Frame f, EntityRef thisEntity, EntityRef koopaEntity) {
+        public static void OnHeavyStoneKoopaInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
-            var koopa = f.Unsafe.GetPointer<Koopa>(koopaEntity);
+            var koopa = f.Unsafe.GetPointer<Koopa>(otherEntity);
 
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
             if (stone->Thrown || beingHeld) {
                 // Destroy them
-                koopa->Kill(f, koopaEntity, thisEntity, KillReason.Special);
-            } else {
-                //EnemySystem.EnemyBumpTurnaround(f, koopaEntity, goombaEntity);
+                koopa->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
         }
 
-        public static void OnHeavyStoneBobombInteraction(Frame f, EntityRef thisEntity, EntityRef bobombEntity) {
+        public static void OnHeavyStoneBobombInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
-            var bobomb = f.Unsafe.GetPointer<Bobomb>(bobombEntity);
+            var bobomb = f.Unsafe.GetPointer<Bobomb>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
             if (stone->Thrown || beingHeld) {
                 // Destroy them
-                bobomb->Kill(f, bobombEntity, thisEntity, KillReason.Special);
-            } else {
-                //EnemySystem.EnemyBumpTurnaround(f, koopaEntity, goombaEntity);
+                bobomb->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
         }
+        public static void OnHeavyStoneBulletBillInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
+            var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
+            var bill = f.Unsafe.GetPointer<BulletBill>(otherEntity);
+            bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
+            if (stone->Thrown || beingHeld) {
+                // Destroy them
+                bill->Kill(f, otherEntity, thisEntity, KillReason.Special);
+            }
+        }
+        public static void OnHeavyStonePiranhaPlantInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
+            var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
+            var plant = f.Unsafe.GetPointer<PiranhaPlant>(otherEntity);
+            bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
+
+            if (stone->Thrown || beingHeld) {
+                // Destroy them
+                plant->Kill(f, otherEntity, thisEntity, KillReason.Special);
+            }
+        }
+        public static void OnHeavyStoneBooInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
+            var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
+            var boo = f.Unsafe.GetPointer<Boo>(otherEntity);
+            bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
+
+            if (stone->Thrown || beingHeld) {
+                // Destroy them
+                boo->Kill(f, otherEntity, thisEntity, KillReason.Special);
+            }
+        }
+        public static void OnHeavyStoneIceBlockInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
+            var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
+            var boo = f.Unsafe.GetPointer<Boo>(otherEntity);
+            bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
+
+            if (stone->Thrown || beingHeld) {
+                // Destroy them
+                boo->Kill(f, otherEntity, thisEntity, KillReason.Special);
+            }
+        }
         #endregion
 
         #region Signals

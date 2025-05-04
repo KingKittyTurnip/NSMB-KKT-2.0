@@ -227,13 +227,14 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventClockCollect ClockCollect(EntityRef Entity, FPVector2 pos, Int32 Time, QBoolean ResetTime, QBoolean TickTimeup) {
+      public EventClockCollect ClockCollect(EntityRef Entity, FPVector2 pos, Int32 Time, QBoolean ResetTime, QBoolean TickTimeup, QBoolean Overtime) {
         var ev = _f.Context.AcquireEvent<EventClockCollect>(EventClockCollect.ID);
         ev.Entity = Entity;
         ev.pos = pos;
         ev.Time = Time;
         ev.ResetTime = ResetTime;
         ev.TickTimeup = TickTimeup;
+        ev.Overtime = Overtime;
         _f.AddEvent(ev);
         return ev;
       }
@@ -1015,6 +1016,7 @@ namespace Quantum {
     public Int32 Time;
     public QBoolean ResetTime;
     public QBoolean TickTimeup;
+    public QBoolean Overtime;
     protected EventClockCollect(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
@@ -1037,6 +1039,7 @@ namespace Quantum {
         hash = hash * 31 + Time.GetHashCode();
         hash = hash * 31 + ResetTime.GetHashCode();
         hash = hash * 31 + TickTimeup.GetHashCode();
+        hash = hash * 31 + Overtime.GetHashCode();
         return hash;
       }
     }

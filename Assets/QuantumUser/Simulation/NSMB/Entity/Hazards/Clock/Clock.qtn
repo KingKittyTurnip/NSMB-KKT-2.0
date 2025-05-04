@@ -2,9 +2,6 @@ component Clock {
 	int Time;
 	bool TickTimeup;
 	bool ResetTime;
-
-	[ExcludeFromPrototype] bool Collected;
-	[ExcludeFromPrototype] byte TimeTillKill;
 }
 
 event ClockCollect {
@@ -13,4 +10,5 @@ event ClockCollect {
 	int Time;
 	bool ResetTime;
 	bool TickTimeup;
+	bool Overtime;
 }

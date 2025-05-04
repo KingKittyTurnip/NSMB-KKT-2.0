@@ -1569,36 +1569,26 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Clock : Quantum.IComponent {
-    public const Int32 SIZE = 20;
+    public const Int32 SIZE = 12;
     public const Int32 ALIGNMENT = 4;
-    [FieldOffset(4)]
-    public Int32 Time;
-    [FieldOffset(16)]
-    public QBoolean TickTimeup;
-    [FieldOffset(12)]
-    public QBoolean ResetTime;
-    [FieldOffset(8)]
-    [ExcludeFromPrototype()]
-    public QBoolean Collected;
     [FieldOffset(0)]
-    [ExcludeFromPrototype()]
-    public Byte TimeTillKill;
+    public Int32 Time;
+    [FieldOffset(8)]
+    public QBoolean TickTimeup;
+    [FieldOffset(4)]
+    public QBoolean ResetTime;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 13649;
         hash = hash * 31 + Time.GetHashCode();
         hash = hash * 31 + TickTimeup.GetHashCode();
         hash = hash * 31 + ResetTime.GetHashCode();
-        hash = hash * 31 + Collected.GetHashCode();
-        hash = hash * 31 + TimeTillKill.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Clock*)ptr;
-        serializer.Stream.Serialize(&p->TimeTillKill);
         serializer.Stream.Serialize(&p->Time);
-        QBoolean.Serialize(&p->Collected, serializer);
         QBoolean.Serialize(&p->ResetTime, serializer);
         QBoolean.Serialize(&p->TickTimeup, serializer);
     }

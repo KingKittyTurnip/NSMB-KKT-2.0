@@ -7,7 +7,15 @@ using static UnityEngine.EventSystems.EventTrigger;
 namespace Quantum {
     
     public unsafe class ClockSystem : SystemMainThreadFilterStage<ClockSystem.Filter>, ISignalInitializeHazard {
+/*
+ ---------------------------------------
 
+Fix The Font Issues With The Clock particles - (Modify Spritesheet)
+
+Make Timer UI Pulse And Blink When Time Changed - (Add An Animation And Event For It)
+
+ ---------------------------------------
+*/
         public struct Filter {
             public EntityRef Entity;
             public Clock* clock;
@@ -18,28 +26,26 @@ namespace Quantum {
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
-            var clock = filter.clock;
-
-            if (clock->Collected) {
-                UnityEngine.Debug.Log("Kill Time!");
-                QuantumUtils.Decrement(ref clock->TimeTillKill);
-                if (clock->TimeTillKill <= 0) {
-                    f.Destroy(filter.Entity);
-                }
-            }
-
         }
 
         #region Interactions
         public static void OnClockMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
             var clock = f.Unsafe.GetPointer<Clock>(thisEntity);
-            if (clock->Collected)
-                return;
 
-            clock->Collected = true;
-            clock->TimeTillKill = 30;
-            // += clock->Time;
-            f.Events.ClockCollect(thisEntity, f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position, clock->Time, clock->ResetTime, clock->TickTimeup);
+            // Change GlobalTime
+            if (f.Global->Timer == 0) {
+                //Clocks Can't be Collected During Overtime
+            } else if (clock->TickTimeup) {
+                f.Global->Timer = 10;
+            } else if (clock->ResetTime) {
+                f.Global->Timer = clock->Time = f.Global->Rules.TimerSeconds * f.UpdateRate;
+            } else {
+                f.Global->Timer += clock->Time;
+                f.Global->Timer = FPMath.Clamp(f.Global->Timer, 1, f.Global->Rules.TimerSeconds * f.UpdateRate);
+            }
+
+            f.Events.ClockCollect(thisEntity, f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position, clock->Time, clock->ResetTime, clock->TickTimeup, f.Global->Timer == 0);
+            f.Destroy(thisEntity);
         }
         #endregion
 
@@ -50,7 +56,7 @@ namespace Quantum {
                 return;
             }
 
-            //Set Timeup
+            //Set TickTimeup
             clock->TickTimeup = false;
 
             //Set ResetTime
@@ -58,8 +64,6 @@ namespace Quantum {
 
             //SetTime
             clock->Time = 10;
-
-            //SetColor
         }
         #endregion
     }
