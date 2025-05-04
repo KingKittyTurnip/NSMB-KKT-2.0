@@ -78,7 +78,7 @@ public unsafe class SfxManager : QuantumSceneViewComponent {
 
     //Always Play This Sound When Orange Clock Collected
     private unsafe void ClockCollect(EventClockCollect e) {
-        if (e.TickTimeup) // Always Play Sound When Orange Clock Collected
+        if (e.TickTimeup && !e.Overtime) // Always Play Sound When Orange Clock Collected
             playedHurryUp = false;
     }
 }

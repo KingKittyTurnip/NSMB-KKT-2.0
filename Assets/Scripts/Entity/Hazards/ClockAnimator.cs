@@ -46,14 +46,14 @@ public unsafe class ClockAnimator : QuantumEntityViewComponent {
         if (e.Overtime) { text = "-0-";  color = new Color32(255, 0, 0, 255);
         } else if (e.TickTimeup) { text = "0:10";  color = new Color32(255, 0, 0, 255);
         } else if (e.ResetTime) { text = Utils.SecondsToMinuteSeconds(e.Time);  color = new Color32(17, 247, 33, 255);
-        } if (e.Time < 0) { color = new Color32(201, 14, 186, 255);
+        } else if (e.Time < 0) { color = new Color32(201, 14, 186, 255);
         }
         //TODO: Make Timer Text Blink Instead of Bouce
         GameObject number = Instantiate(coinNumberParticle, e.pos.ToUnityVector3() + new Vector3(0, 0, -1), Quaternion.identity);
         number.GetComponentInChildren<NumberParticle>().Initialize(
             Utils.GetSymbolString(text, Utils.numberSymbols),
             color,
-            e.TickTimeup
+            e.TickTimeup && !e.Overtime
         );
         Instantiate(
             breakPrefab,
