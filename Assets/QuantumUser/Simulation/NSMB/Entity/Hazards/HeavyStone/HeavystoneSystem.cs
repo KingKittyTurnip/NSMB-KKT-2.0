@@ -29,7 +29,6 @@ Make Interactions Work From Bellow - (??????? ask ipod ig)
 
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<HeavyStone, Coin>(f, OnHeavyStoneCoinInteraction);
-            f.Context.Interactions.Register<MarioPlayer, HeavyStone>(f, OnHeavyStoneMarioInteraction);
             f.Context.Interactions.Register<HeavyStone, Goomba>(f, OnHeavyStoneGoombaInteraction);
             f.Context.Interactions.Register<HeavyStone, Koopa>(f, OnHeavyStoneKoopaInteraction);
             f.Context.Interactions.Register<HeavyStone, Bobomb>(f, OnHeavyStoneBobombInteraction);
@@ -38,6 +37,7 @@ Make Interactions Work From Bellow - (??????? ask ipod ig)
             f.Context.Interactions.Register<HeavyStone, Boo>(f, OnHeavyStoneBooInteraction);
             f.Context.Interactions.Register<HeavyStone, IceBlock>(f, OnHeavyStoneIceBlockInteraction);
             //f.Context.Interactions.Register<HeavyStone, IceBlock>(f, OnHeavyStoneIceBlockInteractionStationary);
+            f.Context.Interactions.Register<MarioPlayer, HeavyStone>(f, OnHeavyStoneMarioInteraction);
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -66,28 +66,36 @@ Make Interactions Work From Bellow - (??????? ask ipod ig)
 
         #region Interactions
         public static void OnHeavyStoneMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
+            UnityEngine.Debug.Log("Touch");
+            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+            if (f.Exists(holdable->Holder))
+                return;
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
 
-            FP upDot = FPVector2.Dot(contact.Normal, FPVector2.Up);
-            //Bug, Sometimes When Struck From bellow Doesn't Work
+            var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
+            var stoneTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+            var stoneCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
+            QuantumUtils.UnwrapWorldLocations(f, stoneTransform->Position + ((stoneCollider->Shape.Centroid.Y - stoneCollider->Shape.Box.Extents.Y) * FPVector2.Up), marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+            FPVector2 damageDirection = (theirPos - ourPos).Normalized;
+            FP upDot = FPVector2.Dot(damageDirection, FPVector2.Up);
+
             if (stone->Thrown || !physicsObject->IsTouchingGround) {
                 // It's A Stone Luigi
-                mario->DoKnockback(f, marioEntity, contact.Normal.X > 0, 3, false, thisEntity);
+                mario->DoKnockback(f, marioEntity, damageDirection.X > 0, 3, false, thisEntity);
                 return;
             } else if (upDot >= PhysicsObjectSystem.GroundMaxAngle || upDot <= -PhysicsObjectSystem.GroundMaxAngle) {
                 // Top/Bottom, Do Nothing
                 return;
             } else {
-                bool rightContact = contact.Normal.X > 0;
+                bool rightContact = damageDirection.X > 0;
                 if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
                     // HOMERUN
                     f.Events.PlayComboSound(thisEntity, 0);
                     stone->Thrown = true;
                     physicsObject->IsTouchingGround = false;
-                    physicsObject->Velocity = new FPVector2(contact.Normal.X > 0 ? -8 : 8, 5);
+                    physicsObject->Velocity = new FPVector2(damageDirection.X > 0 ? -8 : 8, 5);
                     return;
                 }
             }
@@ -100,15 +108,14 @@ Make Interactions Work From Bellow - (??????? ask ipod ig)
                     return;
                 } */
 
-                // Attempt pickup (assuming it isn't already picked up)
-
-                if (!f.Exists(holdable->Holder) && mario->CanPickupItem(f, marioEntity, thisEntity)) {
+                // Attempt pickup
+                if (mario->CanPickupItem(f, marioEntity, thisEntity)) {
                     // Pickup successful
                     holdable->Pickup(f, thisEntity, marioEntity);
                 }
             }
         }
-        // what? Why Don't You Work!
+        
         public static void OnHeavyStoneCoinInteraction(Frame f, EntityRef thisEntity, EntityRef coinEntity) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
@@ -185,12 +192,12 @@ Make Interactions Work From Bellow - (??????? ask ipod ig)
         }
         public static void OnHeavyStoneIceBlockInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var stone = f.Unsafe.GetPointer<HeavyStone>(thisEntity);
-            var boo = f.Unsafe.GetPointer<Boo>(otherEntity);
+            var ice = f.Unsafe.GetPointer<IceBlock>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
             if (stone->Thrown || beingHeld) {
                 // Destroy them
-                boo->Kill(f, otherEntity, thisEntity, KillReason.Special);
+                IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other);
             }
         }
         #endregion

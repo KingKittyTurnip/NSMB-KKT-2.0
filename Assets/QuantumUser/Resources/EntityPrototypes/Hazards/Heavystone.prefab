@@ -134,7 +134,7 @@ MonoBehaviour:
       IsPersistent: 1
       CompoundShapes: []
     LayerSource: 1
-    Layer: 8
+    Layer: 0
     CallbackFlags:
       Value: 448
   PhysicsBody:
@@ -257,6 +257,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -8359218312643153770, guid: b73add24eb026c844b85593f8bab1f8c,
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 5b37bd296278e534a9d438cbf66937ca, type: 3}
+  m_Resource: {fileID: 8300000, guid: 5b37bd296278e534a9d438cbf66937ca, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 0.8
@@ -586,6 +587,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -623,7 +627,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &7951034468652964222
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -637,6 +641,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
