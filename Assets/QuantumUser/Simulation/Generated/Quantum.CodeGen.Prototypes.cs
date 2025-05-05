@@ -465,21 +465,6 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.HeavyStone))]
-  public unsafe partial class HeavyStonePrototype : ComponentPrototype<Quantum.HeavyStone> {
-    [HideInInspector()]
-    public Int32 _empty_prototype_dummy_field_;
-    partial void MaterializeUser(Frame frame, ref Quantum.HeavyStone result, in PrototypeMaterializationContext context);
-    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
-        Quantum.HeavyStone component = default;
-        Materialize((Frame)f, ref component, in context);
-        return f.Set(entity, component) == SetResult.ComponentAdded;
-    }
-    public void Materialize(Frame frame, ref Quantum.HeavyStone result, in PrototypeMaterializationContext context = default) {
-        MaterializeUser(frame, ref result, in context);
-    }
-  }
-  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Holdable))]
   public unsafe partial class HoldablePrototype : ComponentPrototype<Quantum.Holdable> {
     public QBoolean HoldAboveHead;
@@ -888,6 +873,29 @@ namespace Quantum.Prototypes {
         result.Tile = this.Tile;
         result.Rotation = this.Rotation;
         result.Flags = this.Flags;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.ThrowingObject))]
+  public unsafe partial class ThrowingObjectPrototype : ComponentPrototype<Quantum.ThrowingObject> {
+    public Quantum.QEnum8<ThrowingObjectType> Type;
+    public QBoolean GroundBounce;
+    public QBoolean BouceOffPlayer;
+    public Byte StarsToDrop;
+    public QBoolean IgnoreTeamates;
+    partial void MaterializeUser(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.ThrowingObject component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context = default) {
+        result.Type = this.Type;
+        result.GroundBounce = this.GroundBounce;
+        result.BouceOffPlayer = this.BouceOffPlayer;
+        result.StarsToDrop = this.StarsToDrop;
+        result.IgnoreTeamates = this.IgnoreTeamates;
         MaterializeUser(frame, ref result, in context);
     }
   }

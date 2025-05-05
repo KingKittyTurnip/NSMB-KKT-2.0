@@ -14,6 +14,8 @@ Fix The Font Issues With The Clock particles - (Modify Spritesheet)
 
 Make Timer UI Pulse And Blink When Time Changed - (Add An Animation And Event For It)
 
+Use The Correct Sound For Collection
+
  ---------------------------------------
 */
         public struct Filter {

@@ -1,0 +1,31 @@
+component ThrowingObject {
+    ThrowingObjectType Type;
+    bool GroundBounce;
+	bool BouceOffPlayer;
+
+	byte StarsToDrop;
+	bool IgnoreTeamates;
+
+	[ExcludeFromPrototype] bool Thrown;
+	[ExcludeFromPrototype] bool Facing;
+	[ExcludeFromPrototype] byte BounceTimes;
+}
+
+enum ThrowingObjectType : Byte {
+    Basic,
+	Stone, // For Particle When Landing
+	Spring, // For Spring Effect
+	RedPow, // For Explosion
+	BluePow, // For Grounded Explosion
+	Barrel, // For Damage
+	Freezie, // For Freeze And Split Effect
+	CoinBox, // For Coin Giving
+	PropellerBox, // For Flying
+	BillBlock, // For Gliding
+	CannonBox, // For Pewing
+}
+
+event HeavyStoneLand {
+	EntityRef Entity;
+	FPVector2 pos;
+}

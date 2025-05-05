@@ -267,7 +267,6 @@ MonoBehaviour:
     - rid: 2298057438244372484
     - rid: 2298057438244372485
     - rid: 2298057438244372486
-    - rid: 2298057438244372487
   - Components:
     - rid: 7563133792722878464
     - rid: 7563133792722878465
@@ -276,7 +275,6 @@ MonoBehaviour:
     - rid: 7563133792722878468
     - rid: 7563133792722878469
     - rid: 7563133792722878470
-    - rid: 7563133792722878471
   - Components:
     - rid: 4112465285812846592
     - rid: 4112465285812846593
@@ -285,7 +283,6 @@ MonoBehaviour:
     - rid: 4112465285812846596
     - rid: 4112465285812846597
     - rid: 4112465285812846598
-    - rid: 4112465285812846599
   - Components:
     - rid: 1984112996254744576
     - rid: 1984112996254744577
@@ -294,7 +291,6 @@ MonoBehaviour:
     - rid: 1984112996254744580
     - rid: 1984112996254744581
     - rid: 1984112996254744582
-    - rid: 1984112996254744583
   - Components:
     - rid: 4516508314787381248
     - rid: 4516508314787381249
@@ -782,26 +778,6 @@ MonoBehaviour:
       data:
         _empty_prototype_dummy_field_: 0
     - rid: 1984112996254744582
-      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        Gravity:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        TerminalVelocity:
-          RawValue: 0
-        IsFrozen:
-          Value: 1
-        DisableCollision:
-          Value: 0
-        SlowInLiquids:
-          Value: 0
-        IsWaterSolid:
-          Value: 0
-        BreakMegaObjects:
-          Value: 0
-    - rid: 1984112996254744583
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -1038,26 +1014,6 @@ MonoBehaviour:
       data:
         _empty_prototype_dummy_field_: 0
     - rid: 2298057438244372486
-      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        Gravity:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        TerminalVelocity:
-          RawValue: 0
-        IsFrozen:
-          Value: 1
-        DisableCollision:
-          Value: 0
-        SlowInLiquids:
-          Value: 0
-        IsWaterSolid:
-          Value: 0
-        BreakMegaObjects:
-          Value: 0
-    - rid: 2298057438244372487
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -1695,26 +1651,6 @@ MonoBehaviour:
       data:
         _empty_prototype_dummy_field_: 0
     - rid: 4112465285812846598
-      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        Gravity:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        TerminalVelocity:
-          RawValue: 0
-        IsFrozen:
-          Value: 1
-        DisableCollision:
-          Value: 0
-        SlowInLiquids:
-          Value: 0
-        IsWaterSolid:
-          Value: 0
-        BreakMegaObjects:
-          Value: 0
-    - rid: 4112465285812846599
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -1899,6 +1835,8 @@ MonoBehaviour:
             RawValue: 0
         IgnoreMovement:
           Value: 1
+        CanCrushEntities:
+          Value: 0
     - rid: 4516508314787381258
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2132,6 +2070,8 @@ MonoBehaviour:
           Y:
             RawValue: 0
         IgnoreMovement:
+          Value: 0
+        CanCrushEntities:
           Value: 0
     - rid: 5758893550083244038
       type: {class: SpinnerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -3119,26 +3059,6 @@ MonoBehaviour:
       data:
         _empty_prototype_dummy_field_: 0
     - rid: 7563133792722878470
-      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        Gravity:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        TerminalVelocity:
-          RawValue: 0
-        IsFrozen:
-          Value: 1
-        DisableCollision:
-          Value: 0
-        SlowInLiquids:
-          Value: 0
-        IsWaterSolid:
-          Value: 0
-        BreakMegaObjects:
-          Value: 0
-    - rid: 7563133792722878471
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0

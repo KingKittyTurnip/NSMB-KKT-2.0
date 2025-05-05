@@ -100,6 +100,19 @@ namespace Quantum {
     MirrorX = 1,
     MirrorY = 2,
   }
+  public enum ThrowingObjectType : byte {
+    Basic,
+    Stone,
+    Spring,
+    RedPow,
+    BluePow,
+    Barrel,
+    Freezie,
+    CoinBox,
+    PropellerBox,
+    BillBlock,
+    CannonBox,
+  }
   [System.FlagsAttribute()]
   public enum InputButtons : int {
     Up = 1 << 0,
@@ -1894,25 +1907,6 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
-  public unsafe partial struct HeavyStone : Quantum.IComponent {
-    public const Int32 SIZE = 4;
-    public const Int32 ALIGNMENT = 4;
-    [FieldOffset(0)]
-    [ExcludeFromPrototype()]
-    public QBoolean Thrown;
-    public override Int32 GetHashCode() {
-      unchecked { 
-        var hash = 14771;
-        hash = hash * 31 + Thrown.GetHashCode();
-        return hash;
-      }
-    }
-    public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (HeavyStone*)ptr;
-        QBoolean.Serialize(&p->Thrown, serializer);
-    }
-  }
-  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Holdable : Quantum.IComponent {
     public const Int32 SIZE = 32;
     public const Int32 ALIGNMENT = 8;
@@ -3096,6 +3090,55 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct ThrowingObject : Quantum.IComponent {
+    public const Int32 SIZE = 24;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(2)]
+    public ThrowingObjectType Type;
+    [FieldOffset(12)]
+    public QBoolean GroundBounce;
+    [FieldOffset(4)]
+    public QBoolean BouceOffPlayer;
+    [FieldOffset(1)]
+    public Byte StarsToDrop;
+    [FieldOffset(16)]
+    public QBoolean IgnoreTeamates;
+    [FieldOffset(20)]
+    [ExcludeFromPrototype()]
+    public QBoolean Thrown;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean Facing;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte BounceTimes;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 19073;
+        hash = hash * 31 + (Byte)Type;
+        hash = hash * 31 + GroundBounce.GetHashCode();
+        hash = hash * 31 + BouceOffPlayer.GetHashCode();
+        hash = hash * 31 + StarsToDrop.GetHashCode();
+        hash = hash * 31 + IgnoreTeamates.GetHashCode();
+        hash = hash * 31 + Thrown.GetHashCode();
+        hash = hash * 31 + Facing.GetHashCode();
+        hash = hash * 31 + BounceTimes.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (ThrowingObject*)ptr;
+        serializer.Stream.Serialize(&p->BounceTimes);
+        serializer.Stream.Serialize(&p->StarsToDrop);
+        serializer.Stream.Serialize((Byte*)&p->Type);
+        QBoolean.Serialize(&p->BouceOffPlayer, serializer);
+        QBoolean.Serialize(&p->Facing, serializer);
+        QBoolean.Serialize(&p->GroundBounce, serializer);
+        QBoolean.Serialize(&p->IgnoreTeamates, serializer);
+        QBoolean.Serialize(&p->Thrown, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct WrappingObject : Quantum.IComponent {
     public const Int32 SIZE = 4;
     public const Int32 ALIGNMENT = 4;
@@ -3543,8 +3586,6 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Goomba>();
       BuildSignalsArrayOnComponentAdded<Quantum.Hazard>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Hazard>();
-      BuildSignalsArrayOnComponentAdded<Quantum.HeavyStone>();
-      BuildSignalsArrayOnComponentRemoved<Quantum.HeavyStone>();
       BuildSignalsArrayOnComponentAdded<Quantum.Holdable>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Holdable>();
       BuildSignalsArrayOnComponentAdded<Quantum.IceBlock>();
@@ -3603,6 +3644,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Projectile>();
       BuildSignalsArrayOnComponentAdded<Quantum.Spinner>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Spinner>();
+      BuildSignalsArrayOnComponentAdded<Quantum.ThrowingObject>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.ThrowingObject>();
       BuildSignalsArrayOnComponentAdded<Transform2D>();
       BuildSignalsArrayOnComponentRemoved<Transform2D>();
       BuildSignalsArrayOnComponentAdded<Transform2DVertical>();
@@ -3970,7 +4013,6 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.GenericMover), Quantum.GenericMover.SIZE);
       typeRegistry.Register(typeof(Quantum.Goomba), Quantum.Goomba.SIZE);
       typeRegistry.Register(typeof(Quantum.Hazard), Quantum.Hazard.SIZE);
-      typeRegistry.Register(typeof(Quantum.HeavyStone), Quantum.HeavyStone.SIZE);
       typeRegistry.Register(typeof(HingeJoint), HingeJoint.SIZE);
       typeRegistry.Register(typeof(HingeJoint3D), HingeJoint3D.SIZE);
       typeRegistry.Register(typeof(Hit), Hit.SIZE);
@@ -4046,6 +4088,8 @@ namespace Quantum {
       typeRegistry.Register(typeof(SpringJoint3D), SpringJoint3D.SIZE);
       typeRegistry.Register(typeof(Quantum.StageTileFlags), 1);
       typeRegistry.Register(typeof(Quantum.StageTileInstance), Quantum.StageTileInstance.SIZE);
+      typeRegistry.Register(typeof(Quantum.ThrowingObject), Quantum.ThrowingObject.SIZE);
+      typeRegistry.Register(typeof(Quantum.ThrowingObjectType), 1);
       typeRegistry.Register(typeof(Transform2D), Transform2D.SIZE);
       typeRegistry.Register(typeof(Transform2DVertical), Transform2DVertical.SIZE);
       typeRegistry.Register(typeof(Transform3D), Transform3D.SIZE);
@@ -4076,7 +4120,6 @@ namespace Quantum {
         .Add<Quantum.GenericMover>(Quantum.GenericMover.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Goomba>(Quantum.Goomba.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Hazard>(Quantum.Hazard.Serialize, null, null, ComponentFlags.None)
-        .Add<Quantum.HeavyStone>(Quantum.HeavyStone.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Holdable>(Quantum.Holdable.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.IceBlock>(Quantum.IceBlock.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Interactable>(Quantum.Interactable.Serialize, null, null, ComponentFlags.None)
@@ -4093,6 +4136,7 @@ namespace Quantum {
         .Add<Quantum.Powerup>(Quantum.Powerup.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Projectile>(Quantum.Projectile.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Spinner>(Quantum.Spinner.Serialize, Quantum.Spinner.OnAdded, Quantum.Spinner.OnRemoved, ComponentFlags.None)
+        .Add<Quantum.ThrowingObject>(Quantum.ThrowingObject.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.WrappingObject>(Quantum.WrappingObject.Serialize, null, null, ComponentFlags.None)
         .Finish();
     }
@@ -4117,6 +4161,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<QueryOptions>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.SpawnReason>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.StageTileFlags>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.ThrowingObjectType>();
     }
   }
 }

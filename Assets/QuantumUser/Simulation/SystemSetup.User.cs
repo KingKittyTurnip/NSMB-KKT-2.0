@@ -52,7 +52,7 @@ namespace Quantum {
 
                     // new BetterPhysicsObjectSystem()
 
-                    new HeavyStoneSystem(),
+                    new ThrowingObjectSystem(),
                     new ClockSystem()
                 )
             );
