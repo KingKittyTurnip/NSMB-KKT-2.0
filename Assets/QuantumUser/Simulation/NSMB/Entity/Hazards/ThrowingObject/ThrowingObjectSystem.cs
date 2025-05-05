@@ -9,14 +9,26 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
-    public unsafe class ThrowingObjectSystem : SystemMainThreadFilterStage<ThrowingObjectSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEntityBumped, ISignalOnBeforeInteraction,
+    public unsafe class ThrowingObjectSystem : SystemMainThreadFilterStage<ThrowingObjectSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEntityBumped, //ISignalOnBeforeInteraction,
         ISignalOnTryLiquidSplash, ISignalInitializeHazard {
 /*
 ---------------------------------------
 
-Make Player Treat These As semi Solids If Stuck inside
+Make Player Treat These As semi Solids If Stuck inside If It's A Solid Carryable
 
 stone - Add Tarnish Movement - (Playersystem script)
+PropellerBox - Add propeller Ability
+BillBlock - Make & Add Bill Hover Ability
+
+baseball
+Spring
+RedPow
+BluePow
+Barrel
+Freezie
+CoinBox
+CannonBox
+fridge
 
 ---------------------------------------
 */
@@ -73,6 +85,9 @@ stone - Add Tarnish Movement - (Playersystem script)
                 physicsObject->Velocity.X = 0;
             }
 
+            //physicsObject->DisableCollision = false;
+            Dis->CanHit = (Dis->Thrown || Dis->BounceTimes != 0);
+
             // Special Updates
             switch (Dis->Type) {
             case ThrowingObjectType.Basic:
@@ -93,6 +108,7 @@ stone - Add Tarnish Movement - (Playersystem script)
             case ThrowingObjectType.PropellerBox:
             case ThrowingObjectType.BillBlock:
             case ThrowingObjectType.CannonBox:
+            case ThrowingObjectType.Fridge:
                 break;
             }
         }
@@ -105,6 +121,7 @@ stone - Add Tarnish Movement - (Playersystem script)
             #region SetValues
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
+            var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity); var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
@@ -117,12 +134,16 @@ stone - Add Tarnish Movement - (Playersystem script)
 
             if ((Dis->Thrown || (!physicsObject->IsTouchingGround && Dis->BounceTimes == 0)) && mario->IsDamageable) {
                 // Hit Player (Unless Not)
-                Dis->Thrown = false;
-                physicsObject->IsTouchingGround = false;
-                physicsObject->Velocity = new FPVector2(hitRight ? 1 : -1, 4);
+                if (Dis->BouceOffPlayer) {
+                    Dis->Thrown = false;
+                    physicsObject->IsTouchingGround = false;
+                    physicsObject->Velocity = new FPVector2(hitRight ? 1 : -1, 4);
+                }
                 if (Dis->GroundBounce) Dis->BounceTimes = 1;
-                if (Dis->StarsToDrop != 0)
-                    mario->DoKnockback(f, marioEntity, hitRight, Dis->IgnoreTeamates ? 0 : Dis->StarsToDrop, Dis->IgnoreTeamates, thisEntity);
+                if (Dis->StarsToDrop != 0) {
+                    bool TeamateItem = !Dis->IgnoreTeamates && (mario->GetTeam(f) + 1) != hazard->Team;
+                    mario->DoKnockback(f, marioEntity, hitRight, TeamateItem ? 0 : Dis->StarsToDrop, TeamateItem, thisEntity);
+                }
                 return;
             } else if (!(upDot >= PhysicsObjectSystem.GroundMaxAngle || upDot <= -PhysicsObjectSystem.GroundMaxAngle) && mario->CurrentPowerupState == PowerupState.MegaMushroom) {
                 if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
@@ -133,31 +154,32 @@ stone - Add Tarnish Movement - (Playersystem script)
                     physicsObject->Velocity = new FPVector2(hitRight ? -8 : 8, 5);
                     return;
                 }
-            } else if (upDot < PhysicsObjectSystem.GroundMaxAngle && FPMath.Abs(damageDirection.X) < 1 && !(physicsObject->IsTouchingGround && upDot <= -PhysicsObjectSystem.GroundMaxAngle)) {
+            } else if (upDot < Constants._0_66 && FPMath.Abs(damageDirection.X) < Constants._0_90 && !(physicsObject->IsTouchingGround && upDot <= -PhysicsObjectSystem.GroundMaxAngle)) {
                 //PlayerInsideObject
                 if (Dis->BouceOffPlayer) {
                     // Bouce Off Player
                     Dis->Thrown = false;
                     physicsObject->Velocity = new FPVector2(hitRight ? -1 : 1, 4);
                     physicsObject->IsTouchingGround = false;
-                    if (Dis->GroundBounce) Dis->BounceTimes = 1;
+                    if (Dis->GroundBounce) 
+                        Dis->BounceTimes = 1;
                 } else {
-                    //uhhhh
+                    //physicsObject->DisableCollision = true;
                 }
             }
 
             if (!Dis->Thrown && upDot < PhysicsObjectSystem.GroundMaxAngle) {
                 //Only Allow Carry If No Team Or Same Team --- TOTEST
-                /*var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
-                var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
-                if (hazard->Team != 64 && mario->GetTeam(f) != hazard->Team) {
+                if (hazard->Team != 0 && (mario->GetTeam(f) + 1) != hazard->Team) {
                     return;
-                } */
+                }
 
                 // Attempt pickup
                 if (mario->CanPickupItem(f, marioEntity, thisEntity)) {
                     // Pickup successful
                     holdable->Pickup(f, thisEntity, marioEntity);
+                    var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+                    marioPhysicsObject->Velocity.X = marioPhysicsObject->PreviousFrameVelocity.X;
                 }
             }
         }
@@ -165,8 +187,9 @@ stone - Add Tarnish Movement - (Playersystem script)
         public static void OnThrowingObjectCoinInteraction(Frame f, EntityRef thisEntity, EntityRef coinEntity) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
 
-            if (!(f.Exists(holdable->PreviousHolder) && Dis->Thrown)) {
+            if (!(Dis->CanHit && f.Exists(holdable->PreviousHolder))) {
                 return;
             }
 
@@ -178,7 +201,7 @@ stone - Add Tarnish Movement - (Playersystem script)
             var goomba = f.Unsafe.GetPointer<Goomba>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->Thrown || beingHeld) {
+            if (Dis->CanHit || beingHeld) {
                 // Destroy them
                 goomba->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -190,7 +213,7 @@ stone - Add Tarnish Movement - (Playersystem script)
 
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->Thrown || beingHeld) {
+            if (Dis->CanHit || beingHeld) {
                 // Destroy them
                 koopa->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -201,7 +224,7 @@ stone - Add Tarnish Movement - (Playersystem script)
             var bobomb = f.Unsafe.GetPointer<Bobomb>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->Thrown || beingHeld) {
+            if (Dis->CanHit || beingHeld) {
                 // Destroy them
                 bobomb->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -211,7 +234,7 @@ stone - Add Tarnish Movement - (Playersystem script)
             var bill = f.Unsafe.GetPointer<BulletBill>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->Thrown || beingHeld) {
+            if (Dis->CanHit || beingHeld) {
                 // Destroy them
                 bill->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -221,7 +244,7 @@ stone - Add Tarnish Movement - (Playersystem script)
             var plant = f.Unsafe.GetPointer<PiranhaPlant>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->Thrown || beingHeld) {
+            if (Dis->CanHit || beingHeld) {
                 // Destroy them
                 plant->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -231,7 +254,7 @@ stone - Add Tarnish Movement - (Playersystem script)
             var boo = f.Unsafe.GetPointer<Boo>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->Thrown || beingHeld) {
+            if (Dis->CanHit || beingHeld) {
                 // Destroy them
                 boo->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -241,7 +264,7 @@ stone - Add Tarnish Movement - (Playersystem script)
             var ice = f.Unsafe.GetPointer<IceBlock>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->Thrown || beingHeld) {
+            if (Dis->CanHit || beingHeld) {
                 // Destroy them
                 IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other);
             }
@@ -259,18 +282,33 @@ stone - Add Tarnish Movement - (Playersystem script)
             }
 
             //TODO: Up key
-            Dis->Thrown = true;
+            Dis->Thrown = Dis->CanHit = true;
             Dis->Facing = mario->FacingRight;
-            FP bonusSpeed = FPMath.Abs(marioPhysicsObject->Velocity.X / 3);
+            FP bonusSpeed = FPMath.Abs(marioPhysicsObject->Velocity.X / 2);
             if (FPMath.Sign(marioPhysicsObject->Velocity.X) != (mario->FacingRight ? 1 : -1)) {
                 bonusSpeed *= -1;
             }
-            physicsObject->Velocity.X = (Constants._3_50 + bonusSpeed) * (mario->FacingRight ? 1 : -1);
+            physicsObject->Velocity.X = (Dis->ThrowForce + bonusSpeed) * (mario->FacingRight ? 1 : -1);
             physicsObject->Velocity.Y = 1;
             holdable->IgnoreOwnerFrames = 15;
 
             if (!dropped) {
                 f.Events.MarioPlayerThrewObject(marioEntity, entity);
+            }
+
+            // Disable Carryabilites
+            switch (Dis->Type) {
+            case ThrowingObjectType.Stone: {
+                marioPhysicsObject->Velocity.X /= 2;
+                //mario->StoneBux = false;
+                break;
+            }
+            case ThrowingObjectType.PropellerBox:
+                //mario->PropellerBux = false;
+                break;
+            case ThrowingObjectType.BillBlock:
+                //mario->BillBux = false;
+                break;
             }
         }
 
@@ -288,6 +326,16 @@ stone - Add Tarnish Movement - (Playersystem script)
             f.Events.PlayComboSound(entity, 0);
             physicsObject->IsTouchingGround = false;
             physicsObject->Velocity.Y = 5;
+
+            switch (Dis->Type) {
+            case ThrowingObjectType.RedPow:
+            case ThrowingObjectType.BluePow:
+                // Activate These
+                break;
+            case ThrowingObjectType.Freezie:
+                // Break This
+                break;
+            }
         }
 
         public void OnBeforeInteraction(Frame f, EntityRef entity, bool* allowInteraction) {
@@ -304,7 +352,22 @@ stone - Add Tarnish Movement - (Playersystem script)
             }
 
             //uhh i would put specific hazard spawn data here
-            //Like The Activate heavyDis stuff so it hurts on spawn
+
+            /*switch (Dis->Type) {
+            case ThrowingObjectType.Basic:
+            case ThrowingObjectType.Stone:
+            case ThrowingObjectType.Spring:
+            case ThrowingObjectType.RedPow:
+            case ThrowingObjectType.BluePow:
+            case ThrowingObjectType.Barrel:
+            case ThrowingObjectType.Freezie:
+            case ThrowingObjectType.CoinBox:
+            case ThrowingObjectType.PropellerBox:
+            case ThrowingObjectType.BillBlock:
+            case ThrowingObjectType.CannonBox:
+            case ThrowingObjectType.Fridge:
+                break;
+            }*/
         }
         #endregion
     }

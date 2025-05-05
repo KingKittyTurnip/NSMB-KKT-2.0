@@ -882,6 +882,7 @@ namespace Quantum.Prototypes {
     public Quantum.QEnum8<ThrowingObjectType> Type;
     public QBoolean GroundBounce;
     public QBoolean BouceOffPlayer;
+    public FP ThrowForce;
     public Byte StarsToDrop;
     public QBoolean IgnoreTeamates;
     partial void MaterializeUser(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context);
@@ -894,6 +895,7 @@ namespace Quantum.Prototypes {
         result.Type = this.Type;
         result.GroundBounce = this.GroundBounce;
         result.BouceOffPlayer = this.BouceOffPlayer;
+        result.ThrowForce = this.ThrowForce;
         result.StarsToDrop = this.StarsToDrop;
         result.IgnoreTeamates = this.IgnoreTeamates;
         MaterializeUser(frame, ref result, in context);

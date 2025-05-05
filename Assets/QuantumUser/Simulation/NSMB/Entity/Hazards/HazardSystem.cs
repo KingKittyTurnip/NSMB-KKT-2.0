@@ -47,7 +47,7 @@ namespace Quantum {
             //if (hazard->LifeTime > 0) {
             
             //}
-
+            
             // allow interactions
             if (hazard->IPWSUntilGround) {
                 if (physicsObject->IsTouchingGround)
@@ -83,8 +83,8 @@ namespace Quantum {
             }
 
             //Set hazard team
-            //TODO: Actually Set Team
-            hazard->Team = 64;
+            //TODO: Actually Set Team (+1 From That it normally Is)
+            hazard->Team = 0;
 
             //Set LifeTime
             //TODO: Set Lifetime

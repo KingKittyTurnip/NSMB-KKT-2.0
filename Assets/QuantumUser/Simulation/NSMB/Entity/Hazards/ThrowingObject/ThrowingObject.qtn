@@ -2,11 +2,13 @@ component ThrowingObject {
     ThrowingObjectType Type;
     bool GroundBounce;
 	bool BouceOffPlayer;
+	FP ThrowForce;
 
 	byte StarsToDrop;
 	bool IgnoreTeamates;
 
 	[ExcludeFromPrototype] bool Thrown;
+	[ExcludeFromPrototype] bool CanHit;
 	[ExcludeFromPrototype] bool Facing;
 	[ExcludeFromPrototype] byte BounceTimes;
 }
@@ -23,6 +25,8 @@ enum ThrowingObjectType : Byte {
 	PropellerBox, // For Flying
 	BillBlock, // For Gliding
 	CannonBox, // For Pewing
+	Fridge, // For pinata
+	Potion, // For Creating WarpDoor
 }
 
 event HeavyStoneLand {

@@ -112,6 +112,8 @@ namespace Quantum {
     PropellerBox,
     BillBlock,
     CannonBox,
+    Fridge,
+    Potion,
   }
   [System.FlagsAttribute()]
   public enum InputButtons : int {
@@ -3091,22 +3093,27 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct ThrowingObject : Quantum.IComponent {
-    public const Int32 SIZE = 24;
-    public const Int32 ALIGNMENT = 4;
+    public const Int32 SIZE = 40;
+    public const Int32 ALIGNMENT = 8;
     [FieldOffset(2)]
     public ThrowingObjectType Type;
-    [FieldOffset(12)]
+    [FieldOffset(16)]
     public QBoolean GroundBounce;
     [FieldOffset(4)]
     public QBoolean BouceOffPlayer;
+    [FieldOffset(32)]
+    public FP ThrowForce;
     [FieldOffset(1)]
     public Byte StarsToDrop;
-    [FieldOffset(16)]
-    public QBoolean IgnoreTeamates;
     [FieldOffset(20)]
+    public QBoolean IgnoreTeamates;
+    [FieldOffset(24)]
     [ExcludeFromPrototype()]
     public QBoolean Thrown;
     [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean CanHit;
+    [FieldOffset(12)]
     [ExcludeFromPrototype()]
     public QBoolean Facing;
     [FieldOffset(0)]
@@ -3118,9 +3125,11 @@ namespace Quantum {
         hash = hash * 31 + (Byte)Type;
         hash = hash * 31 + GroundBounce.GetHashCode();
         hash = hash * 31 + BouceOffPlayer.GetHashCode();
+        hash = hash * 31 + ThrowForce.GetHashCode();
         hash = hash * 31 + StarsToDrop.GetHashCode();
         hash = hash * 31 + IgnoreTeamates.GetHashCode();
         hash = hash * 31 + Thrown.GetHashCode();
+        hash = hash * 31 + CanHit.GetHashCode();
         hash = hash * 31 + Facing.GetHashCode();
         hash = hash * 31 + BounceTimes.GetHashCode();
         return hash;
@@ -3132,10 +3141,12 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->StarsToDrop);
         serializer.Stream.Serialize((Byte*)&p->Type);
         QBoolean.Serialize(&p->BouceOffPlayer, serializer);
+        QBoolean.Serialize(&p->CanHit, serializer);
         QBoolean.Serialize(&p->Facing, serializer);
         QBoolean.Serialize(&p->GroundBounce, serializer);
         QBoolean.Serialize(&p->IgnoreTeamates, serializer);
         QBoolean.Serialize(&p->Thrown, serializer);
+        FP.Serialize(&p->ThrowForce, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
