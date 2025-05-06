@@ -22,9 +22,8 @@ GameObject:
   - component: {fileID: 3093743753026942761}
   - component: {fileID: -6338529405283914546}
   - component: {fileID: -3897358826683353975}
-  - component: {fileID: -4353356510890767646}
   m_Layer: 19
-  m_Name: Heavystone
+  m_Name: Pow
   m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -352,18 +351,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     Type:
-      Value: 1
+      Value: 3
     GroundBounce:
       Value: 0
     SlideAlong:
       Value: 0
     BouceOffPlayer:
-      Value: 0
-    ThrowForce:
-      RawValue: 163840
-    StarsToDrop: 3
-    IgnoreTeamates:
       Value: 1
+    ThrowForce:
+      RawValue: 294912
+    StarsToDrop: 0
+    IgnoreTeamates:
+      Value: 0
 --- !u!114 &6989136294608042370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,24 +534,9 @@ MonoBehaviour:
     IPWSTime: 0
     SpawningVelocityRange:
       X:
-        RawValue: 131072
+        RawValue: 196608
       Y:
         RawValue: 65536
---- !u!114 &-4353356510890767646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1017215213198693191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 899399899f5ae3e4ba49a12be513a667, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sfx: {fileID: 4207910641862185911}
-  breakPrefab: {fileID: 6779589790155936114, guid: 88cf61688eee6b640a7081bb05599f96,
-    type: 3}
 --- !u!1 &9032870725918412890
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,7 +614,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: -266396479, guid: 427354628d15df94b97bc049f8ca3b68, type: 3}
+  m_Sprite: {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -649,7 +633,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9032870725918412890}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: cfd1434218392ed4eb331d99d4e31062, type: 2}
   m_CullingMode: 0

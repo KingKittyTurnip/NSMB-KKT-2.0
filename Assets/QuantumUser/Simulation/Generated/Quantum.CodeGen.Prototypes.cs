@@ -361,6 +361,23 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Fan))]
+  public unsafe partial class FanPrototype : ComponentPrototype<Quantum.Fan> {
+    public FP Strength;
+    public QBoolean IsMalfunctioned;
+    partial void MaterializeUser(Frame frame, ref Quantum.Fan result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Fan component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Fan result, in PrototypeMaterializationContext context = default) {
+        result.Strength = this.Strength;
+        result.IsMalfunctioned = this.IsMalfunctioned;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Freezable))]
   public unsafe partial class FreezablePrototype : ComponentPrototype<Quantum.Freezable> {
     public FPVector2 IceBlockSize;
@@ -694,6 +711,7 @@ namespace Quantum.Prototypes {
     public QBoolean SlowInLiquids;
     public QBoolean IsWaterSolid;
     public QBoolean BreakMegaObjects;
+    public QBoolean WindImmune;
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.PhysicsObject component = default;
         Materialize((Frame)f, ref component, in context);
@@ -707,6 +725,7 @@ namespace Quantum.Prototypes {
         result.SlowInLiquids = this.SlowInLiquids;
         result.IsWaterSolid = this.IsWaterSolid;
         result.BreakMegaObjects = this.BreakMegaObjects;
+        result.WindImmune = this.WindImmune;
     }
   }
   [System.SerializableAttribute()]
@@ -881,6 +900,7 @@ namespace Quantum.Prototypes {
   public unsafe partial class ThrowingObjectPrototype : ComponentPrototype<Quantum.ThrowingObject> {
     public Quantum.QEnum8<ThrowingObjectType> Type;
     public QBoolean GroundBounce;
+    public QBoolean SlideAlong;
     public QBoolean BouceOffPlayer;
     public FP ThrowForce;
     public Byte StarsToDrop;
@@ -894,6 +914,7 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context = default) {
         result.Type = this.Type;
         result.GroundBounce = this.GroundBounce;
+        result.SlideAlong = this.SlideAlong;
         result.BouceOffPlayer = this.BouceOffPlayer;
         result.ThrowForce = this.ThrowForce;
         result.StarsToDrop = this.StarsToDrop;

@@ -21,14 +21,16 @@ PropellerBox - Add propeller Ability
 BillBlock - Make & Add Bill Hover Ability
 
 baseball
-Spring
-RedPow
-BluePow
+Spring - (Actually Implement)
+RedPow - (Actually Implement)
+BluePow - (Actually Implement)
 Barrel
-Freezie
-CoinBox
+Freezie - (Actually Implement)
+CoinBox - (Actually Implement)
 CannonBox
 fridge
+
+Make Cannonbox & Coinbox Change Texutre Depending On Player
 
 ---------------------------------------
 */
@@ -358,7 +360,7 @@ fridge
             case ThrowingObjectType.Stone:
             case ThrowingObjectType.Spring:
             case ThrowingObjectType.RedPow:
-            case ThrowingObjectType.BluePow:
+            case ThrowingObjectType.BluePow: //Bluepow And Red Pow Are Considerd Varients Of Eachother
             case ThrowingObjectType.Barrel:
             case ThrowingObjectType.Freezie:
             case ThrowingObjectType.CoinBox:

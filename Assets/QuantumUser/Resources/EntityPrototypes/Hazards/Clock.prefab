@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 3901402401622306172}
   - component: {fileID: 6930211675347735981}
   - component: {fileID: -5656916731996867298}
+  - component: {fileID: 4524941981527613117}
   m_Layer: 19
   m_Name: Clock
   m_TagString: Powerup
@@ -424,6 +425,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     _empty_prototype_dummy_field_: 0
+--- !u!114 &4524941981527613117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c912ba00eb8780d468a9d5e4288668e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prototype:
+    IsHefty:
+      Value: 0
+    IPWSUntilGround:
+      Value: 0
+    IPWSTime: 60
+    SpawningVelocityRange:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
 --- !u!1001 &1257495901162909846
 PrefabInstance:
   m_ObjectHideFlags: 0

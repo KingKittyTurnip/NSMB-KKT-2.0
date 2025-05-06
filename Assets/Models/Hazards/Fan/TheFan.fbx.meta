@@ -3,7 +3,22 @@ guid: 88d27a59973a1ba449a7c6aeb5356f33
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MT_metal
+    second: {fileID: 2100000, guid: ed750e1baaae0ad46843e102a1d93924, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MT_normal
+    second: {fileID: 2100000, guid: c5c78060ad59f84409cf718a45eb1b81, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MT_wing
+    second: {fileID: 2100000, guid: 1ce69f9d383314d4295bea8826327355, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

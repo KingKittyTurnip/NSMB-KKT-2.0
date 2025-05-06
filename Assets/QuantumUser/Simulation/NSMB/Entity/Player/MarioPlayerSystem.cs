@@ -37,7 +37,7 @@ namespace Quantum {
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var mario = filter.MarioPlayer;
             var player = mario->PlayerRef;
-            UnityEngine.Debug.Log(mario->GetTeam(f));
+
             // Shuffle RNG.
             _ = mario->RNG.Next();
 

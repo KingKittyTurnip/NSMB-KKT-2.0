@@ -1767,6 +1767,43 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Fan : Quantum.IComponent {
+    public const Int32 SIZE = 24;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(16)]
+    public FP Strength;
+    [FieldOffset(12)]
+    public QBoolean IsMalfunctioned;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public QBoolean Activated;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean FellOver;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public QBoolean FacingRight;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 8713;
+        hash = hash * 31 + Strength.GetHashCode();
+        hash = hash * 31 + IsMalfunctioned.GetHashCode();
+        hash = hash * 31 + Activated.GetHashCode();
+        hash = hash * 31 + FellOver.GetHashCode();
+        hash = hash * 31 + FacingRight.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Fan*)ptr;
+        QBoolean.Serialize(&p->Activated, serializer);
+        QBoolean.Serialize(&p->FacingRight, serializer);
+        QBoolean.Serialize(&p->FellOver, serializer);
+        QBoolean.Serialize(&p->IsMalfunctioned, serializer);
+        FP.Serialize(&p->Strength, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Freezable : Quantum.IComponent {
     public const Int32 SIZE = 56;
     public const Int32 ALIGNMENT = 8;
@@ -2672,11 +2709,11 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct PhysicsObject : Quantum.IComponent {
-    public const Int32 SIZE = 144;
+    public const Int32 SIZE = 152;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(48)]
+    [FieldOffset(56)]
     public FPVector2 Gravity;
-    [FieldOffset(40)]
+    [FieldOffset(48)]
     public FP TerminalVelocity;
     [FieldOffset(12)]
     public QBoolean IsFrozen;
@@ -2688,33 +2725,33 @@ namespace Quantum {
     public QBoolean IsWaterSolid;
     [FieldOffset(4)]
     public QBoolean BreakMegaObjects;
-    [FieldOffset(96)]
+    [FieldOffset(104)]
     [ExcludeFromPrototype()]
     public FPVector2 Velocity;
-    [FieldOffset(32)]
+    [FieldOffset(40)]
     [ExcludeFromPrototype()]
     public EntityRef Parent;
-    [FieldOffset(64)]
+    [FieldOffset(72)]
     [ExcludeFromPrototype()]
     public FPVector2 ParentVelocity;
-    [FieldOffset(80)]
+    [FieldOffset(88)]
     [ExcludeFromPrototype()]
     public FPVector2 PreviousFrameVelocity;
-    [FieldOffset(112)]
+    [FieldOffset(120)]
     [ExcludeFromPrototype()]
     public PhysicsObjectData CurrentData;
-    [FieldOffset(128)]
+    [FieldOffset(136)]
     [ExcludeFromPrototype()]
     public PhysicsObjectData PreviousData;
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public Byte HoverFrames;
-    [FieldOffset(28)]
+    [FieldOffset(32)]
     [ExcludeFromPrototype()]
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
     public QListPtr<PhysicsContact> Contacts;
-    [FieldOffset(24)]
+    [FieldOffset(28)]
     [ExcludeFromPrototype()]
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
@@ -2722,6 +2759,8 @@ namespace Quantum {
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte UnderwaterCounter;
+    [FieldOffset(24)]
+    public QBoolean WindImmune;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 8311;
@@ -2742,6 +2781,7 @@ namespace Quantum {
         hash = hash * 31 + Contacts.GetHashCode();
         hash = hash * 31 + LiquidContacts.GetHashCode();
         hash = hash * 31 + UnderwaterCounter.GetHashCode();
+        hash = hash * 31 + WindImmune.GetHashCode();
         return hash;
       }
     }
@@ -2770,6 +2810,7 @@ namespace Quantum {
         QBoolean.Serialize(&p->IsFrozen, serializer);
         QBoolean.Serialize(&p->IsWaterSolid, serializer);
         QBoolean.Serialize(&p->SlowInLiquids, serializer);
+        QBoolean.Serialize(&p->WindImmune, serializer);
         QHashSet.Serialize(&p->LiquidContacts, serializer, Statics.SerializeEntityRef);
         QList.Serialize(&p->Contacts, serializer, Statics.SerializePhysicsContact);
         EntityRef.Serialize(&p->Parent, serializer);
@@ -3099,6 +3140,8 @@ namespace Quantum {
     public ThrowingObjectType Type;
     [FieldOffset(16)]
     public QBoolean GroundBounce;
+    [FieldOffset(24)]
+    public QBoolean SlideAlong;
     [FieldOffset(4)]
     public QBoolean BouceOffPlayer;
     [FieldOffset(32)]
@@ -3107,7 +3150,7 @@ namespace Quantum {
     public Byte StarsToDrop;
     [FieldOffset(20)]
     public QBoolean IgnoreTeamates;
-    [FieldOffset(24)]
+    [FieldOffset(28)]
     [ExcludeFromPrototype()]
     public QBoolean Thrown;
     [FieldOffset(8)]
@@ -3124,6 +3167,7 @@ namespace Quantum {
         var hash = 19073;
         hash = hash * 31 + (Byte)Type;
         hash = hash * 31 + GroundBounce.GetHashCode();
+        hash = hash * 31 + SlideAlong.GetHashCode();
         hash = hash * 31 + BouceOffPlayer.GetHashCode();
         hash = hash * 31 + ThrowForce.GetHashCode();
         hash = hash * 31 + StarsToDrop.GetHashCode();
@@ -3145,6 +3189,7 @@ namespace Quantum {
         QBoolean.Serialize(&p->Facing, serializer);
         QBoolean.Serialize(&p->GroundBounce, serializer);
         QBoolean.Serialize(&p->IgnoreTeamates, serializer);
+        QBoolean.Serialize(&p->SlideAlong, serializer);
         QBoolean.Serialize(&p->Thrown, serializer);
         FP.Serialize(&p->ThrowForce, serializer);
     }
@@ -3589,6 +3634,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Enemy>();
       BuildSignalsArrayOnComponentAdded<Quantum.EnterablePipe>();
       BuildSignalsArrayOnComponentRemoved<Quantum.EnterablePipe>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Fan>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Fan>();
       BuildSignalsArrayOnComponentAdded<Quantum.Freezable>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Freezable>();
       BuildSignalsArrayOnComponentAdded<Quantum.GenericMover>();
@@ -4016,6 +4063,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(FPQuaternion), FPQuaternion.SIZE);
       typeRegistry.Register(typeof(FPVector2), FPVector2.SIZE);
       typeRegistry.Register(typeof(FPVector3), FPVector3.SIZE);
+      typeRegistry.Register(typeof(Quantum.Fan), Quantum.Fan.SIZE);
       typeRegistry.Register(typeof(FrameMetaData), FrameMetaData.SIZE);
       typeRegistry.Register(typeof(FrameTimer), FrameTimer.SIZE);
       typeRegistry.Register(typeof(Quantum.Freezable), Quantum.Freezable.SIZE);
@@ -4110,7 +4158,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 37)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 38)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -4127,6 +4175,7 @@ namespace Quantum {
         .Add<Quantum.Cullable>(Quantum.Cullable.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Enemy>(Quantum.Enemy.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.EnterablePipe>(Quantum.EnterablePipe.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.Fan>(Quantum.Fan.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Freezable>(Quantum.Freezable.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.GenericMover>(Quantum.GenericMover.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Goomba>(Quantum.Goomba.Serialize, null, null, ComponentFlags.None)

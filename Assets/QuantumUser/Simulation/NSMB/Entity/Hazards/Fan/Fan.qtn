@@ -1,0 +1,17 @@
+component Fan {
+	FP Strength;
+	bool IsMalfunctioned;
+	
+	[ExcludeFromPrototype] bool Activated;
+	[ExcludeFromPrototype] bool FellOver;
+	[ExcludeFromPrototype] bool FacingRight;
+}
+
+event FanJiggle {
+	EntityRef Entity;
+	FPVector2 pos;
+	int Time;
+	bool ResetTime;
+	bool TickTimeup;
+	bool Overtime;
+}

@@ -22,6 +22,8 @@ component PhysicsObject {
     [ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] list<PhysicsContact> Contacts;
     [ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] hash_set<EntityRef> LiquidContacts;
     [ExcludeFromPrototype] byte UnderwaterCounter;
+
+    bool WindImmune;
 }
 
 struct PhysicsObjectData {
