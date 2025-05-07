@@ -82,7 +82,7 @@ namespace Quantum {
           case EventEnemyKilled.ID: result = typeof(EventEnemyKilled); return;
           case EventPlayComboSound.ID: result = typeof(EventPlayComboSound); return;
           case EventPlayBumpSound.ID: result = typeof(EventPlayBumpSound); return;
-          case EventFanJiggle.ID: result = typeof(EventFanJiggle); return;
+          case EventOnFanHit.ID: result = typeof(EventOnFanHit); return;
           case EventGameStateChanged.ID: result = typeof(EventGameStateChanged); return;
           case EventPlayerAdded.ID: result = typeof(EventPlayerAdded); return;
           case EventPlayerRemoved.ID: result = typeof(EventPlayerRemoved); return;
@@ -302,14 +302,10 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventFanJiggle FanJiggle(EntityRef Entity, FPVector2 pos, Int32 Time, QBoolean ResetTime, QBoolean TickTimeup, QBoolean Overtime) {
-        var ev = _f.Context.AcquireEvent<EventFanJiggle>(EventFanJiggle.ID);
+      public EventOnFanHit OnFanHit(EntityRef Entity, QBoolean Broken) {
+        var ev = _f.Context.AcquireEvent<EventOnFanHit>(EventOnFanHit.ID);
         ev.Entity = Entity;
-        ev.pos = pos;
-        ev.Time = Time;
-        ev.ResetTime = ResetTime;
-        ev.TickTimeup = TickTimeup;
-        ev.Overtime = Overtime;
+        ev.Broken = Broken;
         _f.AddEvent(ev);
         return ev;
       }
@@ -1279,18 +1275,14 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventFanJiggle : EventBase {
+  public unsafe partial class EventOnFanHit : EventBase {
     public new const Int32 ID = 22;
     public EntityRef Entity;
-    public FPVector2 pos;
-    public Int32 Time;
-    public QBoolean ResetTime;
-    public QBoolean TickTimeup;
-    public QBoolean Overtime;
-    protected EventFanJiggle(Int32 id, EventFlags flags) : 
+    public QBoolean Broken;
+    protected EventOnFanHit(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
-    public EventFanJiggle() : 
+    public EventOnFanHit() : 
         base(22, EventFlags.Server|EventFlags.Client) {
     }
     public new QuantumGame Game {
@@ -1305,11 +1297,7 @@ namespace Quantum {
       unchecked {
         var hash = 139;
         hash = hash * 31 + Entity.GetHashCode();
-        hash = hash * 31 + pos.GetHashCode();
-        hash = hash * 31 + Time.GetHashCode();
-        hash = hash * 31 + ResetTime.GetHashCode();
-        hash = hash * 31 + TickTimeup.GetHashCode();
-        hash = hash * 31 + Overtime.GetHashCode();
+        hash = hash * 31 + Broken.GetHashCode();
         return hash;
       }
     }

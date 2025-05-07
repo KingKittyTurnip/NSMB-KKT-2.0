@@ -88,7 +88,7 @@ namespace Quantum {
 
             //Set LifeTime
             //TODO: Set Lifetime
-            hazard->LifeTime = 2 * 60;
+            hazard->LifeTime = 80 * 60;
 
             // Create Icon on Map
             if (hazard->IsHefty) {

@@ -364,7 +364,8 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.Fan))]
   public unsafe partial class FanPrototype : ComponentPrototype<Quantum.Fan> {
     public FP Strength;
-    public QBoolean IsMalfunctioned;
+    public QBoolean Broken;
+    public QBoolean FellOver;
     partial void MaterializeUser(Frame frame, ref Quantum.Fan result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Fan component = default;
@@ -373,7 +374,8 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Fan result, in PrototypeMaterializationContext context = default) {
         result.Strength = this.Strength;
-        result.IsMalfunctioned = this.IsMalfunctioned;
+        result.Broken = this.Broken;
+        result.FellOver = this.FellOver;
         MaterializeUser(frame, ref result, in context);
     }
   }

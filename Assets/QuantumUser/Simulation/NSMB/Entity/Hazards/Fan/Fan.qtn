@@ -1,17 +1,15 @@
 component Fan {
 	FP Strength;
-	bool IsMalfunctioned;
+	bool Broken;
+	bool FellOver;
 	
-	[ExcludeFromPrototype] bool Activated;
-	[ExcludeFromPrototype] bool FellOver;
+	[ExcludeFromPrototype] FP CurrentStrength;
 	[ExcludeFromPrototype] bool FacingRight;
+	[ExcludeFromPrototype] int FanTime;
+	[ExcludeFromPrototype] byte TurnEffectorDowntime;
 }
 
-event FanJiggle {
+event OnFanHit {
 	EntityRef Entity;
-	FPVector2 pos;
-	int Time;
-	bool ResetTime;
-	bool TickTimeup;
-	bool Overtime;
+	bool Broken;
 }

@@ -1768,38 +1768,47 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Fan : Quantum.IComponent {
-    public const Int32 SIZE = 24;
+    public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(16)]
+    [FieldOffset(32)]
     public FP Strength;
-    [FieldOffset(12)]
-    public QBoolean IsMalfunctioned;
-    [FieldOffset(0)]
-    [ExcludeFromPrototype()]
-    public QBoolean Activated;
     [FieldOffset(8)]
-    [ExcludeFromPrototype()]
+    public QBoolean Broken;
+    [FieldOffset(16)]
     public QBoolean FellOver;
-    [FieldOffset(4)]
+    [FieldOffset(24)]
+    [ExcludeFromPrototype()]
+    public FP CurrentStrength;
+    [FieldOffset(12)]
     [ExcludeFromPrototype()]
     public QBoolean FacingRight;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public Int32 FanTime;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte TurnEffectorDowntime;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 8713;
         hash = hash * 31 + Strength.GetHashCode();
-        hash = hash * 31 + IsMalfunctioned.GetHashCode();
-        hash = hash * 31 + Activated.GetHashCode();
+        hash = hash * 31 + Broken.GetHashCode();
         hash = hash * 31 + FellOver.GetHashCode();
+        hash = hash * 31 + CurrentStrength.GetHashCode();
         hash = hash * 31 + FacingRight.GetHashCode();
+        hash = hash * 31 + FanTime.GetHashCode();
+        hash = hash * 31 + TurnEffectorDowntime.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Fan*)ptr;
-        QBoolean.Serialize(&p->Activated, serializer);
+        serializer.Stream.Serialize(&p->TurnEffectorDowntime);
+        serializer.Stream.Serialize(&p->FanTime);
+        QBoolean.Serialize(&p->Broken, serializer);
         QBoolean.Serialize(&p->FacingRight, serializer);
         QBoolean.Serialize(&p->FellOver, serializer);
-        QBoolean.Serialize(&p->IsMalfunctioned, serializer);
+        FP.Serialize(&p->CurrentStrength, serializer);
         FP.Serialize(&p->Strength, serializer);
     }
   }
@@ -1899,24 +1908,24 @@ namespace Quantum {
   public unsafe partial struct Hazard : Quantum.IComponent {
     public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(12)]
+    [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public QBoolean IsHazard;
-    [FieldOffset(16)]
+    [FieldOffset(20)]
     public QBoolean IsHefty;
-    [FieldOffset(4)]
+    [FieldOffset(8)]
     public QBoolean IPWSUntilGround;
     [FieldOffset(0)]
     public Byte IPWSTime;
     [FieldOffset(24)]
     public FPVector2 SpawningVelocityRange;
-    [FieldOffset(2)]
-    [ExcludeFromPrototype()]
-    public Byte Team;
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
-    public Byte LifeTime;
-    [FieldOffset(8)]
+    public Byte Team;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public Int32 LifeTime;
+    [FieldOffset(12)]
     [ExcludeFromPrototype()]
     public QBoolean Inactive;
     public override Int32 GetHashCode() {
@@ -1936,8 +1945,8 @@ namespace Quantum {
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Hazard*)ptr;
         serializer.Stream.Serialize(&p->IPWSTime);
-        serializer.Stream.Serialize(&p->LifeTime);
         serializer.Stream.Serialize(&p->Team);
+        serializer.Stream.Serialize(&p->LifeTime);
         QBoolean.Serialize(&p->IPWSUntilGround, serializer);
         QBoolean.Serialize(&p->Inactive, serializer);
         QBoolean.Serialize(&p->IsHazard, serializer);

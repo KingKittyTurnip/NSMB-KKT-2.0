@@ -7,7 +7,7 @@ component Hazard {
 	FPVector2 SpawningVelocityRange;
 
 	[ExcludeFromPrototype] byte Team;
-	[ExcludeFromPrototype] byte LifeTime;
+	[ExcludeFromPrototype] int LifeTime;
 	[ExcludeFromPrototype] bool Inactive;
 }
 

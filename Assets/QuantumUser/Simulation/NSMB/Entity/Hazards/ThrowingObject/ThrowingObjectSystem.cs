@@ -52,7 +52,7 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
             f.Context.Interactions.Register<ThrowingObject, PiranhaPlant>(f, OnThrowingObjectPiranhaPlantInteraction);
             f.Context.Interactions.Register<ThrowingObject, Boo>(f, OnThrowingObjectBooInteraction);
             f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteraction);
-            //f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteractionStationary);
+            f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteractionStationary);
             f.Context.Interactions.Register<MarioPlayer, ThrowingObject>(f, OnThrowingObjectMarioInteraction);
         }
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -262,6 +262,16 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
             }
         }
         public static void OnThrowingObjectIceBlockInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
+            var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
+            var ice = f.Unsafe.GetPointer<IceBlock>(otherEntity);
+            bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
+
+            if (Dis->CanHit || beingHeld) {
+                // Destroy them
+                IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other);
+            }
+        }
+        public static void OnThrowingObjectIceBlockInteractionStationary(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var ice = f.Unsafe.GetPointer<IceBlock>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
