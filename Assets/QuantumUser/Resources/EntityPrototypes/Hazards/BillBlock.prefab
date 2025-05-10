@@ -246,7 +246,7 @@ AudioSource:
   m_Resource: {fileID: 8300000, guid: 5b37bd296278e534a9d438cbf66937ca, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: 0.8
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -355,11 +355,13 @@ MonoBehaviour:
       Value: 9
     GroundBounce:
       Value: 1
+    SlideAlong:
+      Value: 0
     BouceOffPlayer:
       Value: 1
     ThrowForce:
       RawValue: 294912
-    StarsToDrop: 0
+    StarsToDrop: 1
     IgnoreTeamates:
       Value: 1
 --- !u!114 &6989136294608042370
@@ -391,6 +393,8 @@ MonoBehaviour:
     IsWaterSolid:
       Value: 0
     BreakMegaObjects:
+      Value: 0
+    WindImmune:
       Value: 0
 --- !u!114 &7318776400371000510
 MonoBehaviour:
@@ -546,9 +550,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 642619f67a180e44e8ab2221956b27f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Model: {fileID: 1242223969078471660}
   BoostParticles: {fileID: 3048744745634337792}
-  wasTurnaround: 0
+  Model: {fileID: 1242223969078471660}
 --- !u!1 &2394040665678212822
 GameObject:
   m_ObjectHideFlags: 0

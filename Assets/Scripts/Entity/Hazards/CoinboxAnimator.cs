@@ -1,26 +1,34 @@
+using JimmysUnityUtilities;
 using NSMB.Extensions;
+using NUnit.Framework;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Quantum;
 using Quantum.Profiling;
+using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
+public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
 
     //---Serialized Variables
-    [SerializeField] private GameObject BoostParticles;
+    [SerializeField] private GameObject coinFromBlockParticle, Breakparticle;
+    [SerializeField] private Transform Nose;
+    [SerializeField] private Animator animator;
+    [SerializeField] private List<Vector3> NosePoints = new(); //Perhaps Put This In The Player Prefs????
 
     [SerializeField] private Transform Model;
     private Quaternion modelRotationTarget;
     private bool wasTurnaround;
 
-    //TODO: This Code
     private MaterialPropertyBlock materialBlock;
     [SerializeField] private Renderer coinboxRenderer = new();
     private static readonly int ParamBoxType = Shader.PropertyToID("BoxType");
     private int CurrentType = 0;
 
     public void Start() {
+        QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnCoinBoxCoin, NetworkHandler.FilterOutReplayFastForward);
+        Nose.localScale = NosePoints[0];
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -29,7 +37,8 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
             return;
         }
         var holdable = f.Unsafe.GetPointer<Holdable>(EntityRef);
-        var billblock = f.Unsafe.GetPointer<ThrowingObject>(EntityRef);
+        var coinbox = f.Unsafe.GetPointer<ThrowingObject>(EntityRef);
+        bool hasHolder = f.Exists(holdable->Holder);
 
         Vector3 modifiedZ = transform.position;
         if (f.Exists(holdable->Holder)) {
@@ -39,26 +48,45 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
         }
         transform.position = modifiedZ;
 
-        BoostParticles.SetActive(billblock->CanHit);
-        float delta = Time.deltaTime;
-        if (f.Exists(holdable->Holder)) {
+        //Set Visuals From Owner
+        if (hasHolder && CurrentType == 0) {
+            var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->Holder);
+            for (int i = 0; f.SimulationConfig.CharacterDatas.Length > i; i++) {
+                if (f.SimulationConfig.CharacterDatas[i] == mario->CharacterAsset)
+                    SetMat(i + 1);
+            }
+        } else if (!coinbox->Thrown && !hasHolder && CurrentType != 0) {
+            SetMat(0);
+        }
+
+            float delta = Time.deltaTime;
+        if (hasHolder) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->Holder);
             var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(holdable->Holder);
 
             SetFacingDirection(f, mario, marioPhysicsObject);
             InterpolateFacingDirection(mario);
-
-            //Model.rotation = Quaternion.Euler(0, holder.AnimationController.Rotation, 0);
         } else {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
-            //Model.rotation = Quaternion.Euler(0, billblock->Facing ? 90 : -90, 0);
             Model.rotation = Quaternion.RotateTowards(Model.rotation, Quaternion.Euler(0, Model.rotation.eulerAngles.y + ((float) physicsObject->Velocity.X * 100 * Time.deltaTime), 0), 2000f * Time.deltaTime);
         }
+    }
+    private unsafe void OnCoinBoxCoin(EventThrowObjSimple e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+        //sfx.Play();
 
+        GameObject coin = Instantiate(coinFromBlockParticle, e.pos.ToUnityVector3(), Quaternion.identity);
+        coin.GetComponentInChildren<Animator>().SetBool("down", false);
+        Destroy(coin, 1);
+
+        animator.SetTrigger("Collect");
     }
 
     public override void OnDeactivate() {
         if (!NetworkHandler.IsReplayFastForwarding) {
+            Instantiate(Breakparticle, transform.position, Quaternion.identity);
         }
     }
 
@@ -82,4 +110,13 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
         }
     }
 
+    private void SetMat(int Type) {
+        if (materialBlock == null)
+            materialBlock = new();
+        CurrentType = Type;
+        materialBlock.SetFloat(ParamBoxType, Type);
+        Nose.localScale = NosePoints[Type];
+        coinboxRenderer.SetPropertyBlock(materialBlock);
+        Instantiate(Breakparticle, transform.position, Quaternion.identity);
+    }
 }

@@ -10,7 +10,7 @@ public unsafe class HeavystoneAnimator : QuantumEntityViewComponent {
     public AudioSource sfx;
     [SerializeField] private GameObject breakPrefab;
     public void Start() {
-        QuantumEvent.Subscribe<EventHeavyStoneLand>(this, OnHeavyStoneLand, NetworkHandler.FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnHeavyStoneLand, NetworkHandler.FilterOutReplayFastForward);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -28,7 +28,7 @@ public unsafe class HeavystoneAnimator : QuantumEntityViewComponent {
         }
         transform.position = modifiedZ;
     }
-    private unsafe void OnHeavyStoneLand(EventHeavyStoneLand e) {
+    private unsafe void OnHeavyStoneLand(EventThrowObjSimple e) {
         if (e.Entity != EntityRef) {
             return;
         }

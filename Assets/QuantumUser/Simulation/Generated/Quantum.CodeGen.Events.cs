@@ -133,7 +133,7 @@ namespace Quantum {
           case EventPlayerSentChatMessage.ID: result = typeof(EventPlayerSentChatMessage); return;
           case EventPlayerKickedFromRoom.ID: result = typeof(EventPlayerKickedFromRoom); return;
           case EventPlayerUnbanned.ID: result = typeof(EventPlayerUnbanned); return;
-          case EventHeavyStoneLand.ID: result = typeof(EventHeavyStoneLand); return;
+          case EventThrowObjSimple.ID: result = typeof(EventThrowObjSimple); return;
           case EventTileChanged.ID: result = typeof(EventTileChanged); return;
           case EventTileBroken.ID: result = typeof(EventTileBroken); return;
           case EventTimerExpired.ID: result = typeof(EventTimerExpired); return;
@@ -663,8 +663,8 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventHeavyStoneLand HeavyStoneLand(EntityRef Entity, FPVector2 pos) {
-        var ev = _f.Context.AcquireEvent<EventHeavyStoneLand>(EventHeavyStoneLand.ID);
+      public EventThrowObjSimple ThrowObjSimple(EntityRef Entity, FPVector2 pos) {
+        var ev = _f.Context.AcquireEvent<EventThrowObjSimple>(EventThrowObjSimple.ID);
         ev.Entity = Entity;
         ev.pos = pos;
         _f.AddEvent(ev);
@@ -2607,14 +2607,14 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventHeavyStoneLand : EventBase {
+  public unsafe partial class EventThrowObjSimple : EventBase {
     public new const Int32 ID = 73;
     public EntityRef Entity;
     public FPVector2 pos;
-    protected EventHeavyStoneLand(Int32 id, EventFlags flags) : 
+    protected EventThrowObjSimple(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
-    public EventHeavyStoneLand() : 
+    public EventThrowObjSimple() : 
         base(73, EventFlags.Server|EventFlags.Client) {
     }
     public new QuantumGame Game {

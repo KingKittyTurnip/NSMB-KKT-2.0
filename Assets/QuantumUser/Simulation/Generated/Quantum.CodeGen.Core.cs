@@ -3143,7 +3143,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct ThrowingObject : Quantum.IComponent {
-    public const Int32 SIZE = 40;
+    public const Int32 SIZE = 48;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(2)]
     public ThrowingObjectType Type;
@@ -3153,7 +3153,7 @@ namespace Quantum {
     public QBoolean SlideAlong;
     [FieldOffset(4)]
     public QBoolean BouceOffPlayer;
-    [FieldOffset(32)]
+    [FieldOffset(40)]
     public FP ThrowForce;
     [FieldOffset(1)]
     public Byte StarsToDrop;
@@ -3171,6 +3171,9 @@ namespace Quantum {
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public Byte BounceTimes;
+    [FieldOffset(32)]
+    [ExcludeFromPrototype()]
+    public FP ReusableTimer;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 19073;
@@ -3185,6 +3188,7 @@ namespace Quantum {
         hash = hash * 31 + CanHit.GetHashCode();
         hash = hash * 31 + Facing.GetHashCode();
         hash = hash * 31 + BounceTimes.GetHashCode();
+        hash = hash * 31 + ReusableTimer.GetHashCode();
         return hash;
       }
     }
@@ -3200,6 +3204,7 @@ namespace Quantum {
         QBoolean.Serialize(&p->IgnoreTeamates, serializer);
         QBoolean.Serialize(&p->SlideAlong, serializer);
         QBoolean.Serialize(&p->Thrown, serializer);
+        FP.Serialize(&p->ReusableTimer, serializer);
         FP.Serialize(&p->ThrowForce, serializer);
     }
   }

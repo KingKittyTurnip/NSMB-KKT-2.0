@@ -1,10 +1,12 @@
 using Photon.Deterministic;
 using Quantum;
+using Quantum.Physics2D;
 using System;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static IInteractableTile;
 using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
@@ -60,6 +62,7 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
             var physicsObject = filter.PhysicsObject;
             var transform = filter.Transform;
             var collider = filter.PhysicsCollider;
+            var holdable = filter.holdable;
 
             // Despawn off bottom of stage
             if (transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
@@ -95,18 +98,50 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
             case ThrowingObjectType.Basic:
                 break;
             case ThrowingObjectType.Stone: {
+                #region HeavyStone
                 if (physicsObject->IsTouchingGround && !physicsObject->WasTouchingGround) {
                     var entity = filter.Entity;
-                    f.Events.HeavyStoneLand(entity, f.Unsafe.GetPointer<Transform2D>(entity)->Position);
+                    f.Events.ThrowObjSimple(entity, f.Unsafe.GetPointer<Transform2D>(entity)->Position);
                 }
                 break;
+                #endregion
             }
             case ThrowingObjectType.Spring:
             case ThrowingObjectType.RedPow:
             case ThrowingObjectType.BluePow:
             case ThrowingObjectType.Barrel:
             case ThrowingObjectType.Freezie:
-            case ThrowingObjectType.CoinBox:
+                break;
+            case ThrowingObjectType.CoinBox: {
+                #region CoinBox
+                if (!Dis->Thrown && !f.Exists(holdable->Holder)) {
+                    Dis->ReusableTimer = 5;
+                    break;
+                }
+                if (Dis->ReusableTimer > 0) {
+                    FP Distance = Dis->Thrown ? FP._0_50 : f.Unsafe.TryGetPointer(holdable->Holder, out PhysicsObject* marioPhysicsObject) ? (FPMath.Abs(marioPhysicsObject->Velocity.X) / 10) : 0;
+                    Dis->ReusableTimer -= Distance;
+                } else {
+                    var entity = filter.Entity;
+
+                    var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder);
+                    byte newCoins = (byte) (mario->Coins + 1);
+                    bool item = newCoins == f.Global->Rules.CoinsForPowerup;
+                    if (item) {
+                        mario->Coins = 0;
+                        MarioPlayerSystem.SpawnItem(f, holdable->PreviousHolder, mario, default);
+                        Dis->ReusableTimer = 50;
+                    } else {
+                        mario->Coins = newCoins;
+                        Dis->ReusableTimer = 5;
+                    }
+
+                    f.Events.ThrowObjSimple(entity, f.Unsafe.GetPointer<Transform2D>(entity)->Position + (FPVector2.Up / 2));
+                    f.Events.MarioPlayerCollectedCoin(holdable->PreviousHolder, *mario, newCoins, item, f.Unsafe.GetPointer<Transform2D>(entity)->Position + FPVector2.Up, false, false);
+                }
+                break;
+                #endregion
+            }
             case ThrowingObjectType.PropellerBox:
             case ThrowingObjectType.BillBlock:
             case ThrowingObjectType.CannonBox:
@@ -182,6 +217,24 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                     holdable->Pickup(f, thisEntity, marioEntity);
                     var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
                     marioPhysicsObject->Velocity.X = marioPhysicsObject->PreviousFrameVelocity.X;
+
+                    // Enable Carryabilites
+                    switch (Dis->Type) {
+                    case ThrowingObjectType.Stone: {
+                        marioPhysicsObject->Velocity.X /= 2;
+                        //mario->StoneBux = true;
+                        break;
+                    }
+                    case ThrowingObjectType.CoinBox:
+                        Dis->ReusableTimer = 5;
+                        break;
+                    case ThrowingObjectType.PropellerBox:
+                        //mario->PropellerBux = true;
+                        break;
+                    case ThrowingObjectType.BillBlock:
+                        //mario->BillBux = true;
+                        break;
+                    }
                 }
             }
         }
@@ -315,6 +368,9 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                 //mario->StoneBux = false;
                 break;
             }
+            case ThrowingObjectType.CoinBox:
+                Dis->ReusableTimer = 5;
+                break;
             case ThrowingObjectType.PropellerBox:
                 //mario->PropellerBux = false;
                 break;

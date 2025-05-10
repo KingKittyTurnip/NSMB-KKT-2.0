@@ -17,6 +17,7 @@ public unsafe class ClockAnimator : QuantumEntityViewComponent {
     private MaterialPropertyBlock materialBlock;
     [SerializeField] private Renderer clockRenderer = new();
     private static readonly int ParamClockType = Shader.PropertyToID("_ClockType");
+
     public void Start() {
         QuantumEvent.Subscribe<EventClockCollect>(this, ClockCollect, NetworkHandler.FilterOutReplayFastForward);
     }

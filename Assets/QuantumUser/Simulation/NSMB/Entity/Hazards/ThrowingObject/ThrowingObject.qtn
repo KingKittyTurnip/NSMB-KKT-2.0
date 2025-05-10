@@ -12,6 +12,8 @@ component ThrowingObject {
 	[ExcludeFromPrototype] bool CanHit;
 	[ExcludeFromPrototype] bool Facing;
 	[ExcludeFromPrototype] byte BounceTimes;
+
+	[ExcludeFromPrototype] FP ReusableTimer;
 }
 
 enum ThrowingObjectType : Byte {
@@ -30,7 +32,7 @@ enum ThrowingObjectType : Byte {
 	Potion, // For Creating WarpDoor
 }
 
-event HeavyStoneLand {
+event ThrowObjSimple {
 	EntityRef Entity;
 	FPVector2 pos;
 }
