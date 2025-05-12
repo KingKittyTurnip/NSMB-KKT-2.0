@@ -1,7 +1,10 @@
+using JetBrains.Annotations;
 using Photon.Deterministic;
 using Quantum.Collections;
+using System;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -48,43 +51,96 @@ Gp Interactions are weird
                 physicsObject->Velocity.X = 0;
             }
 
-            //Fan Turn Logic
-            if (fan->FanTime != 0 && (hazard->LifeTime > 120 || hazard->LifeTime == 0)) {
-                fan->FanTime -= 1; 
-                if (fan->TurnEffectorDowntime != 0) {
-                    QuantumUtils.Decrement(ref fan->TurnEffectorDowntime);
-                    fan->CurrentStrength = (fan->FacingRight ? fan->Strength : -fan->Strength) * ((fan->TurnEffectorDowntime / (FP) 45) - 1);
-                }
-            } else if (!fan->Broken && !fan->FellOver) {
-                fan->FanTime = 10 * 60;
-                fan->TurnEffectorDowntime = 90;
-                fan->FacingRight = !fan->FacingRight;
+            //Fan Falling Over
+            if (fan->FellOver && fan->TurnEffectorDowntime > 0) {
+                QuantumUtils.Decrement(ref fan->TurnEffectorDowntime);
+                return;
             }
 
-            //Fan Push
-            if (!(fan->FellOver && fan->TurnEffectorDowntime > 0)) {
-                var Objects = f.Filter<PhysicsObject>();
-                while (Objects.NextUnsafe(out EntityRef OtherEntity, out PhysicsObject* physobj)) {
-                    if (physobj->DisableCollision || physobj->IsFrozen || physobj->WindImmune)
+            //Fan Can Push
+            // Multiple Fans optimization
+            var ExistingFans = f.Filter<Fan>();
+            bool MainFanChecked = false, IsVertical = false, IsMainFan = false;
+            Fan* Captain = fan;
+            FP TempStrength = 0;
+            while (ExistingFans.NextUnsafe(out EntityRef OtherEntity, out Fan* Afan)) {
+
+                if (!MainFanChecked) { // We Have Not Found A Fan Yet
+                    if (fan->FellOver == Afan->FellOver) { // Found A Fan!
+                        MainFanChecked = true;
+                        IsVertical = fan->FellOver;
+
+                        if (fan != Afan)
+                            return;
+                        // I Am The Captain Now
+                        IsMainFan = true;
+                        Captain = fan;
+                    } else // Not Correct Type, Move On...
                         continue;
-                    //Is Checking This Expensive?
-                      f.Unsafe.TryGetPointer(OtherEntity, out MarioPlayer* mar);
-                      if (mar != null && (mar->IsInShell || mar->IsCrouchedInShell || mar->MegaMushroomFrames > 0)) //TODO: Metal here
-                        continue;
-                    f.Unsafe.TryGetPointer(OtherEntity, out Transform2D* trans);
-                    f.Unsafe.TryGetPointer(OtherEntity, out PhysicsCollider2D* col);
-                    PhysicsObjectSystem.Filter physicsSystemFilter = new PhysicsObjectSystem.Filter {
-                        Entity = OtherEntity,
-                        Transform = trans,
-                        PhysicsObject = physobj,
-                        Collider = col,
-                    };
-                    if (fan->FellOver) {
-                        if (!physobj->IsTouchingGround)
-                            PhysicsObjectSystem.MoveVertically((FrameThreadSafe) f, new FPVector2(0, fan->Strength), ref physicsSystemFilter, stage, null, out _);
-                    } else {
-                        PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(fan->CurrentStrength, 0), ref physicsSystemFilter, stage, null, out _);
+                }
+                if (IsMainFan && Afan->FellOver == IsVertical) { // If Captain, Then Link All Other "Similar" Fans To It
+                    if (Captain->Broken && !Afan->Broken) {
+                        // This Fan Is Broken, Pass Over Captain To non-Broken
+                        Captain = Afan;
                     }
+                    if (Captain->FellOver && Captain->TurnEffectorDowntime > 0) {
+                        // This Fan Is Flipping, Do NOT Contribute And Pass Over Captain
+                        Captain = Afan;
+                        continue;
+                    }
+                    if (Captain == Afan) { // Captain Calc
+                        var CapnHazard = f.Unsafe.GetPointer<Hazard>(OtherEntity);
+                        if (Captain->FanTime != 0 && (CapnHazard->LifeTime > 120 || CapnHazard->LifeTime == 0)) {
+                            Captain->FanTime -= 1;
+                            if (Captain->TurnEffectorDowntime != 0) {
+                                QuantumUtils.Decrement(ref Captain->TurnEffectorDowntime);
+                                Captain->CurrentStrength = (Captain->FacingRight ? Captain->Strength : -Captain->Strength) * ((Captain->TurnEffectorDowntime / (FP) 45) - 1);
+                            }
+                        } else if (!Captain->Broken && !Captain->FellOver) {
+                            Captain->FanTime = 10 * 60;
+                            Captain->TurnEffectorDowntime = 90;
+                            Captain->FacingRight = !Captain->FacingRight;
+                        }
+                    } else if (!Afan->Broken) { // Sync Other Fans
+                        Afan->FanTime = Captain->FanTime;
+                        Afan->TurnEffectorDowntime = Captain->TurnEffectorDowntime;
+                        Afan->FacingRight = Captain->FacingRight;
+                        Afan->CurrentStrength = (Afan->FacingRight ? Afan->Strength : -Afan->Strength) * ((Captain->TurnEffectorDowntime / (FP) 45) - 1);
+                    } else { //Broken Fan, Don't Sync Just Add
+                        QuantumUtils.Decrement(ref Afan->TurnEffectorDowntime);
+                        Afan->CurrentStrength = (Afan->FacingRight ? Afan->Strength : -Afan->Strength) * ((Afan->TurnEffectorDowntime / (FP) 45) - 1);
+                    }
+
+                    TempStrength += Afan->CurrentStrength;
+                }
+                continue;
+            }
+
+            if (!IsMainFan || TempStrength == 0)
+                return;
+            // Wind Power Isn't 0 And This is CaptainFan, Calculate!
+
+            var Objects = f.Filter<PhysicsObject>();
+            while (Objects.NextUnsafe(out EntityRef OtherEntity, out PhysicsObject* physobj)) {
+                if (physobj->DisableCollision || physobj->IsFrozen || physobj->WindImmune)
+                    continue;
+                //Is Checking This Expensive?
+                f.Unsafe.TryGetPointer(OtherEntity, out MarioPlayer* mar);
+                if (mar != null && (mar->IsInShell || mar->IsCrouchedInShell || mar->MegaMushroomFrames > 0 /*|| mar->StoneBux*/)) //TODO: Metal & Carrying Heavystone here
+                    continue;
+                f.Unsafe.TryGetPointer(OtherEntity, out Transform2D* trans);
+                f.Unsafe.TryGetPointer(OtherEntity, out PhysicsCollider2D* col);
+                PhysicsObjectSystem.Filter physicsSystemFilter = new PhysicsObjectSystem.Filter {
+                    Entity = OtherEntity,
+                    Transform = trans,
+                    PhysicsObject = physobj,
+                    Collider = col,
+                };
+                if (IsVertical) {
+                    if (!physobj->IsTouchingGround)
+                        PhysicsObjectSystem.MoveVertically((FrameThreadSafe) f, new FPVector2(0, TempStrength), ref physicsSystemFilter, stage, null, out _);
+                } else {
+                    PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(TempStrength, 0), ref physicsSystemFilter, stage, null, out _);
                 }
             }
         }
@@ -112,12 +168,14 @@ Gp Interactions are weird
                 physicsObject->IsFrozen = physicsObject->DisableCollision = f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = true;
                 fan->FellOver = fan->Broken = true;
                 fan->FanTime = fan->TurnEffectorDowntime = 90;
+                fan->FacingRight = false;
                 f.Events.OnFanHit(thisEntity, true);
             } else if (upDot >= PhysicsObjectSystem.GroundMaxAngle && (mario->IsGroundpounding || mario->GroundpoundStandFrames > 0)) {
                 physicsObject->IsTouchingGround = false;
                 physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
                 physicsObject->Velocity.Y = 3;
                 fan->Broken = true;
+                fan->FanTime = 90;
                 mario->IsGroundpounding = mariophys->IsTouchingGround = false;
                 mariophys->Velocity.Y = 6;
                 f.Events.OnFanHit(thisEntity, false);
