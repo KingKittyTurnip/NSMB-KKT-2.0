@@ -143,6 +143,7 @@ PlayerSettings:
   bundleVersion: 1.8.0.0
   preloadedAssets:
   - {fileID: 11400000, guid: 49335f30d253220488d2d332ade6e901, type: 2}
+  - {fileID: -944628639613478452, guid: d29805f34fe91da4e94010a38823fab7, type: 3}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -823,14 +824,16 @@ PlayerSettings:
     EmbeddedLinux: QUANTUM_XY
     GameCoreScarlett: QUANTUM_XY
     GameCoreXboxOne: QUANTUM_XY
+    Kepler: QUANTUM_XY
     LinuxHeadlessSimulation: QUANTUM_XY
     Lumin: 
     Nintendo Switch: QUANTUM_XY
     PS4: QUANTUM_XY
     PS5: QUANTUM_XY
     QNX: QUANTUM_XY
+    ReservedCFE: QUANTUM_XY
     Stadia: QUANTUM_XY
-    Standalone: QUANTUM_DISABLE_AI;QUANTUM_DISABLE_PHYSICS3D;QUANTUM_XY
+    Standalone: QUANTUM_DISABLE_AI;QUANTUM_DISABLE_PHYSICS3D;QUANTUM_XY;QUANTUM_REMOTE_PROFILER
     VisionOS: QUANTUM_XY
     WebGL: FUSION_WEAVER;FUSION2;QUANTUM_XY
     Windows Store Apps: FUSION_WEAVER;QUANTUM_XY
@@ -840,7 +843,7 @@ PlayerSettings:
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
-    Standalone: 0
+    Standalone: 1
   il2cppCompilerConfiguration: {}
   il2cppCodeGeneration:
     WebGL: 1
