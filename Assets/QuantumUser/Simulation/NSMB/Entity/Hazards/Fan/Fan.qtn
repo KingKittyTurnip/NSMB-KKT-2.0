@@ -2,6 +2,8 @@ component Fan {
 	FP Strength;
 	bool Broken;
 	bool FellOver;
+	bool Sturdy;
+	bool HandleParticles;
 	
 	[ExcludeFromPrototype] FP CurrentStrength;
 	[ExcludeFromPrototype] bool FacingRight;

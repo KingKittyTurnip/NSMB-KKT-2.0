@@ -1,9 +1,13 @@
 using NSMB.Extensions;
 using Org.BouncyCastle.Asn1.Pkcs;
+using Photon.Deterministic;
 using Quantum;
 using Quantum.Profiling;
+using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 public unsafe class FanAnimator : QuantumEntityViewComponent {
 
@@ -12,8 +16,14 @@ public unsafe class FanAnimator : QuantumEntityViewComponent {
     [SerializeField] private Animator Base;
     [SerializeField] private GameObject BrokenParticles;
 
-    private Quaternion modelRotationTarget;
     private float BladeVelocity;
+
+    //public List<Material> mats = new();
+    public Texture GreenFanTexture;
+    private bool SturdyComplete = false;
+    List<Renderer> renderers = new();
+
+    public WeatherParticleAnimator weatherPar;
 
     public void Start() {
         QuantumEvent.Subscribe<EventOnFanHit>(this, OnFanHit, NetworkHandler.FilterOutReplayFastForward);
@@ -34,6 +44,18 @@ public unsafe class FanAnimator : QuantumEntityViewComponent {
         BrokenParticles.SetActive(fan->Broken);
         Blades.localRotation = Quaternion.Euler(0, 0, Blades.localRotation.eulerAngles.z - (BladeVelocity * delta));
         Head.localRotation = Quaternion.Euler(0, fan->FellOver ? 0 : (fan->FacingRight ? 45 - fan->TurnEffectorDowntime : -45 + fan->TurnEffectorDowntime), 0);
+        weatherPar.UpdateVelocity(new Vector3(fan->FacingRight ? -40 : -40 * ((float) (fan->TurnEffectorDowntime / (FP) 45) - 1), 0, 0));
+
+        if (fan->Sturdy && !SturdyComplete) {
+            renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
+            renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
+            Debug.Log("SturdyFan!");
+            foreach (Renderer r in renderers) {
+                r.material.SetTexture("_BaseMap", GreenFanTexture);
+            }
+            SturdyComplete = true;
+        }
+        //mats.SetTexture = GreenFanTexture;
     }
     private unsafe void OnFanHit(EventOnFanHit e) {
         if (e.Entity != EntityRef) {

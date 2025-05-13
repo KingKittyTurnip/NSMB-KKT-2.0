@@ -179,7 +179,7 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                 if (Dis->GroundBounce) Dis->BounceTimes = 1;
                 if (Dis->StarsToDrop != 0) {
                     bool TeamateItem = !Dis->IgnoreTeamates && (mario->GetTeam(f) + 1) != hazard->Team;
-                    mario->DoKnockback(f, marioEntity, hitRight, TeamateItem ? 0 : Dis->StarsToDrop, TeamateItem, thisEntity);
+                    mario->DoKnockback(f, marioEntity, hitRight, TeamateItem ? 0 : Dis->StarsToDrop, /*TeamateItem*/ KnockbackStrength.FireballBump, thisEntity);
                 }
                 return;
             } else if (!(upDot >= PhysicsObjectSystem.GroundMaxAngle || upDot <= -PhysicsObjectSystem.GroundMaxAngle) && mario->CurrentPowerupState == PowerupState.MegaMushroom) {

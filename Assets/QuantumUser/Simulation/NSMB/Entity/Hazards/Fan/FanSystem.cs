@@ -15,7 +15,8 @@ namespace Quantum {
 /*
  ---------------------------------------
 
-Wind Particles (attach to the fan, make it the size of the stage and increase emmission to copensate for larger sizes)
+Make Wind Particles Go Upwards If Fan Fell over
+Wind Particles Are offset In Some Stages Like Bonus And Ghost House (unsure why but prob related to lack of automatic tile)
 
 Team interactions Make it Not Effect Teamate Objects
 
@@ -126,7 +127,9 @@ Gp Interactions are weird
                     continue;
                 //Is Checking This Expensive?
                 f.Unsafe.TryGetPointer(OtherEntity, out MarioPlayer* mar);
-                if (mar != null && (mar->IsInShell || mar->IsCrouchedInShell || mar->MegaMushroomFrames > 0 /*|| mar->StoneBux*/)) //TODO: Metal & Carrying Heavystone here
+                if (mar != null && (mar->IsInShell || mar->IsCrouchedInShell || mar->MegaMushroomFrames > 0 || mar->IsGroundpounding
+                    || mar->IsWallsliding || ((physobj->IsTouchingLeftWall || physobj->IsTouchingRightWall))
+                    /*|| mar->StoneBux*/)) //TODO: Metal & Carrying Heavystone here
                     continue;
                 f.Unsafe.TryGetPointer(OtherEntity, out Transform2D* trans);
                 f.Unsafe.TryGetPointer(OtherEntity, out PhysicsCollider2D* col);
@@ -162,7 +165,7 @@ Gp Interactions are weird
             FP upDot = FPVector2.Dot(damageDirection, FPVector2.Up);
             #endregion
 
-            if (mario->CurrentPowerupState == PowerupState.MegaMushroom) { //TODO: Add Metal
+            if (mario->CurrentPowerupState == PowerupState.MegaMushroom && !fan->Sturdy) { //TODO: Add Metal
                 if (hazard->LifeTime > 1200)
                     hazard->LifeTime = 1200;
                 physicsObject->IsFrozen = physicsObject->DisableCollision = f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = true;
@@ -170,7 +173,7 @@ Gp Interactions are weird
                 fan->FanTime = fan->TurnEffectorDowntime = 90;
                 fan->FacingRight = false;
                 f.Events.OnFanHit(thisEntity, true);
-            } else if (upDot >= PhysicsObjectSystem.GroundMaxAngle && (mario->IsGroundpounding || mario->GroundpoundStandFrames > 0)) {
+            } else if (upDot >= PhysicsObjectSystem.GroundMaxAngle && (mario->IsGroundpounding || mario->GroundpoundStandFrames > 0) && !fan->Sturdy) {
                 physicsObject->IsTouchingGround = false;
                 physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
                 physicsObject->Velocity.Y = 3;
@@ -192,6 +195,8 @@ Gp Interactions are weird
 
             if (throwobj->Type == ThrowingObjectType.Stone && !f.Exists(holdable->Holder)) {
                 var fan = f.Unsafe.GetPointer<Fan>(thisEntity);
+                if (fan->Sturdy)
+                    return;
                 var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
                 var throwTransform = f.Unsafe.GetPointer<Transform2D>(throwEntity);
                 var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
@@ -235,6 +240,9 @@ Gp Interactions are weird
                 || !f.Unsafe.TryGetPointer(thisEntity, out Fan* fan)) {
                 return;
             }
+
+            //Set Sturdy
+            fan->Sturdy = false;
 
             //Set Constant Direction
             fan->Broken = false; // Enable if hazard rules allow (Use Smoke Particles To Indicate)

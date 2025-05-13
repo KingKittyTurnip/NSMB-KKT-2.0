@@ -233,7 +233,6 @@ MonoBehaviour:
     - rid: 6822443760287219718
     - rid: 6822443760287219719
     - rid: 6822443760287219720
-    - rid: 6822443760287219721
   - Components:
     - rid: 7436244520175403008
     - rid: 7436244520175403009
@@ -1670,9 +1669,9 @@ MonoBehaviour:
       data:
         Position:
           X:
-            RawValue: -49191
+            RawValue: -163879
           Y:
-            RawValue: 15706
+            RawValue: 114010
         Rotation:
           RawValue: 0
     - rid: 2584499578992590849
@@ -1735,6 +1734,10 @@ MonoBehaviour:
         Broken:
           Value: 0
         FellOver:
+          Value: 0
+        Sturdy:
+          Value: 0
+        HandleParticles:
           Value: 0
     - rid: 2584499578992590853
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -3668,6 +3671,10 @@ MonoBehaviour:
           Value: 0
         FellOver:
           Value: 0
+        Sturdy:
+          Value: 0
+        HandleParticles:
+          Value: 0
     - rid: 6774341670612762629
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -3833,28 +3840,6 @@ MonoBehaviour:
       data:
         _empty_prototype_dummy_field_: 0
     - rid: 6822443760287219720
-      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        Gravity:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        TerminalVelocity:
-          RawValue: 0
-        IsFrozen:
-          Value: 1
-        DisableCollision:
-          Value: 0
-        SlowInLiquids:
-          Value: 0
-        IsWaterSolid:
-          Value: 0
-        BreakMegaObjects:
-          Value: 0
-        WindImmune:
-          Value: 0
-    - rid: 6822443760287219721
       type: {class: PiranhaPlantPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Pipe:
@@ -4605,6 +4590,10 @@ MonoBehaviour:
         Broken:
           Value: 0
         FellOver:
+          Value: 0
+        Sturdy:
+          Value: 1
+        HandleParticles:
           Value: 0
     - rid: 8098407346255953925
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}

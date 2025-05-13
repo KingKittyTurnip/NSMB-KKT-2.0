@@ -1775,15 +1775,19 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Fan : Quantum.IComponent {
-    public const Int32 SIZE = 40;
+    public const Int32 SIZE = 48;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(32)]
+    [FieldOffset(40)]
     public FP Strength;
     [FieldOffset(8)]
     public QBoolean Broken;
     [FieldOffset(16)]
     public QBoolean FellOver;
     [FieldOffset(24)]
+    public QBoolean Sturdy;
+    [FieldOffset(20)]
+    public QBoolean HandleParticles;
+    [FieldOffset(32)]
     [ExcludeFromPrototype()]
     public FP CurrentStrength;
     [FieldOffset(12)]
@@ -1801,6 +1805,8 @@ namespace Quantum {
         hash = hash * 31 + Strength.GetHashCode();
         hash = hash * 31 + Broken.GetHashCode();
         hash = hash * 31 + FellOver.GetHashCode();
+        hash = hash * 31 + Sturdy.GetHashCode();
+        hash = hash * 31 + HandleParticles.GetHashCode();
         hash = hash * 31 + CurrentStrength.GetHashCode();
         hash = hash * 31 + FacingRight.GetHashCode();
         hash = hash * 31 + FanTime.GetHashCode();
@@ -1815,6 +1821,8 @@ namespace Quantum {
         QBoolean.Serialize(&p->Broken, serializer);
         QBoolean.Serialize(&p->FacingRight, serializer);
         QBoolean.Serialize(&p->FellOver, serializer);
+        QBoolean.Serialize(&p->HandleParticles, serializer);
+        QBoolean.Serialize(&p->Sturdy, serializer);
         FP.Serialize(&p->CurrentStrength, serializer);
         FP.Serialize(&p->Strength, serializer);
     }

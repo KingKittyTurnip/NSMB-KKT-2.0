@@ -366,6 +366,8 @@ namespace Quantum.Prototypes {
     public FP Strength;
     public QBoolean Broken;
     public QBoolean FellOver;
+    public QBoolean Sturdy;
+    public QBoolean HandleParticles;
     partial void MaterializeUser(Frame frame, ref Quantum.Fan result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Fan component = default;
@@ -376,6 +378,8 @@ namespace Quantum.Prototypes {
         result.Strength = this.Strength;
         result.Broken = this.Broken;
         result.FellOver = this.FellOver;
+        result.Sturdy = this.Sturdy;
+        result.HandleParticles = this.HandleParticles;
         MaterializeUser(frame, ref result, in context);
     }
   }
