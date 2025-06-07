@@ -153,8 +153,10 @@ public class ChangeableRule : Selectable, ISubmitHandler, IPointerClickHandler, 
         }
 #endif
         UpdateLabel();
-        leftArrow.enabled = Editing && CanDecreaseValue;
-        rightArrow.enabled = Editing && CanIncreaseValue;
+        try {
+            leftArrow.enabled = Editing && CanDecreaseValue;
+            rightArrow.enabled = Editing && CanIncreaseValue;
+        } catch { /* bodge */ }
     }
 
     protected virtual void UpdateLabel() {

@@ -166,11 +166,11 @@ namespace NSMB.Entities.Player {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(EntityRef);
 
             var playerData = QuantumUtils.GetPlayerData(f, mario->PlayerRef);
-            var skins = ScriptableManager.Instance.skins;
-            int skinIndex = Mathf.Clamp(playerData != null ? playerData->Palette : 0, 0, skins.Length - 1);
+            var palettes = GlobalController.Instance.config.Palettes;
+            int paletteIndex = Mathf.Clamp(playerData != null ? playerData->Palette : 0, 0, palettes.Length - 1);
 
-            if (skins[skinIndex] is PaletteSet colorSet) {
-                skin = colorSet.GetPaletteForCharacter(character);
+            if (QuantumUnityDB.TryGetGlobalAsset(palettes[paletteIndex], out var paletteSet)) {
+                skin = paletteSet.GetPaletteForCharacter(character);
             }
 
             GlowColor = Utils.Utils.GetPlayerColor(f, mario->PlayerRef);
@@ -288,17 +288,14 @@ namespace NSMB.Entities.Player {
             drillPlayer.SetSoundData(mario->IsPropellerFlying ? propellerDrillData : spinnerDrillData);
             bubblesParticle.transform.localPosition = new(bubblesParticle.transform.localPosition.x, physicsCollider->Shape.Box.Extents.Y.AsFloat * 2);
 
-            bool isInWaterLiquid = false;
-            var waterColliders = f.ResolveHashSet(physicsObject->LiquidContacts);
-            float marioTop = transform.position.y + physicsCollider->Shape.Centroid.Y.AsFloat + physicsCollider->Shape.Box.Extents.Y.AsFloat;
-            foreach (EntityRef water in waterColliders) {
-                var liquidCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(water);
-                var liquidTransform = f.Unsafe.GetPointer<Transform2D>(water);
-                var liquid = f.Unsafe.GetPointer<Liquid>(water);
+            if (!mario->IsDead) {
+                var waterColliders = f.ResolveHashSet(physicsObject->LiquidContacts);
+                float marioTop = transform.position.y + physicsCollider->Shape.Centroid.Y.AsFloat + physicsCollider->Shape.Box.Extents.Y.AsFloat;
+                foreach (EntityRef water in waterColliders) {
+                    var liquidCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(water);
+                    var liquidTransform = f.Unsafe.GetPointer<Transform2D>(water);
+                    var liquid = f.Unsafe.GetPointer<Liquid>(water);
 
-                isInWaterLiquid |= liquid->LiquidType == LiquidType.Water;
-
-                if (!mario->IsDead) {
                     liquidCollider->Shape.Compound.GetShapes(f, out Shape2D* shapes, out _);
                     float waterTop = liquidTransform->Position.Y.AsFloat + liquidCollider->Shape.Centroid.Y.AsFloat + shapes[0].Box.Extents.Y.AsFloat;
                     if (marioTop >= waterTop - 0.125f) {
@@ -315,7 +312,7 @@ namespace NSMB.Entities.Player {
                 }
             }
 
-            animator.SetLayerWeight(3, isInWaterLiquid ? 1 : 0);
+            animator.SetLayerWeight(3, physicsObject->IsUnderwater ? 1 : 0);
         }
 
         private IEnumerator BlinkRoutine() {
@@ -333,17 +330,6 @@ namespace NSMB.Entities.Player {
 
         private void SetFacingDirection(Frame f, MarioPlayer* mario, PhysicsObject* physicsObject) {
             using var profilerScope = HostProfiler.Start("MarioPlayerAnimator.SetFacingDirection");
-            //TODO: refactor
-            /*
-            if (GameManager.Instance.GameEnded) {
-                if (mario->IsDead) {
-                    modelRotationTarget.Set(0, 180, 0);
-                    modelRotateInstantly = true;
-                }
-                return;
-            }
-            */
-
             float delta = Time.deltaTime;
 
             modelRotateInstantly = false;
@@ -378,7 +364,7 @@ namespace NSMB.Entities.Player {
 
             } else if (f.Unsafe.TryGetPointer(mario->CurrentSpinner, out Spinner* spinner)
                        && physicsObject->IsTouchingGround && mario->ProjectileDelayFrames == 0
-                       && Mathf.Abs(physicsObject->Velocity.X.AsFloat) < 0.3f && !mario->HeldEntity.IsValid
+                       && Mathf.Abs(physicsObject->Velocity.X.AsFloat) < 0.3f && !f.Exists(mario->HeldEntity)
                        && !animator.GetCurrentAnimatorStateInfo(0).IsName("fireball")) {
 
                 modelRotationTarget *= Quaternion.Euler(0, spinner->AngularVelocity.AsFloat * delta, 0);
@@ -606,9 +592,9 @@ namespace NSMB.Entities.Player {
             materialBlock = new();
 
             // Customizable player color
-            materialBlock.SetVector(ParamOverallsColor, skin?.overallsColor.linear ?? Color.clear);
-            materialBlock.SetVector(ParamShirtColor, skin?.shirtColor != null ? skin.shirtColor.linear : Color.clear);
-            materialBlock.SetFloat(ParamHatUsesOverallsColor, (skin?.hatUsesOverallsColor ?? false) ? 1 : 0);
+            materialBlock.SetVector(ParamOverallsColor, skin?.OverallsColor.AsColor.linear ?? Color.clear);
+            materialBlock.SetVector(ParamShirtColor, skin?.ShirtColor != null ? skin.ShirtColor.AsColor.linear : Color.clear);
+            materialBlock.SetFloat(ParamHatUsesOverallsColor, (skin?.HatUsesOverallsColor ?? false) ? 1 : 0);
         }
 
         private unsafe void URPOnPreRender(ScriptableRenderContext context, Camera camera) {

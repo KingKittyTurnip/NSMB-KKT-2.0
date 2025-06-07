@@ -21,7 +21,7 @@ public class ReplayListEntry : MonoBehaviour {
 
     //---Serialized Variables
     [SerializeField] private MainMenuCanvas canvas;
-    [SerializeField] internal GameObject defaultSelection;
+    [SerializeField] internal GameObject defaultSelection, mainPanel, buttonPanel;
     [SerializeField] private TMP_Text nameText, dateText, favoriteButtonText;
     [SerializeField] public TMP_Text warningText;
     [SerializeField] private Image mapImage;
@@ -36,19 +36,41 @@ public class ReplayListEntry : MonoBehaviour {
     private ReplayListManager manager;
     private Coroutine showHideButtonsCoroutine;
 
+    public void Initialize(ReplayListManager ourManager, BinaryReplayFile ourReplay) {
+        manager = ourManager;
+        ReplayFile = ourReplay;
+        // gameObject.SetActive(true);
+    }
+
     public void OnEnable() {
         TranslationManager.OnLanguageChanged += OnLanguageChanged;
-        OnLanguageChanged(GlobalController.Instance.translationManager);
     }
 
     public void OnDisable() {
         TranslationManager.OnLanguageChanged -= OnLanguageChanged;
+        mainPanel.SetActive(false);
+        buttonPanel.SetActive(false);
     }
 
-    public void Initialize(ReplayListManager ourManager, BinaryReplayFile ourReplay) {
-        manager = ourManager;
-        ReplayFile = ourReplay;
-        gameObject.SetActive(true);
+    public void Update() {
+        //UpdateVisibility();
+    }
+
+    private static readonly Vector3[] corners = new Vector3[4];
+    public void UpdateVisibility(Rect parentRect) {
+        if (mainPanel.activeSelf) {
+            return;
+        }
+
+        RectTransform ourRectTransform = ((RectTransform) transform);
+        ourRectTransform.GetWorldCorners(corners);
+        Vector3 topLeft = corners[1];
+        Rect ourRect = new Rect(topLeft, ourRectTransform.rect.size);
+
+        if (parentRect.Overlaps(ourRect)) {
+            mainPanel.SetActive(true);
+            buttonPanel.SetActive(true);
+        }
     }
 
     public void UpdateNavigation(ReplayListEntry previous) {
@@ -174,8 +196,13 @@ public class ReplayListEntry : MonoBehaviour {
         BinaryReplayHeader header = ReplayFile.Header;
 
         nameText.text = header.GetDisplayName();
-        dateText.text = DateTime.UnixEpoch.AddSeconds(header.UnixTimestamp).ToLocalTime().ToString();
-        
+        dateText.text = ReplayListManager.DateTimeToLocalizedString(DateTime.UnixEpoch.AddSeconds(header.UnixTimestamp), false, false);
+
+        bool rtl = tm.RightToLeft;
+        warningText.horizontalAlignment = rtl ? HorizontalAlignmentOptions.Left : HorizontalAlignmentOptions.Right;
+        dateText.horizontalAlignment = rtl ? HorizontalAlignmentOptions.Right : HorizontalAlignmentOptions.Left;
+        nameText.horizontalAlignment = rtl ? HorizontalAlignmentOptions.Right : HorizontalAlignmentOptions.Left;
+
         if (!header.IsCompatible) {
             warningText.text = tm.GetTranslationWithReplacements("ui.extras.replays.incompatible", "version", header.Version.ToString());
             warningText.color = criticalColor;

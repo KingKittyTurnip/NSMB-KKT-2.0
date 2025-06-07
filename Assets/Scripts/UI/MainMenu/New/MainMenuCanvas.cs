@@ -34,7 +34,6 @@ namespace NSMB.UI.MainMenu {
         [SerializeField] private GameObject header;
         [SerializeField] private Image headerImage;
         [SerializeField] private TMP_Text headerPath;
-        [SerializeField] private string headerSeparation;
 
         //---Private Variables
         private readonly List<MainMenuSubmenu> allSubmenus = new();
@@ -96,7 +95,11 @@ namespace NSMB.UI.MainMenu {
 
             bool showHeader = false;
             Color? newHeaderColor = null;
-            foreach (var menu in submenuStack) {
+
+            bool rtl = GlobalController.Instance.translationManager.RightToLeft;
+            IEnumerable<MainMenuSubmenu> submenus = rtl ? submenuStack.Reverse<MainMenuSubmenu>() : submenuStack;
+            string headerSeparation = rtl ? " < " : " > ";
+            foreach (var menu in submenus) {
                 showHeader |= menu.ShowHeader;
                 if (!string.IsNullOrEmpty(menu.Header)) {
                     builder.Append(menu.Header).Append(headerSeparation);
@@ -109,6 +112,7 @@ namespace NSMB.UI.MainMenu {
             if (builder.Length > 0) {
                 builder.Remove(builder.Length - headerSeparation.Length, headerSeparation.Length);
                 headerPath.text = builder.ToString();
+                headerPath.horizontalAlignment = rtl ? HorizontalAlignmentOptions.Right : HorizontalAlignmentOptions.Left;
             }
 
             Color newColor = newHeaderColor ?? defaultHeaderColor;
@@ -148,7 +152,7 @@ namespace NSMB.UI.MainMenu {
                 submenuStack.Add(menu);
             }
 
-            menu.Show(first);
+            menu.InternalShow(first);
             UpdateHeader();
             ShowHideMainPanel();
         }
@@ -175,7 +179,7 @@ namespace NSMB.UI.MainMenu {
                 menu.Hide(SubmenuHideReason.Closed);
                 var newHead = submenuStack[^1];
                 if (newHead != head) {
-                    newHead.Show(false);
+                    newHead.InternalShow(false);
                     UpdateHeader();
                 }
             }
@@ -198,7 +202,7 @@ namespace NSMB.UI.MainMenu {
             if (force || currentSubmenu.TryGoBack(out playSound)) {
                 currentSubmenu.Hide(SubmenuHideReason.Closed);
                 submenuStack.RemoveAt(submenuStack.Count - 1);
-                submenuStack[^1].Show(false);
+                submenuStack[^1].InternalShow(false);
             }
 
             if (playSound) {

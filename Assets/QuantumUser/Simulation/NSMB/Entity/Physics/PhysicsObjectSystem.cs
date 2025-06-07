@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Quantum {
 #if MULTITHREADED
-    public unsafe class PhysicsObjectSystem : SystemArrayFilter<PhysicsObjectSystem.Filter>, ISignalOnTryLiquidSplash, ISignalOnEntityEnterExitLiquid {
+    public unsafe class PhysicsObjectSystem : SystemArrayFilter<PhysicsObjectSystem.Filter>, ISignalOnEntityEnterExitLiquid {
 #else
-    public unsafe class PhysicsObjectSystem : SystemMainThread, ISignalOnTryLiquidSplash, ISignalOnEntityEnterExitLiquid {
+    public unsafe class PhysicsObjectSystem : SystemMainThread, ISignalOnEntityEnterExitLiquid {
 #endif
 
         public static readonly FP RaycastSkin = FP._0_05;
@@ -308,7 +308,7 @@ namespace Quantum {
                 FPVector2 raycastTranslation = new FPVector2(0, velocityY) + (directionVector * (RaycastSkin * 2 + Skin));
 
                 var mask = ((Frame) f).Context.ExcludeEntityAndPlayerMask;
-                var physicsHits = f.Physics2D.ShapeCastAll(raycastOrigin, 0, &shape, raycastTranslation, mask, QueryOptions.HitKinematics | QueryOptions.ComputeDetailedInfo);
+                var physicsHits = f.Physics2D.ShapeCastAll(raycastOrigin, 0, &shape, raycastTranslation, mask, QueryOptions.HitKinematics | QueryOptions.HitTriggers | QueryOptions.ComputeDetailedInfo);
 
                 if (stage.IsWrappingLevel) {
                     FP center = transform->Position.X + shape.Centroid.X;
@@ -330,7 +330,7 @@ namespace Quantum {
                         FPVector2 wrappedRaycastOrigin = raycastOrigin;
                         wrappedRaycastOrigin.X += stage.TileDimensions.x * FP._0_50;
 
-                        var wrappedHits = f.Physics2D.ShapeCastAll(wrappedRaycastOrigin, 0, &shape, raycastTranslation, mask, QueryOptions.HitKinematics | QueryOptions.ComputeDetailedInfo);
+                        var wrappedHits = f.Physics2D.ShapeCastAll(wrappedRaycastOrigin, 0, &shape, raycastTranslation, mask, QueryOptions.HitKinematics | QueryOptions.HitTriggers | QueryOptions.ComputeDetailedInfo);
                         for (int i = 0; i < wrappedHits.Count; i++) {
                             physicsHits.Add(wrappedHits[i], f.Context);
                         }
@@ -535,7 +535,7 @@ namespace Quantum {
 
                 var mask = ((Frame) f).Context.ExcludeEntityAndPlayerMask;
 
-                var physicsHits = f.Physics2D.ShapeCastAll(raycastOrigin, 0, &shape, raycastTranslation, mask, QueryOptions.HitKinematics | QueryOptions.ComputeDetailedInfo);
+                var physicsHits = f.Physics2D.ShapeCastAll(raycastOrigin, 0, &shape, raycastTranslation, mask, QueryOptions.HitKinematics | QueryOptions.HitTriggers | QueryOptions.ComputeDetailedInfo);
 
                 if (stage.IsWrappingLevel) {
                     FP center = transform->Position.X + shape.Centroid.X;
@@ -557,7 +557,7 @@ namespace Quantum {
                         FPVector2 wrappedRaycastOrigin = raycastOrigin;
                         wrappedRaycastOrigin.X += stage.TileDimensions.x * FP._0_50;
 
-                        var wrappedHits = f.Physics2D.ShapeCastAll(wrappedRaycastOrigin, 0, &shape, raycastTranslation, mask, QueryOptions.HitKinematics | QueryOptions.ComputeDetailedInfo);
+                        var wrappedHits = f.Physics2D.ShapeCastAll(wrappedRaycastOrigin, 0, &shape, raycastTranslation, mask, QueryOptions.HitKinematics | QueryOptions.HitTriggers | QueryOptions.ComputeDetailedInfo);
                         for (int i = 0; i < wrappedHits.Count; i++) {
                             physicsHits.Add(wrappedHits[i], f.Context);
                         }
@@ -715,18 +715,27 @@ namespace Quantum {
                     transform->Position += directionVector * (min.Value - Skin);
 
                     // Readjust the remaining velocity
-                    FP remainingVelocity = velocity.Magnitude - min.Value;
-                    FPVector2 newDirection = new(-avgNormal.Y, avgNormal.X);
+                    FPVector2 newVelocity = new(0, velocity.Y);
+                    if (FPMath.Abs(FPVector2.Dot(avgNormal, FPVector2.Up)) > GroundMaxAngle
+                        && FPVector2.Dot(avgNormal, velocity.Normalized) <= 0) {
+                        // Slope/ground/ceiling
+                        FPVector2 newDirection = new(avgNormal.Y, -avgNormal.X);
+                        if ((avgNormal.X > 0) ^ (avgNormal.Y < 0)) {
+                            newDirection *= -1;
+                        }
+                        FP speed = velocity.Y > 0 ? velocity.Magnitude : FPMath.Abs(velocity.X);
+                        FPVector2 projected = newDirection * speed;
+                        if (avgNormal.Y > 0) {
+                            projected -= physicsObject->Gravity * f.DeltaTime;
+                        }
 
-                    FPVector2 newVelocity = Project(velocity.Normalized * remainingVelocity, newDirection);
-                    if (FPMath.Abs(FPVector2.Dot(newDirection, FPVector2.Right)) > GroundMaxAngle) {
-                        newVelocity.X = velocityX / f.DeltaTime;
+                        newVelocity = projected;
                     }
                     hitObject = true;
                     return newVelocity;
                 }
             }
-
+            
             // Good to move
             transform->Position += directionVector * FPMath.Abs(velocityX);
             hitObject = false;
@@ -1080,6 +1089,14 @@ namespace Quantum {
             for (int i = 0; i < overlappingTiles; i++) {
                 StageTileInstance tile = tiles[i].Tile;
                 StageTile stageTile = f.FindAsset(tile.Tile);
+                Vector2Int location = tiles[i].Position;
+
+                while (stageTile is TileInteractionRelocator tir) {
+                    location += tir.RelocateTo;
+                    tile = stage.GetTileRelative((Frame) f, location);
+                    stageTile = f.FindAsset(tile.Tile);
+                }
+
                 if (stageTile == null
                     || !stageTile.IsPolygon
                     || (!includeMegaBreakable && stageTile is BreakableBrickTile breakable && breakable.BreakingRules.HasFlag(BreakableBrickTile.BreakableBy.MegaMario))) {
@@ -1345,19 +1362,6 @@ namespace Quantum {
             int num2 = num;
             QuickSortSpan(span, lo, num2 - 1);
             QuickSortSpan(span, num2 + 1, hi);
-        }
-
-        public void OnTryLiquidSplash(Frame f, EntityRef entity, EntityRef liquidEntity, QBoolean exit, bool* doSplash) {
-            if (!f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)) {
-                return;
-            }
-
-            var colliders = f.ResolveHashSet(physicsObject->LiquidContacts);
-            if (exit) {
-                colliders.Remove(liquidEntity);
-            } else {
-                colliders.Add(liquidEntity);
-            }
         }
 
         public void OnEntityEnterExitLiquid(Frame f, EntityRef entity, EntityRef liquid, QBoolean underwater) {

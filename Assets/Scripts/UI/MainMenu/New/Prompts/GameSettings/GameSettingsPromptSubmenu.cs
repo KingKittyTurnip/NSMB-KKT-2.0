@@ -20,6 +20,7 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             set {
                 roomIdLabel.text = value ? NetworkHandler.Client.CurrentRoom.Name : GlobalController.Instance.translationManager.GetTranslation("ui.inroom.settings.room.roomid.hidden");
                 _roomIdVisible = value;
+                LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform) roomIdLabel.transform.parent);
             }
         }
         public override GameObject BackButton => tabs[activeTab].BackButton;
@@ -63,7 +64,8 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
 
             var stages = GlobalController.Instance.config.AllStages;
             var stageGroups = stages.Select(QuantumUnityDB.GetGlobalAsset)
-                .Select(m => (m, (VersusStageData) QuantumUnityDB.GetGlobalAsset(m.UserAsset)))
+                .Select(m => (m, m ? (VersusStageData) QuantumUnityDB.GetGlobalAsset(m.UserAsset) : null))
+                .Where(vsd => vsd.Item2)
                 .GroupBy(vsd => vsd.Item2.GroupingTranslationKey).OrderBy(g => IndexOfNullIsMax(headerOrder, g.Key));
 
             TranslationManager tm = GlobalController.Instance.translationManager;
@@ -71,7 +73,9 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             List<StageSelectionButton> currentButtonRow = null;
             foreach (var grouping in stageGroups) {
                 TMP_Text newHeader = Instantiate(headerTemplate, headerTemplate.transform.parent);
-                newHeader.text = tm.GetTranslation(grouping.Key);
+                TMP_Translatable translatable = newHeader.GetComponent<TMP_Translatable>();
+                translatable.key = grouping.Key;
+                translatable.Run();
                 newHeader.gameObject.SetActive(true);
 
                 GameObject row = null;
@@ -121,8 +125,6 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
                 nav2.selectOnUp = currentButtonRow[currentButtonRow.Count / 2];
                 backButton.navigation = nav2;
             }
-
-            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform) transform);
         }
 
         private int IndexOfNullIsMax<T>(IReadOnlyList<T> arr, T thing) where T : IComparable {
@@ -210,7 +212,11 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
         }
 
         public void ChangeTabWithSound(int newTabIndex) {
-            ChangeTab(newTabIndex, true);
+            ChangeTab(newTabIndex, activeTab != newTabIndex);
+        }
+
+        public void AddTabWithSound(int increment) {
+            ChangeTabWithSound(activeTab + increment);
         }
 
         public unsafe void ChangeTab(int newTabIndex, bool playSound) {
@@ -233,6 +239,8 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             if (newTabIndex == 0) {
                 var stage = QuantumUnityDB.GetGlobalAsset(QuantumRunner.DefaultGame.Frames.Predicted.Global->Rules.Stage).UserAsset;
                 var buttons = newTab.Root.GetComponentsInChildren<StageSelectionButton>(true);
+                LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform) transform);
+                UnityEngine.Canvas.ForceUpdateCanvases();
                 Canvas.EventSystem.SetSelectedGameObject(buttons.FirstOrDefault(ssb => ssb.stage == stage).gameObject);
             } else {
                 Canvas.EventSystem.SetSelectedGameObject(newTab.DefaultSelection);
@@ -277,6 +285,14 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
         public void RoomIdClicked() {
             RoomIdVisible = !RoomIdVisible;
             Canvas.PlayCursorSound();
+        }
+
+        public void CopyRoomIdClicked() {
+            TextEditor te = new TextEditor();
+            te.text = NetworkHandler.Client.CurrentRoom.Name;
+            te.SelectAll();
+            te.Copy();
+            Canvas.PlayConfirmSound();
         }
 
         public void OnPlayerEnteredRoom(Player newPlayer) { }
