@@ -166,12 +166,12 @@ PrefabInstance:
     - target: {fileID: 1017215213198693199, guid: 2fe15eaf9521db34e8f71eba5b049ab0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.043054
+      value: 2.793054
       objectReference: {fileID: 0}
     - target: {fileID: 1017215213198693199, guid: 2fe15eaf9521db34e8f71eba5b049ab0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.9601843
+      value: -3.4601843
       objectReference: {fileID: 0}
     - target: {fileID: 1017215213198693199, guid: 2fe15eaf9521db34e8f71eba5b049ab0,
         type: 3}
@@ -892,12 +892,12 @@ PrefabInstance:
     - target: {fileID: 1017215213198693199, guid: 32d52fae6df00aa4a888cdf276f80dd4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.4300814
+      value: 5.043054
       objectReference: {fileID: 0}
     - target: {fileID: 1017215213198693199, guid: 32d52fae6df00aa4a888cdf276f80dd4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.3435647
+      value: -3.4601843
       objectReference: {fileID: 0}
     - target: {fileID: 1017215213198693199, guid: 32d52fae6df00aa4a888cdf276f80dd4,
         type: 3}
@@ -2023,7 +2023,8 @@ PrefabInstance:
         type: 3}
       propertyPath: Asset
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11400000, guid: 3e972041a3620e94fbeb719f665fa29b,
+        type: 2}
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
       propertyPath: AssetRef.Id.Value
@@ -2032,7 +2033,7 @@ PrefabInstance:
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
       propertyPath: MapEntityReferences.Array.size
-      value: 38
+      value: 37
       objectReference: {fileID: 0}
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
@@ -2223,7 +2224,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'MapEntityReferences.Array.data[37]'
       value: 
-      objectReference: {fileID: 943242295}
+      objectReference: {fileID: 846187442}
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
       propertyPath: 'MapEntityReferences.Array.data[38]'
@@ -2496,7 +2497,7 @@ PrefabInstance:
     - target: {fileID: 4824223341387914446, guid: 7b99b9d3bd915734eb212259c70cc1ac,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2661,6 +2662,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1288070390}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &846187442 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9150257369006672343, guid: 90832438caa67d441830a0448b98051e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1288070390}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b14052113b8414abfdb2effb52d984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &848992257
 GameObject:
   m_ObjectHideFlags: 0
@@ -2890,7 +2903,7 @@ PrefabInstance:
     - target: {fileID: 1017215213198693191, guid: 90832438caa67d441830a0448b98051e,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1017215213198693199, guid: 90832438caa67d441830a0448b98051e,
         type: 3}
@@ -3773,12 +3786,12 @@ PrefabInstance:
     - target: {fileID: 1017215213198693199, guid: 819791d3cfc996646acd24a6fb15993e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.793054
+      value: 3.043054
       objectReference: {fileID: 0}
     - target: {fileID: 1017215213198693199, guid: 819791d3cfc996646acd24a6fb15993e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.4601843
+      value: -2.9601843
       objectReference: {fileID: 0}
     - target: {fileID: 1017215213198693199, guid: 819791d3cfc996646acd24a6fb15993e,
         type: 3}
