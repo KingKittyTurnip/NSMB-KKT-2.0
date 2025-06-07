@@ -172,7 +172,11 @@ Gp Interactions are weird
                 fan->FellOver = fan->Broken = true;
                 fan->FanTime = fan->TurnEffectorDowntime = 90;
                 fan->FacingRight = false;
+                DisCollider->Enabled = false;
+                DisCollider->Shape.Box.Extents = FPVector2.Zero;
+                DisCollider->Shape.Centroid.Y = -999;
                 f.Events.OnFanHit(thisEntity, true);
+                return;
             } else if (upDot >= PhysicsObjectSystem.GroundMaxAngle && (mario->IsGroundpounding || mario->GroundpoundStandFrames > 0) && !fan->Sturdy) {
                 physicsObject->IsTouchingGround = false;
                 physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
@@ -182,10 +186,12 @@ Gp Interactions are weird
                 mario->IsGroundpounding = mariophys->IsTouchingGround = false;
                 mariophys->Velocity.Y = 6;
                 f.Events.OnFanHit(thisEntity, false);
+                return;
             } else if (upDot <= -PhysicsObjectSystem.GroundMaxAngle) {
                 physicsObject->IsTouchingGround = false;
                 physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
                 physicsObject->Velocity.Y = 3;
+                return;
             }
         }
 

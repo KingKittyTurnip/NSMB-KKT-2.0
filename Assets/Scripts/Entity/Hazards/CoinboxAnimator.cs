@@ -1,13 +1,7 @@
-using JimmysUnityUtilities;
-using NSMB.Extensions;
-using NUnit.Framework;
-using Org.BouncyCastle.Asn1.Pkcs;
 using Quantum;
 using Quantum.Profiling;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
 

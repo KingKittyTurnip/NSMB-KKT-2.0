@@ -1,12 +1,5 @@
-using NSMB.Extensions;
 using NSMB.Utils;
-using Org.BouncyCastle.Asn1.Pkcs;
-using Photon.Deterministic;
 using Quantum;
-using Quantum.Profiling;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Text;
 using UnityEngine;
 
 public unsafe class ClockAnimator : QuantumEntityViewComponent {
