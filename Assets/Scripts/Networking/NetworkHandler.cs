@@ -23,7 +23,7 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
 
     //---Constants
     public static readonly string RoomIdValidChars = "BCDFGHJKLMNPRQSTVWXYZ";
-    private static readonly int RoomIdLength = 8;
+    public static readonly int RoomIdLength = 4;
     private static readonly List<DisconnectCause> NonErrorDisconnectCauses = new() {
         DisconnectCause.None, DisconnectCause.DisconnectByClientLogic, DisconnectCause.ApplicationQuit,
     };
@@ -72,6 +72,7 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
         QuantumEvent.Subscribe<EventRecordingStarted>(this, OnRecordingStarted);
         QuantumEvent.Subscribe<EventGameEnded>(this, OnGameEnded);
         QuantumEvent.Subscribe<EventRulesChanged>(this, OnRulesChanged);
+        QuantumEvent.Subscribe<EventPlayerKickedFromRoom>(this, OnPlayerKickedFromRoom);
 
         CurrentReplay = null;
     }
@@ -219,7 +220,7 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
         }
         id = id.ToUpper();
         regionIndex = RoomIdValidChars.IndexOf(id[0]);
-        return regionIndex >= 0 && regionIndex < Regions.Count() && Regex.IsMatch(id, $"[{RoomIdValidChars}]{{8}}");
+        return regionIndex >= 0 && regionIndex < Regions.Count() && Regex.IsMatch(id, $"[{RoomIdValidChars}]{{{RoomIdLength}}}");
     }
 
     public static async Task<short> JoinRoom(EnterRoomArgs args) {
@@ -409,7 +410,7 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
             },
             SessionConfig = QuantumDeterministicSessionConfigAsset.DefaultConfig,
             GameMode = DeterministicGameMode.Multiplayer,
-            PlayerCount = 10,
+            PlayerCount = Constants.MaxPlayers,
             Communicator = new QuantumNetworkCommunicator(Client),
         };
 
@@ -469,6 +470,12 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
 
     private unsafe void OnRulesChanged(EventRulesChanged e) {
         UpdateRealtimeProperties();
+    }
+
+    private void OnPlayerKickedFromRoom(EventPlayerKickedFromRoom e) {
+        if (e.Game.PlayerIsLocal(e.Player)) {
+            Runner.Shutdown(ShutdownCause.Ok);
+        }
     }
 
     private void OnGameEnded(EventGameEnded e) {

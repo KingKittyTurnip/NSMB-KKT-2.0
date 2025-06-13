@@ -12,9 +12,9 @@ public class TilemapAnimator : QuantumSceneViewComponent<StageContext> {
 
     //---Private Variables
     private readonly Dictionary<EntityRef, AudioSource> entityBreakBlockSounds = new();
-
     private readonly Dictionary<EventKey, Vector3Int> tilePositionData = new();
     private readonly Dictionary<Vector3Int, List<TileChangeData>> tileUndoData = new();
+    private double startTime;
 
     public void OnValidate() {
         this.SetIfNull(ref tilemap);
@@ -37,11 +37,17 @@ public class TilemapAnimator : QuantumSceneViewComponent<StageContext> {
             RefreshMap(QuantumRunner.DefaultGame.Frames.Verified);
         }
         tilemap.RefreshAllTiles();
+        startTime = Time.timeAsDouble;
+    }
+
+    public override void OnUpdateView() {
+        LevelWrapRenderPass.wrapAmount = ViewContext.Stage.TileDimensions.x * 0.5f;
     }
 
     private void OnGameStateChanged(EventGameStateChanged e) {
         if (e.NewState == GameState.Playing) {
             tilemap.RefreshAllTiles();
+            startTime = Time.timeAsDouble;
         }
     }
 
@@ -58,6 +64,9 @@ public class TilemapAnimator : QuantumSceneViewComponent<StageContext> {
             tilemap.SetTile(coords, undoData[0].tile);
             tilemap.SetTransformMatrix(coords, undoData[0].transform);
             tilemap.RefreshTile(coords);
+            if (undoData[0].tile is AnimatedTile at) {
+                tilemap.SetAnimationTime(coords, (float) (Time.timeAsDouble - startTime) * at.m_MaxSpeed % at.m_AnimatedSprites.Length);
+            }
         }
 
         if (undoData.Count > 0) {
@@ -103,7 +112,9 @@ public class TilemapAnimator : QuantumSceneViewComponent<StageContext> {
         tilemap.SetTile(coords, unityTile);
         tilemap.SetTransformMatrix(coords, mat);
         tilemap.RefreshTile(coords);
-        
+        if (unityTile is AnimatedTile at) {
+            tilemap.SetAnimationTime(coords, (float) (Time.timeAsDouble - startTime) * at.m_MaxSpeed % at.m_AnimatedSprites.Length);
+        }
     }
 
     private unsafe void OnTileBroken(EventTileBroken e) {
@@ -152,9 +163,11 @@ public class TilemapAnimator : QuantumSceneViewComponent<StageContext> {
                 tilemap.SetTile(coords, unityTile);
                 Matrix4x4 mat = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, tileInstance.Rotation / (float) (ushort.MaxValue / 360f)), scale);
                 tilemap.SetTransformMatrix(coords, mat);
+                tilemap.RefreshTile(coords);
+                if (unityTile is AnimatedTile at) {
+                    tilemap.SetAnimationTime(coords, (float) (Time.timeAsDouble - startTime) * at.m_MaxSpeed % at.m_AnimatedSprites.Length);
+                }
             }
         }
-
-        tilemap.RefreshAllTiles();
     }
 }

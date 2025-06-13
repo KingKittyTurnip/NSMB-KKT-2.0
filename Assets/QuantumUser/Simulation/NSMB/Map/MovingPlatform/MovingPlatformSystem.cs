@@ -1,5 +1,6 @@
 using Photon.Deterministic;
 using Quantum.Collections;
+using UnityEngine;
 
 namespace Quantum {
     public unsafe class MovingPlatformSystem : SystemMainThreadEntityFilter<MovingPlatform, MovingPlatformSystem.Filter> {
@@ -64,12 +65,14 @@ namespace Quantum {
                     continue;
                 }
 
-                bool movingAway = FPVector2.Dot(physicsObject->Velocity.Normalized, velocity.Normalized) > 0;
+                bool movingAway = FPVector2.Dot(physicsObject->Velocity.Normalized, velocity.Normalized) >= 0;
                 if (shape->Type == Shape2DType.Edge) {
                     // Semisolid logic
-                    movingAway = !movingAway;
-                    if (!movingAway) {
+                    bool below = physicsSystemFilter.Transform->Position.Y < (hit.Point.Y - (filter.Platform->Velocity.Y * 2 * f.DeltaTime));
+                    if (movingAway || below) {
                         continue;
+                    } else {
+                        movingAway = !movingAway;
                     }
                 }
 

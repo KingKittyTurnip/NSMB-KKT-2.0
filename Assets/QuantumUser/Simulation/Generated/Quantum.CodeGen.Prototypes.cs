@@ -810,7 +810,7 @@ namespace Quantum.Prototypes {
     public PlayerRef PlayerRef;
     [MaxStringByteCount(46, "Unicode")]
     public string Nickname;
-    [MaxStringByteCount(14, "Unicode")]
+    [MaxStringByteCount(46, "UTF-8")]
     public string NicknameColor;
     public Byte Team;
     public Byte Character;
@@ -820,7 +820,7 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.PlayerInformation result, in PrototypeMaterializationContext context = default) {
         result.PlayerRef = this.PlayerRef;
         PrototypeValidator.AssignQString(this.Nickname, 48, in context, out result.Nickname);
-        PrototypeValidator.AssignQString(this.NicknameColor, 16, in context, out result.NicknameColor);
+        PrototypeValidator.AssignQStringUtf8(this.NicknameColor, 48, in context, out result.NicknameColor);
         result.Team = this.Team;
         result.Character = this.Character;
         result.Disconnected = this.Disconnected;

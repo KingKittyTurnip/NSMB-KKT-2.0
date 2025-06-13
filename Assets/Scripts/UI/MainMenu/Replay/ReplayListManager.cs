@@ -51,6 +51,7 @@ public class ReplayListManager : Selectable {
     private readonly SortedSet<ReplayListEntry> temporaryReplays = new(new ReplayDateComparer());
     private bool sortAscending;
     private int sortIndex;
+    private bool languageChangedSinceLastOpen;
     private Coroutine findReplaysCoroutine;
 
 #if UNITY_EDITOR
@@ -62,6 +63,12 @@ public class ReplayListManager : Selectable {
 
     public void Initialize() {
         FindReplays();
+        TranslationManager.OnLanguageChanged += OnLanguageChanged;
+    }
+
+    protected override void OnDestroy() {
+        base.OnDestroy();
+        TranslationManager.OnLanguageChanged -= OnLanguageChanged;
     }
 
     private static readonly Vector3[] corners = new Vector3[4];
@@ -77,20 +84,7 @@ public class ReplayListManager : Selectable {
         FindReplays();
         SortReplays();
         OnScrollRectScrolled(default);
-    }
-
-    protected override void OnEnable() {
-        base.OnEnable();
-
-        if (Application.isPlaying) {
-            TranslationManager.OnLanguageChanged += OnLanguageChanged;
-            OnLanguageChanged(GlobalController.Instance.translationManager);
-        }
-    }
-
-    protected override void OnDisable() {
-        base.OnDisable();
-        TranslationManager.OnLanguageChanged -= OnLanguageChanged;
+        OnLanguageChanged(GlobalController.Instance.translationManager);
     }
 
     private IEnumerator SelectAtEndOfFrame() {
@@ -267,6 +261,14 @@ public class ReplayListManager : Selectable {
         noReplaysText.text = "";
         loadingIcon.SetActive(true);
 
+        if (languageChangedSinceLastOpen) {
+            // Update to fix a bug where the names are invalid after a language switch.
+            foreach (var createdReplays in replays) {
+                createdReplays.UpdateText();
+            }
+            languageChangedSinceLastOpen = false;
+        }
+
         Stopwatch stopwatch = new();
         stopwatch.Start();
         foreach (var filepath in files) {
@@ -280,6 +282,7 @@ public class ReplayListManager : Selectable {
                 newReplayEntry.Initialize(this, replay);
                 newReplayEntry.UpdateText();
                 newReplayEntry.name = Path.GetFileName(filepath);
+                newReplayEntry.gameObject.SetActive(true);
                 replays.Add(newReplayEntry);
 
                 if (newReplayEntry.IsTemporary) {
@@ -308,7 +311,6 @@ public class ReplayListManager : Selectable {
         // Update a second time to fix the "Temporary" label.
         foreach (var createdReplays in replays) {
             createdReplays.UpdateText();
-            createdReplays.gameObject.SetActive(true);
         }
 
         FilterReplays();
@@ -351,6 +353,7 @@ public class ReplayListManager : Selectable {
 
                 replays.Add(newReplayEntry);
                 newReplayEntry.UpdateText();
+                newReplayEntry.gameObject.SetActive(true);
                 SortReplays();
 
                 canvas.EventSystem.SetSelectedGameObject(newReplayEntry.gameObject);
@@ -537,15 +540,22 @@ public class ReplayListManager : Selectable {
     }
 
     public void OnScrollRectScrolled(Vector2 pos) {
+        /*
         RectTransform parent = (RectTransform) canvas.transform;
         parent.GetWorldCorners(corners);
         Rect parentRect = new((Vector2) corners[0], parent.rect.size);
         foreach (var replay in replays) {
             replay.UpdateVisibility(parentRect);
         }
+        */
     }
 
     private void OnLanguageChanged(TranslationManager tm) {
+        if (!gameObject.activeInHierarchy) {
+            languageChangedSinceLastOpen = true;
+            return;
+        }
+
         int index = sortDropdown.value;
 
         sortDropdown.ClearOptions();
@@ -553,10 +563,8 @@ public class ReplayListManager : Selectable {
         sortDropdown.options.Add(new TMP_Dropdown.OptionData { text = prefix + tm.GetTranslation("ui.extras.replays.sort.date") });
         sortDropdown.options.Add(new TMP_Dropdown.OptionData { text = prefix + tm.GetTranslation("ui.extras.replays.sort.alphabetical") });
         sortDropdown.options.Add(new TMP_Dropdown.OptionData { text = prefix + tm.GetTranslation("ui.extras.replays.sort.stage") });
-
         sortDropdown.SetValueWithoutNotify(index);
         sortDropdown.RefreshShownValue();
-
 
         UpdateInformation(Selected);
     }

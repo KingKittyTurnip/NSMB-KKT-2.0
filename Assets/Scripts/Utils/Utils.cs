@@ -1,11 +1,12 @@
+using NSMB.Extensions;
 using NSMB.UI.Game;
 using Quantum;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace NSMB.Utils {
     public class Utils {
@@ -275,32 +276,13 @@ namespace NSMB.Utils {
             return (Math.Sign(byteCount) * num).ToString() + suf[place];
         }
 
-        public static Color SampleNicknameColor(ReadOnlySpan<char> color, out bool constant) {
-            if (color == null || color.IsEmpty) {
-                constant = true;
-                return Color.white;
-            }
-
-            if (color[0] == '#') {
-                constant = true;
-                return new Color32(
-                    byte.Parse(color[1..3], System.Globalization.NumberStyles.HexNumber),
-                    byte.Parse(color[3..5], System.Globalization.NumberStyles.HexNumber),
-                    byte.Parse(color[5..7], System.Globalization.NumberStyles.HexNumber),
-                    255);
-            } else if (color == "rainbow".AsSpan()) {
-                constant = false;
-                return GetRainbowColor();
-            } else {
-                constant = true;
-                return Color.white;
-            }
+        public static Color SampleIQGradient(float time, Vector3 a, Vector3 b, Vector3 c, Vector3 d) {
+            Vector3 result = a + b.Multiply(Vector3Cos(Mathf.PI * 2 * (c * time + d)));
+            return new Color(result.x, result.y, result.z);
         }
 
-        public static Color GetRainbowColor() {
-            // Four seconds per revolution
-            double time = (Time.timeAsDouble * 0.25d) % 1d;
-            return GlobalController.Instance.rainbowGradient.Evaluate((float) time);
+        private static Vector3 Vector3Cos(Vector3 vec) {
+            return new(Mathf.Cos(vec.x), Mathf.Cos(vec.y), Mathf.Cos(vec.z));
         }
 
         public static float Luminance(Color color) {
