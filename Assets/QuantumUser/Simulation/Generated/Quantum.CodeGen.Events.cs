@@ -670,19 +670,17 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventTileChanged TileChanged(Int32 TileX, Int32 TileY, StageTileInstance NewTile) {
+      public EventTileChanged TileChanged(IntVector2 Position, StageTileInstance NewTile) {
         var ev = _f.Context.AcquireEvent<EventTileChanged>(EventTileChanged.ID);
-        ev.TileX = TileX;
-        ev.TileY = TileY;
+        ev.Position = Position;
         ev.NewTile = NewTile;
         _f.AddEvent(ev);
         return ev;
       }
-      public EventTileBroken TileBroken(EntityRef Entity, Int32 TileX, Int32 TileY, StageTileInstance Tile, QBoolean BrokenByMega) {
+      public EventTileBroken TileBroken(EntityRef Entity, IntVector2 Position, StageTileInstance Tile, QBoolean BrokenByMega) {
         var ev = _f.Context.AcquireEvent<EventTileBroken>(EventTileBroken.ID);
         ev.Entity = Entity;
-        ev.TileX = TileX;
-        ev.TileY = TileY;
+        ev.Position = Position;
         ev.Tile = Tile;
         ev.BrokenByMega = BrokenByMega;
         _f.AddEvent(ev);
@@ -2636,8 +2634,7 @@ namespace Quantum {
   }
   public unsafe partial class EventTileChanged : EventBase {
     public new const Int32 ID = 74;
-    public Int32 TileX;
-    public Int32 TileY;
+    public IntVector2 Position;
     public StageTileInstance NewTile;
     protected EventTileChanged(Int32 id, EventFlags flags) : 
         base(id, flags) {
@@ -2656,8 +2653,7 @@ namespace Quantum {
     public override Int32 GetHashCode() {
       unchecked {
         var hash = 443;
-        hash = hash * 31 + TileX.GetHashCode();
-        hash = hash * 31 + TileY.GetHashCode();
+        hash = hash * 31 + Position.GetHashCode();
         hash = hash * 31 + NewTile.GetHashCode();
         return hash;
       }
@@ -2666,8 +2662,7 @@ namespace Quantum {
   public unsafe partial class EventTileBroken : EventBase {
     public new const Int32 ID = 75;
     public EntityRef Entity;
-    public Int32 TileX;
-    public Int32 TileY;
+    public IntVector2 Position;
     public StageTileInstance Tile;
     public QBoolean BrokenByMega;
     protected EventTileBroken(Int32 id, EventFlags flags) : 
@@ -2688,8 +2683,7 @@ namespace Quantum {
       unchecked {
         var hash = 449;
         hash = hash * 31 + Entity.GetHashCode();
-        hash = hash * 31 + TileX.GetHashCode();
-        hash = hash * 31 + TileY.GetHashCode();
+        hash = hash * 31 + Position.GetHashCode();
         hash = hash * 31 + Tile.GetHashCode();
         hash = hash * 31 + BrokenByMega.GetHashCode();
         return hash;
