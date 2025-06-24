@@ -203,30 +203,6 @@ MonoBehaviour:
   InvisibleSolidTile:
     Id:
       Value: 282924479522535788
-  AllPowerups:
-  - Id:
-      Value: 390055422968795145
-  - Id:
-      Value: 296548766860541996
-  - Id:
-      Value: 279725308049324760
-  - Id:
-      Value: 271390802845879304
-  - Id:
-      Value: 378514462062875007
-  - Id:
-      Value: 269903407669338010
-  - Id:
-      Value: 328877894917160747
-  - Id:
-      Value: 372382251364764784
-  - Id:
-      Value: 402398838204577684
-  - Id:
-      Value: 421291512996345105
-  FallbackPowerup:
-    Id:
-      Value: 390055422968795145
   AllStages:
   - Id:
       Value: 438935048561577377
@@ -326,15 +302,9 @@ MonoBehaviour:
   HammerPrototype:
     Id:
       Value: 1406353302584805307
-  BigStarPrototype:
-    Id:
-      Value: 1295981493910502871
   BlockBumpPrototype:
     Id:
       Value: 1308320651839637093
-  LooseCoinPrototype:
-    Id:
-      Value: 1464681621458001613
   IceBlockPrototype:
     Id:
       Value: 1386525317044462577
@@ -342,8 +312,11 @@ MonoBehaviour:
     Stage:
       Id:
         Value: 438935048561577377
+    Gamemode:
+      Id:
+        Value: 394255533064620237
     StarsToWin: 10
-    CoinsForPowerup: 8
+    CoinsForPowerup: 1
     Lives: 0
     TimerSeconds: 10
     TeamsEnabled:

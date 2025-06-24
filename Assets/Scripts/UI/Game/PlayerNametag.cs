@@ -51,6 +51,7 @@ namespace NSMB.UI.Game {
         public void Start() {
             QuantumEvent.Subscribe<EventMarioPlayerCollectedStar>(this, OnMarioPlayerCollectedStar);
             QuantumEvent.Subscribe<EventMarioPlayerDroppedStar>(this, OnMarioPlayerDroppedStar);
+            QuantumEvent.Subscribe<EventMarioPlayerObjectiveCoinsChanged>(this, OnMarioPlayerObjectiveCoinsChanged);
             QuantumEvent.Subscribe<EventMarioPlayerDied>(this, OnMarioPlayerDied);
             QuantumEvent.Subscribe<EventMarioPlayerPreRespawned>(this, OnMarioPlayerPreRespawned);
             QuantumEvent.Subscribe<EventPlayerRemoved>(this, OnPlayerRemoved);
@@ -105,6 +106,7 @@ namespace NSMB.UI.Game {
             if (!f.Unsafe.TryGetPointer(Entity, out MarioPlayer* mario)) {
                 return;
             }
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
 
             stringBuilder.Clear();
 
@@ -119,7 +121,7 @@ namespace NSMB.UI.Game {
                 stringBuilder.Append(character.UiString).Append(Utils.Utils.GetSymbolString("x" + mario->Lives)).Append(' ');
             }
 
-            stringBuilder.Append(Utils.Utils.GetSymbolString("Sx" + mario->Stars));
+            stringBuilder.Append(Utils.Utils.GetSymbolString(gamemode.ObjectiveSymbolPrefix + "x" + gamemode.GetObjectiveCount(f, mario)));
 
             text.text = stringBuilder.ToString();
         }
@@ -141,6 +143,14 @@ namespace NSMB.UI.Game {
         }
 
         private void OnMarioPlayerCollectedStar(EventMarioPlayerCollectedStar e) {
+            if (e.Entity != Entity) {
+                return;
+            }
+
+            UpdateText(e.Game.Frames.Predicted);
+        }
+
+        private void OnMarioPlayerObjectiveCoinsChanged(EventMarioPlayerObjectiveCoinsChanged e) {
             if (e.Entity != Entity) {
                 return;
             }

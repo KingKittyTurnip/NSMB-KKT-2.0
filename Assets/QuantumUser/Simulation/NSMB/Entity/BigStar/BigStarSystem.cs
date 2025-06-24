@@ -2,7 +2,9 @@ using Photon.Deterministic;
 using Quantum.Physics2D;
 
 namespace Quantum {
-    public unsafe class BigStarSystem : SystemMainThread, ISignalOnReturnToRoom {
+    public unsafe class BigStarSystem : SystemMainThread, ISignalOnReturnToRoom, ISignalOnMarioPlayerDropObjective {
+
+        public override bool StartEnabled => false;
 
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<BigStar, MarioPlayer>(f, OnBigStarMarioInteraction);
@@ -29,7 +31,7 @@ namespace Quantum {
             bool spawnedStar = false;
             for (int i = 0; i < spawnpoints; i++) {
                 // Find a spot...
-                if (f.Global->UsedStarSpawnCount == spawnpoints) {
+                if (f.Global->UsedStarSpawnCount >= spawnpoints) {
                     usedSpawnpoints.ClearAll();
                     f.Global->UsedStarSpawnCount = 0;
                 }
@@ -54,7 +56,8 @@ namespace Quantum {
 
                 if (hits.Count == 0) {
                     // Hit no players
-                    EntityRef newEntity = f.Create(f.SimulationConfig.BigStarPrototype);
+                    var gamemode = f.FindAsset(f.Global->Rules.Gamemode) as StarChasersGamemode;
+                    EntityRef newEntity = f.Create(gamemode.BigStarPrototype);
                     f.Global->MainBigStar = newEntity;
                     var newStarTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
                     var newStar = f.Unsafe.GetPointer<BigStar>(newEntity);
@@ -137,7 +140,7 @@ namespace Quantum {
                 return;
             }
 
-            mario->Stars++;
+            mario->GamemodeData.StarChasers->Stars++;
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
 
             if (star->IsStationary) {
@@ -146,6 +149,8 @@ namespace Quantum {
             }
 
             f.Signals.OnMarioPlayerCollectedStar(marioEntity);
+            GameLogicSystem.CheckForGameEnd(f);
+
             f.Events.MarioPlayerCollectedStar(marioEntity, *mario, f.Unsafe.GetPointer<Transform2D>(starEntity)->Position);
             f.Events.CollectableDespawned(starEntity, f.Unsafe.GetPointer<Transform2D>(starEntity)->Position, true);
             f.Destroy(starEntity);
@@ -156,6 +161,12 @@ namespace Quantum {
             f.Global->BigStarSpawnTimer = 0;
             f.Global->UsedStarSpawnCount = 0;
             f.Global->UsedStarSpawns.ClearAll();
+        }
+
+        public void OnMarioPlayerDropObjective(Frame f, EntityRef entity, int amount, EntityRef attacker) {
+            if (f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)) {
+                mario->SpawnStars(f, entity, amount);
+            }
         }
     }
 }

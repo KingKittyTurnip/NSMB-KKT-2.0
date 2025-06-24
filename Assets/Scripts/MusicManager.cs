@@ -24,8 +24,9 @@ namespace NSMB.Sound {
             LoadingCanvas.OnLoadingEnded += OnLoadingEnded;
 
             QuantumGame game = NetworkHandler.Game;
-            if (game != null) {
-                GameState state = game.Frames.Predicted.Global->GameState;
+            Frame f;
+            if (game != null && (f = game.Frames.Predicted) != null) {
+                GameState state = f.Global->GameState;
                 if (state == GameState.Starting || state == GameState.Playing) {
                     // Already in a game
                     HandleMusic(game, true);
@@ -90,7 +91,11 @@ namespace NSMB.Sound {
             }
 
             speedup |= rules.IsTimerEnabled && f.Global->Timer <= 60;
-            speedup |= QuantumUtils.GetFirstPlaceStars(f) >= rules.StarsToWin - 1;
+
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
+            if (gamemode is StarChasersGamemode) {
+                speedup |= gamemode.GetFirstPlaceObjectiveCount(f) >= rules.StarsToWin - 1;
+            }
 
             if (!speedup && rules.IsLivesEnabled) {
                 // Also speed up the music if:

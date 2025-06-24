@@ -1,7 +1,7 @@
 using System;
 
 public enum SoundEffect : byte {
-    //CURRENT HIGHEST NUMBER: 109 (use 110 next)
+    //CURRENT HIGHEST NUMBER: 114 (use 115 next)
     //Enemy
     [SoundData("enemy/freeze")] Enemy_Generic_Freeze = 0,
     [SoundData("enemy/freeze_shatter")] Enemy_Generic_FreezeShatter = 1,
@@ -117,7 +117,12 @@ public enum SoundEffect : byte {
     [SoundData("world/coin_drop")] World_Coin_Drop = 91,
     [SoundData("world/coin_dotted_spawn")] World_Coin_Dotted_Spawn = 100,
     [SoundData("world/ice_skidding")] World_Ice_Skidding = 71,
+    [SoundData("world/gold_block_damage")] World_Gold_Block_Damage = 112,
+    [SoundData("world/gold_block_equip")] World_Gold_Block_Equip = 113,
+    [SoundData("world/gold_block_finished")] World_Gold_Block_Finished = 114,
     [SoundData("world/spinner_launch")] World_Spinner_Launch = 72,
+    [SoundData("world/starcoin_collect")] World_Starcoin_Collect = 110,
+    [SoundData("world/starcoin_store")] World_Starcoin_Store = 111,
     [SoundData("world/star_collect")] World_Star_Collect = 73,
     [SoundData("world/star_collect_enemy")] World_Star_CollectOthers = 74,
     [SoundData("world/star_nearby")] World_Star_Nearby = 75,

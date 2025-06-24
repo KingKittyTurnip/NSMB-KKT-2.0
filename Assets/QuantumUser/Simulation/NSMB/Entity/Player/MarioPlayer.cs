@@ -9,6 +9,7 @@ namespace Quantum {
         public bool IsCrouchedInShell => CurrentPowerupState == PowerupState.BlueShell && IsCrouching && !IsInShell;
         public bool IsDamageable => !IsStarmanInvincible && DamageInvincibilityFrames == 0;
         public bool IsInKnockback => CurrentKnockback != KnockbackStrength.None;
+        public bool CanCollectOwnTeamsObjectiveCoins => !IsInKnockback && DamageInvincibilityFrames == 0;
 
         public byte? GetTeam(Frame f) {
             var data = QuantumUtils.GetPlayerData(f, PlayerRef);
@@ -150,7 +151,7 @@ namespace Quantum {
             ReserveItem = newItem;
         }
 
-        public void Death(Frame f, EntityRef entity, bool fire, bool stars = true) {
+        public void Death(Frame f, EntityRef entity, bool fire, bool dropStars, EntityRef attacker) {
             if (IsDead) {
                 return;
             }
@@ -163,13 +164,11 @@ namespace Quantum {
             RespawnFrames = 78;
 
             if ((f.Global->Rules.IsLivesEnabled && QuantumUtils.Decrement(ref Lives)) || Disconnected) {
-                if (stars) {
-                    SpawnStars(f, entity, 1);
-                }
-                DeathAnimationFrames = (Stars > 0) ? (byte) 30 : (byte) 36;
+                f.Signals.OnMarioPlayerDropObjective(entity, 1, attacker);
+                DeathAnimationFrames = (GamemodeData.StarChasers->Stars > 0) ? (byte) 30 : (byte) 36;
             } else {
-                if (stars) {
-                    SpawnStars(f, entity, 1);
+                if (dropStars) {
+                    f.Signals.OnMarioPlayerDropObjective(entity, 1, attacker);
                 }
                 DeathAnimationFrames = 36;
             }
@@ -214,8 +213,14 @@ namespace Quantum {
             f.Events.MarioPlayerDied(entity, fire);
         }
 
-        public bool Powerdown(Frame f, EntityRef entity, bool ignoreInvincible) {
+        public bool Powerdown(Frame f, EntityRef entity, bool ignoreInvincible, EntityRef attacker) {
             if (!ignoreInvincible && !IsDamageable) {
+                return false;
+            }
+
+            QBoolean doDamage = true;
+            f.Signals.OnMarioPlayerTakeDamage(entity, ref doDamage);
+            if (!doDamage) {
                 return false;
             }
 
@@ -224,12 +229,12 @@ namespace Quantum {
             switch (CurrentPowerupState) {
             case PowerupState.MiniMushroom:
             case PowerupState.NoPowerup: {
-                Death(f,entity, false);
+                Death(f, entity, false, true, attacker);
                 break;
             }
             case PowerupState.Mushroom: {
                 CurrentPowerupState = PowerupState.NoPowerup;
-                SpawnStars(f, entity, 1);
+                f.Signals.OnMarioPlayerDropObjective(entity, 1, attacker);
                 break;
             }
             case PowerupState.HammerSuit:
@@ -238,7 +243,7 @@ namespace Quantum {
             case PowerupState.PropellerMushroom:
             case PowerupState.BlueShell: {
                 CurrentPowerupState = PowerupState.Mushroom;
-                SpawnStars(f, entity, 1);
+                f.Signals.OnMarioPlayerDropObjective(entity, 1, attacker);
                 break;
             }
             }
@@ -260,7 +265,7 @@ namespace Quantum {
         public void SpawnStars(Frame f, EntityRef entity, int amount) {
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
             var transform = f.Unsafe.GetPointer<Transform2D>(entity);
-            bool fastStars = amount > 2 && Stars > 2;
+            bool fastStars = amount > 2 && GamemodeData.StarChasers->Stars > 2;
             int starDirection = FacingRight ? 1 : 2;
 
             if (f.Global->Rules.IsLivesEnabled && Lives == 0) {
@@ -277,7 +282,7 @@ namespace Quantum {
 
             int droppedStars = 0;
             while (amount > 0) {
-                if (Stars <= 0) {
+                if (GamemodeData.StarChasers->Stars <= 0) {
                     break;
                 }
 
@@ -290,13 +295,14 @@ namespace Quantum {
                     };
                 }
 
-                EntityRef newStarEntity = f.Create(f.SimulationConfig.BigStarPrototype);
+                var gamemode = f.FindAsset(f.Global->Rules.Gamemode) as StarChasersGamemode;
+                EntityRef newStarEntity = f.Create(gamemode.BigStarPrototype);
                 var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
                 var newStarTransform = f.Unsafe.GetPointer<Transform2D>(newStarEntity);
                 newStarTransform->Position = transform->Position;
                 newStar->InitializeMovingStar(f, stage, newStarEntity, actualStarDirection);
 
-                Stars--;
+                GamemodeData.StarChasers->Stars--;
                 amount--;
                 droppedStars++;
                 starDirection++;
@@ -375,6 +381,11 @@ namespace Quantum {
             physicsObject->DisableCollision = false;
 
             f.Events.MarioPlayerRespawned(entity);
+
+            if (Disconnected) {
+                // Disconnected while respawning
+                Death(f, entity, false, true, EntityRef.None);
+            }
         }
 
         public bool DoKnockback(Frame f, EntityRef entity, bool fromRight, int starsToDrop, KnockbackStrength strength, EntityRef attacker, bool bypassDamageInvincibility = false) {
@@ -397,8 +408,8 @@ namespace Quantum {
             }
 
             if (CurrentPowerupState == PowerupState.MiniMushroom && strength >= KnockbackStrength.Groundpound) {
-                SpawnStars(f, entity, starsToDrop - 1);
-                Powerdown(f, entity, false);
+                f.Signals.OnMarioPlayerDropObjective(entity, starsToDrop - 1, attacker);
+                Powerdown(f, entity, false, attacker);
                 return true;
             }
 
@@ -462,7 +473,7 @@ namespace Quantum {
             IsDrilling = false;
             WallslideLeft = WallslideRight = false;
 
-            SpawnStars(f, entity, starsToDrop);
+            f.Signals.OnMarioPlayerDropObjective(entity, starsToDrop, attacker);
             return true;
         }
 

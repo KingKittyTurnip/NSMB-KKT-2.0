@@ -251,29 +251,9 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.Clock))]
-  public unsafe partial class ClockPrototype : ComponentPrototype<Quantum.Clock> {
-    public Int32 Time;
-    public QBoolean TickTimeup;
-    public QBoolean ResetTime;
-    partial void MaterializeUser(Frame frame, ref Quantum.Clock result, in PrototypeMaterializationContext context);
-    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
-        Quantum.Clock component = default;
-        Materialize((Frame)f, ref component, in context);
-        return f.Set(entity, component) == SetResult.ComponentAdded;
-    }
-    public void Materialize(Frame frame, ref Quantum.Clock result, in PrototypeMaterializationContext context = default) {
-        result.Time = this.Time;
-        result.TickTimeup = this.TickTimeup;
-        result.ResetTime = this.ResetTime;
-        MaterializeUser(frame, ref result, in context);
-    }
-  }
-  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Coin))]
   public unsafe partial class CoinPrototype : ComponentPrototype<Quantum.Coin> {
-    public QBoolean IsFloating;
-    public QBoolean IsDotted;
+    public Quantum.QEnum8<CoinType> CoinType;
     public UInt16 Lifetime;
     public Byte UncollectableFrames;
     partial void MaterializeUser(Frame frame, ref Quantum.Coin result, in PrototypeMaterializationContext context);
@@ -283,10 +263,36 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Coin result, in PrototypeMaterializationContext context = default) {
-        result.IsFloating = this.IsFloating;
-        result.IsDotted = this.IsDotted;
+        result.CoinType = this.CoinType;
         result.Lifetime = this.Lifetime;
         result.UncollectableFrames = this.UncollectableFrames;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.CoinItem))]
+  public unsafe partial class CoinItemPrototype : ComponentPrototype<Quantum.CoinItem> {
+    public AssetRef<CoinItemAsset> Scriptable;
+    public Int32 Lifetime;
+    partial void MaterializeUser(Frame frame, ref Quantum.CoinItem result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.CoinItem component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.CoinItem result, in PrototypeMaterializationContext context = default) {
+        result.Scriptable = this.Scriptable;
+        result.Lifetime = this.Lifetime;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.CoinRunnersData))]
+  public unsafe partial class CoinRunnersDataPrototype : StructPrototype {
+    public Int32 ObjectiveCoins;
+    partial void MaterializeUser(Frame frame, ref Quantum.CoinRunnersData result, in PrototypeMaterializationContext context);
+    public void Materialize(Frame frame, ref Quantum.CoinRunnersData result, in PrototypeMaterializationContext context = default) {
+        result.ObjectiveCoins = this.ObjectiveCoins;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -361,29 +367,6 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.Fan))]
-  public unsafe partial class FanPrototype : ComponentPrototype<Quantum.Fan> {
-    public FP Strength;
-    public QBoolean Broken;
-    public QBoolean FellOver;
-    public QBoolean Sturdy;
-    public QBoolean HandleParticles;
-    partial void MaterializeUser(Frame frame, ref Quantum.Fan result, in PrototypeMaterializationContext context);
-    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
-        Quantum.Fan component = default;
-        Materialize((Frame)f, ref component, in context);
-        return f.Set(entity, component) == SetResult.ComponentAdded;
-    }
-    public void Materialize(Frame frame, ref Quantum.Fan result, in PrototypeMaterializationContext context = default) {
-        result.Strength = this.Strength;
-        result.Broken = this.Broken;
-        result.FellOver = this.FellOver;
-        result.Sturdy = this.Sturdy;
-        result.HandleParticles = this.HandleParticles;
-        MaterializeUser(frame, ref result, in context);
-    }
-  }
-  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Freezable))]
   public unsafe partial class FreezablePrototype : ComponentPrototype<Quantum.Freezable> {
     public FPVector2 IceBlockSize;
@@ -414,6 +397,7 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.GameRules))]
   public unsafe partial class GameRulesPrototype : StructPrototype {
     public AssetRef<Map> Stage;
+    public AssetRef<GamemodeAsset> Gamemode;
     public Int32 StarsToWin;
     public Int32 CoinsForPowerup;
     public Int32 Lives;
@@ -424,6 +408,7 @@ namespace Quantum.Prototypes {
     partial void MaterializeUser(Frame frame, ref Quantum.GameRules result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.GameRules result, in PrototypeMaterializationContext context = default) {
         result.Stage = this.Stage;
+        result.Gamemode = this.Gamemode;
         result.StarsToWin = this.StarsToWin;
         result.CoinsForPowerup = this.CoinsForPowerup;
         result.Lives = this.Lives;
@@ -431,6 +416,23 @@ namespace Quantum.Prototypes {
         result.TeamsEnabled = this.TeamsEnabled;
         result.CustomPowerupsEnabled = this.CustomPowerupsEnabled;
         result.DrawOnTimeUp = this.DrawOnTimeUp;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.GamemodeSpecificData))]
+  public unsafe partial class GamemodeSpecificDataPrototype : UnionPrototype {
+    public string _field_used_;
+    public Quantum.Prototypes.StarChasersDataPrototype StarChasers;
+    public Quantum.Prototypes.CoinRunnersDataPrototype CoinRunners;
+    partial void MaterializeUser(Frame frame, ref Quantum.GamemodeSpecificData result, in PrototypeMaterializationContext context);
+    public void Materialize(Frame frame, ref Quantum.GamemodeSpecificData result, in PrototypeMaterializationContext context = default) {
+        switch (_field_used_) {
+          case "STARCHASERS": this.StarChasers.Materialize(frame, ref *result.StarChasers, in context); break;
+          case "COINRUNNERS": this.CoinRunners.Materialize(frame, ref *result.CoinRunners, in context); break;
+          case "": case null: break;
+          default: PrototypeValidator.UnknownUnionField(_field_used_, in context); break;
+        }
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -452,6 +454,23 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.GoldBlock))]
+  public unsafe class GoldBlockPrototype : ComponentPrototype<Quantum.GoldBlock> {
+    public MapEntityId AttachedTo;
+    public Int32 ObjectiveCoinsRemaining;
+    public Byte Timer;
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.GoldBlock component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.GoldBlock result, in PrototypeMaterializationContext context = default) {
+        PrototypeValidator.FindMapEntity(this.AttachedTo, in context, out result.AttachedTo);
+        result.ObjectiveCoinsRemaining = this.ObjectiveCoinsRemaining;
+        result.Timer = this.Timer;
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Goomba))]
   public unsafe partial class GoombaPrototype : ComponentPrototype<Quantum.Goomba> {
     public FP Speed;
@@ -467,31 +486,9 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.Hazard))]
-  public unsafe partial class HazardPrototype : ComponentPrototype<Quantum.Hazard> {
-    public QBoolean IsHefty;
-    public QBoolean IPWSUntilGround;
-    public Byte IPWSTime;
-    public FPVector2 SpawningVelocityRange;
-    partial void MaterializeUser(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context);
-    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
-        Quantum.Hazard component = default;
-        Materialize((Frame)f, ref component, in context);
-        return f.Set(entity, component) == SetResult.ComponentAdded;
-    }
-    public void Materialize(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context = default) {
-        result.IsHefty = this.IsHefty;
-        result.IPWSUntilGround = this.IPWSUntilGround;
-        result.IPWSTime = this.IPWSTime;
-        result.SpawningVelocityRange = this.SpawningVelocityRange;
-        MaterializeUser(frame, ref result, in context);
-    }
-  }
-  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Holdable))]
   public unsafe partial class HoldablePrototype : ComponentPrototype<Quantum.Holdable> {
     public QBoolean HoldAboveHead;
-    public QBoolean IsSolidCarryable;
     partial void MaterializeUser(Frame frame, ref Quantum.Holdable result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Holdable component = default;
@@ -500,7 +497,6 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Holdable result, in PrototypeMaterializationContext context = default) {
         result.HoldAboveHead = this.HoldAboveHead;
-        result.IsSolidCarryable = this.IsSolidCarryable;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -690,6 +686,21 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.ObjectiveCoin))]
+  public unsafe partial class ObjectiveCoinPrototype : ComponentPrototype<Quantum.ObjectiveCoin> {
+    [HideInInspector()]
+    public Int32 _empty_prototype_dummy_field_;
+    partial void MaterializeUser(Frame frame, ref Quantum.ObjectiveCoin result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.ObjectiveCoin component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.ObjectiveCoin result, in PrototypeMaterializationContext context = default) {
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.PhysicsContact))]
   public unsafe class PhysicsContactPrototype : StructPrototype {
     public FPVector2 Position;
@@ -717,7 +728,6 @@ namespace Quantum.Prototypes {
     public QBoolean SlowInLiquids;
     public QBoolean IsWaterSolid;
     public QBoolean BreakMegaObjects;
-    public QBoolean WindImmune;
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.PhysicsObject component = default;
         Materialize((Frame)f, ref component, in context);
@@ -731,7 +741,6 @@ namespace Quantum.Prototypes {
         result.SlowInLiquids = this.SlowInLiquids;
         result.IsWaterSolid = this.IsWaterSolid;
         result.BreakMegaObjects = this.BreakMegaObjects;
-        result.WindImmune = this.WindImmune;
     }
   }
   [System.SerializableAttribute()]
@@ -831,9 +840,7 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Powerup))]
   public unsafe partial class PowerupPrototype : ComponentPrototype<Quantum.Powerup> {
-    public AssetRef<PowerupAsset> Scriptable;
     public QBoolean FacingRight;
-    public Int32 Lifetime;
     public FPVector2 AnimationCurveOrigin;
     public FP AnimationCurveTimer;
     partial void MaterializeUser(Frame frame, ref Quantum.Powerup result, in PrototypeMaterializationContext context);
@@ -843,9 +850,7 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Powerup result, in PrototypeMaterializationContext context = default) {
-        result.Scriptable = this.Scriptable;
         result.FacingRight = this.FacingRight;
-        result.Lifetime = this.Lifetime;
         result.AnimationCurveOrigin = this.AnimationCurveOrigin;
         result.AnimationCurveTimer = this.AnimationCurveTimer;
         MaterializeUser(frame, ref result, in context);
@@ -902,30 +907,28 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.ThrowingObject))]
-  public unsafe partial class ThrowingObjectPrototype : ComponentPrototype<Quantum.ThrowingObject> {
-    public Quantum.QEnum8<ThrowingObjectType> Type;
-    public QBoolean GroundBounce;
-    public QBoolean SlideAlong;
-    public QBoolean BouceOffPlayer;
-    public FP ThrowForce;
-    public Byte StarsToDrop;
-    public QBoolean IgnoreTeamates;
-    partial void MaterializeUser(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context);
+  [Quantum.Prototypes.Prototype(typeof(Quantum.StarChasersData))]
+  public unsafe partial class StarChasersDataPrototype : StructPrototype {
+    public Byte Stars;
+    partial void MaterializeUser(Frame frame, ref Quantum.StarChasersData result, in PrototypeMaterializationContext context);
+    public void Materialize(Frame frame, ref Quantum.StarChasersData result, in PrototypeMaterializationContext context = default) {
+        result.Stars = this.Stars;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.StarCoin))]
+  public unsafe class StarCoinPrototype : ComponentPrototype<Quantum.StarCoin> {
+    public Byte DespawnCounter;
+    public MapEntityId Collector;
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
-        Quantum.ThrowingObject component = default;
+        Quantum.StarCoin component = default;
         Materialize((Frame)f, ref component, in context);
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
-    public void Materialize(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context = default) {
-        result.Type = this.Type;
-        result.GroundBounce = this.GroundBounce;
-        result.SlideAlong = this.SlideAlong;
-        result.BouceOffPlayer = this.BouceOffPlayer;
-        result.ThrowForce = this.ThrowForce;
-        result.StarsToDrop = this.StarsToDrop;
-        result.IgnoreTeamates = this.IgnoreTeamates;
-        MaterializeUser(frame, ref result, in context);
+    public void Materialize(Frame frame, ref Quantum.StarCoin result, in PrototypeMaterializationContext context = default) {
+        result.DespawnCounter = this.DespawnCounter;
+        PrototypeValidator.FindMapEntity(this.Collector, in context, out result.Collector);
     }
   }
   [System.SerializableAttribute()]

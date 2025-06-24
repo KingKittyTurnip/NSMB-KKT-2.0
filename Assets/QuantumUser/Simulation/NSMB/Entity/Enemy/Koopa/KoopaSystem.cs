@@ -228,7 +228,7 @@ namespace Quantum {
                     marioPhysicsObject->Velocity.X = 0;
 
                 } else if (mario->IsDamageable) {
-                    mario->Powerdown(f, marioEntity, false);
+                    mario->Powerdown(f, marioEntity, false, koopaEntity);
                     if (!koopa->IsInShell) {
                         koopaEnemy->ChangeFacingRight(f, koopaEntity, damageDirection.X > 0);
                     }
@@ -266,11 +266,11 @@ namespace Quantum {
                         PowerupAsset powerupAsset = f.FindAsset(koopa->SpawnPowerupWhenStomped);
                         EntityRef newPowerup = f.Create(powerupAsset.Prefab);
                         var powerupTransform = f.Unsafe.GetPointer<Transform2D>(newPowerup);
-                        var powerup = f.Unsafe.GetPointer<Powerup>(newPowerup);
+                        var coinItem = f.Unsafe.GetPointer<CoinItem>(newPowerup);
                         var powerupPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(newPowerup);
 
                         powerupTransform->Position = koopaTransform->Position;
-                        powerup->Initialize(f, newPowerup, 15, PowerupSpawnReason.BlueKoopa);
+                        coinItem->Initialize(f, newPowerup, 15, PowerupSpawnReason.BlueKoopa);
                         powerupPhysicsObject->DisableCollision = false;
 
                         koopaEnemy->IsActive = false;
@@ -291,7 +291,7 @@ namespace Quantum {
                         koopa->Kill(f, koopaEntity, marioEntity, KillReason.Special);
 
                     } else if (mario->IsDamageable) {
-                        mario->Powerdown(f, marioEntity, false);
+                        mario->Powerdown(f, marioEntity, false, koopaEntity);
                         if (!koopa->IsInShell) {
                             koopaEnemy->ChangeFacingRight(f, koopaEntity, damageDirection.X > 0);
                         }

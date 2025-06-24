@@ -67,6 +67,7 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
         QuantumCallback.Subscribe<CallbackGameResynced>(this, OnGameResynced);
         QuantumCallback.Subscribe<CallbackGameDestroyed>(this, OnGameDestroyed);
         QuantumCallback.Subscribe<CallbackPluginDisconnect>(this, OnPluginDisconnect);
+        QuantumEvent.Subscribe<EventHostChanged>(this, OnHostChanged);
         QuantumEvent.Subscribe<EventGameStateChanged>(this, OnGameStateChanged);
         QuantumEvent.Subscribe<EventPlayerAdded>(this, OnPlayerAdded);
         QuantumEvent.Subscribe<EventRecordingStarted>(this, OnRecordingStarted);
@@ -274,6 +275,7 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
 
         // Find end-game data
         Frame f = game.Frames.Verified;
+        var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
 
         int players = f.Global->RealPlayers;
         ReplayPlayerInformation[] playerInformation = new ReplayPlayerInformation[players];
@@ -294,7 +296,7 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
 
                 // Found him :)
                 if (mario->Lives > 0 || !f.Global->Rules.IsLivesEnabled) {
-                    playerInformation[i].FinalStarCount = mario->Stars;
+                    playerInformation[i].FinalObjectiveCount = gamemode.GetObjectiveCount(f, mario);
                 }
                 break;
             }
@@ -353,6 +355,10 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
     }
 
     private unsafe void UpdateRealtimeProperties() {
+        if (!realtimeClient.InRoom) {
+            return;
+        }
+
         Frame f = Game.Frames.Predicted;
         PlayerRef host = f.Global->Host;
         if (!Game.PlayerIsLocal(host)) {
@@ -468,7 +474,11 @@ public class NetworkHandler : Singleton<NetworkHandler>, IMatchmakingCallbacks, 
         CurrentReplay = null;
     }
 
-    private unsafe void OnRulesChanged(EventRulesChanged e) {
+    private void OnHostChanged(EventHostChanged e) {
+        UpdateRealtimeProperties();
+    }
+
+    private void OnRulesChanged(EventRulesChanged e) {
         UpdateRealtimeProperties();
     }
 

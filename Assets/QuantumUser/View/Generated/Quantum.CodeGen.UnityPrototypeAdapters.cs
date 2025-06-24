@@ -67,6 +67,21 @@ namespace Quantum.Prototypes.Unity {
     }
   }
   [System.SerializableAttribute()]
+  public unsafe partial class GoldBlockPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.GoldBlockPrototype> {
+    public Quantum.QuantumEntityPrototype AttachedTo;
+    public Int32 ObjectiveCoinsRemaining;
+    public Byte Timer;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.GoldBlockPrototype prototype);
+    public override Quantum.Prototypes.GoldBlockPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.GoldBlockPrototype();
+      converter.Convert(this.AttachedTo, out result.AttachedTo);
+      converter.Convert(this.ObjectiveCoinsRemaining, out result.ObjectiveCoinsRemaining);
+      converter.Convert(this.Timer, out result.Timer);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
   public unsafe partial class PhysicsContactPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.PhysicsContactPrototype> {
     public FPVector2 Position;
     public FPVector2 Normal;
@@ -119,6 +134,19 @@ namespace Quantum.Prototypes.Unity {
     public override Quantum.Prototypes.PiranhaPlantPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
       var result = new Quantum.Prototypes.PiranhaPlantPrototype();
       converter.Convert(this.Pipe, out result.Pipe);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
+  public unsafe partial class StarCoinPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.StarCoinPrototype> {
+    public Byte DespawnCounter;
+    public Quantum.QuantumEntityPrototype Collector;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.StarCoinPrototype prototype);
+    public override Quantum.Prototypes.StarCoinPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.StarCoinPrototype();
+      converter.Convert(this.DespawnCounter, out result.DespawnCounter);
+      converter.Convert(this.Collector, out result.Collector);
       ConvertUser(converter, ref result);
       return result;
     }

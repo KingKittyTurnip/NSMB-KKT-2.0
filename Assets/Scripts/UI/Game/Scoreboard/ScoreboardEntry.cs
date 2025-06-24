@@ -26,6 +26,7 @@ namespace NSMB.UI.Game.Scoreboard {
             QuantumCallback.Subscribe<CallbackGameResynced>(this, OnGameResynced);
             QuantumEvent.Subscribe<EventMarioPlayerDied>(this, OnMarioPlayerDied);
             QuantumEvent.Subscribe<EventMarioPlayerCollectedStar>(this, OnMarioPlayerCollectedStar);
+            QuantumEvent.Subscribe<EventMarioPlayerObjectiveCoinsChanged>(this, OnMarioPlayerObjectiveCoinsChanged);
             QuantumEvent.Subscribe<EventMarioPlayerDroppedStar>(this, OnMarioPlayerDroppedStar);
             QuantumEvent.Subscribe<EventMarioPlayerPreRespawned>(this, OnMarioPlayerPreRespawned);
             QuantumEvent.Subscribe<EventMarioPlayerDestroyed>(this, OnMarioPlayerDestroyed);
@@ -58,6 +59,7 @@ namespace NSMB.UI.Game.Scoreboard {
         }
 
         public unsafe void UpdateEntry(Frame f) {
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             ref PlayerInformation info = ref f.Global->PlayerInfo[informationIndex];
 
             var playerData = QuantumUtils.GetPlayerData(f, info.PlayerRef);
@@ -73,10 +75,10 @@ namespace NSMB.UI.Game.Scoreboard {
             background.color = backgroundColor;
 
             CharacterAsset character = f.FindAsset(f.SimulationConfig.CharacterDatas[info.Character]);
-            int stars = 0;
+            int objective = 0;
             int lives = 0;
             if (f.Unsafe.TryGetPointer(Target, out MarioPlayer* mario)) {
-                stars = mario->Stars;
+                objective = Mathf.Max(0, gamemode.GetObjectiveCount(f, mario));
                 lives = mario->Disconnected ? 0 : mario->Lives;
             }
 
@@ -84,7 +86,7 @@ namespace NSMB.UI.Game.Scoreboard {
             if (f.Global->Rules.IsLivesEnabled) {
                 scoreBuilder.Append(character.UiString).Append(Utils.Utils.GetSymbolString(lives.ToString()));
             }
-            scoreBuilder.Append(Utils.Utils.GetSymbolString('S' + stars.ToString()));
+            scoreBuilder.Append(Utils.Utils.GetSymbolString(gamemode.ObjectiveSymbolPrefix + objective.ToString()));
 
             scoreText.text = scoreBuilder.ToString();
             updater.RequestSorting = true;
@@ -99,6 +101,14 @@ namespace NSMB.UI.Game.Scoreboard {
         }
 
         private void OnMarioPlayerCollectedStar(EventMarioPlayerCollectedStar e) {
+            if (e.Entity != Target) {
+                return;
+            }
+
+            UpdateEntry(e.Game.Frames.Predicted);
+        }
+
+        private void OnMarioPlayerObjectiveCoinsChanged(EventMarioPlayerObjectiveCoinsChanged e) {
             if (e.Entity != Target) {
                 return;
             }

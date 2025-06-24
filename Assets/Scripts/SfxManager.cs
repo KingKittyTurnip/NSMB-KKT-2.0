@@ -24,6 +24,7 @@ public unsafe class SfxManager : QuantumSceneViewComponent {
         QuantumEvent.Subscribe<EventTimerExpired>(this, OnTimerExpired, NetworkHandler.FilterOutReplayFastForward);
         QuantumEvent.Subscribe<EventMarioPlayerPreRespawned>(this, OnMarioPlayerPreRespawned, NetworkHandler.FilterOutReplayFastForward);
         QuantumEvent.Subscribe<EventClockCollect>(this, ClockCollect, NetworkHandler.FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventStageAutoRefresh>(this, OnStageAutoRefresh, NetworkHandler.FilterOutReplayFastForward);
     }
 
     public override void OnUpdateView() {
@@ -80,5 +81,9 @@ public unsafe class SfxManager : QuantumSceneViewComponent {
     private unsafe void ClockCollect(EventClockCollect e) {
         if (e.TickTimeup && !e.Overtime) // Always Play Sound When Orange Clock Collected
             playedHurryUp = false;
+    }
+
+    private void OnStageAutoRefresh(EventStageAutoRefresh e) {
+        sfx.PlayOneShot(SoundEffect.World_Star_CollectOthers);
     }
 }

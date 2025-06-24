@@ -2,6 +2,7 @@ using Photon.Deterministic;
 using Quantum.Collections;
 using Quantum.Profiling;
 using System;
+using UnityEngine;
 using static IInteractableTile;
 
 namespace Quantum {
@@ -572,6 +573,10 @@ namespace Quantum {
                     FP htv = maxWalkSpeed + (Constants._1_18 * (remainingTime * 2));
                     terminalVelocity = mario->PropellerSpinFrames > 0 ? physics.TerminalVelocityPropellerSpin : physics.TerminalVelocityPropeller;
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -htv, htv);
+                    if (remainingTime > 0) {
+                        physicsObject->IsTouchingGround = false;
+                        physicsObject->WasTouchingGround = false;
+                    }
                 }
             } else if (mario->IsWallsliding) {
                 terminalVelocity = physics.TerminalVelocityWallslide;
@@ -1700,7 +1705,7 @@ namespace Quantum {
                 // In a ceiling crusher
                 if (mario->CrushDamageInvincibilityFrames == 0) {
                     mario->CrushDamageInvincibilityFrames = 30;
-                    mario->Powerdown(f, filter.Entity, true);
+                    mario->Powerdown(f, filter.Entity, true, filter.Entity);
                 }
                 return false;
             }
@@ -1840,7 +1845,7 @@ namespace Quantum {
             if (!mario->IsDead) {
                 if (transform->Position.Y + (collider->Shape.Box.Extents.Y * 2) < stage.StageWorldMin.Y) {
                     // Death via pit
-                    mario->Death(f, entity, false);
+                    mario->Death(f, entity, false, true, filter.Entity);
                     return true;
                 } else {
                     return false;
@@ -1871,9 +1876,9 @@ namespace Quantum {
             // Death up
             if (mario->DeathAnimationFrames > 0 && QuantumUtils.Decrement(ref mario->DeathAnimationFrames)) {
                 bool doRespawn = !mario->Disconnected && (!f.Global->Rules.IsLivesEnabled || mario->Lives > 0);
-                if (!doRespawn && mario->Stars > 0) {
+                if (!doRespawn && mario->GamemodeData.StarChasers->Stars > 0) {
                     // Try to drop more stars
-                    mario->SpawnStars(f, entity, 1);
+                    f.Signals.OnMarioPlayerDropObjective(entity, 1, filter.Entity);
                     mario->DeathAnimationFrames = 30;
                     mario->PreRespawnFrames = 180;
                 } else {
@@ -1895,14 +1900,15 @@ namespace Quantum {
             return true;
         }
 
-        public static void SpawnItem(Frame f, EntityRef marioEntity, MarioPlayer* mario, AssetRef<EntityPrototype> prefab) {
+        public static void SpawnItem(Frame f, EntityRef marioEntity, MarioPlayer* mario, AssetRef<EntityPrototype> prefab, bool fromBlock) {
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             if (!prefab.IsValid) {
-                prefab = QuantumUtils.GetRandomItem(f, mario).Prefab;
+                prefab = gamemode.GetRandomItem(f, mario, fromBlock).Prefab;
             }
 
             EntityRef newEntity = f.Create(prefab);
-            if (f.Unsafe.TryGetPointer(newEntity, out Powerup* powerup)) {
-                powerup->ParentToPlayer(f, newEntity, marioEntity);
+            if (f.Unsafe.TryGetPointer(newEntity, out CoinItem* coinItem)) {
+                coinItem->ParentToPlayer(f, newEntity, marioEntity);
             }
         }
 
@@ -1915,7 +1921,7 @@ namespace Quantum {
                 return;
             }
 
-            SpawnItem(f, filter.Entity, mario, reserveItem.Prefab);
+            SpawnItem(f, filter.Entity, mario, reserveItem.Prefab, false);
             mario->ReserveItem = default;
             f.Events.MarioPlayerUsedReserveItem(filter.Entity, true);
         }
@@ -1934,7 +1940,7 @@ namespace Quantum {
             StageTileInstance result = new StageTileInstance {
                 Tile = invisibleBlock->Tile,
             };
-            f.Signals.OnMarioPlayerCollectedCoin(marioEntity, mario, transform->Position, true, false);
+            f.Signals.OnMarioPlayerCollectedCoin(marioEntity, EntityRef.None, transform->Position, true, false);
             BreakableBrickTile.Bump(f, stage, QuantumUtils.WorldToRelativeTile(stage, transform->Position), invisibleBlock->BumpTile, result, false, marioEntity, false);
         }
 
@@ -1971,14 +1977,14 @@ namespace Quantum {
                 case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
                 case ProjectileEffectType.Fire:
                     if (dropStars && mario->CurrentPowerupState == PowerupState.MiniMushroom) {
-                        mario->Death(f, marioEntity, false);
+                        mario->Death(f, marioEntity, false, true, projectileEntity);
                     } else {
                         didKnockback = mario->DoKnockback(f, marioEntity, !projectile->FacingRight, dropStars ? 1 : 0, KnockbackStrength.FireballBump, projectileEntity);
                     }
                     break;
                 case ProjectileEffectType.Freeze:
                     if (dropStars && mario->CurrentPowerupState == PowerupState.MiniMushroom) {
-                        mario->Death(f, marioEntity, false);
+                        mario->Death(f, marioEntity, false, true, projectileEntity);
                     } else if (dropStars) {
                         IceBlockSystem.Freeze(f, marioEntity);
                     } else {
@@ -2084,7 +2090,7 @@ namespace Quantum {
                     return;
                 } else if (marioAMega) {
                     if (dropStars) {
-                        marioB->Powerdown(f, marioBEntity, false);
+                        marioB->Powerdown(f, marioBEntity, false, marioAEntity);
                     } else {
                         bool damaged = marioB->DoKnockback(f, marioBEntity, !fromRight, 0, KnockbackStrength.CollisionBump, marioAEntity);
                         if (damaged) {
@@ -2094,7 +2100,7 @@ namespace Quantum {
                     return;
                 } else if (marioBMega) {
                     if (dropStars) {
-                        marioA->Powerdown(f, marioAEntity, false);
+                        marioA->Powerdown(f, marioAEntity, false, marioBEntity);
                     } else {
                         bool damaged = marioA->DoKnockback(f, marioAEntity, fromRight, 0, KnockbackStrength.CollisionBump, marioBEntity);
                         if (damaged) {
@@ -2121,7 +2127,7 @@ namespace Quantum {
                         marioB->FacingRight = !fromRight;
                         marioB->DoKnockback(f, marioBEntity, !fromRight, 0, KnockbackStrength.Normal, marioAEntity);
                         if (dropStars) {
-                            marioB->Powerdown(f, marioBEntity, false);
+                            marioB->Powerdown(f, marioBEntity, false, marioAEntity);
                         }
                         marioA->FacingRight = !marioA->FacingRight;
                         f.Events.PlayBumpSound(marioAEntity);
@@ -2133,7 +2139,7 @@ namespace Quantum {
                         marioA->FacingRight = fromRight;
                         marioA->DoKnockback(f, marioAEntity, fromRight, 0, KnockbackStrength.Normal, marioBEntity);
                         if (dropStars) {
-                            marioA->Powerdown(f, marioAEntity, false);
+                            marioA->Powerdown(f, marioAEntity, false, marioBEntity);
                         }
                         marioB->FacingRight = !marioB->FacingRight;
                         f.Events.PlayBumpSound(marioBEntity);
@@ -2247,7 +2253,7 @@ namespace Quantum {
                 damaged = attackerMario->DoKnockback(f, defender, fromRight, dropStars ? 1 : 0, KnockbackStrength.CollisionBump, attacker);
             } else {
                 if (dropStars) {
-                    defenderMario->Powerdown(f, defender, false);
+                    defenderMario->Powerdown(f, defender, false, attacker);
                 } else {
                     damaged = defenderMario->DoKnockback(f, defender, !fromRight, 0, KnockbackStrength.CollisionBump, attacker);
                 }
@@ -2304,8 +2310,8 @@ namespace Quantum {
                 }
             } else if (defenderMario->CurrentPowerupState == PowerupState.MiniMushroom && groundpounded) {
                 // We are big, groundpounding a mini opponent. squish.
-                defenderMario->Death(f, defender, false, false);
-                defenderMario->SpawnStars(f, defender, 3);
+                defenderMario->Death(f, defender, false, false, attacker);
+                f.Signals.OnMarioPlayerDropObjective(defender, 3, attacker);
                 attackerMario->DoEntityBounce = false;
             } else if (defenderMario->CurrentPowerupState == PowerupState.HammerSuit && defenderPhysicsObject->IsTouchingGround && defenderMario->IsCrouching && !groundpounded) {
                 // Bounce
@@ -2319,7 +2325,7 @@ namespace Quantum {
             } else {
                 // Normal knockbacks
                 if (defenderMario->CurrentPowerupState == PowerupState.MiniMushroom && groundpounded) {
-                    defenderMario->Powerdown(f, defender, false);
+                    defenderMario->Powerdown(f, defender, false, attacker);
                 } else {
                     if (!groundpounded && !dropStars) {
                         // Bounce
@@ -2360,7 +2366,7 @@ namespace Quantum {
 
         public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity) {
             if (f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)) {
-                mario->Powerdown(f, entity, false);
+                mario->Powerdown(f, entity, false, bobomb);
             }
         }
 
@@ -2382,11 +2388,11 @@ namespace Quantum {
                     break;
                 case LiquidType.Lava:
                     // Kill, fire death
-                    mario->Death(f, entity, true);
+                    mario->Death(f, entity, true, true, entity);
                     break;
                 case LiquidType.Poison:
                     // Kill, normal death
-                    mario->Death(f, entity, false);
+                    mario->Death(f, entity, false, true, entity);
                     break;
                 }
             }
@@ -2397,7 +2403,7 @@ namespace Quantum {
                 return;
             }
 
-            if (!fromBelow || mario->IsInKnockback || mario->KnockbackGetupFrames > 0) {
+            if (!fromBelow || mario->IsInKnockback || mario->KnockbackGetupFrames > 0 || mario->IsStuckInBlock) {
                 return;
             }
 
@@ -2437,9 +2443,8 @@ namespace Quantum {
                 }
 
                 mario->Disconnected = true;
-                mario->IsDead = false;
                 mario->PlayerRef = PlayerRef.None;
-                mario->Death(f, entity, false);
+                mario->Death(f, entity, false, true, entity);
             }
         }
 
@@ -2458,10 +2463,10 @@ namespace Quantum {
             foreach (var contact in liquidContacts) {
                 var liquid = f.Unsafe.GetPointer<Liquid>(contact);
                 if (liquid->LiquidType == LiquidType.Poison) {
-                    mario->Death(f, entity, false);
+                    mario->Death(f, entity, false, true, brokenIceBlock);
                     return;
                 } else if (liquid->LiquidType == LiquidType.Lava) {
-                    mario->Death(f, entity, true);
+                    mario->Death(f, entity, true, true, brokenIceBlock);
                     return;
                 }
             }
@@ -2513,24 +2518,26 @@ namespace Quantum {
         }
 
         public void OnStageReset(Frame f, QBoolean full) {
-            VersusStageData stage = null;
+            VersusStageData stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
             var marios = f.Filter<MarioPlayer, Transform2D, PhysicsCollider2D>();
             while (marios.NextUnsafe(out EntityRef entity, out MarioPlayer* mario, out Transform2D* transform, out PhysicsCollider2D* physicsCollider)) {
-                if (mario->CurrentPowerupState != PowerupState.MegaMushroom) {
-                    continue;
-                }
-
-                if (stage == null) {
-                    stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-                }
-
                 Span<PhysicsObjectSystem.LocationTilePair> tiles = stackalloc PhysicsObjectSystem.LocationTilePair[64];
                 int overlappingTiles = PhysicsObjectSystem.GetTilesOverlappingHitbox(f, transform->Position, physicsCollider->Shape, tiles, stage);
 
-                for (int i = 0; i < overlappingTiles; i++) {
-                    StageTile stageTile = f.FindAsset(tiles[i].Tile.Tile);
-                    if (stageTile is IInteractableTile it) {
-                        it.Interact(f, entity, InteractionDirection.Up, tiles[i].Position, tiles[i].Tile, out _);
+                if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
+                    for (int i = 0; i < overlappingTiles; i++) {
+                        StageTile stageTile = f.FindAsset(tiles[i].Tile.Tile);
+                        if (stageTile is IInteractableTile it) {
+                            it.Interact(f, entity, InteractionDirection.Up, tiles[i].Position, tiles[i].Tile, out _);
+                        }
+                    }
+                } else if (mario->CurrentPowerupState >= PowerupState.Mushroom) {
+                    for (int i = 0; i < overlappingTiles; i++) {
+                        StageTile stageTile = f.FindAsset(tiles[i].Tile.Tile);
+                        if (stageTile is BreakableBrickTile bbt && bbt.BreakingRules.HasFlag(BreakableBrickTile.BreakableBy.LargeMario)) {
+                            f.Events.TileBroken(entity, tiles[i].Position, tiles[i].Tile, false);
+                            stage.SetTileRelative(f, tiles[i].Position, default);
+                        }
                     }
                 }
             }

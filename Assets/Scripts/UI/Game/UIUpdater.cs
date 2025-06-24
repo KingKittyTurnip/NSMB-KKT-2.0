@@ -21,9 +21,9 @@ namespace NSMB.UI.Game {
         //---Serialized Variables
         [SerializeField] private PlayerElements playerElements;
         [SerializeField] private CanvasGroup toggler;
-        [SerializeField] private TrackIcon playerTrackTemplate, starTrackTemplate;
+        [SerializeField] private TrackIcon playerTrackTemplate, starTrackTemplate, starCoinTrackTemplate;
         [SerializeField] private Sprite storedItemNull;
-        [SerializeField] private TMP_Text uiTeamStars, uiStars, uiCoins, uiDebug, uiLives, uiCountdown;
+        [SerializeField] private TMP_Text uiTeamObjective, uiMainObjective, uiCoins, uiDebug, uiLives, uiCountdown;
         [SerializeField] private Image itemReserve, itemColor, deathFade;
         [SerializeField] private GameObject boos, reserveItemBox;
         [SerializeField] private Animation reserveAnimation;
@@ -39,7 +39,7 @@ namespace NSMB.UI.Game {
         private Material timerMaterial;
 
         //private TeamManager teamManager;
-        private int cachedCoins = -1, cachedTeamStars = -1, cachedStars = -1, cachedLives = -1, cachedTimer = -1;
+        private int cachedCoins = -1, cachedTeamObjective = -1, cachedObjective = -1, cachedLives = -1, cachedTimer = -1;
         private PowerupAsset previousPowerup;
         private EntityRef previousTarget;
         private bool previousMarioExists;
@@ -52,6 +52,8 @@ namespace NSMB.UI.Game {
             MarioPlayerAnimator.MarioPlayerDestroyed += OnMarioDestroyed;
             BigStarAnimator.BigStarInitialized += OnBigStarInitialized;
             BigStarAnimator.BigStarDestroyed += OnBigStarDestroyed;
+            StarCoinAnimator.StarCoinInitialized += OnStarCoinInitialized;
+            StarCoinAnimator.StarCoinDestroyed += OnStarCoinDestroyed;
             TranslationManager.OnLanguageChanged += OnLanguageChanged;
             Settings.Controls.Debug.ToggleHUD.performed += OnToggleHUD;
             OnLanguageChanged(GlobalController.Instance.translationManager);
@@ -77,8 +79,8 @@ namespace NSMB.UI.Game {
         }
 
         public void Awake() {
-            teamsParent = uiTeamStars.transform.parent.gameObject;
-            starsParent = uiStars.transform.parent.gameObject;
+            teamsParent = uiTeamObjective.transform.parent.gameObject;
+            starsParent = uiMainObjective.transform.parent.gameObject;
             coinsParent = uiCoins.transform.parent.gameObject;
             livesParent = uiLives.transform.parent.gameObject;
             timerParent = uiCountdown.transform.parent.gameObject;
@@ -127,21 +129,16 @@ namespace NSMB.UI.Game {
                 UpdateElementVisibility(f, marioExists);
             }
 
-            if (!marioExists) {
-                previousMarioExists = false;
-                return;
-            }
-
             UpdateStoredItemUI(mario, previousTarget == Target);
             UpdateTextUI(f, mario);
             ApplyUIColor(f, mario);
 
             previousTarget = Target;
-            previousMarioExists = true;
+            previousMarioExists = marioExists;
         }
 
         private void OnMarioInitialized(QuantumGame game, Frame f, MarioPlayerAnimator mario) {
-            entityTrackIcons[mario] = CreateTrackIcon(f, mario.EntityRef, mario.transform);
+            entityTrackIcons[mario] = CreateTrackIcon(Updater, f, mario.EntityRef, mario.transform);
         }
 
         private void OnMarioDestroyed(QuantumGame game, Frame f, MarioPlayerAnimator mario) {
@@ -151,7 +148,7 @@ namespace NSMB.UI.Game {
         }
 
         private void OnBigStarInitialized(Frame f, BigStarAnimator star) {
-            entityTrackIcons[star] = CreateTrackIcon(f, star.EntityRef, star.transform);
+            entityTrackIcons[star] = CreateTrackIcon(Updater, f, star.EntityRef, star.transform);
         }
 
         private void OnBigStarDestroyed(Frame f, BigStarAnimator star) {
@@ -163,7 +160,24 @@ namespace NSMB.UI.Game {
             }
         }
 
+        private void OnStarCoinInitialized(Frame f, StarCoinAnimator starCoin) {
+            entityTrackIcons[starCoin] = CreateTrackIcon(Updater, f, starCoin.EntityRef, starCoin.transform);
+        }
+
+        private void OnStarCoinDestroyed(Frame f, StarCoinAnimator starCoin) {
+            if (entityTrackIcons.TryGetValue(starCoin, out TrackIcon icon)) {
+                if (icon) {
+                    Destroy(icon.gameObject);
+                }
+                entityTrackIcons.Remove(starCoin);
+            }
+        }
+
         private void UpdateStoredItemUI(MarioPlayer* mario, bool playAnimation) {
+            if (mario == null) {
+                return;
+            }
+
             PowerupAsset powerup = QuantumUnityDB.GetGlobalAsset(mario->ReserveItem);
             if (previousPowerup == powerup) {
                 return;
@@ -236,36 +250,54 @@ namespace NSMB.UI.Game {
         }
 
         private unsafe void UpdateTextUI(Frame f, MarioPlayer* mario) {
-
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             var rules = f.Global->Rules;
 
-            int starRequirement = rules.StarsToWin;
+            //int starRequirement = rules.StarsToWin;
             int coinRequirement = rules.CoinsForPowerup;
             bool teamsEnabled = rules.TeamsEnabled;
             bool livesEnabled = rules.IsLivesEnabled;
             bool timerEnabled = rules.TimerSeconds > 0;
 
+            // TIMER
+            if (timerEnabled) {
+                float timeRemaining = f.Global->Timer.AsFloat;
+                int secondsRemaining = Mathf.Max(Mathf.CeilToInt(timeRemaining), 0);
+
+                if (secondsRemaining != cachedTimer) {
+                    cachedTimer = secondsRemaining;
+                    uiCountdown.text = Utils.Utils.GetSymbolString("Tx" + Utils.Utils.SecondsToMinuteSeconds(secondsRemaining));
+                    timerParent.SetActive(true);
+                }
+            }
+
+            if (mario == null) {
+                return;
+            }
+
             // TEAMS
             if (teamsEnabled) {
                 if (mario->GetTeam(f) is byte teamIndex) {
-                    int teamStars = QuantumUtils.GetTeamStars(f, teamIndex);
-                    if (cachedTeamStars != teamStars) {
-                        cachedTeamStars = teamStars;
+                    int teamObjective = gamemode.GetTeamObjectiveCount(f, teamIndex);
+                    if (cachedTeamObjective != teamObjective) {
+                        cachedTeamObjective = teamObjective;
                         TeamAsset team = f.FindAsset(f.SimulationConfig.Teams[teamIndex]);
-                        uiTeamStars.text = (Settings.Instance.GraphicsColorblind ? team.textSpriteColorblind : team.textSpriteNormal) + Utils.Utils.GetSymbolString("x" + cachedTeamStars + "/" + starRequirement);
+                        // TODO: fix teams for coin runners.
+                        uiTeamObjective.text = (Settings.Instance.GraphicsColorblind ? team.textSpriteColorblind : team.textSpriteNormal) + Utils.Utils.GetSymbolString("x" + cachedTeamObjective + "/" + rules.StarsToWin);
                     }
                 }
             }
 
             // STARS
-            if (mario->Stars != cachedStars) {
-                cachedStars = mario->Stars;
-                string starString = "Sx" + cachedStars;
-                if (!teamsEnabled) {
-                    starString += "/" + starRequirement;
+            int objective = gamemode.GetObjectiveCount(f, mario);
+            if (objective != cachedObjective) {
+                cachedObjective = objective;
+                string objectiveString = gamemode.ObjectiveSymbolPrefix + "x" + cachedObjective;
+                if (gamemode is StarChasersGamemode && !teamsEnabled) {
+                    objectiveString += "/" + rules.StarsToWin;
                 }
 
-                uiStars.text = Utils.Utils.GetSymbolString(starString);
+                uiMainObjective.text = Utils.Utils.GetSymbolString(objectiveString);
             }
 
             // COINS
@@ -281,29 +313,21 @@ namespace NSMB.UI.Game {
                     uiLives.text = QuantumUnityDB.GetGlobalAsset(mario->CharacterAsset).UiString + Utils.Utils.GetSymbolString("x" + cachedLives);
                 }
             }
-
-            // TIMER
-            if (timerEnabled) {
-                float timeRemaining = f.Global->Timer.AsFloat;
-                int secondsRemaining = Mathf.Max(Mathf.CeilToInt(timeRemaining), 0);
-
-                if (secondsRemaining != cachedTimer) {
-                    cachedTimer = secondsRemaining;
-                    uiCountdown.text = Utils.Utils.GetSymbolString("Tx" + Utils.Utils.SecondsToMinuteSeconds(secondsRemaining));
-                    timerParent.SetActive(true);
-                }
-            }
         }
 
-        public TrackIcon CreateTrackIcon(Frame f, EntityRef entity, Transform target) {
+        public TrackIcon CreateTrackIcon(QuantumEntityViewUpdater evu, Frame f, EntityRef entity, Transform target) {
             TrackIcon icon;
-            if (f.Has<BigStar>(entity)) {
+            if (f.Has<BigStar>(entity) || f.Has<StarCoin>(entity)) {
                 icon = Instantiate(starTrackTemplate, starTrackTemplate.transform.parent);
+            } else if (false && f.Has<StarCoin>(entity)) {
+                Debug.Log(starCoinTrackTemplate);
+                //icon = Instantiate(starCoinTrackTemplate, starCoinTrackTemplate.transform.parent);
             } else {
                 icon = Instantiate(playerTrackTemplate, playerTrackTemplate.transform.parent);
             }
 
-            icon.Initialize(playerElements, entity, target, ViewContext.Stage);
+            icon.Updater = evu;
+            icon.Initialize(playerElements, entity, target);
             icon.gameObject.SetActive(true);
             return icon;
         }
@@ -327,7 +351,7 @@ namespace NSMB.UI.Game {
         }
 
         private unsafe void ApplyUIColor(Frame f, MarioPlayer* mario) {
-            Color color = (f.Global->Rules.TeamsEnabled && mario->GetTeam(f) is byte team) ? Utils.Utils.GetTeamColor(f, team, 0.8f, 1f) : ViewContext.Stage.UIColor.AsColor;
+            Color color = (f.Global->Rules.TeamsEnabled && mario != null && mario->GetTeam(f) is byte team) ? Utils.Utils.GetTeamColor(f, team, 0.8f, 1f) : ViewContext.Stage.UIColor.AsColor;
 
             foreach (Image bg in backgrounds) {
                 bg.color = color;
@@ -369,7 +393,7 @@ namespace NSMB.UI.Game {
         private void OnGameStateChanged(EventGameStateChanged e) {
             if (e.NewState == GameState.Starting) {
                 foreach (var mario in MarioPlayerAnimator.AllMarioPlayers) {
-                    entityTrackIcons[mario] = CreateTrackIcon(e.Game.Frames.Predicted, mario.EntityRef, mario.transform);
+                    entityTrackIcons[mario] = CreateTrackIcon(Updater, PredictedFrame, mario.EntityRef, mario.transform);
                 }
             }
         }
