@@ -43,13 +43,14 @@ namespace Quantum {
             bool gamemodeChanged = false;
             bool levelChanged = false;
 
+            if (rulesChanges.HasFlag(Rules.Gamemode)) {
+                gamemodeChanged = rules.Gamemode != Gamemode;
+                f.FindAsset(Gamemode).DefaultRules.Materialize(f, ref rules);
+                rules.Gamemode = Gamemode;
+            }
             if (rulesChanges.HasFlag(Rules.Stage)) {
                 levelChanged = rules.Stage != Stage;
                 rules.Stage = Stage;
-            }
-            if (rulesChanges.HasFlag(Rules.Gamemode)) {
-                gamemodeChanged = rules.Gamemode != Gamemode;
-                rules.Gamemode = Gamemode;
             }
             if (rulesChanges.HasFlag(Rules.StarsToWin)) {
                 rules.StarsToWin = StarsToWin;
@@ -60,8 +61,8 @@ namespace Quantum {
             if (rulesChanges.HasFlag(Rules.Lives)) {
                 rules.Lives = Lives;
             }
-            if (rulesChanges.HasFlag(Rules.TimerSeconds)) {
-                rules.TimerSeconds = TimerMinutes;
+            if (rulesChanges.HasFlag(Rules.TimerMinutes)) {
+                rules.TimerMinutes = TimerMinutes;
             }
             if (rulesChanges.HasFlag(Rules.TeamsEnabled)) {
                 rules.TeamsEnabled = TeamsEnabled;
@@ -89,7 +90,7 @@ namespace Quantum {
             StarsToWin = 1 << 2,
             CoinsForPowerup = 1 << 3,
             Lives = 1 << 4,
-            TimerSeconds = 1 << 5,
+            TimerMinutes = 1 << 5,
             TeamsEnabled = 1 << 6,
             CustomPowerupsEnabled = 1 << 7,
             DrawOnTimeUp = 1 << 8,

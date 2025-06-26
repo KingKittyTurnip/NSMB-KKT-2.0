@@ -1,9 +1,11 @@
-using NSMB.Extensions;
+using NSMB.Entities.Player;
+using NSMB.Utilities.Extensions;
 using Quantum;
 using System.Collections;
 using UnityEngine;
+using static NSMB.Utilities.QuantumViewUtils;
 
-namespace NSMB.Entities.Player {
+namespace NSMB.Entities.CoinItems {
     public unsafe class GoldBlockAnimator : QuantumEntityViewComponent {
 
         //---Serialized Variables
@@ -26,7 +28,7 @@ namespace NSMB.Entities.Player {
 
         private Vector2 lostViaDamageVelocity;
         private float lostViaDamageAngularVelocity;
-        private bool lostViaDamage;
+        private bool lostViaDamage, resyncedThisFrame;
         private float collectTime;
 
         public void OnValidate() {
@@ -55,13 +57,19 @@ namespace NSMB.Entities.Player {
             if (marioPlayerAnimator) {
                 marioPlayerAnimator.DisableHeadwear = false;
             }
-            if (flyingModel.activeInHierarchy) {
+            if (resyncedThisFrame || flyingModel.activeInHierarchy) {
                 Destroy(gameObject);
+                Destroy(helmetModel);
             }
         }
 
         public void LateUpdate() {
             Transform t = helmetModel.transform;
+
+            if (!marioPlayerAnimator && PredictedFrame.Unsafe.TryGetPointer(EntityRef, out GoldBlock* goldBlock)) {
+                SwapParentView(goldBlock->AttachedTo);
+            }
+
             if (lostViaDamage) {
                 lostViaDamageAngularVelocity = Mathf.MoveTowards(lostViaDamageAngularVelocity, 0, lostViaDamageAngularDeceleration * Time.deltaTime);
                 lostViaDamageVelocity += lostViaDamageGravity * Time.deltaTime;
@@ -87,6 +95,8 @@ namespace NSMB.Entities.Player {
             } else {
                 t.SetParent(transform);
             }
+
+            resyncedThisFrame = false;
         }
 
         public void SwapParentView(EntityRef entity) {
@@ -138,7 +148,7 @@ namespace NSMB.Entities.Player {
 
             SwapParentView(e.Entity);
             collectTime = Time.time;
-            if (!NetworkHandler.IsReplayFastForwarding) {
+            if (!IsReplayFastForwarding) {
                 marioPlayerAnimator.PlaySound(SoundEffect.World_Gold_Block_Equip);
             }
         }
@@ -148,7 +158,7 @@ namespace NSMB.Entities.Player {
                 return;
             }
 
-            if (!NetworkHandler.IsReplayFastForwarding) {
+            if (!IsReplayFastForwarding) {
                 sfx.pitch = Random.Range(1.35f, 1.45f);
                 sfx.Play();
             }
@@ -185,7 +195,6 @@ namespace NSMB.Entities.Player {
             StartCoroutine(DelayedParticlePlay());
         }
 
-
         private void OnGameResynced(CallbackGameResynced e) {
             Frame f = PredictedFrame;
             if (EntityView) {
@@ -197,6 +206,7 @@ namespace NSMB.Entities.Player {
                 Destroy(gameObject);
                 Destroy(helmetModel);
             }
+            resyncedThisFrame = true;
         }
 
         private void OnGoldBlockRanOutOfCoins(EventGoldBlockRanOutOfCoins e) {
