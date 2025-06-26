@@ -2,6 +2,7 @@ using Quantum;
 using Quantum.Profiling;
 using System.Collections.Generic;
 using UnityEngine;
+using static NSMB.Utilities.QuantumViewUtils;
 
 public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
 
@@ -21,7 +22,7 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
     private int CurrentType = 0;
 
     public void Start() {
-        QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnCoinBoxCoin, NetworkHandler.FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnCoinBoxCoin);
         Nose.localScale = NosePoints[0];
     }
     public override unsafe void OnUpdateView() {
@@ -79,7 +80,7 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
     }
 
     public override void OnDeactivate() {
-        if (!NetworkHandler.IsReplayFastForwarding) {
+        if (!IsReplayFastForwarding) {
             Instantiate(Breakparticle, transform.position, Quaternion.identity);
         }
     }

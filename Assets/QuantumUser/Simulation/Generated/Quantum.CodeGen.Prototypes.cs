@@ -251,6 +251,25 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Clock))]
+  public unsafe partial class ClockPrototype : ComponentPrototype<Quantum.Clock> {
+    public Int32 Time;
+    public QBoolean TickTimeup;
+    public QBoolean ResetTime;
+    partial void MaterializeUser(Frame frame, ref Quantum.Clock result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Clock component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Clock result, in PrototypeMaterializationContext context = default) {
+        result.Time = this.Time;
+        result.TickTimeup = this.TickTimeup;
+        result.ResetTime = this.ResetTime;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Coin))]
   public unsafe partial class CoinPrototype : ComponentPrototype<Quantum.Coin> {
     public Quantum.QEnum8<CoinType> CoinType;
@@ -364,6 +383,29 @@ namespace Quantum.Prototypes {
         result.IsEnterable = this.IsEnterable;
         result.IsCeilingPipe = this.IsCeilingPipe;
         result.IsMiniOnly = this.IsMiniOnly;
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Fan))]
+  public unsafe partial class FanPrototype : ComponentPrototype<Quantum.Fan> {
+    public FP Strength;
+    public QBoolean Broken;
+    public QBoolean FellOver;
+    public QBoolean Sturdy;
+    public QBoolean HandleParticles;
+    partial void MaterializeUser(Frame frame, ref Quantum.Fan result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Fan component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Fan result, in PrototypeMaterializationContext context = default) {
+        result.Strength = this.Strength;
+        result.Broken = this.Broken;
+        result.FellOver = this.FellOver;
+        result.Sturdy = this.Sturdy;
+        result.HandleParticles = this.HandleParticles;
+        MaterializeUser(frame, ref result, in context);
     }
   }
   [System.SerializableAttribute()]
@@ -486,9 +528,31 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Hazard))]
+  public unsafe partial class HazardPrototype : ComponentPrototype<Quantum.Hazard> {
+    public QBoolean IsHefty;
+    public QBoolean IPWSUntilGround;
+    public Byte IPWSTime;
+    public FPVector2 SpawningVelocityRange;
+    partial void MaterializeUser(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Hazard component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context = default) {
+        result.IsHefty = this.IsHefty;
+        result.IPWSUntilGround = this.IPWSUntilGround;
+        result.IPWSTime = this.IPWSTime;
+        result.SpawningVelocityRange = this.SpawningVelocityRange;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Holdable))]
   public unsafe partial class HoldablePrototype : ComponentPrototype<Quantum.Holdable> {
     public QBoolean HoldAboveHead;
+    public QBoolean IsSolidCarryable;
     partial void MaterializeUser(Frame frame, ref Quantum.Holdable result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Holdable component = default;
@@ -497,6 +561,7 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Holdable result, in PrototypeMaterializationContext context = default) {
         result.HoldAboveHead = this.HoldAboveHead;
+        result.IsSolidCarryable = this.IsSolidCarryable;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -728,6 +793,7 @@ namespace Quantum.Prototypes {
     public QBoolean SlowInLiquids;
     public QBoolean IsWaterSolid;
     public QBoolean BreakMegaObjects;
+    public QBoolean WindImmune;
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.PhysicsObject component = default;
         Materialize((Frame)f, ref component, in context);
@@ -741,6 +807,7 @@ namespace Quantum.Prototypes {
         result.SlowInLiquids = this.SlowInLiquids;
         result.IsWaterSolid = this.IsWaterSolid;
         result.BreakMegaObjects = this.BreakMegaObjects;
+        result.WindImmune = this.WindImmune;
     }
   }
   [System.SerializableAttribute()]
@@ -929,6 +996,33 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.StarCoin result, in PrototypeMaterializationContext context = default) {
         result.DespawnCounter = this.DespawnCounter;
         PrototypeValidator.FindMapEntity(this.Collector, in context, out result.Collector);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.ThrowingObject))]
+  public unsafe partial class ThrowingObjectPrototype : ComponentPrototype<Quantum.ThrowingObject> {
+    public Quantum.QEnum8<ThrowingObjectType> Type;
+    public QBoolean GroundBounce;
+    public QBoolean SlideAlong;
+    public QBoolean BouceOffPlayer;
+    public FP ThrowForce;
+    public Byte StarsToDrop;
+    public QBoolean IgnoreTeamates;
+    partial void MaterializeUser(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.ThrowingObject component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context = default) {
+        result.Type = this.Type;
+        result.GroundBounce = this.GroundBounce;
+        result.SlideAlong = this.SlideAlong;
+        result.BouceOffPlayer = this.BouceOffPlayer;
+        result.ThrowForce = this.ThrowForce;
+        result.StarsToDrop = this.StarsToDrop;
+        result.IgnoreTeamates = this.IgnoreTeamates;
+        MaterializeUser(frame, ref result, in context);
     }
   }
   [System.SerializableAttribute()]

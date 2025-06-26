@@ -1,5 +1,7 @@
+using NSMB.Networking;
 using NSMB.Utilities.Extensions;
 using Photon.Deterministic;
+using Photon.Deterministic.Protocol;
 using Quantum;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
@@ -24,6 +26,7 @@ namespace NSMB.Sound {
             QuantumEvent.Subscribe<EventTimerExpired>(this, OnTimerExpired, FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventMarioPlayerPreRespawned>(this, OnMarioPlayerPreRespawned, FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventStageAutoRefresh>(this, OnStageAutoRefresh, FilterOutReplayFastForward);
+            QuantumEvent.Subscribe<EventClockCollect>(this, ClockCollect, FilterOutReplayFastForward);
         }
 
         public override void OnUpdateView() {
@@ -76,6 +79,12 @@ namespace NSMB.Sound {
 
         private void OnStageAutoRefresh(EventStageAutoRefresh e) {
             sfx.PlayOneShot(SoundEffect.World_Star_CollectOthers);
+        }
+
+        //Always Play This Sound When Orange Clock Collected
+        private unsafe void ClockCollect(EventClockCollect e) {
+            if (e.TickTimeup && !e.Overtime) // Always Play Sound When Orange Clock Collected
+                playedHurryUp = false;
         }
     }
 }

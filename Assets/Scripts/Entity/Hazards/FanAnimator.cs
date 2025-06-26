@@ -2,6 +2,7 @@ using Photon.Deterministic;
 using Quantum;
 using System.Collections.Generic;
 using UnityEngine;
+using static NSMB.Utilities.QuantumViewUtils;
 
 public unsafe class FanAnimator : QuantumEntityViewComponent {
 
@@ -20,7 +21,7 @@ public unsafe class FanAnimator : QuantumEntityViewComponent {
     public WeatherParticleAnimator weatherPar;
 
     public void Start() {
-        QuantumEvent.Subscribe<EventOnFanHit>(this, OnFanHit, NetworkHandler.FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventOnFanHit>(this, OnFanHit);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -60,7 +61,7 @@ public unsafe class FanAnimator : QuantumEntityViewComponent {
     }
 
     public override void OnDeactivate() {
-        if (!NetworkHandler.IsReplayFastForwarding) {
+        if (!IsReplayFastForwarding) {
         }
     }
 }

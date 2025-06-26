@@ -33,6 +33,7 @@ Use The Correct Sound For Collection
         #region Interactions
         public static void OnClockMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
             var clock = f.Unsafe.GetPointer<Clock>(thisEntity);
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
 
             // Change GlobalTime
             if (f.Global->Timer == 0) {
@@ -40,10 +41,10 @@ Use The Correct Sound For Collection
             } else if (clock->TickTimeup) {
                 f.Global->Timer = 10 + FP._0_10;
             } else if (clock->ResetTime) {
-                f.Global->Timer = clock->Time = f.Global->Rules.TimerSeconds * f.UpdateRate;
+                f.Global->Timer = clock->Time = f.Global->Rules.TimerMinutes * f.UpdateRate;
             } else {
                 f.Global->Timer += clock->Time;
-                f.Global->Timer = FPMath.Clamp(f.Global->Timer, FP._0_50, f.Global->Rules.TimerSeconds * f.UpdateRate);
+                f.Global->Timer = FPMath.Clamp(f.Global->Timer, FP._0_50, f.Global->Rules.TimerMinutes * f.UpdateRate);
             }
 
             f.Events.ClockCollect(thisEntity, f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position, clock->Time, clock->ResetTime, clock->TickTimeup, f.Global->Timer == 0);

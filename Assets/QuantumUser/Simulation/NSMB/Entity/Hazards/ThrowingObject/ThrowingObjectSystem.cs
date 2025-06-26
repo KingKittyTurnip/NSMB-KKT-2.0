@@ -129,7 +129,7 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                     bool item = newCoins == f.Global->Rules.CoinsForPowerup;
                     if (item) {
                         mario->Coins = 0;
-                        MarioPlayerSystem.SpawnItem(f, holdable->PreviousHolder, mario, default);
+                        MarioPlayerSystem.SpawnItem(f, holdable->PreviousHolder, mario, default, false);
                         Dis->ReusableTimer = 50;
                     } else {
                         mario->Coins = newCoins;
@@ -137,7 +137,7 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                     }
 
                     f.Events.ThrowObjSimple(entity, f.Unsafe.GetPointer<Transform2D>(entity)->Position + (FPVector2.Up / 2));
-                    f.Events.MarioPlayerCollectedCoin(holdable->PreviousHolder, *mario, newCoins, item, f.Unsafe.GetPointer<Transform2D>(entity)->Position + FPVector2.Up, false, false);
+                    f.Events.MarioPlayerCollectedCoin(holdable->PreviousHolder, newCoins, item, f.Unsafe.GetPointer<Transform2D>(entity)->Position + FPVector2.Up, false, false);
                 }
                 break;
                 #endregion

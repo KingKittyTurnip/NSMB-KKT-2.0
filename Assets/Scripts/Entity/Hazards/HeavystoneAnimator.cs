@@ -1,7 +1,6 @@
-using NSMB.Extensions;
 using Quantum;
-using Quantum.Profiling;
 using UnityEngine;
+using static NSMB.Utilities.QuantumViewUtils;
 
 public unsafe class HeavystoneAnimator : QuantumEntityViewComponent {
 
@@ -9,7 +8,7 @@ public unsafe class HeavystoneAnimator : QuantumEntityViewComponent {
     public AudioSource sfx;
     [SerializeField] private GameObject breakPrefab;
     public void Start() {
-        QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnHeavyStoneLand, NetworkHandler.FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnHeavyStoneLand);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -39,7 +38,7 @@ public unsafe class HeavystoneAnimator : QuantumEntityViewComponent {
     }
 
     public override void OnDeactivate() {
-        if (!NetworkHandler.IsReplayFastForwarding) {
+        if (!IsReplayFastForwarding) {
             Instantiate(breakPrefab, transform.position, Quaternion.identity);
         }
     }

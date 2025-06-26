@@ -1,4 +1,5 @@
-using NSMB.Utils;
+using NSMB.Particles;
+using NSMB.Utilities;
 using Quantum;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ public unsafe class ClockAnimator : QuantumEntityViewComponent {
     private static readonly int ParamClockType = Shader.PropertyToID("_ClockType");
 
     public void Start() {
-        QuantumEvent.Subscribe<EventClockCollect>(this, ClockCollect, NetworkHandler.FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventClockCollect>(this, ClockCollect);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;

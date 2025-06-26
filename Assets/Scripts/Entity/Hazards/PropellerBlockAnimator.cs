@@ -1,4 +1,3 @@
-using NSMB.Extensions;
 using Quantum;
 using Quantum.Profiling;
 using System.Drawing.Drawing2D;
@@ -53,11 +52,6 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
                 Model.rotation = Quaternion.Euler(0, 180, 0);
         }
 
-    }
-
-    public override void OnDeactivate() {
-        if (!NetworkHandler.IsReplayFastForwarding) {
-        }
     }
 
     private void SetFacingDirection(Frame f, MarioPlayer* mario, PhysicsObject* physicsObject) {

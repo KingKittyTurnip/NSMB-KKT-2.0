@@ -1,8 +1,8 @@
-using NSMB.Extensions;
 using Quantum;
 using Quantum.Profiling;
 using System.Drawing.Drawing2D;
 using UnityEngine;
+using static NSMB.Utilities.QuantumViewUtils;
 
 public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
 
@@ -57,7 +57,7 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
     }
 
     public override void OnDeactivate() {
-        if (!NetworkHandler.IsReplayFastForwarding) {
+        if (!IsReplayFastForwarding) {
         }
     }
 
