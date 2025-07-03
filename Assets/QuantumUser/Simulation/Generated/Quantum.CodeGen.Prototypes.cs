@@ -635,6 +635,23 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.MarioBot))]
+  public unsafe partial class MarioBotPrototype : ComponentPrototype<Quantum.MarioBot> {
+    public Quantum.Prototypes.InputPrototype inputs;
+    public Byte Lv;
+    partial void MaterializeUser(Frame frame, ref Quantum.MarioBot result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.MarioBot component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.MarioBot result, in PrototypeMaterializationContext context = default) {
+        this.inputs.Materialize(frame, ref result.inputs, in context);
+        result.Lv = this.Lv;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.MarioBrosPlatform))]
   public unsafe partial class MarioBrosPlatformPrototype : ComponentPrototype<Quantum.MarioBrosPlatform> {
     [HideInInspector()]

@@ -1,0 +1,19 @@
+component MarioBot {
+        //Input Variable
+        Input inputs;
+
+        //Lists
+        //FPVector2[] e;
+        //Quantum.FixedArray<FPVector3> Targets;
+        //Quantum.FixedArray<FPVector3> Terrain;
+
+        //--Vars For Updating
+        [ExcludeFromPrototype] byte FrameDelay;
+        [ExcludeFromPrototype] int LastUpdateFrame;
+
+        //Other
+        byte Lv;
+        [ExcludeFromPrototype] FP SightDistance;
+        [ExcludeFromPrototype] FP GroupDistance;
+        [ExcludeFromPrototype] FP ThrowDelay;
+}

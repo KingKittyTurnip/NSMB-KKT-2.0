@@ -2284,6 +2284,55 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct MarioBot : Quantum.IComponent {
+    public const Int32 SIZE = 144;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(140)]
+    private fixed Byte _alignment_padding_[4];
+    [FieldOffset(32)]
+    public Input inputs;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte FrameDelay;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public Int32 LastUpdateFrame;
+    [FieldOffset(1)]
+    public Byte Lv;
+    [FieldOffset(16)]
+    [ExcludeFromPrototype()]
+    public FP SightDistance;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public FP GroupDistance;
+    [FieldOffset(24)]
+    [ExcludeFromPrototype()]
+    public FP ThrowDelay;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 1873;
+        hash = hash * 31 + inputs.GetHashCode();
+        hash = hash * 31 + FrameDelay.GetHashCode();
+        hash = hash * 31 + LastUpdateFrame.GetHashCode();
+        hash = hash * 31 + Lv.GetHashCode();
+        hash = hash * 31 + SightDistance.GetHashCode();
+        hash = hash * 31 + GroupDistance.GetHashCode();
+        hash = hash * 31 + ThrowDelay.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (MarioBot*)ptr;
+        serializer.Stream.Serialize(&p->FrameDelay);
+        serializer.Stream.Serialize(&p->Lv);
+        serializer.Stream.Serialize(&p->LastUpdateFrame);
+        FP.Serialize(&p->GroupDistance, serializer);
+        FP.Serialize(&p->SightDistance, serializer);
+        FP.Serialize(&p->ThrowDelay, serializer);
+        Quantum.Input.Serialize(&p->inputs, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct MarioBrosPlatform : Quantum.IComponent {
     public const Int32 SIZE = 4;
     public const Int32 ALIGNMENT = 4;
@@ -3661,6 +3710,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Liquid>();
       BuildSignalsArrayOnComponentAdded<MapEntityLink>();
       BuildSignalsArrayOnComponentRemoved<MapEntityLink>();
+      BuildSignalsArrayOnComponentAdded<Quantum.MarioBot>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.MarioBot>();
       BuildSignalsArrayOnComponentAdded<Quantum.MarioBrosPlatform>();
       BuildSignalsArrayOnComponentRemoved<Quantum.MarioBrosPlatform>();
       BuildSignalsArrayOnComponentAdded<Quantum.MarioPlayer>();
@@ -4129,6 +4180,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(LiquidType), 1);
       typeRegistry.Register(typeof(MapEntityId), MapEntityId.SIZE);
       typeRegistry.Register(typeof(MapEntityLink), MapEntityLink.SIZE);
+      typeRegistry.Register(typeof(Quantum.MarioBot), Quantum.MarioBot.SIZE);
       typeRegistry.Register(typeof(Quantum.MarioBrosPlatform), Quantum.MarioBrosPlatform.SIZE);
       typeRegistry.Register(typeof(Quantum.MarioPlayer), Quantum.MarioPlayer.SIZE);
       typeRegistry.Register(typeof(Quantum.MovingPlatform), Quantum.MovingPlatform.SIZE);
@@ -4192,7 +4244,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 38)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 39)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -4220,6 +4272,7 @@ namespace Quantum {
         .Add<Quantum.InvisibleBlock>(Quantum.InvisibleBlock.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Koopa>(Quantum.Koopa.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Liquid>(Quantum.Liquid.Serialize, Quantum.Liquid.OnAdded, Quantum.Liquid.OnRemoved, ComponentFlags.None)
+        .Add<Quantum.MarioBot>(Quantum.MarioBot.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.MarioBrosPlatform>(Quantum.MarioBrosPlatform.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.MarioPlayer>(Quantum.MarioPlayer.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.MovingPlatform>(Quantum.MovingPlatform.Serialize, Quantum.MovingPlatform.OnAdded, Quantum.MovingPlatform.OnRemoved, ComponentFlags.None)
