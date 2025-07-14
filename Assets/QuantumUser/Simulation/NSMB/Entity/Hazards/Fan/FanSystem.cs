@@ -141,15 +141,15 @@ Gp Interactions are weird
                 };
                 if (IsVertical) {
                     if (!physobj->IsTouchingGround)
-                        PhysicsObjectSystem.MoveVertically((FrameThreadSafe) f, new FPVector2(0, TempStrength), ref physicsSystemFilter, stage, null, out _);
+                        PhysicsObjectSystem.MoveVertically(f, new FPVector2(0, TempStrength), ref physicsSystemFilter, stage, null, out _);
                 } else {
-                    PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(TempStrength, 0), ref physicsSystemFilter, stage, null, out _);
+                    PhysicsObjectSystem.MoveHorizontally(f, new FPVector2(TempStrength, 0), ref physicsSystemFilter, stage, null, out _);
                 }
             }
         }
 
         #region Interactions
-        public static void OnFanMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
+        public static bool OnFanMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
             #region SetValues
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var fan = f.Unsafe.GetPointer<Fan>(thisEntity);
@@ -176,8 +176,8 @@ Gp Interactions are weird
                 DisCollider->Shape.Box.Extents = FPVector2.Zero;
                 DisCollider->Shape.Centroid.Y = -999;
                 f.Events.OnFanHit(thisEntity, true);
-                return;
-            } else if (upDot >= PhysicsObjectSystem.GroundMaxAngle && (mario->IsGroundpounding || mario->GroundpoundStandFrames > 0) && !fan->Sturdy) {
+                return false;
+            } else if (upDot >= Constants.PhysicsGroundMaxAngleCos && (mario->IsGroundpounding || mario->GroundpoundStandFrames > 0) && !fan->Sturdy) {
                 physicsObject->IsTouchingGround = false;
                 physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
                 physicsObject->Velocity.Y = 3;
@@ -186,13 +186,13 @@ Gp Interactions are weird
                 mario->IsGroundpounding = mariophys->IsTouchingGround = false;
                 mariophys->Velocity.Y = 6;
                 f.Events.OnFanHit(thisEntity, false);
-                return;
-            } else if (upDot <= -PhysicsObjectSystem.GroundMaxAngle) {
+                return true;
+            } else if (upDot <= -Constants.PhysicsGroundMaxAngleCos) {
                 physicsObject->IsTouchingGround = false;
                 physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
                 physicsObject->Velocity.Y = 3;
-                return;
             }
+            return false;
         }
 
         public static void OnFanThrowingObjectInteraction(Frame f, EntityRef thisEntity, EntityRef throwEntity) {

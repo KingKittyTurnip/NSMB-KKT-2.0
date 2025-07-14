@@ -151,10 +151,10 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
         }
 
         #region Interactions
-        public static void OnThrowingObjectMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
+        public static bool OnThrowingObjectMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             if (f.Exists(holdable->Holder))
-                return;
+                return false;
             #region SetValues
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
@@ -181,17 +181,17 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                     bool TeamateItem = !Dis->IgnoreTeamates && (mario->GetTeam(f) + 1) != hazard->Team;
                     mario->DoKnockback(f, marioEntity, hitRight, TeamateItem ? 0 : Dis->StarsToDrop, /*TeamateItem*/ KnockbackStrength.FireballBump, thisEntity);
                 }
-                return;
-            } else if (!(upDot >= PhysicsObjectSystem.GroundMaxAngle || upDot <= -PhysicsObjectSystem.GroundMaxAngle) && mario->CurrentPowerupState == PowerupState.MegaMushroom) {
+                return false;
+            } else if (!(upDot >= Constants.PhysicsGroundMaxAngleCos || upDot <= -Constants.PhysicsGroundMaxAngleCos) && mario->CurrentPowerupState == PowerupState.MegaMushroom) {
                 if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
                     // HOMERUN
                     f.Events.PlayComboSound(thisEntity, 0);
                     Dis->Thrown = true;
                     physicsObject->IsTouchingGround = false;
                     physicsObject->Velocity = new FPVector2(hitRight ? -8 : 8, 5);
-                    return;
+                    return false;
                 }
-            } else if (upDot < Constants._0_66 && FPMath.Abs(damageDirection.X) < Constants._0_90 && !(physicsObject->IsTouchingGround && upDot <= -PhysicsObjectSystem.GroundMaxAngle)) {
+            } else if (upDot < Constants._0_66 && FPMath.Abs(damageDirection.X) < Constants._0_90 && !(physicsObject->IsTouchingGround && upDot <= -Constants.PhysicsGroundMaxAngleCos)) {
                 //PlayerInsideObject
                 if (Dis->BouceOffPlayer) {
                     // Bouce Off Player
@@ -205,10 +205,10 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                 }
             }
 
-            if (!Dis->Thrown && upDot < PhysicsObjectSystem.GroundMaxAngle) {
+            if (!Dis->Thrown && upDot < Constants.PhysicsGroundMaxAngleCos) {
                 //Only Allow Carry If No Team Or Same Team --- TOTEST
                 if (hazard->Team != 0 && (mario->GetTeam(f) + 1) != hazard->Team) {
-                    return;
+                    return false;
                 }
 
                 // Attempt pickup
@@ -237,6 +237,7 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                     }
                 }
             }
+            return false;
         }
         
         public static void OnThrowingObjectCoinInteraction(Frame f, EntityRef thisEntity, EntityRef coinEntity) {
