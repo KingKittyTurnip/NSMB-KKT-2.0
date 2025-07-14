@@ -9,10 +9,16 @@ using System.IO;
 using TMPro;
 using Unity.Profiling;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 namespace NSMB.UI.MainMenu.Submenus.Replays {
     public class ReplayListEntry : MonoBehaviour {
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        [System.Runtime.InteropServices.DllImport("__Internal")]
+        public static extern void DownloadFile(string gameObjectName, string methodName, string filename, byte[] byteArray, int byteArraySize);
+#endif
 
         //---Properties
         public BinaryReplayFile ReplayFile { get; private set; }
@@ -164,7 +170,7 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
         }
 
         public void OnWatchClick() {
-            ActiveReplayManager.Instance.StartReplay(ReplayFile);
+            ActiveReplayManager.Instance.StartReplayPlayback(ReplayFile);
         }
 
         public void OnRenameClick() {
@@ -172,6 +178,13 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
         }
 
         public void OnExportClick() {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (ReplayFile.LoadAllIfNeeded() == ReplayParseResult.Success) {
+                using MemoryStream stream = new((int) ReplayFile.FileSize);
+                long replaySize = ReplayFile.WriteToStream(stream);
+                DownloadFile(name, nameof(FileDownloadedCallback), ReplayFile.Header.GetDisplayName() + ".mvlreplay", stream.ToArray(), (int) replaySize);
+            }
+#else
             TranslationManager tm = GlobalController.Instance.translationManager;
             StandaloneFileBrowser.SaveFilePanelAsync(tm.GetTranslation("ui.extras.replays.actions.export.prompt"), null, ReplayFile.Header.GetDisplayName(), "mvlreplay", (file) => {
                 if (string.IsNullOrWhiteSpace(file)) {
@@ -183,6 +196,12 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
                     ReplayFile.WriteToStream(stream);
                 }
             });
+#endif
+        }
+
+        [Preserve]        
+        private void FileDownloadedCallback() {
+
         }
 
         public void OnDeleteClick() {
@@ -210,7 +229,7 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
 
             string finalWarningText;
             if (!header.IsCompatible) {
-                finalWarningText = tm.GetTranslationWithReplacements("ui.extras.replays.incompatible", "version", header.Version.ToString());
+                finalWarningText = tm.GetTranslationWithReplacements("ui.extras.replays.incompatible", "version", header.Version.ToStringIgnoreHotfix() + ".X");
                 warningText.color = criticalColor;
                 foreach (var button in compatibleButtons) {
                     button.interactable = false;

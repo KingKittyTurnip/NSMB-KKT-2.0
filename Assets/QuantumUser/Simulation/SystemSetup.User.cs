@@ -1,6 +1,5 @@
 ﻿using Quantum.Core;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Quantum {
     public static partial class DeterministicSystemSetup {
@@ -15,7 +14,6 @@ namespace Quantum {
             systems.Add(new PlayerConnectedSystem());
             systems.Add(new MvLCullingSystem());
             systems.Add(new GameLogicSystem());
-
             systems.Add(
                 new StartDisabledSystemGroup("gameplay",
                     new PrePhysicsObjectSystem(),
@@ -60,6 +58,11 @@ namespace Quantum {
                 )
             );
             systems.Add(new StageSystem());
+
+#if MVL_DEBUG
+            // This HAS to be the last system otherwise it breaks replays.
+            systems.Add(new MvLDebugSystem());
+#endif
         }
     }
 }

@@ -152,7 +152,7 @@ namespace NSMB.Cameras {
             // Screenshake (ignores clamping)
             if (screenshakeTimer > 0) {
                 newPosition += new Vector3((UnityEngine.Random.value - 0.5f) * screenshakeTimer, (UnityEngine.Random.value - 0.5f) * screenshakeTimer);
-                screenshakeTimer -= Time.deltaTime;
+                screenshakeTimer -= Time.unscaledDeltaTime;
             }
 
             ourCamera.transform.position = newPosition;
@@ -297,14 +297,17 @@ namespace NSMB.Cameras {
         }
 
         private void OnScreenshakeCallback(float screenshake) {
+            screenshakeTimer = screenshake;
+            
+            /*
             Frame f = QuantumRunner.DefaultGame.Frames.Predicted;
 
             if (!f.Exists(Target)
                 || !f.Unsafe.TryGetPointer(Target, out PhysicsObject* physicsObject)
                 || physicsObject->IsTouchingGround) {
-
-                screenshakeTimer += screenshake;
+                screenshakeTimer = screenshake;
             }
+            */
         }
 
         public enum CameraMode {

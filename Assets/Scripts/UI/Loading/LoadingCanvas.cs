@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using static NSMB.Utilities.QuantumViewUtils;
 
 namespace NSMB.UI.Loading {
-    public class LoadingCanvas : MonoBehaviour {
+    public unsafe class LoadingCanvas : MonoBehaviour {
 
         public static event Action<bool> OnLoadingEnded;
 
@@ -31,12 +31,15 @@ namespace NSMB.UI.Loading {
             this.SetIfNull(ref mario, UnityExtensions.GetComponentType.Children);
         }
 
-        public void Awake() {
-            QuantumCallback.Subscribe<CallbackGameStarted>(this, OnGameStarted, onlyIfActiveAndEnabled: true);
-            QuantumEvent.Subscribe<EventGameStateChanged>(this, OnGameStateChanged, onlyIfActiveAndEnabled: true);
+        public void Startup() {
+            QuantumCallback.Subscribe<CallbackUnitySceneLoadBegin>(this, OnUnitySceneLoadBegin);
+            QuantumCallback.Subscribe<CallbackUnitySceneLoadDone>(this, OnUnitySceneLoadDone);
+            QuantumCallback.Subscribe<CallbackGameStarted>(this, OnGameStarted);
+            QuantumCallback.Subscribe<CallbackGameDestroyed>(this, OnGameDestroyed);
+            QuantumEvent.Subscribe<EventGameStateChanged>(this, OnGameStateChanged);
         }
 
-        public unsafe void Initialize(QuantumGame game) {
+        private void Initialize(QuantumGame game) {
             if (running) {
                 return;
             }
@@ -84,6 +87,19 @@ namespace NSMB.UI.Loading {
             running = true;
         }
 
+        private void OnUnitySceneLoadBegin(CallbackUnitySceneLoadBegin e) {
+            if (e.SceneName != null) {
+                // Loading a map.
+                Initialize(e.Game);
+            }
+        }
+
+        private void OnUnitySceneLoadDone(CallbackUnitySceneLoadDone e) {
+            if (IsReplay || e.Game.Frames.Predicted.Global->GameState is GameState.Starting or GameState.Playing) {
+                EndLoading(e.Game);
+            }
+        }
+
         private void OnGameStarted(CallbackGameStarted e) {
             if (!IsReplay) {
                 EndLoading(e.Game);
@@ -91,28 +107,32 @@ namespace NSMB.UI.Loading {
         }
 
         private void OnGameStateChanged(EventGameStateChanged e) {
-            if (e.NewState > GameState.WaitingForPlayers) {
+            if (e.NewState is GameState.Starting or GameState.Playing) {
                 EndLoading(e.Game);
             }
         }
 
-        public unsafe void EndLoading(QuantumGame game) {
+        public void EndLoading(QuantumGame game) {
             if (running && endCoroutine == null) {
-                endCoroutine = StartCoroutine(EndLoadingRoutine(game));
+                endCoroutine = StartCoroutine(EndLoadingRoutine(game, game.Frames.Predicted.Global->GameState));
             }
-        } 
+        }
 
-        public IEnumerator EndLoadingRoutine(QuantumGame game) {
+        private void OnGameDestroyed(CallbackGameDestroyed callback) {
+            gameObject.SetActive(false);
+        }
+
+        public IEnumerator EndLoadingRoutine(QuantumGame game, GameState state) {
             if (!IsReplay) {
                 yield return new WaitForSeconds(1);
             }
 
             Frame f = game.Frames.Predicted;
 
-            bool validPlayer = game.GetLocalPlayers().Any(p => !(QuantumUtils.GetPlayerDataSafe(f, p)?.IsSpectator ?? true));
+            bool longIntro = !IsReplay && (state <= GameState.Starting || game.GetLocalPlayers().Any(p => !(QuantumUtils.GetPlayerDataSafe(f, p)?.IsSpectator ?? true)));
             
             readyGroup.gameObject.SetActive(true);
-            animator.SetTrigger(validPlayer ? "loaded" : "spectating");
+            animator.SetTrigger(longIntro  ? "loaded" : "spectating");
 
             if (fadeVolumeCoroutine != null) {
                 StopCoroutine(fadeVolumeCoroutine);
@@ -121,7 +141,7 @@ namespace NSMB.UI.Loading {
             fadeVolumeCoroutine = StartCoroutine(FadeVolume(0.1f, false));
             //audioListener.enabled = false;
 
-            OnLoadingEnded?.Invoke(validPlayer);
+            OnLoadingEnded?.Invoke(longIntro);
             running = false;
             endCoroutine = null;
         }

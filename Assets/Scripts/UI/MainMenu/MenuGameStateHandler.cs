@@ -2,7 +2,7 @@ using Quantum;
 using UnityEngine;
 
 namespace NSMB.UI.MainMenu {
-    public class MenuGameStateHandler : MonoBehaviour {
+    public unsafe class MenuGameStateHandler : MonoBehaviour {
 
         public void Start() {
             QuantumCallback.Subscribe<CallbackGameDestroyed>(this, OnGameDestroyed);
@@ -11,29 +11,14 @@ namespace NSMB.UI.MainMenu {
         }
 
         private void OnGameStateChanged(EventGameStateChanged e) {
-            if (e.NewState == GameState.PreGameRoom) {
-                gameObject.SetActive(true);
-            } else {
-                if (gameObject.activeSelf) {
-                    GlobalController.Instance.loadingCanvas.Initialize(e.Game);
-                    gameObject.SetActive(false);
-                }
-            }
+            gameObject.SetActive(e.NewState == GameState.PreGameRoom);
         }
 
-        private unsafe void OnGameResynced(CallbackGameResynced e) {
-            Frame f = e.Game.Frames.Verified;
-            if (f.Global->GameState == GameState.PreGameRoom) {
-                gameObject.SetActive(true);
-            } else if (gameObject.activeSelf) {
-                // GlobalController.Instance.loadingCanvas.Initialize(e.Game);
-                GlobalController.Instance.loadingCanvas.EndLoading(e.Game);
-                gameObject.SetActive(false);
-            }
+        private void OnGameResynced(CallbackGameResynced e) {
+            gameObject.SetActive(e.Game.Frames.Predicted.Global->GameState == GameState.PreGameRoom);
         }
 
         private void OnGameDestroyed(CallbackGameDestroyed e) {
-            GlobalController.Instance.loadingCanvas.gameObject.SetActive(false);
             gameObject.SetActive(true);
         }
     }

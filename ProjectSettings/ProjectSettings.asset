@@ -55,7 +55,7 @@ PlayerSettings:
   mipStripping: 0
   numberOfMipsStripped: 0
   numberOfMipsStrippedPerMipmapLimitGroup: {}
-  m_StackTraceTypes: 010000000100000001000000010000000100000001000000
+  m_StackTraceTypes: 020000000100000001000000000000000200000001000000
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
   iosUseCustomAppBackgroundBehavior: 0
@@ -140,7 +140,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 1.8.0.0
+  bundleVersion: 2.0.2.0
   preloadedAssets:
   - {fileID: 11400000, guid: 49335f30d253220488d2d332ade6e901, type: 2}
   - {fileID: -944628639613478452, guid: d29805f34fe91da4e94010a38823fab7, type: 3}
@@ -178,7 +178,7 @@ PlayerSettings:
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 
-  stripEngineCode: 1
+  stripEngineCode: 0
   iPhoneStrippingLevel: 0
   iPhoneScriptCallOptimization: 0
   ForceInternetPermission: 0
@@ -537,7 +537,8 @@ PlayerSettings:
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
   openGLRequireES32: 0
-  m_TemplateCustomTags: {}
+  m_TemplateCustomTags:
+    PRODUCT_DESCRIPTION: 
   mobileMTRendering:
     Android: 1
     iPhone: 1
@@ -838,7 +839,7 @@ PlayerSettings:
     Stadia: QUANTUM_XY
     Standalone: QUANTUM_DISABLE_AI;QUANTUM_DISABLE_PHYSICS3D;QUANTUM_XY;QUANTUM_LOGLEVEL_WARN;QUANTUM_ENABLE_REMOTE_PROFILER
     VisionOS: QUANTUM_XY;QUANTUM_LOGLEVEL_WARN
-    WebGL: FUSION_WEAVER;FUSION2;QUANTUM_XY;QUANTUM_LOGLEVEL_WARN
+    WebGL: QUANTUM_XY;QUANTUM_LOGLEVEL_WARN
     Windows Store Apps: FUSION_WEAVER;QUANTUM_XY;QUANTUM_LOGLEVEL_WARN
     XboxOne: QUANTUM_XY;QUANTUM_LOGLEVEL_WARN
     iPhone: QUANTUM_XY;QUANTUM_LOGLEVEL_WARN
@@ -856,7 +857,7 @@ PlayerSettings:
   suppressCommonWarnings: 1
   allowUnsafeCode: 1
   useDeterministicCompilation: 1
-  additionalIl2CppArgs: 
+  additionalIl2CppArgs: --compiler-flags="-fbracket-depth=512"
   scriptingRuntimeVersion: 1
   gcIncremental: 1
   gcWBarrierValidation: 0

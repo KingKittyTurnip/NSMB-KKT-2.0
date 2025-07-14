@@ -26,13 +26,13 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
 
                 if (playerData == null) {
                     // Assume we're the host...
-                    hostname = Settings.Instance.generalNickname.ToValidUsername(f, host);
+                    hostname = Settings.Instance.generalNickname.ToValidNickname(f, host);
                 } else {
-                    hostname = playerData.PlayerNickname.ToValidUsername(f, host);
+                    hostname = playerData.PlayerNickname.ToValidNickname(f, host);
                 }
 
                 Random.InitState(hostname.GetHashCode() + rngSeed);
-                return Random.ColorHSV(0f, 1f, 0.5f, 1f, 0f, 1f);
+                return Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.8f, 1f);
             }
         }
         public unsafe override string Header {
@@ -44,9 +44,9 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
 
                 if (playerData == null) {
                     // Assume we're the host...
-                    hostname = Settings.Instance.generalNickname.ToValidUsername(f, host);
+                    hostname = Settings.Instance.generalNickname.ToValidNickname(f, host);
                 } else {
-                    hostname = playerData.PlayerNickname.ToValidUsername(f, host);
+                    hostname = playerData.PlayerNickname.ToValidNickname(f, host);
                 }
 
                 return GlobalController.Instance.translationManager.GetTranslationWithReplacements("ui.rooms.listing.name", "playername", hostname);

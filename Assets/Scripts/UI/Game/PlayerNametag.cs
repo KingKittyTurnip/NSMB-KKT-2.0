@@ -122,7 +122,7 @@ namespace NSMB.UI.Game {
                 stringBuilder.Append(character.UiString).Append(Utils.GetSymbolString("x" + mario->Lives)).Append(' ');
             }
 
-            stringBuilder.Append(Utils.GetSymbolString(gamemode.ObjectiveSymbolPrefix + "x" + gamemode.GetObjectiveCount(f, mario)));
+            stringBuilder.Append(Utils.GetSymbolString(gamemode.ObjectiveSymbolPrefix + "x" + Mathf.Max(0, gamemode.GetObjectiveCount(f, mario))));
 
             text.text = stringBuilder.ToString();
         }
@@ -130,7 +130,7 @@ namespace NSMB.UI.Game {
         public unsafe void UpdateCachedNickname(Frame f, MarioPlayer* mario) {
             RuntimePlayer runtimePlayer = f.GetPlayerData(mario->PlayerRef);
             if (runtimePlayer != null) {
-                cachedNickname = runtimePlayer.PlayerNickname.ToValidUsername(f, mario->PlayerRef);
+                cachedNickname = runtimePlayer.PlayerNickname.ToValidNickname(f, mario->PlayerRef);
                 nicknameColor = NicknameColor.Parse(runtimePlayer.NicknameColor);
             }
         }

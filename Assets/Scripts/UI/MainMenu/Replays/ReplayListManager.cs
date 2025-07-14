@@ -17,11 +17,18 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 namespace NSMB.UI.MainMenu.Submenus.Replays {
     public class ReplayListManager : Selectable {
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+        [System.Runtime.InteropServices.DllImport("__Internal")]
+        public static extern void UploadFile(string gameObjectName, string methodName, string filter, bool multiple);
+#endif
+
+        //---Static Variables
         public static ReplayListManager Instance { get; private set; }
         public static string ReplayDirectory => Path.Combine(Application.persistentDataPath, "replays");
         public static string TempDirectory => Path.Combine(ReplayDirectory, "temp");
@@ -124,22 +131,36 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
             if (Selected) {
                 Selected.OnSelect(open);
             }
+            LayoutRebuilder.MarkLayoutForRebuild((RectTransform) headerTemplate.transform.parent);
             UpdateInformation(replay);
         }
 
         public void UpdateInformation(ReplayListEntry replay) {
+            TranslationManager tm = GlobalController.Instance.translationManager;
             if (replay == null) {
-                replayInformation.text = GlobalController.Instance.translationManager.GetTranslation("ui.extras.replays.information.none");
+                replayInformation.text = tm.GetTranslation("ui.extras.replays.information.none");
                 replayInformation.horizontalAlignment = HorizontalAlignmentOptions.Center;
                 return;
             }
-            TranslationManager tm = GlobalController.Instance.translationManager;
+            if (!replay.ReplayFile.Header.IsCompatible) {
+                replayInformation.text = tm.GetTranslationWithReplacements("ui.extras.replays.incompatible", "version", replay.ReplayFile.Header.Version.ToStringIgnoreHotfix() + ".X");
+                replayInformation.horizontalAlignment = HorizontalAlignmentOptions.Center;
+                return;
+            }
+
+            BinaryReplayHeader header = replay.ReplayFile.Header;
+            ref var rules = ref header.Rules;
+            string gamemodeName;
+            if (QuantumUnityDB.TryGetGlobalAsset(rules.Gamemode, out var gamemode)) {
+                gamemodeName = gamemode.NamePrefix + tm.GetTranslation(gamemode.TranslationKey);
+            } else {
+                gamemodeName = "<sprite name=room_customlevel> ???";
+            }
 
             // TODO: possibly parse from initial frame instead of storing as separate members
             // Playerlist
             StringBuilder builder = new();
-            BinaryReplayHeader header = replay.ReplayFile.Header;
-            for (int i = 0; i < header.PlayerInformation.Length; i++) {
+            foreach (int i in Enumerable.Range(0, header.PlayerInformation.Length).OrderByDescending(idx => header.PlayerInformation[idx].FinalObjectiveCount)) {
                 ref ReplayPlayerInformation info = ref header.PlayerInformation[i];
 
                 // Color and width
@@ -155,14 +176,14 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
                 }
 
                 // Username
-                builder.Append(info.Username);
+                builder.Append(string.IsNullOrWhiteSpace(info.Nickname) ? "noname" : info.Nickname);
                 builder.Append("</nobr>");
 
                 // Stars
-                builder.Append("<width=100%><pos=90%><sprite name=room_stars>");
-                builder.Append("<line-height=0><align=right><br>");
+                builder.Append("<width=100%><line-height=0><align=right><br>");
+                builder.Append(gamemode ? Utils.GetSymbolString(gamemode.ObjectiveSymbolPrefix) : "");
                 builder.Append(info.Team == header.WinningTeam ? "<color=yellow>" : "<color=white>");
-                builder.Append(info.FinalObjectiveCount);
+                builder.Append(Mathf.Max(0, info.FinalObjectiveCount));
 
                 // Fix formatting
                 builder.AppendLine("<align=left><line-height=100%>");
@@ -174,24 +195,23 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
             string on = tm.GetTranslation("ui.generic.on");
 
             builder.Append("<align=center><color=white>");
-            var rules = header.Rules;
-            if (tm.RightToLeft) {
-                builder.Append(rules.TeamsEnabled ? on : off).Append(" <sprite name=room_teams>").Append("    ");
-                builder.Append(rules.CustomPowerupsEnabled ? on : off).Append(" <sprite name=room_powerups>").Append("    ");
-                builder.Append(rules.TimerMinutes > 0 ? Utils.SecondsToMinuteSeconds(rules.TimerMinutes * 60) : off).Append(" <sprite name=room_timer>").Append("    ");
-                builder.Append(rules.Lives > 0 ? rules.Lives : off).Append(" <sprite name=room_lives>").Append("    ");
-                builder.Append(rules.CoinsForPowerup).Append(" <sprite name=room_coins>").Append("    ");
-                builder.Append(rules.StarsToWin).AppendLine(" <sprite name=room_stars> ");
+            builder.AppendLine(gamemodeName);
+
+            if (gamemode is CoinRunnersGamemode) {
+                builder.Append("<sprite name=room_timer> ").Append(Utils.SecondsToMinuteSeconds(rules.TimerMinutes * 60)).Append("    ");
+                builder.Append("<sprite name=room_coins> ").Append(rules.CoinsForPowerup).Append("    ");
+                builder.Append("<sprite name=room_lives> ").Append(rules.Lives > 0 ? rules.Lives : off).Append("    ");
+                builder.Append("<sprite name=room_powerups>").Append(rules.CustomPowerupsEnabled ? on : off).Append("    ");
+                builder.Append("<sprite name=room_teams>").AppendLine(rules.TeamsEnabled ? on : off);
             } else {
+                // Default to star chasers
                 builder.Append("<sprite name=room_stars> ").Append(rules.StarsToWin).Append("    ");
                 builder.Append("<sprite name=room_coins> ").Append(rules.CoinsForPowerup).Append("    ");
                 builder.Append("<sprite name=room_lives> ").Append(rules.Lives > 0 ? rules.Lives : off).Append("    ");
                 builder.Append("<sprite name=room_timer> ").Append(rules.TimerMinutes > 0 ? Utils.SecondsToMinuteSeconds(rules.TimerMinutes * 60) : off).Append("    ");
                 builder.Append("<sprite name=room_powerups>").Append(rules.CustomPowerupsEnabled ? on : off).Append("    ");
                 builder.Append("<sprite name=room_teams>").AppendLine(rules.TeamsEnabled ? on : off);
-            }
-
-            // Add date
+            } 
             builder.Append("<color=#aaa>").Append(DateTimeToLocalizedString(DateTime.UnixEpoch.AddSeconds(header.UnixTimestamp), false, false)).Append(" - ");
             builder.Append(Utils.SecondsToMinuteSeconds(header.ReplayLengthInFrames / 60)).Append(" - ").Append(Utils.BytesToString(replay.ReplayFile.FileSize));
 
@@ -199,8 +219,9 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
             replayInformation.horizontalAlignment = HorizontalAlignmentOptions.Left;
         }
 
-        public static string DateTimeToLocalizedString(in DateTime dt, bool shortDisplay, bool dateOnly) {
+        public static string DateTimeToLocalizedString(DateTime dt, bool shortDisplay, bool dateOnly) {
             TranslationManager tm = GlobalController.Instance.translationManager;
+            dt = dt.ToLocalTime();
             try {
                 CultureInfo culture = new(tm.CurrentLocale);
                 if (dateOnly) {
@@ -226,6 +247,9 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
         }
 
         public void RemoveReplay(ReplayListEntry replay) {
+            replays.Remove(replay);
+            bool wasTemporary = temporaryReplays.Remove(replay);
+            
             if (replay) {
                 Destroy(replay.gameObject);
                 if (replays.Count == 0) {
@@ -233,8 +257,13 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
                 }
             }
             int? index = isActiveAndEnabled ? replays.IndexOf(replay) : null;
-            replays.Remove(replay);
             SortReplays(index);
+            
+            if (wasTemporary && Settings.Instance.generalMaxTempReplays != 0) {
+                foreach (var tempReplay in temporaryReplays.Skip(Settings.Instance.generalMaxTempReplays - 5).Take(5)) {
+                    tempReplay.UpdateText();
+                }
+            }
         }
 
         public void FindReplays() {
@@ -279,7 +308,7 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
                     ReplayListEntry newReplayEntry = Instantiate(replayTemplate, replayTemplate.transform.parent);
                     newReplayEntry.Initialize(this, replay);
                     newReplayEntry.UpdateText();
-                    newReplayEntry.name = Path.GetFileName(filepath);
+                    newReplayEntry.name = newReplayEntry.ReplayFile.Header.GetDisplayName();
                     newReplayEntry.gameObject.SetActive(true);
                     replays.Add(newReplayEntry);
 
@@ -335,33 +364,61 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
 
         public void OnImportClicked() {
             TranslationManager tm = GlobalController.Instance.translationManager;
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+            UploadFile(name, nameof(ImportFile), ".mvlreplay", false);
+#else
             string[] selected = StandaloneFileBrowser.OpenFilePanel(tm.GetTranslation("ui.extras.replays.actions.import"), "", "mvlreplay", false);
-
-            foreach (var filepath in selected) {
-                ReplayParseResult parseResult = BinaryReplayFile.TryLoadNewFromFile(filepath, true, out BinaryReplayFile parsedReplay);
-
-                if (parseResult == ReplayParseResult.Success) {
-                    // Move into the replays folder
-                    string newPath = Path.Combine(ReplayDirectory, "saved", parsedReplay.Header.UnixTimestamp + ".mvlreplay");
-                    File.Copy(filepath, newPath, false);
-
-                    ReplayListEntry newReplayEntry = Instantiate(replayTemplate, replayTemplate.transform.parent);
-                    newReplayEntry.Initialize(this, parsedReplay);
-                    newReplayEntry.name = Path.GetFileName(filepath);
-
-                    replays.Add(newReplayEntry);
-                    newReplayEntry.UpdateText();
-                    newReplayEntry.gameObject.SetActive(true);
-                    SortReplays();
-
-                    canvas.EventSystem.SetSelectedGameObject(newReplayEntry.gameObject);
-
-                    noReplaysText.text = "";
-                } else {
-                    GlobalController.Instance.sfx.PlayOneShot(SoundEffect.UI_Error);
-                    UnityEngine.Debug.LogWarning($"[Replay] Failed to parse {filepath} as a replay: {parseResult}");
-                }
+            if (selected != null && selected.Length > 0) {
+                StartCoroutine(ImportFile(selected[0]));
             }
+#endif
+        }
+
+        private IEnumerator ImportFile(string filepath) {
+#if UNITY_WEBGL
+            using UnityWebRequest downloadRequest = new(filepath, "GET");
+            downloadRequest.downloadHandler = new DownloadHandlerBuffer();
+            yield return downloadRequest.SendWebRequest();
+            while (!downloadRequest.downloadHandler.isDone) {
+                yield return null;
+            }
+            byte[] replay = ((DownloadHandlerBuffer) downloadRequest.downloadHandler).data;
+            using MemoryStream memStream = new MemoryStream(replay);
+
+            ReplayParseResult parseResult = BinaryReplayFile.TryLoadNewFromStream(memStream, true, out BinaryReplayFile parsedReplay);
+#else
+            ReplayParseResult parseResult = BinaryReplayFile.TryLoadNewFromFile(filepath, true, out BinaryReplayFile parsedReplay);
+#endif
+
+            if (parseResult == ReplayParseResult.Success) {
+                // Change to today
+                parsedReplay.Header.UnixTimestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+
+                // Write into the replays folder (not copy, since we changed the timestamp in the header...)
+                string newPath = Path.Combine(ReplayDirectory, "saved", parsedReplay.Header.UnixTimestamp + ".mvlreplay");
+                using (FileStream fs = new FileStream(newPath, FileMode.Create)) {
+                    parsedReplay.WriteToStream(fs);
+                }
+                parsedReplay.FilePath = newPath;
+
+                ReplayListEntry newReplayEntry = Instantiate(replayTemplate, replayTemplate.transform.parent);
+                newReplayEntry.Initialize(this, parsedReplay);
+                newReplayEntry.name = newReplayEntry.ReplayFile.Header.GetDisplayName();
+
+                replays.Add(newReplayEntry);
+                newReplayEntry.UpdateText();
+                newReplayEntry.gameObject.SetActive(true);
+                SortReplays();
+
+                canvas.EventSystem.SetSelectedGameObject(newReplayEntry.gameObject);
+
+                noReplaysText.text = "";
+            } else {
+                GlobalController.Instance.sfx.PlayOneShot(SoundEffect.UI_Error);
+                UnityEngine.Debug.LogWarning($"[Replay] Failed to parse {filepath} as a replay: {parseResult}");
+            }
+            yield return null;
         }
 
         public void UpdateReplayNavigation(int? selectIndex = null) {
@@ -449,7 +506,7 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
                     // Check player usernames
                     bool found = false;
                     foreach (var playerInfo in replay.ReplayFile.Header.PlayerInformation) {
-                        if (playerInfo.Username.Contains(searchField.text, StringComparison.InvariantCultureIgnoreCase)) {
+                        if (playerInfo.Nickname.Contains(searchField.text, StringComparison.InvariantCultureIgnoreCase)) {
                             found = true;
                             break;
                         }
@@ -595,6 +652,9 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
 
         public class ReplayDateComparer : IComparer<ReplayListEntry> {
             public int Compare(ReplayListEntry x, ReplayListEntry y) {
+                if (x.ReplayFile.Header.UnixTimestamp == y.ReplayFile.Header.UnixTimestamp) {
+                    return 0;
+                }
                 return x.ReplayFile.Header.UnixTimestamp < y.ReplayFile.Header.UnixTimestamp ? 1 : -1;
             }
         }

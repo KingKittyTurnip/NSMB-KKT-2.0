@@ -49,6 +49,7 @@ namespace NSMB.UI.Game {
         private PowerupAsset previousPowerup;
         private EntityRef previousTarget;
         private bool previousMarioExists;
+        private bool justResynced;
 
         private Coroutine endGameSequenceCoroutine, reserveSummonCoroutine;
 
@@ -141,12 +142,13 @@ namespace NSMB.UI.Game {
                 UpdateElementVisibility(f, marioExists);
             }
 
-            UpdateStoredItemUI(mario, previousTarget == Target);
+            UpdateStoredItemUI(mario, previousTarget == Target && !justResynced);
             UpdateTextUI(f, mario);
             ApplyUIColor(f, mario);
 
             previousTarget = Target;
             previousMarioExists = marioExists;
+            justResynced = false;
         }
 
         private void OnMarioInitialized(QuantumGame game, Frame f, MarioPlayerAnimator mario) {
@@ -286,18 +288,21 @@ namespace NSMB.UI.Game {
             // TEAMS
             if (teamsEnabled) {
                 if (mario->GetTeam(f) is byte teamIndex) {
-                    int teamObjective = gamemode.GetTeamObjectiveCount(f, teamIndex);
+                    int teamObjective = Mathf.Max(0, gamemode.GetTeamObjectiveCount(f, teamIndex));
                     if (cachedTeamObjective != teamObjective) {
                         cachedTeamObjective = teamObjective;
                         TeamAsset team = f.FindAsset(f.SimulationConfig.Teams[teamIndex]);
-                        // TODO: fix teams for coin runners.
-                        uiTeamObjective.text = (Settings.Instance.GraphicsColorblind ? team.textSpriteColorblind : team.textSpriteNormal) + Utils.GetSymbolString("x" + cachedTeamObjective + "/" + rules.StarsToWin);
+                        string objectiveString = "x" + cachedTeamObjective;
+                        if (gamemode is StarChasersGamemode) {
+                            objectiveString += "/" + rules.StarsToWin;
+                        }
+                        uiTeamObjective.text = (Settings.Instance.GraphicsColorblind ? team.textSpriteColorblind : team.textSpriteNormal) + Utils.GetSymbolString(objectiveString);
                     }
                 }
             }
 
             // STARS
-            int objective = gamemode.GetObjectiveCount(f, mario);
+            int objective = Mathf.Max(0, gamemode.GetObjectiveCount(f, mario));
             if (objective != cachedObjective) {
                 cachedObjective = objective;
                 string objectiveString = gamemode.ObjectiveSymbolPrefix + "x" + cachedObjective;
@@ -421,6 +426,8 @@ namespace NSMB.UI.Game {
                 timerColor = Color.red;
             }
             timerMaterial.SetColor("_Color", timerColor);
+
+            justResynced = true;
         }
 
         private void OnGameStateChanged(EventGameStateChanged e) {
@@ -458,7 +465,7 @@ namespace NSMB.UI.Game {
                     while (allPlayers.NextUnsafe(out _, out PlayerData* data)) {
                         if (data->RealTeam == e.WinningTeam) {
                             RuntimePlayer runtimePlayer = f.GetPlayerData(data->PlayerRef);
-                            winner = runtimePlayer?.PlayerNickname.ToValidUsername(f, data->PlayerRef);
+                            winner = runtimePlayer?.PlayerNickname.ToValidNickname(f, data->PlayerRef);
                         }
                     }
                     resultText = tm.GetTranslationWithReplacements("ui.result.playerwin", "playername", winner);

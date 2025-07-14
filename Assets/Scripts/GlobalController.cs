@@ -1,7 +1,9 @@
 ﻿using NSMB.Networking;
-using NSMB.UI.Translation;
+using NSMB.Quantum;
 using NSMB.UI.Loading;
+using NSMB.UI.MainMenu.Submenus.Replays;
 using NSMB.UI.Options;
+using NSMB.UI.Translation;
 using NSMB.Utilities.Extensions;
 using Quantum;
 using System;
@@ -38,12 +40,14 @@ namespace NSMB {
         [NonSerialized] public bool checkedForVersion = false, firstConnection = true;
         [NonSerialized] public int windowWidth = 1280, windowHeight = 720;
 
-
         //---Serialized Variables
         [SerializeField] private AudioMixer mixer;
 
         //---Private Variables
         private Coroutine fadeMusicRoutine, fadeSfxRoutine, totalFadeRoutine;
+#if IDLE_LOCK_30FPS
+        private int previousVsyncCount, previousFrameRate;
+#endif
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void CreateInstance() {
@@ -77,6 +81,7 @@ namespace NSMB {
             Settings.Controls.Debug.FPSMonitor.performed += ToggleFpsMonitor;
             QuantumEvent.Subscribe<EventStartGameEndFade>(this, OnStartGameEndFade);
             QuantumCallback.Subscribe<CallbackUnitySceneLoadDone>(this, OnUnitySceneLoadDone);
+            loadingCanvas.Startup();
         }
 
         public void OnDestroy() {
@@ -95,23 +100,27 @@ namespace NSMB {
                 Screen.SetResolution(newWindowWidth, newWindowHeight, FullScreenMode.Windowed);
             }
 
-            //if (Debug.isDebugBuild) {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F9)) {
-                if (Profiler.enabled) {
-                    Profiler.enabled = false;
-                    PlaySound(SoundEffect.Player_Sound_Powerdown);
-                } else {
-                    Profiler.maxUsedMemory = 256 * 1024 * 1024;
-                    Profiler.logFile = "profile-" + DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                    Profiler.enableBinaryLog = true;
-                    Profiler.enabled = true;
-                    PlaySound(SoundEffect.Player_Sound_PowerupCollect);
+            if (Debug.isDebugBuild) {
+                if (UnityEngine.Input.GetKeyDown(KeyCode.F9)) {
+                    if (Profiler.enabled) {
+                        Profiler.enabled = false;
+                        PlaySound(SoundEffect.Player_Sound_Powerdown);
+                    } else {
+                        Profiler.maxUsedMemory = 256 * 1024 * 1024;
+                        Profiler.logFile = "profile-" + DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                        Profiler.enableBinaryLog = true;
+                        Profiler.enabled = true;
+                        PlaySound(SoundEffect.Player_Sound_PowerupCollect);
+                    }
                 }
             }
-            //}
 
             if (UnityEngine.Input.GetKeyDown(KeyCode.F6)) {
                 System.Diagnostics.Process.Start(Application.consoleLogPath);
+            }
+
+            if (UnityEngine.Input.GetKeyDown(KeyCode.F7)) {
+                System.Diagnostics.Process.Start(ReplayListManager.ReplayDirectory);
             }
 #endif
 
@@ -127,26 +136,16 @@ namespace NSMB {
             }
         }
 
-#if UNITY_WEBGL
-    int previousVsyncCount;
-    int previousFrameRate;
-#endif
-
         public void OnApplicationFocus(bool focus) {
             if (focus) {
                 Settings.Instance.ApplyVolumeSettings();
                 this.StopCoroutineNullable(ref fadeMusicRoutine);
                 this.StopCoroutineNullable(ref fadeSfxRoutine);
 
-#if UNITY_WEBGL
-            // Lock framerate when losing focus to (hopefully) disable browsers slowing the game
-            previousVsyncCount = QualitySettings.vSyncCount;
-            previousFrameRate = Application.targetFrameRate;
-
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = 30;
+#if IDLE_LOCK_30FPS
+                QualitySettings.vSyncCount = previousVsyncCount;
+                Application.targetFrameRate = previousFrameRate;
 #endif
-
             } else {
                 if (Settings.Instance.audioMuteMusicOnUnfocus) {
                     fadeMusicRoutine ??= StartCoroutine(FadeVolume("MusicVolume"));
@@ -156,9 +155,13 @@ namespace NSMB {
                     fadeSfxRoutine ??= StartCoroutine(FadeVolume("SoundVolume"));
                 }
 
-#if UNITY_WEBGL
-            QualitySettings.vSyncCount = previousVsyncCount;
-            Application.targetFrameRate = previousFrameRate;
+#if IDLE_LOCK_30FPS
+                // Lock framerate when losing focus to (hopefully) disable browsers slowing the game
+                previousVsyncCount = QualitySettings.vSyncCount;
+                previousFrameRate = Application.targetFrameRate;
+
+                QualitySettings.vSyncCount = 0;
+                Application.targetFrameRate = 30;
 #endif
             }
         }
