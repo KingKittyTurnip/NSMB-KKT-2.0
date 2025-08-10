@@ -1,13 +1,16 @@
-<a href="https://ipodtouch0218.itch.io/nsmb-mariovsluigi">
-  <p align="center">
-    <img src="https://raw.githubusercontent.com/ipodtouch0218/NSMB-MarioVsLuigi/master/Assets/Sprites/UI/Menu/Title.png?raw=true" alt="NSMB-MarioVsLuigi Logo" width="350px">
-  </p>
-</a>
+<p align="center">
+  <a href="https://ipodtouch0218.itch.io/nsmb-mariovsluigi">
+    <img src="https://raw.githubusercontent.com/ipodtouch0218/NSMB-MarioVsLuigi/refs/heads/nightly/Assets/Sprites/UI/Menu/title-vector.svg?raw=true" alt="Mario vs Luigi Online Logo" width="650px">
+  </a>
+</p>
+<p align="center"><sub><sup><i>Mario vs Luigi Online Logo by zomblebobble, BluCorDev. INFENEK GAMES Logo by TheBluePixeling</i></sup></sub></p>
 
-A unity-standalone 2-10 player remake of the Mario vs. Luigi gamemode from the New Super Mario Bros DS download game. 
+---
+
+A Unity-standalone 2-10 player remake of the Mario vs. Luigi gamemode from the New Super Mario Bros DS download game. 
 
 Includes the 5 default levels (Grassland, Bricks, Castle, Pipes, and Ice), along with a handful of custom levels to battle on! 
-All power-ups are included and remain faithful to their original counterparts, along with the new addition of the Propeller Suit & Ice Flower!
+All power-ups are included and remain faithful to their original counterparts, along with the new addition of the Propeller Suit, Ice Flower, and Hammer Suit!
 
 ## Discord
 [**Join the discord**](https://discord.gg/dgKVaUKpj5) to keep up to date with the development of the game, make feature suggestions, report bugs (if you're too lazy to use issues...), get technical support, look for people to play with, and just talk about the game!
@@ -46,28 +49,25 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 </details>
 <details>
   <summary><h2>Credits</h2></summary>
-
-### Original Content:
-* New Super Mario Bros.
-* New Super Mario Bros. Wii
-* Super Mario Maker 2
-
+  
 ### Contributors:
+* [amykaname](https://github.com/amykaname)
 * [Amy54Desu](https://github.com/Amy54Desu)
 * [AprilShade](https://github.com/AprilShade)
 * [ArianLust](https://github.com/ArianLust)
-* [AtwerJ](https://github.com/AtwerJ)
-* [Ave](https://github.com/AutumnLeafy)
+* [Atwer](https://github.com/AtwerJ)
+* [Ave](https://github.com/AutumnLeafDev)
 * [BluCorDev](https://github.com/BluCorDev)
 * [Cubby Crazes](https://github.com/CubbyCrazes)
 * [davart154](https://github.com/davart154)
 * [DonKaiStorm](https://github.com/DonKaiStorm)
 * [GithubSPerez](https://github.com/GithubSPerez)
 * GradedWarrior
+* [HyperC@T](https://github.com/SuperSonic392)
 * [Jeffjewett27](https://github.com/Jeffjewett27)
 * [KingKittyTurnip](https://github.com/KingKittyTurnip)
 * [kittenchilly](https://github.com/kittenchilly)
-* [Kraken](https://github.com/KrakHub)
+* [Kraken](https://github.com/McKrak)
 * [MiiBumm](https://github.com/MiiBumm)
 * [mindnomad](https://github.com/mindnomad)
 * [Pordrack](https://github.com/Pordrack)
@@ -109,8 +109,10 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * Iketarou *(ja-jp)*
 * IvythePoS *(es-la)*
 * Kate Karui *(sv-sv)*
-* Lyroy The Toad *(it-it)*
+* Laxan3000 *(it-it)*
+* LyroyTheToad *(it-it)*
 * Maestrike *(it-it)*
+* Maksymilian Król *(pl-pl)*
 * marbo *(pt-br)*
 * Mark19 *(es-es)*
 * MasterMindo *(it-it)*
@@ -122,8 +124,10 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * MUI_Noam *(he-il)*
 * notossdekasaihassei *(ja-jp)*
 * ossdekasaihassei *(ja-jp)*
+* Pedro Lunar *(es-la)*
 * pixelated *(he-il)*
-* SadenceZinzap *(tr-tr)*
+* SadeceZinzap *(tr-tr)*
+* SlavaWOW *(ru-ru)*
 * SLG64 *(es-la)*
 * Snayp *(fr-fr)*
 * Thebababois369 *(id-id)*
@@ -133,6 +137,7 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 
 ### QA Testing:
 * AprilShade
+* ArianLust
 * Ave
 * CreativeGhost
 * Cubby Crazes
@@ -144,15 +149,22 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * Vinnnnnnny
 
 ### Level Design:
-* AtwerJ
+* Atwer
 * Ave
 * mindnomad
 * Skarph
 * TheCyVap
 * VentureSonic
  
+### Original Content:
+* New Super Mario Bros.
+* New Super Mario Bros. Wii
+* New Super Mario Bros. 2
+* Super Mario Maker 2
+
 ### Asset Rips:
 * A Refracted Swindler (UI)
+* ArianLust (Sound)
 * Clougo (Tiles)
 * Cubby Crazes (Sound)
 * Demon2Warrior (Background)
@@ -164,6 +176,7 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * Keira (Background)
 * Luke Hackett (Sound)
 * LukeWarnut (Sound)
+* MiiBumm (Models/Sound)
 * mindnomad (Tiles/Sound)
 * Mr. C (Enemies)
 * Mr-SUGOI (Tiles)
@@ -177,6 +190,14 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * TeridaxXD001 (Models)
 * Treeki (UI)
 * VentureSonic (Background)
+* vlco_o (Sound)
 * xFrostyCake123 (Sound)
 
 </details>
+
+---
+<p align="center">
+  <a href="https://twitter.com/ipodtouch0218">
+    <img src="https://raw.githubusercontent.com/ipodtouch0218/NSMB-MarioVsLuigi/refs/heads/nightly/Assets/Sprites/UI/Menu/logo.png" alt="INFENEK GAMES Logo" width="240px">
+  </a>
+</p>

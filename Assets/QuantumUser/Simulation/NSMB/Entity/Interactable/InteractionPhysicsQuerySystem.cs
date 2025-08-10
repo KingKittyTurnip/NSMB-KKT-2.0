@@ -2,6 +2,7 @@ using Photon.Deterministic;
 
 namespace Quantum {
 #if OLD
+    [UnityEngine.Scripting.Preserve]
     public unsafe class InteractionPhysicsQuerySystem : SystemMainThreadFilterStage<InteractionSystem.Filter> {
         public override void Update(Frame f, ref InteractionSystem.Filter filter, VersusStageData stage) {
             var interactable = filter.Interactable;
@@ -31,6 +32,7 @@ namespace Quantum {
         }
     }
 #else
+    [UnityEngine.Scripting.Preserve]
     public unsafe class InteractionPhysicsQuerySystem : SystemMainThread {
 
         public struct Filter {
@@ -53,6 +55,9 @@ namespace Quantum {
                 var shape = filter.Collider->Shape;
 
                 Transform2D transformCopy = *filter.Transform;
+                if (f.Unsafe.TryGetPointer(filter.Entity, out PhysicsObject* physicsObject)) {
+                    transformCopy.Position += physicsObject->Velocity * f.DeltaTime;
+                }
                 interactable->OverlapQueryRef = f.Physics2D.AddOverlapShapeQuery(transformCopy, shape);
 
                 if (stage.IsWrappingLevel) {
@@ -61,7 +66,6 @@ namespace Quantum {
                         // Left edge
                         transformCopy.Position.X += offset;
                         interactable->OverlapLevelSeamQueryRef = f.Physics2D.AddOverlapShapeQuery(transformCopy, shape);
-
                     } else if (center + shape.Box.Extents.X >= max) {
                         // Right edge
                         transformCopy.Position.X -= offset;

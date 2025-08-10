@@ -2,6 +2,7 @@ using Photon.Deterministic;
 using Quantum.Collections;
 
 namespace Quantum {
+    [UnityEngine.Scripting.Preserve]
     public unsafe class SpinnerSystem : SystemMainThreadEntityFilter<Spinner, SpinnerSystem.Filter> {
 
         public struct Filter {
@@ -71,15 +72,16 @@ namespace Quantum {
             marios.Clear();
         }
 
-        public static void OnSpinnerMarioPlayerInteraction(Frame f, EntityRef marioEntity, EntityRef spinnerEntity, PhysicsContact contact) {
-            if (FPVector2.Dot(contact.Normal, FPVector2.Up) < PhysicsObjectSystem.GroundMaxAngle) {
-                return;
+        public static bool OnSpinnerMarioPlayerInteraction(Frame f, EntityRef marioEntity, EntityRef spinnerEntity, PhysicsContact contact) {
+            if (FPVector2.Dot(contact.Normal, FPVector2.Up) < Constants.PhysicsGroundMaxAngleCos) {
+                return false;
             }
 
             var spinner = f.Unsafe.GetPointer<Spinner>(spinnerEntity);
             QHashSet<EntityRef> mariosSet = f.ResolveHashSet(spinner->MariosOnPlatform);
 
             mariosSet.Add(marioEntity);
+            return false;
         }
     }
 }

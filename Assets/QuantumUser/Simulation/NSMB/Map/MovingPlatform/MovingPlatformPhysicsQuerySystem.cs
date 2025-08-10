@@ -2,7 +2,8 @@ using Photon.Deterministic;
 using Quantum.Collections;
 
 namespace Quantum {
-    public unsafe class MovingPlatformPhysicsQuerySystem : SystemMainThreadFilterStage<MovingPlatformSystem.Filter> {
+    [UnityEngine.Scripting.Preserve]
+    public unsafe class MovingPlatformPhysicsQuerySystem : SystemMainThreadEntityFilter<MovingPlatform, MovingPlatformSystem.Filter> {
         public override void Update(Frame f, ref MovingPlatformSystem.Filter filter, VersusStageData stage) {
             var platform = filter.Platform;
             if (f.Unsafe.TryGetPointer(filter.Entity, out PhysicsObject* physicsObject)) {
@@ -29,9 +30,9 @@ namespace Quantum {
                 return;
             }
             
-            queryList.Add(f.Physics2D.AddOverlapShapeQuery(transform, shape, ~f.Context.ExcludeEntityAndPlayerMask, QueryOptions.HitKinematics | QueryOptions.ComputeDetailedInfo));
+            queryList.Add(f.Physics2D.AddOverlapShapeQuery(transform, shape, options: QueryOptions.HitKinematics | QueryOptions.ComputeDetailedInfo));
             transform.Position.X += stage.TileDimensions.X * FP._0_50 * (transform.Position.X < stage.StageWorldMidpoint.X ? 1 : -1);
-            queryList.Add(f.Physics2D.AddOverlapShapeQuery(transform, shape, ~f.Context.ExcludeEntityAndPlayerMask, QueryOptions.HitKinematics | QueryOptions.ComputeDetailedInfo));
+            queryList.Add(f.Physics2D.AddOverlapShapeQuery(transform, shape, options: QueryOptions.HitKinematics | QueryOptions.ComputeDetailedInfo));
         }
     }
 }

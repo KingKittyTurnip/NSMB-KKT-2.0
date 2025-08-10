@@ -1,9 +1,9 @@
 using Photon.Deterministic;
 using Quantum.Collections;
 using Quantum.Physics2D;
-using UnityEngine;
 
 namespace Quantum {
+    [UnityEngine.Scripting.Preserve]
     public unsafe class MovingPlatformSystem : SystemMainThreadEntityFilter<MovingPlatform, MovingPlatformSystem.Filter> {
 
         public struct Filter {
@@ -12,6 +12,7 @@ namespace Quantum {
             public MovingPlatform* Platform;
             public PhysicsCollider2D* Collider;
         }
+
         private ComponentGetter<PhysicsObjectSystem.Filter> PhysicsObjectSystemFilterGetter;
 
         public override void OnInit(Frame f) {
@@ -48,6 +49,11 @@ namespace Quantum {
                 ProcessHit(f, ref filter, shape, hits[i], stage);
             }
 
+            if (!f.DestroyPending(filter.Entity) || !f.Exists(filter.Entity)) {
+                // Destroyed in movement callback
+                return;
+            }
+
             // level wrap seam
             var hits2 = f.Physics2D.GetQueryHits(queries[index + 1]);
             for (int i = 0; i < hits2.Count; i++) {
@@ -74,7 +80,8 @@ namespace Quantum {
             bool movingAway = FPVector2.Dot(physicsObject->Velocity.Normalized, velocity.Normalized) >= 0;
             if (shape->Type == Shape2DType.Edge) {
                 // Semisolid logic
-                bool below = physicsSystemFilter.Transform->Position.Y < (hit.Point.Y - (platform->Velocity.Y * 2 * f.DeltaTime));
+                FP lowerEdge = physicsSystemFilter.Transform->Position.Y + physicsSystemFilter.Collider->Shape.Centroid.Y - physicsSystemFilter.Collider->Shape.Box.Extents.Y;
+                bool below = lowerEdge < (hit.Point.Y - (platform->Velocity.Y * 2 * f.DeltaTime));
                 if (movingAway || below) {
                     return;
                 } else {
@@ -90,6 +97,7 @@ namespace Quantum {
                 Frame = f.Number,
                 Tile = new(-1, -1)
             };
+
             bool keepContact = true;
             foreach (var callback in f.Context.PreContactCallbacks) {
                 callback?.Invoke(f, stage, hit.Entity, newContact, ref keepContact);
@@ -103,8 +111,8 @@ namespace Quantum {
             FPVector2 moveVector = -hit.Normal * (moveDistance * f.UpdateRate);
 
             var contacts = f.ResolveList(physicsObject->Contacts);
-            PhysicsObjectSystem.MoveVertically((FrameThreadSafe) f, moveVector, ref physicsSystemFilter, stage, contacts, out bool tempHit1);
-            PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, moveVector, ref physicsSystemFilter, stage, contacts, out bool tempHit2);
+            PhysicsObjectSystem.MoveVertically(f, moveVector, ref physicsSystemFilter, stage, contacts, out bool tempHit1);
+            PhysicsObjectSystem.MoveHorizontally(f, moveVector, ref physicsSystemFilter, stage, contacts, out bool tempHit2);
 
             bool addContact = !movingAway || FPVector3.Project(physicsObject->Velocity.XYO, platform->Velocity.Normalized.XYO).Magnitude < platform->Velocity.Magnitude;
             if (addContact) {

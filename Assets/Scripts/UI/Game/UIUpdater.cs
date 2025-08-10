@@ -288,18 +288,21 @@ namespace NSMB.UI.Game {
             // TEAMS
             if (teamsEnabled) {
                 if (mario->GetTeam(f) is byte teamIndex) {
-                    int teamObjective = gamemode.GetTeamObjectiveCount(f, teamIndex);
+                    int teamObjective = Mathf.Max(0, gamemode.GetTeamObjectiveCount(f, teamIndex));
                     if (cachedTeamObjective != teamObjective) {
                         cachedTeamObjective = teamObjective;
                         TeamAsset team = f.FindAsset(f.SimulationConfig.Teams[teamIndex]);
-                        // TODO: fix teams for coin runners.
-                        uiTeamObjective.text = (Settings.Instance.GraphicsColorblind ? team.textSpriteColorblind : team.textSpriteNormal) + Utils.GetSymbolString("x" + cachedTeamObjective + "/" + rules.StarsToWin);
+                        string objectiveString = "x" + cachedTeamObjective;
+                        if (gamemode is StarChasersGamemode) {
+                            objectiveString += "/" + rules.StarsToWin;
+                        }
+                        uiTeamObjective.text = (Settings.Instance.GraphicsColorblind ? team.textSpriteColorblind : team.textSpriteNormal) + Utils.GetSymbolString(objectiveString);
                     }
                 }
             }
 
             // STARS
-            int objective = gamemode.GetObjectiveCount(f, mario);
+            int objective = Mathf.Max(0, gamemode.GetObjectiveCount(f, mario));
             if (objective != cachedObjective) {
                 cachedObjective = objective;
                 string objectiveString = gamemode.ObjectiveSymbolPrefix + "x" + cachedObjective;

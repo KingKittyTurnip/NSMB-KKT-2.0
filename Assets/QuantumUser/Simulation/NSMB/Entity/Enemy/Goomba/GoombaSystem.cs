@@ -1,6 +1,7 @@
 using Photon.Deterministic;
 
 namespace Quantum {
+    [UnityEngine.Scripting.Preserve]
     public unsafe class GoombaSystem : SystemMainThreadEntityFilter<Goomba, GoombaSystem.Filter>, ISignalOnEntityBumped, ISignalOnBobombExplodeEntity,
         ISignalOnIceBlockBroken, ISignalOnEnemyKilledByStageReset, ISignalOnEntityCrushed, ISignalOnEnemyRespawned {
 
@@ -101,16 +102,17 @@ namespace Quantum {
             }
         }
 
-        public static void OnGoombaIceBlockInteraction(Frame f, EntityRef goombaEntity, EntityRef iceBlockEntity, PhysicsContact contact) {
+        public static bool OnGoombaIceBlockInteraction(Frame f, EntityRef goombaEntity, EntityRef iceBlockEntity, PhysicsContact contact) {
             var goomba = f.Unsafe.GetPointer<Goomba>(goombaEntity);
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(iceBlockEntity);
 
             FP upDot = FPVector2.Dot(contact.Normal, FPVector2.Up);
             if (iceBlock->IsSliding
-                && upDot < PhysicsObjectSystem.GroundMaxAngle) {
+                && upDot < Constants.PhysicsGroundMaxAngleCos) {
 
                 goomba->Kill(f, goombaEntity, iceBlockEntity, KillReason.Special);
             }
+            return false;
         }
 
         public static void OnGoombaProjectileInteraction(Frame f, EntityRef goombaEntity, EntityRef projectileEntity) {

@@ -8,9 +8,11 @@ using System.Collections.Generic;
 namespace Quantum {
 
 #if MULTITHREADED
+    [UnityEngine.Scripting.Preserve]
     public unsafe class InteractionSystem : SystemArrayFilter<InteractionSystem.Filter> {
 #else
-    public unsafe class InteractionSystem : SystemMainThread {
+    [UnityEngine.Scripting.Preserve]
+    public unsafe class InteractionSystem : SystemMainThread, ISignalOnMarioPlayerGroundpoundedSolid {
 #endif
         private List<PendingInteraction> pendingInteractions = new(16);
         private HashSet<EntityRefPair> alreadyInteracted = new(16);
@@ -45,22 +47,21 @@ namespace Quantum {
                 EntityRef entityA = interaction.EntityA;
                 EntityRef entityB = interaction.EntityB;
 
-                {
-                    using var profilerScope2 = HostProfiler.Start("InteractionSystem.Contains");
-
-                    EntityRefPair pair = new EntityRefPair { 
+                using (var profilerScope2 = HostProfiler.Start("InteractionSystem.Contains")) {
+                    EntityRefPair pair = new EntityRefPair {
                         EntityA = entityA,
                         EntityB = entityB,
                     };
-                    
-                    if (alreadyInteracted.Contains(pair)) {
+
+                    if (!f.Exists(entityA)
+                        || !f.Exists(entityB)
+                        || alreadyInteracted.Contains(pair)) {
                         continue;
                     }
                     alreadyInteracted.Add(pair);
                 }
 
-                {
-                    using var profilerScope5 = HostProfiler.Start("InteractionSystem.BeforeInteractionSignals");
+                using (var profilerScope5 = HostProfiler.Start("InteractionSystem.BeforeInteractionSignals")) {
 
                     bool continueInteraction = true;
                     f.Signals.OnBeforeInteraction(entityA, &continueInteraction);
@@ -71,8 +72,7 @@ namespace Quantum {
                     }
                 }
 
-                {
-                    using var profilerScope3 = HostProfiler.Start("InteractionSystem.ExecuteInteractors");
+                using (var profilerScope3 = HostProfiler.Start("InteractionSystem.ExecuteInteractors")) {
                     if (interaction.IsPlatformInteraction) {
                         f.Context.Interactions.platformInteractors[interaction.InteractorIndex].Invoke(f, entityA, entityB, interaction.Contact);
                     } else {
@@ -81,9 +81,10 @@ namespace Quantum {
                 }
             }
 
-            using var profilerScope4 = HostProfiler.Start("InteractionSystem.Clear");
-            pendingInteractions.Clear();
-            alreadyInteracted.Clear();
+            using (var profilerScope4 = HostProfiler.Start("InteractionSystem.Clear")) {
+                pendingInteractions.Clear();
+                alreadyInteracted.Clear();
+            }
         }
 
 #if MULTITHREADED
@@ -214,6 +215,24 @@ namespace Quantum {
             }
         }
 
+        public void OnMarioPlayerGroundpoundedSolid(Frame f, EntityRef entityA, PhysicsContact contact, ref QBoolean continueGroundpound) {
+            EntityRef entityB = contact.Entity;
+            PendingInteraction interaction = f.Context.Interactions.FindPlatformInteractor(entityA, f.GetComponentSet(entityA), entityB, f.GetComponentSet(entityB), contact);
+            if (interaction.InteractorIndex != -1) {
+                bool continueInteraction = true;
+                f.Signals.OnBeforeInteraction(entityA, &continueInteraction);
+                f.Signals.OnBeforeInteraction(entityB, &continueInteraction);
+
+                if (!continueInteraction) {
+                    continueGroundpound = false;
+                    return;
+                }
+
+                continueGroundpound = f.Context.Interactions.platformInteractors[interaction.InteractorIndex].Invoke(f, entityA, entityB, interaction.Contact);
+            } else {
+                continueGroundpound = false;
+            }
+        }
 
         public struct PendingInteraction {
             public EntityRef EntityA, EntityB;
@@ -238,15 +257,15 @@ namespace Quantum {
             public EntityRef EntityA, EntityB;
 
 
-            public bool Equals(EntityRefPair other) {
+            public readonly bool Equals(EntityRefPair other) {
                 return (EntityA == other.EntityA && EntityB == other.EntityB) || (EntityA == other.EntityB && EntityB == other.EntityA);
             }
 
-            public bool Equals(EntityRefPair x, EntityRefPair y) {
+            public readonly bool Equals(EntityRefPair x, EntityRefPair y) {
                 return x.Equals(y);
             }
 
-            public int GetHashCode(EntityRefPair obj) {
+            public readonly int GetHashCode(EntityRefPair obj) {
                 return (obj.EntityA.GetHashCode() * 37) + (obj.EntityB.GetHashCode() * 37);
             }
 

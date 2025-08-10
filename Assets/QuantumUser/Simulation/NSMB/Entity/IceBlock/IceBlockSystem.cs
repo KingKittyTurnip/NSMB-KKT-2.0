@@ -1,7 +1,7 @@
 using Photon.Deterministic;
 
 namespace Quantum {
-
+    [UnityEngine.Scripting.Preserve]
     public unsafe class IceBlockSystem : SystemMainThreadEntityFilter<IceBlock, IceBlockSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEntityBumped,
         ISignalOnBeforeInteraction, ISignalOnBobombExplodeEntity, ISignalOnTryLiquidSplash, ISignalOnEntityChangeUnderwaterState {
 
@@ -31,7 +31,7 @@ namespace Quantum {
             var childFreezable = f.Unsafe.GetPointer<Freezable>(iceBlock->Entity);
             var physicsObject = filter.PhysicsObject;
 
-            if ((f.Number + entity.Index) % 2 == 0 && PhysicsObjectSystem.BoxInGround((FrameThreadSafe) f, transform->Position, filter.PhysicsCollider->Shape, true, stage, entity)) {
+            if ((f.Number + entity.Index) % 2 == 0 && PhysicsObjectSystem.BoxInGround(f, transform->Position, filter.PhysicsCollider->Shape, true, stage, entity)) {
                 Destroy(f, entity, IceBlockBreakReason.HitWall);
                 return;
             }
@@ -108,26 +108,26 @@ namespace Quantum {
         }
 
         #region Interactions
-        public static void OnIceBlockMarioInteraction(Frame f, EntityRef marioEntity, EntityRef iceBlockEntity, PhysicsContact contact) {
+        public static bool OnIceBlockMarioInteraction(Frame f, EntityRef marioEntity, EntityRef iceBlockEntity, PhysicsContact contact) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(iceBlockEntity);
 
             if (mario->IsStarmanInvincible || mario->CurrentPowerupState == PowerupState.MegaMushroom) {
                 Destroy(f, iceBlockEntity, IceBlockBreakReason.Other);
-                return;
+                return true;
             }
 
             FP upDot = FPVector2.Dot(contact.Normal, FPVector2.Up);
-            if (upDot >= PhysicsObjectSystem.GroundMaxAngle) {
+            if (upDot >= Constants.PhysicsGroundMaxAngleCos) {
                 // Top
                 if (mario->IsGroundpoundActive) {
                     Destroy(f, iceBlockEntity, IceBlockBreakReason.Groundpounded);
-                    return;
+                    return true;
                 }
-            } else if (upDot <= -PhysicsObjectSystem.GroundMaxAngle) {
+            } else if (upDot <= -Constants.PhysicsGroundMaxAngleCos) {
                 // Bottom
                 Destroy(f, iceBlockEntity, IceBlockBreakReason.BlockBump);
-                return;
+                return false;
             } else {
                 // Side
                 bool rightContact = contact.Normal.X > 0;
@@ -141,7 +141,7 @@ namespace Quantum {
                     }
 
                     Destroy(f, iceBlockEntity, IceBlockBreakReason.HitWall);
-                    return;
+                    return false;
                 }
             }
 
@@ -161,6 +161,7 @@ namespace Quantum {
                     iceBlock->AutoBreakFrames = (byte) FPMath.Clamp(iceBlock->AutoBreakFrames + child->AutoBreakGrabAdditionalFrames, 0, byte.MaxValue);
                 }
             }
+            return false;
         }
 
         public static void OnIceBlockCoinInteraction(Frame f, EntityRef coinEntity, EntityRef iceBlockEntity) {
@@ -175,7 +176,7 @@ namespace Quantum {
             CoinSystem.TryCollectCoin(f, coinEntity, holdable->PreviousHolder);
         }
 
-        public static void OnIceBlockProjectileInteraction(Frame f, EntityRef projectileEntity, EntityRef iceBlockEntity, PhysicsContact contact) {
+        public static bool OnIceBlockProjectileInteraction(Frame f, EntityRef projectileEntity, EntityRef iceBlockEntity, PhysicsContact contact) {
             var projectileAsset = f.FindAsset(f.Unsafe.GetPointer<Projectile>(projectileEntity)->Asset);
 
             if (projectileAsset.Effect == ProjectileEffectType.Fire) {
@@ -186,6 +187,7 @@ namespace Quantum {
             if (projectileAsset.DestroyOnHit) {
                 ProjectileSystem.Destroy(f, projectileEntity, projectileAsset.DestroyParticleEffect);
             }
+            return false;
         }
         #endregion
 
