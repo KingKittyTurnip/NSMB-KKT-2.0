@@ -1,11 +1,20 @@
 using Photon.Deterministic;
 using System;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 namespace Quantum {
     public unsafe class MarioBotSystem : SystemMainThreadEntityFilter<MarioBot, MarioPlayerSystem.Filter> {
 
         //public List<(FP, FP, EntityType)> Targets => ;
+        FPVector2 MainGoal;
+
+        //The Bot Has 4 Steps:
+
+        //Locate Objects                                      - (This Is Where we locate stars, and powerups)
+        //Figure Out What Matters The Most At The Moment      - (Multiple Stars And Powerups? Determine Which one Is More Worth Going After)
+        //Create A Ray Traced Path                            - (Look For A Path To our Target, This is Where We Check For Terrain, Enemies, Players(?), Projectiles, And coins and figure the optimal path)
+        //Set inputs                                          - (Follow The Points Of Our Path Using Inputs)
 
         public void MannualSetup(MarioBot* Bot) {
             Bot->Lv = 5;
@@ -39,7 +48,7 @@ namespace Quantum {
 
         private void UpdateAi(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
             GetTargets(f, ref filter, stage); //Find The Entities, Then Asign A Priority Value (Priority Changes Based on State And Reserve)
-            GetTerrain(f, ref filter, stage); //Find The Solid Terrain
+            GetPriorities(f, ref filter, stage); //Find What To Focus On
             DecidePath(f, ref filter, stage); //Choose Where To Go (Shell & Propeller Code Here)
             SetInput(f, ref filter, stage); //Set Our Inputs (Fire & Ice Code Here)
 
@@ -53,13 +62,14 @@ namespace Quantum {
             f.SimulationConfig.BotTargets.Clear();
             f.SimulationConfig.BotTargets.TrimExcess();
 
-            FPVector2 Spot = new FPVector2(mario->FacingRight ? 999999 : -999999, 999999), posA = Spot, posB = Spot, avoA = Spot, avoB = Spot;
+            FPVector2 Spot = new FPVector2(mario->FacingRight ? 999999 : -999999, 999999), posA = Spot;
             int Count = 0;
 
             //Check For Players, Items, Coins, Objectivecoins, And Individual Enemies
             //Stars & Starcoins Ignore SightDistance, Can be Seen From Anywhere Via Minimap
             var stars = f.Filter<BigStar>();
             while (stars.NextUnsafe(out EntityRef entity, out BigStar* bigStar)) {
+                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out Spot);
                 f.SimulationConfig.BotTargets.Add((Spot.X, Spot.Y, EntityType.Star));
                 Count++;
             }
@@ -74,16 +84,16 @@ namespace Quantum {
             while (foes.NextUnsafe(out EntityRef entity, out MarioPlayer* player)) {
                 if (player == mario) //Skip ourself
                     continue;
-                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out posB);
-                FP Distance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out Spot);
+                FP Distance = FPMath.Sqrt(((posA.X - Spot.X) * (posA.X - Spot.X)) + ((posA.Y - Spot.Y) * (posA.Y - Spot.Y)));
                 f.SimulationConfig.BotTargets.Add((Spot.X, Distance < Bot->SightDistance ? Spot.Y : 9999, EntityType.Player));
                 Count++;
             }
 
             var coins = f.Filter<Coin>();
             while (coins.NextUnsafe(out EntityRef entity, out Coin* coin)) {
-                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out posB);
-                FP Distance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out Spot);
+                FP Distance = FPMath.Sqrt(((posA.X - Spot.X) * (posA.X - Spot.X)) + ((posA.Y - Spot.Y) * (posA.Y - Spot.Y)));
                 if (Distance < Bot->SightDistance) {
                     f.SimulationConfig.BotTargets.Add((Spot.X, Spot.Y, EntityType.Coin));
                     Count++;
@@ -93,15 +103,16 @@ namespace Quantum {
             //Make Specific Enemies Change The EntityType.
             var enemies = f.Filter<Enemy>();
             while (enemies.NextUnsafe(out EntityRef entity, out Enemy* enemy)) {
-                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out posB);
-                FP Distance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out Spot);
+                FP Distance = FPMath.Sqrt(((posA.X - Spot.X) * (posA.X - Spot.X)) + ((posA.Y - Spot.Y) * (posA.Y - Spot.Y)));
                 if (Distance < Bot->SightDistance) {
                     f.SimulationConfig.BotTargets.Add((Spot.X, Spot.Y, EntityType.EnemyStompable));
                     Count++;
                 }
             }
         }
-        private void GetTerrain(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
+        private void GetPriorities(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
+
         }
         private void DecidePath(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
             FPVector2 marioPos = filter.Transform->Position;
@@ -116,7 +127,7 @@ namespace Quantum {
 
                     Bot->inputs.Right = damageDirection.X > 0;
                     Bot->inputs.Left = damageDirection.X < 0;
-                    UnityEngine.Debug.Log(damageDirection.X + "" + Bot->inputs.Right.IsDown + Bot->inputs.Left.IsDown);
+                    UnityEngine.Debug.Log(damageDirection.X + " " + theirPos.X + " " + f.SimulationConfig.BotTargets[i].Item1 + " " + ourPos  + " " + Bot->inputs.Right.IsDown + Bot->inputs.Left.IsDown);
                     return;
                 }
             }
@@ -145,27 +156,18 @@ namespace Quantum {
             Hammer,
 
             Spinner,
+            CeilingCrusher,
+            MarioBrosPlat,
+            QuestionCoin, //Includes Invisible Block
+            QuestionPowerup,
+            //MiniTile, //Do We Have This Here
+
             EnterablePipe,
             EnemyStompable, //Goomba, Koopas, Bobomb, Bullet Bill
             EnemyCarryable, //Shells, Lit Bobombs (Not Used For Carrying Objects)
             EnemySturdy, //Spiny
             EnemyGhost, //Boo
             EnemyKooper, //Blue koopa Has A Shell Powerup!
-        }
-        enum BlockType : Byte {
-            Solid,
-            Semi, //Includes Cloudplats
-            HardBlock, //Includes Solid Entities like pipes and bill blasters
-            Brick,
-            QuestionCoin, //Includes Invisible Block
-            QuestionPowerup,
-
-            SlopeL,
-            SlopeR,
-            MarioBrosPlat,
-            MiniTile,
-            CeilingCrush,
-
         }
 
         //Used To Add Variety in The Ai
