@@ -49,9 +49,8 @@ namespace Quantum {
             } else {
                 filter.Inputs = default;
             }
-            //var marioBot = filter.PlayerBot;
-            //if (marioBot != null)
-            //    filter.Inputs = marioBot->GetInputs(f, ref filter, stage);
+            if (filter.PlayerBot != null)
+                filter.Inputs = filter.PlayerBot->inputs;//  ->GetInputs(f, ref filter, stage);
 
             var physics = f.FindAsset(filter.MarioPlayer->PhysicsAsset);
             if (HandleDeathAndRespawning(f, ref filter, stage)) {

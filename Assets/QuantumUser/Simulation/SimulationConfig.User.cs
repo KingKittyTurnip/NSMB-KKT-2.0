@@ -1,4 +1,8 @@
-﻿namespace Quantum {
+﻿using System;
+using System.Collections.Generic;
+using Photon.Deterministic;
+
+namespace Quantum {
     public partial class SimulationConfig : AssetObject {
 
         public AssetRef<StageTile> InvisibleSolidTile;
@@ -11,5 +15,6 @@
         public AssetRef<TeamAsset>[] Teams;
         public AssetRef<EntityPrototype> FireballPrototype, IceballPrototype, HammerPrototype, BlockBumpPrototype, IceBlockPrototype;
 
+        public List<(FP, FP, MarioBotSystem.EntityType)> BotTargets = new();
     }
 }

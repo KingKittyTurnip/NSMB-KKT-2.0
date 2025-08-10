@@ -38,6 +38,7 @@ namespace Quantum {
                     new CoinItemSystem(),
                     new PowerupSystem(),
                     new BlockBumpSystem(),
+                        new MarioBotSystem(),
                     new MarioPlayerSystem(),
                     new CoinSystem(),
                     new GoldBlockSystem(),

@@ -1,10 +1,11 @@
 using Photon.Deterministic;
 using System;
 using System.Collections.Generic;
-using UnityEngine.UIElements;
 
 namespace Quantum {
-    public unsafe class MarioBotSystem : SystemMainThreadEntity<MarioBot> {
+    public unsafe class MarioBotSystem : SystemMainThreadEntityFilter<MarioBot, MarioPlayerSystem.Filter> {
+
+        //public List<(FP, FP, EntityType)> Targets => ;
 
         public void MannualSetup(MarioBot* Bot) {
             Bot->Lv = 5;
@@ -15,7 +16,7 @@ namespace Quantum {
             //Lv 1 Baby: FrameDelay-50, SightDistence-6, Sprint Isn't Used, Enemies Are Always ignored, Ignores The Fact They Can Walljumps
             //Lv 2 Newbie: FrameDelay-40, SightDistence-8, Sprint Is Only Used For Travel, Enemies Often ignored, Bad At Walljumps
             //Lv 3 Casual: FrameDelay-30, SightDistance-10, Sprint Generally Used, Enemies Occasionally Ignored, Can Use Carryables, Decent At Walljumps
-            //Lv 4 Pro: FrameDelay-20, SightDistance-12, Enemies Occasionally Ignored, Can Use Carryables, Good At Walljumps, Abuses Speed Tricks
+             //Lv 4 Pro: FrameDelay-20, SightDistance-12, Enemies Occasionally Ignored, Can Use Carryables, Good At Walljumps, Abuses Speed Tricks
             //Lv 5 Expert: FrameDelay-10, SightDistance-13, Enemies Never ignored, Uses Star Pridiction To Some Degree, Uses Gp Cancels To Turn Around Sometimes, Uses Walljumps For Quick movement, Tries To Combo, Abuses Speed Tricks
             //Other
             //Lv 6 Master: FrameDelay-3, SightDistence-20, Uses High Level StarPridiction, Uses Gp Cancels To Turn Around, Knows How To Combo, Abuses Speed Tricks, Knows When To Run
@@ -23,46 +24,117 @@ namespace Quantum {
             //Lv 7 Hacks: FrameDelay-0, SightDistence-99, Uses High Level StarPridiction, Frame Perfect Actions, Knows How To Combo, Abuses Speed Tricks, Knows When To Run
         }
 
+        public override void Update(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
+            var Bot = filter.PlayerBot;
 
-        public override void Update(Frame f) {
-        }
-
-        public Input GetInputs(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage, MarioBot* Bot) {
             if (Bot->FrameDelay == 0)
                 MannualSetup(Bot);
 
             if (Bot->LastUpdateFrame < f.Number) {
                 Bot->LastUpdateFrame = f.Number + Bot->FrameDelay;
-                UpdateAi(f, ref filter, stage, Bot);
+                UpdateAi(f, ref filter, stage);
             }
 
-            Bot->inputs.Right = true;
-            return Bot->inputs;
         }
 
-        private void UpdateAi(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage, MarioBot* Bot) {
-            GetTargets(f, ref filter, stage, Bot); //Find The Entities, Then Asign A Priority Value (Priority Changes Based on State And Reserve)
-            GetTerrain(f, ref filter, stage, Bot); //Find The Solid Terrain
-            DecidePath(f, ref filter, stage, Bot); //Choose Where To Go (Shell & Propeller Code Here)
-            SetInput(f, ref filter, stage, Bot); //Set Our Inputs (Fire & Ice Code Here)
+        private void UpdateAi(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
+            GetTargets(f, ref filter, stage); //Find The Entities, Then Asign A Priority Value (Priority Changes Based on State And Reserve)
+            GetTerrain(f, ref filter, stage); //Find The Solid Terrain
+            DecidePath(f, ref filter, stage); //Choose Where To Go (Shell & Propeller Code Here)
+            SetInput(f, ref filter, stage); //Set Our Inputs (Fire & Ice Code Here)
 
         }
 
-        private void GetTargets(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage, MarioBot* Bot) {
+        private void GetTargets(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
+            var mario = filter.MarioPlayer;
+            var marioPos = filter.Transform->Position;
+            var Bot = filter.PlayerBot;
+
+            f.SimulationConfig.BotTargets.Clear();
+            f.SimulationConfig.BotTargets.TrimExcess();
+
+            FPVector2 Spot = new FPVector2(mario->FacingRight ? 999999 : -999999, 999999), posA = Spot, posB = Spot, avoA = Spot, avoB = Spot;
+            int Count = 0;
+
             //Check For Players, Items, Coins, Objectivecoins, And Individual Enemies
-            //Stars & Starcoins Ignore SightDistance
-        }
-        private void GetTerrain(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage, MarioBot* Bot) {
+            //Stars & Starcoins Ignore SightDistance, Can be Seen From Anywhere Via Minimap
+            var stars = f.Filter<BigStar>();
+            while (stars.NextUnsafe(out EntityRef entity, out BigStar* bigStar)) {
+                f.SimulationConfig.BotTargets.Add((Spot.X, Spot.Y, EntityType.Star));
+                Count++;
+            }
+            /*
+            var starcoins = f.Filter<StarCoin>();
+            while (stars.NextUnsafe(out EntityRef entity, out StarCoin* starcoin)) {
+                Targets[Count] = (Spot.X, Spot.Y, EntityType.Star);
+                Count++;
+            }*/
+            //We Can Only Know The Foe's X Pos At All Times.
+            var foes = f.Filter<MarioPlayer>();
+            while (foes.NextUnsafe(out EntityRef entity, out MarioPlayer* player)) {
+                if (player == mario) //Skip ourself
+                    continue;
+                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out posB);
+                FP Distance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+                f.SimulationConfig.BotTargets.Add((Spot.X, Distance < Bot->SightDistance ? Spot.Y : 9999, EntityType.Player));
+                Count++;
+            }
 
-        }
-        private void DecidePath(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage, MarioBot* Bot) {
+            var coins = f.Filter<Coin>();
+            while (coins.NextUnsafe(out EntityRef entity, out Coin* coin)) {
+                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out posB);
+                FP Distance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+                if (Distance < Bot->SightDistance) {
+                    f.SimulationConfig.BotTargets.Add((Spot.X, Spot.Y, EntityType.Coin));
+                    Count++;
+                }
+            }
 
+            //Make Specific Enemies Change The EntityType.
+            var enemies = f.Filter<Enemy>();
+            while (enemies.NextUnsafe(out EntityRef entity, out Enemy* enemy)) {
+                QuantumUtils.UnwrapWorldLocations(stage, marioPos, Spot = f.Unsafe.GetPointer<Transform2D>(entity)->Position, out posA, out posB);
+                FP Distance = FPMath.Sqrt(((posA.X - posB.X) * (posA.X - posB.X)) + ((posA.Y - posB.Y) * (posA.Y - posB.Y)));
+                if (Distance < Bot->SightDistance) {
+                    f.SimulationConfig.BotTargets.Add((Spot.X, Spot.Y, EntityType.EnemyStompable));
+                    Count++;
+                }
+            }
         }
-        private void SetInput(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage, MarioBot* Bot) {
+        private void GetTerrain(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
+        }
+        private void DecidePath(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
+            FPVector2 marioPos = filter.Transform->Position;
+            var Bot = filter.PlayerBot;
 
+            //List<(FP, FP, EntityType)> NewTargets = null;
+
+            for (int i = 0; i < f.SimulationConfig.BotTargets.Count; i++) {
+                if (f.SimulationConfig.BotTargets[i].Item3 == EntityType.Star) {
+                    QuantumUtils.UnwrapWorldLocations(stage, marioPos, new FPVector2(f.SimulationConfig.BotTargets[i].Item1, f.SimulationConfig.BotTargets[i].Item2), out FPVector2 ourPos, out FPVector2 theirPos);
+                    FPVector2 damageDirection = (theirPos - ourPos);
+
+                    Bot->inputs.Right = damageDirection.X > 0;
+                    Bot->inputs.Left = damageDirection.X < 0;
+                    UnityEngine.Debug.Log(damageDirection.X + "" + Bot->inputs.Right.IsDown + Bot->inputs.Left.IsDown);
+                    return;
+                }
+            }
+
+            //f.SimulationConfig.e = NewTargets;
+        }
+        private void SetInput(Frame f, ref Quantum.MarioPlayerSystem.Filter filter, VersusStageData stage) {
+            var mario = filter.MarioPlayer;
+            var physics = filter.PhysicsObject;
+            var Bot = filter.PlayerBot;
+
+            Bot->inputs.Sprint = true;
+            if ((physics->WasTouchingGround && !physics->IsTouchingGround) || physics->Velocity.Y > 1 || physics->IsTouchingLeftWall || physics->IsTouchingRightWall) {
+                Bot->inputs.Jump = true;
+            }
         }
 
-        enum EntityType : Byte {
+        public enum EntityType : Byte {
             Star, //Includes Starcoin
             ObjectiveCoin,
             Powerup,
