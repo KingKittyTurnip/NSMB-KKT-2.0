@@ -7,7 +7,8 @@ using static NSMB.Utilities.QuantumViewUtils;
 public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
 
     //---Serialized Variables
-    [SerializeField] private GameObject BoostParticles;
+    //[SerializeField] private GameObject BoostParticles;
+    [SerializeField] private Animator animator;
 
     [SerializeField] private Transform Model;
     private Quaternion modelRotationTarget;
@@ -38,7 +39,9 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
         }
         transform.position = modifiedZ;
 
-        BoostParticles.SetActive(billblock->CanHit);
+        animator.SetBool("Powered", true);
+        animator.SetBool("Failing", true);
+        //BoostParticles.SetActive(billblock->CanHit);
         float delta = Time.deltaTime;
         if (f.Exists(holdable->Holder)) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->Holder);

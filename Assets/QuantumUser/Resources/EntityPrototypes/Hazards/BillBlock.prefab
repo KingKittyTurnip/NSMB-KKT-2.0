@@ -66,12 +66,12 @@ MonoBehaviour:
     PositionOffset:
       RawValue: 0
   PhysicsCollider:
+    IsEnabled: 1
     IsTrigger: 0
     Material:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
-    IsEnabled: 1
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -550,8 +550,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 642619f67a180e44e8ab2221956b27f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BoostParticles: {fileID: 3048744745634337792}
+  animator: {fileID: 0}
   Model: {fileID: 1242223969078471660}
+  coinboxRenderer: {fileID: 0}
 --- !u!1 &2394040665678212822
 GameObject:
   m_ObjectHideFlags: 0
@@ -10325,7 +10326,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4440388983403599254}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b8e90e58bb07b7f44a52bb5d42872cda,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6019046297828722700}
   m_SourcePrefab: {fileID: 100100000, guid: b8e90e58bb07b7f44a52bb5d42872cda, type: 3}
 --- !u!4 &1242223969078471660 stripped
 Transform:
@@ -10333,3 +10338,31 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1637055592136215559}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1906874988000293206 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b8e90e58bb07b7f44a52bb5d42872cda,
+    type: 3}
+  m_PrefabInstance: {fileID: 1637055592136215559}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &6019046297828722700
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906874988000293206}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
