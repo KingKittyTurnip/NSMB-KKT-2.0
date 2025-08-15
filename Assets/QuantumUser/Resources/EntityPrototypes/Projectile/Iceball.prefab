@@ -61,12 +61,12 @@ MonoBehaviour:
     PositionOffset:
       RawValue: 0
   PhysicsCollider:
+    IsEnabled: 1
     IsTrigger: 0
     Material:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
-    IsEnabled: 1
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -256,6 +256,8 @@ MonoBehaviour:
       Value: 0
     BreakMegaObjects:
       Value: 0
+    WindImmune:
+      Value: 0
 --- !u!114 &3977285621181604314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,7 +439,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.11, y: 0.11}
+  m_Size: {x: 0.34375, y: 0.34375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -456,14 +458,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDisplaying: 1
-  runInEditor: 0
   frame: 0.5826652
+  runInEditor: 0
   fps: 12
   frames:
   - {fileID: 5353841184698615464, guid: eddf8ec042b3e614e925d846a27642df, type: 3}
   - {fileID: 750297706712597742, guid: eddf8ec042b3e614e925d846a27642df, type: 3}
   - {fileID: -8127487528002223245, guid: eddf8ec042b3e614e925d846a27642df, type: 3}
   - {fileID: -3915765450054648673, guid: eddf8ec042b3e614e925d846a27642df, type: 3}
+  colorblindModeFrames: []
   useUnscaledDelta: 0
   sRenderer: {fileID: 6983710913193508245}
   image: {fileID: 0}

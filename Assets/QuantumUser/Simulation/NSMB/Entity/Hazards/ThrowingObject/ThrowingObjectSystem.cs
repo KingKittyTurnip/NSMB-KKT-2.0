@@ -143,7 +143,26 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                 #endregion
             }
             case ThrowingObjectType.PropellerBox:
-            case ThrowingObjectType.BillBlock:
+            case ThrowingObjectType.BillBlock: {
+                #region BillBlock
+                if (!Dis->Thrown && !f.Exists(holdable->Holder)) {
+                    Dis->ReusableTimer = 240;
+                    break;
+                }
+                var entity = filter.Entity;
+
+                var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder);
+                var marioPhys = f.Unsafe.GetPointer<PhysicsObject>(holdable->PreviousHolder);
+                byte newCoins = (byte) (mario->Coins + 1);
+                bool item = newCoins == f.Global->Rules.CoinsForPowerup;
+                if (marioPhys->IsTouchingGround || marioPhys->WasTouchingGround) {
+                    Dis->ReusableTimer = 240;
+                } else if (f.GetPlayerInput(mario->PlayerRef)->Jump.IsDown) { //get inputs
+                    Dis->ReusableTimer -= 1;
+                }
+                break;
+                #endregion
+            }
             case ThrowingObjectType.CannonBox:
             case ThrowingObjectType.Fridge:
                 break;
@@ -222,17 +241,18 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                     switch (Dis->Type) {
                     case ThrowingObjectType.Stone: {
                         marioPhysicsObject->Velocity.X /= 2;
-                        //mario->StoneBux = true;
+                        mario->StoneBux = true;
                         break;
                     }
                     case ThrowingObjectType.CoinBox:
                         Dis->ReusableTimer = 5;
                         break;
                     case ThrowingObjectType.PropellerBox:
-                        //mario->PropellerBux = true;
+                        mario->PropellerBux = true;
                         break;
                     case ThrowingObjectType.BillBlock:
-                        //mario->BillBux = true;
+                        mario->BillBux = true;
+                        Dis->ReusableTimer = 240;
                         break;
                     }
                 }
@@ -366,17 +386,21 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
             switch (Dis->Type) {
             case ThrowingObjectType.Stone: {
                 marioPhysicsObject->Velocity.X /= 2;
-                //mario->StoneBux = false;
+                mario->StoneBux = false;
                 break;
             }
             case ThrowingObjectType.CoinBox:
                 Dis->ReusableTimer = 5;
                 break;
             case ThrowingObjectType.PropellerBox:
-                //mario->PropellerBux = false;
+                mario->PropellerBux = false;
+                mario->IsPropellerFlying = false;
+                mario->IsSpinnerFlying = false;
+                mario->UsedPropellerThisJump = false;
                 break;
             case ThrowingObjectType.BillBlock:
-                //mario->BillBux = false;
+                mario->BillBux = false;
+                marioPhysicsObject->Velocity.Y += 3;
                 break;
             }
         }

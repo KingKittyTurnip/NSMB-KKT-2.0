@@ -129,8 +129,13 @@ component MarioPlayer {
 	[ExcludeFromPrototype] byte PropellerDrillCooldown;
 	[ExcludeFromPrototype] byte PropellerDrillHoldFrames;
 
+	//Carryables
     [ExcludeFromPrototype] EntityRef HeldEntity;
 	[ExcludeFromPrototype] int HoldStartFrame;
+	
+	[ExcludeFromPrototype] bool StoneBux;
+	[ExcludeFromPrototype] bool PropellerBux;
+	[ExcludeFromPrototype] bool BillBux;
 
     [ExcludeFromPrototype] EntityRef CurrentPipe;
 	[ExcludeFromPrototype] FPVector2 PipeDirection;
