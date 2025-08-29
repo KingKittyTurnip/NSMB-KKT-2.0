@@ -16,6 +16,7 @@ public static class Enums {
     public enum SpecialPowerupMusic {
         Starman = 1 << 0,
         MegaMushroom = 1 << 1,
+        StarBall = 1 << 2,
     }
 
     public enum PrefabParticle : byte {

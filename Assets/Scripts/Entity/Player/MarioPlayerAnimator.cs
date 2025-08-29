@@ -466,7 +466,7 @@ namespace NSMB.Entities.Player {
             animator.SetBool(ParamOnLeft, mario->WallslideLeft);
             animator.SetBool(ParamOnRight, mario->WallslideRight);
             animator.SetBool(ParamOnGround, physicsObject->IsTouchingGround || mario->IsStuckInBlock || mario->CoyoteTimeFrames > 0);
-            animator.SetBool(ParamInvincible, mario->IsStarmanInvincible);
+            animator.SetBool(ParamInvincible, mario->IsStarmanInvincible || mario->RidingStarball);
             animator.SetBool(ParamSkidding, mario->IsSkidding);
             animator.SetBool(ParamPropeller, mario->IsPropellerFlying);
             animator.SetBool(ParamPropellerSpin, mario->IsPropellerFlying && mario->PropellerSpinFrames > 0);
@@ -1152,6 +1152,9 @@ namespace NSMB.Entities.Player {
                     animator.SetTrigger(ParamPaddle);
                 }
                 return;
+            }
+            if (e.IsStarball) {
+                PlaySound(SoundEffect.Powerup_MegaMushroom_Jump);
             }
 
             // Voice SFX

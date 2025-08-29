@@ -461,7 +461,8 @@ namespace Quantum {
                 && mario->JumpState != JumpState.TripleJump
                 && !mario->IsCrouching
                 && !mario->IsInShell
-                && (physicsObject->Velocity.X < 0 != mario->FacingRight);
+                && (physicsObject->Velocity.X < 0 != mario->FacingRight)
+                && !mario->RidingStarball;
 
             mario->IsSkidding = false;
             mario->IsTurnaround = false;
@@ -512,7 +513,7 @@ namespace Quantum {
 
             physicsObject->Velocity.Y = newY;
 
-            f.Events.MarioPlayerJumped(filter.Entity, mario->CurrentPowerupState, mario->JumpState, mario->DoEntityBounce, false);
+            f.Events.MarioPlayerJumped(filter.Entity, mario->CurrentPowerupState, mario->JumpState, mario->DoEntityBounce, false, mario->RidingStarball);
             if (mario->DoEntityBounce) {
                 mario->IsCrouching = false;
                 mario->PropellerDrillCooldown = 30;
@@ -642,7 +643,7 @@ namespace Quantum {
             var physicsObject = filter.PhysicsObject;
 
             if (mario->IsInShell || mario->IsGroundpounding || mario->IsCrouching || mario->IsDrilling
-                || mario->IsSpinnerFlying || mario->IsInKnockback || physicsObject->IsUnderwater) {
+                || mario->IsSpinnerFlying || mario->IsInKnockback || physicsObject->IsUnderwater || mario->RidingStarball) {
                 return;
             }
 
@@ -813,7 +814,7 @@ namespace Quantum {
 
             // Can't crouch while sliding, flying, or mega.
             if (mario->IsSliding || mario->IsPropellerFlying || mario->IsSpinnerFlying || mario->IsInKnockback || mario->CurrentPowerupState == PowerupState.MegaMushroom
-                || mario->IsWallsliding) {
+                || mario->IsWallsliding || mario->RidingStarball) {
                 mario->IsCrouching = false;
                 return;
             }
@@ -921,7 +922,7 @@ namespace Quantum {
             if (physicsObject->IsTouchingGround || mario->IsInKnockback || mario->IsGroundpounding || mario->IsDrilling
                 || (mario->HeldEntity.IsValid && !mario->PropellerBux) || mario->IsCrouching || mario->IsSliding || mario->IsInShell
                 || mario->IsWallsliding || mario->GroundpoundCooldownFrames > 0 || physicsObject->IsUnderwater
-                || f.Exists(mario->CurrentPipe)) {
+                || f.Exists(mario->CurrentPipe) || mario->RidingStarball) {
                 return;
             }
 
@@ -1399,7 +1400,7 @@ namespace Quantum {
             }
 
             if (mario->IsDead || filter.Freezable->IsFrozen(f) || mario->IsGroundpounding || mario->IsInKnockback || f.Exists(mario->CurrentPipe)
-                || mario->IsCrouching || mario->IsSliding) {
+                || mario->IsCrouching || mario->IsSliding || mario->RidingStarball) {
                 return;
             }
 
@@ -1608,7 +1609,7 @@ namespace Quantum {
                 mario->JumpBufferFrames = 0;
                 mario->IsCrouching = false;
 
-                f.Events.MarioPlayerJumped(filter.Entity, mario->CurrentPowerupState, JumpState.None, mario->DoEntityBounce, true);
+                f.Events.MarioPlayerJumped(filter.Entity, mario->CurrentPowerupState, JumpState.None, mario->DoEntityBounce, true, mario->RidingStarball);
             }
         }
 

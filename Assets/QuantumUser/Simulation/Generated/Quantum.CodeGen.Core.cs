@@ -2571,10 +2571,10 @@ namespace Quantum {
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public Byte CantJumpTimer;
-    [FieldOffset(172)]
+    [FieldOffset(176)]
     [ExcludeFromPrototype()]
     public QBoolean WallslideLeft;
-    [FieldOffset(176)]
+    [FieldOffset(180)]
     [ExcludeFromPrototype()]
     public QBoolean WallslideRight;
     [FieldOffset(36)]
@@ -2682,7 +2682,7 @@ namespace Quantum {
     [FieldOffset(29)]
     [ExcludeFromPrototype()]
     public Byte PropellerSpinFrames;
-    [FieldOffset(168)]
+    [FieldOffset(172)]
     [ExcludeFromPrototype()]
     public QBoolean UsedPropellerThisJump;
     [FieldOffset(26)]
@@ -2697,7 +2697,7 @@ namespace Quantum {
     [FieldOffset(48)]
     [ExcludeFromPrototype()]
     public Int32 HoldStartFrame;
-    [FieldOffset(164)]
+    [FieldOffset(168)]
     [ExcludeFromPrototype()]
     public QBoolean StoneBux;
     [FieldOffset(160)]
@@ -2721,6 +2721,9 @@ namespace Quantum {
     [FieldOffset(21)]
     [ExcludeFromPrototype()]
     public Byte PipeCooldownFrames;
+    [FieldOffset(164)]
+    [ExcludeFromPrototype()]
+    public QBoolean RidingStarball;
     [FieldOffset(216)]
     [ExcludeFromPrototype()]
     public EntityRef CurrentSpinner;
@@ -2812,6 +2815,7 @@ namespace Quantum {
         hash = hash * 31 + PipeEntering.GetHashCode();
         hash = hash * 31 + PipeFrames.GetHashCode();
         hash = hash * 31 + PipeCooldownFrames.GetHashCode();
+        hash = hash * 31 + RidingStarball.GetHashCode();
         hash = hash * 31 + CurrentSpinner.GetHashCode();
         return hash;
       }
@@ -2891,6 +2895,7 @@ namespace Quantum {
         QBoolean.Serialize(&p->MegaMushroomStationaryEnd, serializer);
         QBoolean.Serialize(&p->PipeEntering, serializer);
         QBoolean.Serialize(&p->PropellerBux, serializer);
+        QBoolean.Serialize(&p->RidingStarball, serializer);
         QBoolean.Serialize(&p->StoneBux, serializer);
         QBoolean.Serialize(&p->UsedPropellerThisJump, serializer);
         QBoolean.Serialize(&p->WallslideLeft, serializer);
@@ -3378,20 +3383,28 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Starball : Quantum.IComponent {
-    public const Int32 SIZE = 24;
+    public const Int32 SIZE = 32;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(0)]
+    [FieldOffset(8)]
     public AssetRef<EntityPrototype> Contains;
-    [FieldOffset(16)]
+    [FieldOffset(1)]
+    [ExcludeFromPrototype()]
+    public Byte JumpBufferFrames;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte CoyoteTimeFrames;
+    [FieldOffset(24)]
     [ExcludeFromPrototype()]
     public EntityRef Rider;
-    [FieldOffset(8)]
+    [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public EntityRef Goal;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 4111;
         hash = hash * 31 + Contains.GetHashCode();
+        hash = hash * 31 + JumpBufferFrames.GetHashCode();
+        hash = hash * 31 + CoyoteTimeFrames.GetHashCode();
         hash = hash * 31 + Rider.GetHashCode();
         hash = hash * 31 + Goal.GetHashCode();
         return hash;
@@ -3399,6 +3412,8 @@ namespace Quantum {
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Starball*)ptr;
+        serializer.Stream.Serialize(&p->CoyoteTimeFrames);
+        serializer.Stream.Serialize(&p->JumpBufferFrames);
         AssetRef.Serialize(&p->Contains, serializer);
         EntityRef.Serialize(&p->Goal, serializer);
         EntityRef.Serialize(&p->Rider, serializer);

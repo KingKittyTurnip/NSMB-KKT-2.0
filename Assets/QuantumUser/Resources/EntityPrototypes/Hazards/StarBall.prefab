@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 2934046834125206836}
   - component: {fileID: 3527695474151798566}
   - component: {fileID: 2287914521826614558}
+  - component: {fileID: 2197340425489620535}
   m_Layer: 19
   m_Name: StarBall
   m_TagString: Untagged
@@ -157,7 +158,7 @@ MonoBehaviour:
         Value: 0
     SourceCollider: {fileID: 0}
     Shape2D:
-      ShapeType: 1
+      ShapeType: 4
       PolygonCollider:
         Id:
           Value: 323677908924403078
@@ -172,9 +173,9 @@ MonoBehaviour:
         RawValue: 0
       BoxExtents:
         X:
-          RawValue: 26214
+          RawValue: 22938
         Y:
-          RawValue: 26214
+          RawValue: 32768
       PositionOffset:
         X:
           RawValue: 0
@@ -627,6 +628,24 @@ MonoBehaviour:
         RawValue: 0
       Y:
         RawValue: 0
+--- !u!114 &2197340425489620535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7523289063499453450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23167d8f102768243a7b81ed244ada74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ball: {fileID: 3226492972513086045}
+  Ring: {fileID: 1789605428218159809}
+  Contents: {fileID: 4146102460629140252}
+  breakPrefab: {fileID: 6621544317595282144, guid: 51b09745b9ed23f49986be6555fd6caa,
+    type: 3}
+  sfx: {fileID: 5674404523704379184}
 --- !u!1001 &3708128175817274997
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -710,6 +729,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: StarBall
       objectReference: {fileID: 0}
+    - target: {fileID: 3143545844426953908, guid: 31f32c85bb55e2146846b08faed553ef,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3143545844426953908, guid: 31f32c85bb55e2146846b08faed553ef,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3143545844426953908, guid: 31f32c85bb55e2146846b08faed553ef,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -719,6 +753,18 @@ PrefabInstance:
       addedObject: {fileID: 405667300596671550}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31f32c85bb55e2146846b08faed553ef, type: 3}
+--- !u!4 &1789605428218159809 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3143545844426953908, guid: 31f32c85bb55e2146846b08faed553ef,
+    type: 3}
+  m_PrefabInstance: {fileID: 3708128175817274997}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3226492972513086045 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6939162269396009944, guid: 31f32c85bb55e2146846b08faed553ef,
+    type: 3}
+  m_PrefabInstance: {fileID: 3708128175817274997}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3818862889449148830 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 31f32c85bb55e2146846b08faed553ef,

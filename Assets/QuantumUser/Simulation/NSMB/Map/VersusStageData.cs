@@ -51,6 +51,7 @@ public unsafe class VersusStageData : AssetObject {
     public AssetRef<LoopingMusicData>[] MainMusic;
     public AssetRef<LoopingMusicData> InvincibleMusic;
     public AssetRef<LoopingMusicData> MegaMushroomMusic;
+    public AssetRef<LoopingMusicData> StarballMusic;
 
 
     [HideInInspector] public StageTileInstance[] TileData;

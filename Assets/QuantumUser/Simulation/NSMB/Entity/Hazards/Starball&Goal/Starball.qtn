@@ -1,5 +1,8 @@
 component Starball {
 	AssetRef<EntityPrototype> Contains;
+	
+	[ExcludeFromPrototype] byte JumpBufferFrames;
+	[ExcludeFromPrototype] byte CoyoteTimeFrames;
 
 	[ExcludeFromPrototype] EntityRef Rider;
 	[ExcludeFromPrototype] EntityRef Goal;
@@ -7,4 +10,10 @@ component Starball {
 
 event StarBallDestroyed {
 	EntityRef Entity;
+}
+
+event StarBallLand {
+	Frame f;
+	EntityRef Entity;
+	bool Hard;
 }

@@ -144,6 +144,8 @@ component MarioPlayer {
 	[ExcludeFromPrototype] bool PipeEntering;
 	[ExcludeFromPrototype] byte PipeFrames;
 	[ExcludeFromPrototype] byte PipeCooldownFrames;
+	
+	[ExcludeFromPrototype] bool RidingStarball;
 
 	[ExcludeFromPrototype] EntityRef CurrentSpinner;
 }
@@ -183,6 +185,7 @@ event MarioPlayerJumped {
 	nothashed JumpState JumpState;
 	nothashed bool WasBounce;
 	nothashed bool IsUnderwater;
+	nothashed bool IsStarball;
 }
 
 event MarioPlayerGroundpoundStarted {
