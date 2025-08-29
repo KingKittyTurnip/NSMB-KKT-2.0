@@ -1,14 +1,12 @@
 using Photon.Deterministic;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
-using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.EventSystems.EventTrigger;
+using Quantum.Collections;
+using static BreakableBrickTile;
+using static IInteractableTile;
 
 namespace Quantum {
     
     public unsafe class StarballSystem : SystemMainThreadFilterStage<StarballSystem.Filter>, ISignalInitializeHazard {
-
+        private static readonly FP SlopeBonus = FP.FromString("0.15");
         public struct Filter {
             public EntityRef Entity;
             public Starball* Starball;
@@ -28,10 +26,12 @@ namespace Quantum {
 
             bool Deccel = true;
             // Despawn off bottom of stage
-            if (filter.Transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
+            if (filter.Transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y || physicsObject->IsUnderwater) {
                 physicsObject->IsFrozen = true;
                 if (starball->Rider != EntityRef.None) {
-                    f.Unsafe.GetPointer<MarioPlayer>(starball->Rider)->RidingStarball = false;
+                    var mario = f.Unsafe.GetPointer<MarioPlayer>(starball->Rider);
+                    mario->RidingStarball = false;
+                    mario->DoEntityBounce = true;
                 }
 
                 f.Destroy(filter.Entity);
@@ -54,22 +54,24 @@ namespace Quantum {
                         starball->CoyoteTimeFrames = 5;
                     }
                     //Left/Right
-                    if (inputs.Left.IsDown || inputs.Right.IsDown) {
+                    if ((inputs.Left.IsDown || inputs.Right.IsDown) && !mario->IsCrouching) {
                         physicsObject->Velocity.X += (inputs.Left.IsDown ? -1 : 1) * (FPMath.Abs(physicsObject->Velocity.X) > 3 ? FPMath.Abs(physicsObject->Velocity.X) > 6 ? FP._0_03 : FP._0_10 : Constants._0_1875) * (mario->FacingRight == physicsObject->Velocity.X > 0 ? 1 : 2); //Move
                         Deccel = false;
                     }
 
                     //Transfer Collision Logic
-                    if (marphys->IsTouchingLeftWall)
-                        physicsObject->IsTouchingLeftWall = true;
-                    if (marphys->IsTouchingRightWall)
-                        physicsObject->IsTouchingRightWall = true;
-                    if (marphys->IsTouchingCeiling)
+                    if (marphys->IsTouchingCeiling) {
                         physicsObject->IsTouchingCeiling = true;
+                    } else {
+                        if (marphys->IsTouchingLeftWall)
+                            physicsObject->IsTouchingLeftWall = true;
+                        if (marphys->IsTouchingRightWall)
+                            physicsObject->IsTouchingRightWall = true;
+                    }
 
                     //Jump
                     if (starball->JumpBufferFrames > 0 && starball->CoyoteTimeFrames > 0 && physicsObject->WasTouchingGround) {
-                        physicsObject->Velocity.Y = 10 + (physicsObject->Velocity.X * FP._0_05);
+                        physicsObject->Velocity.Y = 10 + (physicsObject->Velocity.X * FP._0_10);
                         physicsObject->IsTouchingGround = false;
                         starball->CoyoteTimeFrames = 0;
                         starball->JumpBufferFrames = 0;
@@ -82,15 +84,27 @@ namespace Quantum {
 
                     //Misc Actions
                     f.Unsafe.GetPointer<Transform2D>(starball->Rider)->Position = filter.Transform->Position + new FPVector2(0, FP._0_50 + (starball->CoyoteTimeFrames == 0 ? FP._0_20 : 0));
-                    //collider->Shape.Box.Extents = new FPVector2(Constants._0_40, Constants._0_40);
                     marphys->Velocity = physicsObject->Velocity;
+                    mario->IsSkidding = false;
                 } else {
                     starball->Rider = EntityRef.None;
                     mario->RidingStarball = false;
                 }
+
+                //Create A Goal if One Doesn't Exist
+                var Objects = f.Filter<Starballgoal>();
+                bool i = true;
+                while (Objects.NextUnsafe(out EntityRef OtherEntity, out Starballgoal* starballgoal)) {
+                    i = false;
+                    break;
+                }
+                if (i) {
+                    EntityRef newStarEntity = f.Create(starball->CurrentGoal);
+                    //var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
+                    var newStarTransform = f.Unsafe.GetPointer<Transform2D>(newStarEntity);
+                    newStarTransform->Position = filter.Transform->Position + new FPVector2(1, -FP._0_50);
+                }
             } else {
-                //collider->Shape.Box.Extents = new FPVector2(Constants._0_40, Constants._0_40); //new FPVector2(FP._0_01, FP._0_50);
-                //collider->Shape.Circle.Radius = FP._0_50;
                 physicsObject->Gravity.Y = -31;
             }
 
@@ -100,7 +114,7 @@ namespace Quantum {
                     if (!physicsObject->WasTouchingGround) {
                         physicsObject->Velocity.X = FPMath.Clamp(physicsObject->FloorAngle, -8, 8);
                     }
-                    physicsObject->Velocity.X -= (Constants.WeirdSlopeConstant * physicsObject->FloorAngle) * FP._0_20;
+                    physicsObject->Velocity.X -= (Constants.WeirdSlopeConstant * physicsObject->FloorAngle) * SlopeBonus;
                     Deccel = false;
                 }
                 if (!physicsObject->WasTouchingGround) {
@@ -109,6 +123,7 @@ namespace Quantum {
             } else {
                 Deccel = false;
             }
+            TouchedBricks(f, filter.Entity, stage);
             physicsObject->BreakMegaObjects = FPMath.Abs(physicsObject->Velocity.X) > 6;
             if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) {
                 physicsObject->Velocity.X = FPMath.Abs(physicsObject->Velocity.X) * (physicsObject->IsTouchingLeftWall ? 1 : -1) * FP._0_75;
@@ -119,6 +134,75 @@ namespace Quantum {
             if (Deccel)
                 physicsObject->Velocity.X *= Constants._0_95;
             physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -10, 10);
+        }
+
+        private bool TouchedBricks(Frame f, EntityRef Starball, VersusStageData stage) {
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(Starball);
+            var transform = f.Unsafe.GetPointer<Transform2D>(Starball);
+
+            bool BrickBroken = false;
+            //Tile Check
+            QList<PhysicsContact> contacts = f.ResolveList(physicsObject->Contacts);
+            foreach (var contact in contacts) {
+                if (f.Exists(contact.Entity)) {
+                    if (f.Has<BreakableObject>(contact.Entity)) {
+                        BrickBroken = true;
+                    }
+                    continue;
+                }
+
+                FP dot = FPVector2.Dot(contact.Normal, FPVector2.Right);
+                bool right = dot < 0;
+
+                // Floor tiles.
+                var tileInstance = stage.GetTileRelative(f, contact.Tile);
+                StageTile tile = f.FindAsset(tileInstance.Tile);
+                if (tile is IInteractableTile it && contact.Tile.Y > transform->Position.Y - FP._0_50) {
+                    it.Interact(f, Starball, InteractionDirection.Up,
+                       new IntVector2(contact.Tile.X, contact.Tile.Y), tileInstance, out bool tempPlayBumpSound);
+
+                    //If The Thing in Front Is Breakable By Bombs Or Shells, Push Through (do note he can break mega breakabled he will just be bumped)
+                    if (!((tile is BreakableBrickTile uh && !uh.BreakingRules.HasFlag(BreakableBy.Shells) && !uh.BreakingRules.HasFlag(BreakableBy.Bombs))
+                        || (tile is CoinTile uhh && !uhh.BreakingRules.HasFlag(BreakableBy.Shells) && !uhh.BreakingRules.HasFlag(BreakableBy.Bombs))
+                        || (tile is PowerupTileBase uhhh && !uhhh.BreakingRules.HasFlag(BreakableBy.Shells) && !uhhh.BreakingRules.HasFlag(BreakableBy.Bombs))))
+                        BrickBroken = true;
+                }
+            }
+
+            return BrickBroken;
+        }
+
+        public static void BreakOpenStarball(Frame f, EntityRef starballEntity, EntityRef starballgoalEntity) {
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(starballEntity);
+            var starball = f.Unsafe.GetPointer<Starball>(starballEntity);
+            var transform = f.Unsafe.GetPointer<Transform2D>(starballEntity);
+            VersusStageData stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+
+            int starDirection = 0;
+            physicsObject->IsFrozen = true;
+            if (starball->Rider != EntityRef.None) {
+                var mario = f.Unsafe.GetPointer<MarioPlayer>(starball->Rider);
+                mario->RidingStarball = false;
+                starDirection = !f.Unsafe.GetPointer<MarioPlayer>(starball->Rider)->FacingRight ? 1 : 2;
+            } else {
+                starDirection = FPMath.CeilToInt(f.RNG->Next() * 2);
+            }
+
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode) as StarChasersGamemode;
+            EntityRef newStarEntity = f.Create(starball->Contains);
+            var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
+            var newStarTransform = f.Unsafe.GetPointer<Transform2D>(newStarEntity);
+            newStarTransform->Position = transform->Position;
+            newStar->InitializeMovingStar(f, stage, newStarEntity, starDirection);
+
+            f.Events.StarBallDestroyed(starballEntity, starballgoalEntity);
+
+            /*if (droppedStars > 0) {
+                f.Events.MarioPlayerDroppedStar(entity);
+                GameLogicSystem.CheckForGameEnd(f);
+            }*/
+
+            f.Destroy(starballEntity);
         }
 
         #region Interactions

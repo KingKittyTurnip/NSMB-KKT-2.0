@@ -16,9 +16,8 @@ public unsafe class StarballAnimator : QuantumEntityViewComponent {
     private Quaternion modelRotationTarget;
 
     public void Start() {
-        //QuantumEvent.Subscribe<EventStarBallDestroyed>(this, StarBallDestroyed, FilterOutReplayFastForward);
         QuantumEvent.Subscribe<EventStarBallLand>(this, OnStarBallLand, FilterOutReplayFastForward);
-        //QuantumEvent.Subscribe<EventStarBallJump>(this, OnStarBallJump, FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventStarBallDestroyed>(this, OnStarBallConsumed, FilterOutReplayFastForward);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -58,5 +57,15 @@ public unsafe class StarballAnimator : QuantumEntityViewComponent {
             Enums.PrefabParticle.Player_Groundpound.GetGameObject(),
             transform.position + (Vector3.down * 0.5f),
             Quaternion.identity);
-        }
     }
+    private void OnStarBallConsumed(EventStarBallDestroyed e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+        sfx.PlayOneShot(SoundEffect.Powerup_MegaMushroom_Break_Pipe);
+        Instantiate(
+            breakPrefab,
+            transform.position,
+            Quaternion.identity);
+    }
+}

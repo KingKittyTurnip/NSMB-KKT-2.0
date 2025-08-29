@@ -5,6 +5,7 @@ namespace Quantum {
 
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<MarioPlayer, BreakableObject>(f, OnMarioBreakableObjectInteract);
+            f.Context.Interactions.Register<Starball, BreakableObject>(f, OnStarballBreakableObjectInteract);
             f.Context.RegisterPreContactCallback(f, OnMarioBreakableObjectPreContact);
         }
 
@@ -65,6 +66,62 @@ namespace Quantum {
 
             return true;
         }
+        private static bool TryGenericInteraction(Frame f, EntityRef marioEntity, EntityRef breakableObjectEntity, PhysicsContact? contact = null) {
+            var physics = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
+            if (!physics->BreakMegaObjects) {
+                return true;
+            }
+
+            var breakable = f.Unsafe.GetPointer<BreakableObject>(breakableObjectEntity);
+            var breakableCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(breakableObjectEntity);
+            var breakableTransform = f.Unsafe.GetPointer<Transform2D>(breakableObjectEntity);
+            FPVector2 breakableUp = FPVector2.Rotate(FPVector2.Up, breakableTransform->Rotation);
+
+            FPVector2 effectiveNormal;
+            if (contact != null) {
+                effectiveNormal = -contact.Value.Normal;
+            } else {
+                var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
+                int direction = QuantumUtils.WrappedDirectionSign(f, breakableTransform->Position, marioTransform->Position);
+                effectiveNormal = (direction == 1) ? FPVector2.Right : FPVector2.Left;
+            }
+
+            FP dot = FPVector2.Dot(effectiveNormal, breakableUp);
+            if (dot > Constants.PhysicsGroundMaxAngleCos) {
+                // Hit the top of a pipe
+                // Shrink by 1, if we can.
+                var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
+                if (breakable->IsDestroyed && breakable->IsStompable && breakable->CurrentHeight >= breakable->MinimumHeight + 1 && !marioPhysicsObject->WasTouchingGround && (breakable->CurrentHeight - 1 > 0)) {
+                    ChangeHeight(f, breakableObjectEntity, breakable, breakableCollider, breakable->CurrentHeight - 1, null);
+                }
+
+                return true;
+            } else if (dot > -Constants.PhysicsGroundMaxAngleCos) {
+                // Hit the side of a pipe
+                if (breakable->IsDestroyed || breakable->CurrentHeight <= breakable->MinimumHeight) {
+                    return false;
+                }
+
+                f.Events.BreakableObjectBroken(breakableObjectEntity, marioEntity, effectiveNormal, breakable->CurrentHeight - breakable->MinimumHeight);
+                ChangeHeight(f, breakableObjectEntity, breakable, breakableCollider, breakable->MinimumHeight, true);
+                breakable->IsDestroyed = true;
+
+                /*
+                var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
+                FPVector2 velocity = marioPhysicsObject->PreviousFrameVelocity;
+                
+                if (contact.HasValue) {
+                    FP before = f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position.X;
+                    FP leftoverVelocity = (FPMath.Abs(velocity.X) - (contact.Value.Distance * f.UpdateRate)) * (velocity.X > 0 ? 1 : -1);
+                    PhysicsObjectSystem.MoveHorizontally((FrameThreadSafe) f, new FPVector2(leftoverVelocity, 0), marioEntity, f.FindAsset<VersusStageData>(f.Map.UserAsset), default, out _);
+                    marioPhysicsObject->Velocity.X = velocity.X;
+                }
+                */
+                return false;
+            }
+
+            return true;
+        }
 
         public static void ChangeHeight(Frame f, EntityRef entity, BreakableObject* breakable, PhysicsCollider2D* collider, FP newHeight, bool? broken) {
             newHeight = FPMath.Max(newHeight, breakable->MinimumHeight);
@@ -83,6 +140,9 @@ namespace Quantum {
         #region Interactions
         private void OnMarioBreakableObjectInteract(Frame f, EntityRef marioEntity, EntityRef breakableEntity) {
             TryInteraction(f, marioEntity, breakableEntity);
+        }
+        private void OnStarballBreakableObjectInteract(Frame f, EntityRef starballEntity, EntityRef breakableEntity) {
+            TryGenericInteraction(f, starballEntity, breakableEntity);
         }
 
         private void OnMarioBreakableObjectPreContact(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts) {

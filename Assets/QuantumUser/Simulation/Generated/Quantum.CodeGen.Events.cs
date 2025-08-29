@@ -742,9 +742,10 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventStarBallDestroyed StarBallDestroyed(EntityRef Entity) {
+      public EventStarBallDestroyed StarBallDestroyed(EntityRef Entity, EntityRef Starballgoal) {
         var ev = _f.Context.AcquireEvent<EventStarBallDestroyed>(EventStarBallDestroyed.ID);
         ev.Entity = Entity;
+        ev.Starballgoal = Starballgoal;
         _f.AddEvent(ev);
         return ev;
       }
@@ -2960,6 +2961,7 @@ namespace Quantum {
   public unsafe partial class EventStarBallDestroyed : EventBase {
     public new const Int32 ID = 83;
     public EntityRef Entity;
+    public EntityRef Starballgoal;
     protected EventStarBallDestroyed(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
@@ -2978,6 +2980,7 @@ namespace Quantum {
       unchecked {
         var hash = 499;
         hash = hash * 31 + Entity.GetHashCode();
+        hash = hash * 31 + Starballgoal.GetHashCode();
         return hash;
       }
     }

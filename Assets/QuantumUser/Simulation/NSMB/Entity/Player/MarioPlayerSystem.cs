@@ -130,7 +130,7 @@ namespace Quantum {
             }
 
             bool swimming = physicsObject->IsUnderwater;
-            if (!physicsObject->IsTouchingGround || swimming) {
+            if (!physicsObject->IsTouchingGround || swimming || mario->RidingStarball) {
                 mario->IsSkidding = false;
             }
 
@@ -289,7 +289,7 @@ namespace Quantum {
 
                 physicsObject->Velocity.X = newX;
 
-            } else if (physicsObject->IsTouchingGround || swimming) {
+            } else if (physicsObject->IsTouchingGround || swimming || mario->RidingStarball) {
                 // Not holding anything, sliding, or holding both directions. decelerate
                 mario->IsSkidding = false;
                 mario->IsTurnaround = false;
@@ -814,7 +814,7 @@ namespace Quantum {
 
             // Can't crouch while sliding, flying, or mega.
             if (mario->IsSliding || mario->IsPropellerFlying || mario->IsSpinnerFlying || mario->IsInKnockback || mario->CurrentPowerupState == PowerupState.MegaMushroom
-                || mario->IsWallsliding || mario->RidingStarball) {
+                || mario->IsWallsliding) {
                 mario->IsCrouching = false;
                 return;
             }
@@ -1744,7 +1744,7 @@ namespace Quantum {
 
             FP newHeight;
             bool crouchHitbox = mario->CurrentPowerupState >= PowerupState.Mushroom && mario->CurrentPowerupState != PowerupState.MegaMushroom && !f.Exists(mario->CurrentPipe) && ((mario->IsCrouching && !mario->IsGroundpounding) || mario->IsInShell || mario->IsSliding);
-            bool smallHitbox = mario->CurrentPowerupState != PowerupState.MegaMushroom && ((mario->IsStarmanInvincible && !physicsObject->IsTouchingGround && !crouchHitbox && !mario->IsSliding && !mario->IsSpinnerFlying && !mario->IsPropellerFlying) || mario->IsGroundpounding);
+            bool smallHitbox = mario->CurrentPowerupState != PowerupState.MegaMushroom && ((mario->IsStarmanInvincible && !physicsObject->IsTouchingGround && !crouchHitbox && !mario->IsSliding && !mario->IsSpinnerFlying && !mario->IsPropellerFlying) || mario->IsGroundpounding || (mario->RidingStarball && !physicsObject->IsTouchingGround && !crouchHitbox));
             if (mario->CurrentPowerupState <= PowerupState.MiniMushroom || smallHitbox) {
                 newHeight = physics.SmallHitboxHeight;
             } else {

@@ -55,6 +55,7 @@ namespace Quantum {
 
                     new TanoombaSystem(),
                     new StarballSystem(),
+                    new StarballgoalSystem(),
                     new ThrowingObjectSystem(),
                     new ClockSystem(),
                     new FanSystem()
