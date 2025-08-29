@@ -270,11 +270,11 @@ namespace NSMB.Entities.Player {
                     inputs = *inputPointer;
                 }
             }
-
+            
             SetFacingDirection(f, mario, physicsObject);
-            InterpolateFacingDirection(mario);
+            InterpolateFacingDirection(mario, freezable->IsFrozen(f));
             UpdateAnimatorVariables(f, mario, physicsObject, freezable, ref inputs);
-
+            
             previousPosition = transform.position;
             forceUpdate = false;
         }
@@ -428,7 +428,7 @@ namespace NSMB.Entities.Player {
             wasTurnaround = mario->IsTurnaround;
         }
 
-        private void InterpolateFacingDirection(MarioPlayer* mario) {
+        private void InterpolateFacingDirection(MarioPlayer* mario, bool frozen) {
             using var profilerScope = HostProfiler.Start("MarioPlayerAnimator.InterpolateFacingDirection");
             if (modelRotateInstantly || wasTurnaround) {
                 models.transform.rotation = modelRotationTarget;
@@ -437,7 +437,7 @@ namespace NSMB.Entities.Player {
                 models.transform.rotation = Quaternion.RotateTowards(models.transform.rotation, modelRotationTarget, maxRotation);
             }
 
-            if (mario->CurrentPowerupState == PowerupState.PropellerMushroom /* && !controller.IsFrozen */) {
+            if (mario->CurrentPowerupState == PowerupState.PropellerMushroom && !frozen) {
                 propeller.transform.Rotate(Vector3.forward, propellerVelocity * Time.deltaTime);
             }
         }
@@ -572,7 +572,10 @@ namespace NSMB.Entities.Player {
             foreach (Renderer r in renderers) {
                 r.SetPropertyBlock(materialBlock);
                 foreach (var m in materials[r]) {
-                    m.shader = mario->IsStarmanInvincible ? rainbowShader : normalShader;
+                    var newShader = mario->IsStarmanInvincible ? rainbowShader : normalShader;
+                    if (m.shader != newShader) {
+                        m.shader = newShader;
+                    }
                 }
             }
 
@@ -589,7 +592,7 @@ namespace NSMB.Entities.Player {
             HammerHelm.SetActive(!DisableHeadwear && mario->CurrentPowerupState == PowerupState.HammerSuit && (!mario->IsCrouching || f.Exists(mario->CurrentPipe)));
             HammerShell.SetActive(mario->CurrentPowerupState == PowerupState.HammerSuit && (!mario->IsCrouching || f.Exists(mario->CurrentPipe)));
             HammerTuck.SetActive(mario->CurrentPowerupState == PowerupState.HammerSuit && mario->IsCrouching && !f.Exists(mario->CurrentPipe));
-
+            
             Avatar targetAvatar = large ? largeAvatar : smallAvatar;
             bool changedAvatar = animator.avatar != targetAvatar;
 

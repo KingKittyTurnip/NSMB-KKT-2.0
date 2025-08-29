@@ -1,4 +1,5 @@
 using NSMB.Replay;
+using NSMB.UI.MainMenu;
 using NSMB.UI.MainMenu.Submenus.Replays;
 using NSMB.UI.Translation;
 using NSMB.Utilities.Extensions;
@@ -101,7 +102,6 @@ namespace NSMB.UI.Game.Results {
         }
 
         private void OnSubmit(InputAction.CallbackContext context) {
-
             if (GlobalController.Instance.optionsManager.isActiveAndEnabled || context.canceled || (previousCountdownTime == 0 && !IsReplay)) {
                 return;
             }
@@ -170,18 +170,28 @@ namespace NSMB.UI.Game.Results {
             case 0:
                 if (IsReplay) {
                     ReplayListManager replayManager = ReplayListManager.Instance;
-                    int replayIndex = replayManager.Replays.IndexOf(rle => rle.ReplayFile == ActiveReplayManager.Instance.CurrentReplay);
+                    int nextReplayIndex = replayManager.Replays.IndexOf(rle => rle.ReplayFile == ActiveReplayManager.Instance.CurrentReplay);
 
-                    BinaryReplayFile newReplay = replayManager.Replays[(replayIndex + 1) % replayManager.Replays.Count].ReplayFile;
-                    if (replayIndex + 1 >= replayManager.Replays.Count || newReplay == ActiveReplayManager.Instance.CurrentReplay) {
+                    bool success = false;
+                    ReplayListEntry newReplay = null;
+                    while (++nextReplayIndex < replayManager.Replays.Count) {
+                        newReplay = replayManager.Replays[nextReplayIndex];
+                        if (newReplay.ReplayFile != ActiveReplayManager.Instance.CurrentReplay && newReplay.ReplayFile.Header.IsCompatible) {
+                            success = true;
+                            break;
+                        }
+                    }
+                    
+                    if (success) {
+                        ReplayListManager.Instance.Select(newReplay, true);
+                        ActiveReplayManager.Instance.StartReplayPlayback(newReplay.ReplayFile);
+                    } else {
                         labels[0].text = "» " + GlobalController.Instance.translationManager.GetTranslation("ui.game.results.nextreplay.nomore");
                         sfx.PlayOneShot(SoundEffect.UI_Error);
                         if (noReplaysCoroutine != null) {
                             StopCoroutine(noReplaysCoroutine);
                         }
                         noReplaysCoroutine = StartCoroutine(ResetTextAfterTime(0, 0.5f));
-                    } else {
-                        ActiveReplayManager.Instance.StartReplayPlayback(newReplay);
                     }
                 } else {
                     // Vote to continue

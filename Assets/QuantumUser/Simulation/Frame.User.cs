@@ -1,40 +1,53 @@
-﻿using System;
+﻿using Unity.Collections.LowLevel.Unsafe;
 
 namespace Quantum {
     public unsafe partial class Frame {
 
-        public StageTileInstance[] StageTiles;
+        public StageTileInstance* StageTiles;
+        public int StageTilesLength;
 
-        partial void InitUser() {
-            StageTiles = Array.Empty<StageTileInstance>();
+        partial void FreeUser() {
+            if (StageTiles != null) {
+                UnsafeUtility.Free(StageTiles, Unity.Collections.Allocator.Persistent);
+                StageTiles = null;
+            }
         }
 
         partial void SerializeUser(FrameSerializer serializer) {
-            // Possible desync fix?
-            StageTiles ??= Array.Empty<StageTileInstance>();
+            var stream = serializer.Stream;
 
-            serializer.Stream.SerializeArrayLength(ref StageTiles);
-            for (int i = 0; i < StageTiles.Length; i++) {
-                ref StageTileInstance tile = ref StageTiles[i];
-                serializer.Stream.Serialize(ref tile.Tile);
-
-                if (serializer.Stream.Writing) {
-                    serializer.Stream.WriteByte((byte) tile.Flags);
-                    serializer.Stream.WriteByte((byte) (tile.Rotation >> 8));
-                    serializer.Stream.WriteByte((byte) tile.Rotation);
-                } else {
-                    tile.Flags = (StageTileFlags) serializer.Stream.ReadByte();
-                    tile.Rotation = (ushort) (serializer.Stream.ReadByte() << 8);
-                    tile.Rotation |= serializer.Stream.ReadByte();
-                }
+            // Tilemap
+            if (stream.Writing) {
+                stream.WriteInt(StageTilesLength);
+            } else {
+                int newLength = stream.ReadInt();
+                ReallocStageTiles(newLength);
+            }
+            for (int i = 0; i < StageTilesLength; i++) {
+                StageTileInstance.Serialize(StageTiles + i, serializer);
             }
         }
 
         partial void CopyFromUser(Frame frame) {
-            if (StageTiles.Length != frame.StageTiles.Length) {
-                StageTiles = new StageTileInstance[frame.StageTiles.Length];
+            ReallocStageTiles(frame.StageTilesLength);
+            UnsafeUtility.MemCpy(StageTiles, frame.StageTiles, StageTileInstance.SIZE * frame.StageTilesLength);
+        }
+
+        public void ReallocStageTiles(int newSize) {
+            if (StageTilesLength == newSize) {
+                return;
             }
-            Array.Copy(frame.StageTiles, StageTiles, frame.StageTiles.Length);
+
+            if (StageTiles != null) {
+                UnsafeUtility.Free(StageTiles, Unity.Collections.Allocator.Persistent);
+                StageTiles = null;
+            }
+            
+            if (newSize > 0) {
+                StageTiles = (StageTileInstance*) UnsafeUtility.Malloc(StageTileInstance.SIZE * newSize, StageTileInstance.ALIGNMENT, Unity.Collections.Allocator.Persistent);
+            }
+
+            StageTilesLength = newSize;
         }
     }
 }

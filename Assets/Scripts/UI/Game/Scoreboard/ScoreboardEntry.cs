@@ -6,10 +6,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace NSMB.UI.Game.Scoreboard {
-    public class ScoreboardEntry : MonoBehaviour {
+    public unsafe class ScoreboardEntry : MonoBehaviour {
 
         //---Properties
         public EntityRef Target { get; private set; }
+        public int Index { get; set; }
 
         //---Serialized Variables
         [SerializeField] private Image background, pingIndicator;
@@ -17,7 +18,6 @@ namespace NSMB.UI.Game.Scoreboard {
 
         //---Private Variables
         private ScoreboardUpdater updater;
-        private int informationIndex;
         private NicknameColor nicknameColor = NicknameColor.White;
         private string cachedNickname, cachedPingSymbol;
         private bool nicknameMayHaveChanged;
@@ -31,6 +31,7 @@ namespace NSMB.UI.Game.Scoreboard {
             QuantumEvent.Subscribe<EventMarioPlayerPreRespawned>(this, OnMarioPlayerPreRespawned);
             QuantumEvent.Subscribe<EventMarioPlayerDestroyed>(this, OnMarioPlayerDestroyed);
             QuantumEvent.Subscribe<EventPlayerRemoved>(this, OnPlayerRemoved);
+            QuantumEvent.Subscribe<EventPlayerDataChanged>(this, OnPlayerDataChanged);
 
             var game = QuantumRunner.DefaultGame;
             if (game != null) {
@@ -38,11 +39,11 @@ namespace NSMB.UI.Game.Scoreboard {
             }
         }
 
-        public unsafe void Initialize(Frame f, int index, EntityRef target, ScoreboardUpdater updater) {
+        public void Initialize(Frame f, int index, EntityRef target, ScoreboardUpdater updater) {
             Target = target;
+            Index = index;
             this.updater = updater;
 
-            informationIndex = index;
             ref PlayerInformation info = ref f.Global->PlayerInfo[index];
             cachedNickname = info.Nickname.ToString().ToValidNickname(f, info.PlayerRef);
             nicknameColor = NicknameColor.Parse(info.NicknameColor.ToString());
@@ -59,13 +60,20 @@ namespace NSMB.UI.Game.Scoreboard {
             }
         }
 
-        public unsafe void UpdateEntry(Frame f) {
-            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
-            ref PlayerInformation info = ref f.Global->PlayerInfo[informationIndex];
-
+        public void UpdatePing(Frame f) {
+            ref PlayerInformation info = ref f.Global->PlayerInfo[Index];
             var playerData = QuantumUtils.GetPlayerData(f, info.PlayerRef);
             int ping = (!info.Disconnected && playerData != null) ? playerData->Ping : -1;
             pingIndicator.sprite = Utils.GetPingSprite(ping);
+        }
+
+        public void UpdateEntry(Frame f) {
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
+            ref PlayerInformation info = ref f.Global->PlayerInfo[Index];
+            var playerData = QuantumUtils.GetPlayerData(f, info.PlayerRef);
+            
+            UpdatePing(f);
+
             if (nicknameMayHaveChanged) {
                 nicknameText.text = cachedNickname;
                 nicknameMayHaveChanged = false;
@@ -117,6 +125,15 @@ namespace NSMB.UI.Game.Scoreboard {
             UpdateEntry(e.Game.Frames.Predicted);
         }
 
+        private void OnPlayerDataChanged(EventPlayerDataChanged e) {
+            Frame f = e.Game.Frames.Predicted;
+            if (e.Player != f.Global->PlayerInfo[Index].PlayerRef) {
+                return;
+            }
+
+            UpdateEntry(f);
+        }
+
         private void OnMarioPlayerDroppedStar(EventMarioPlayerDroppedStar e) {
             if (e.Entity != Target) {
                 return;
@@ -145,9 +162,9 @@ namespace NSMB.UI.Game.Scoreboard {
             UpdateEntry(e.Game.Frames.Predicted);
         }
 
-        private unsafe void OnPlayerRemoved(EventPlayerRemoved e) {
+        private void OnPlayerRemoved(EventPlayerRemoved e) {
             Frame f = e.Game.Frames.Verified;
-            ref PlayerInformation info = ref f.Global->PlayerInfo[informationIndex];
+            ref PlayerInformation info = ref f.Global->PlayerInfo[Index];
             cachedNickname = info.Nickname.ToString().ToValidNickname(f, info.PlayerRef);
             nicknameMayHaveChanged = true;
 

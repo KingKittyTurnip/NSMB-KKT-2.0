@@ -45,8 +45,8 @@ namespace NSMB.UI.Game {
         [SerializeField] private ReplayUI replayUi;
         [SerializeField] private PauseMenuManager pauseMenu;
 
-        [SerializeField] public GameObject spectationUI;
-        [SerializeField] private TMP_Text spectatingText;
+        [SerializeField] public GameObject spectationUI, spectatingArrows;
+        [SerializeField] private TMP_Text spectatingText, spectateModeSwitchPrompt;
         [SerializeField] private PlayerNametag nametagPrefab;
         [SerializeField] public GameObject nametagCanvas;
 
@@ -71,6 +71,7 @@ namespace NSMB.UI.Game {
             Settings.Controls.UI.SpectatePlayerByIndex.performed += SpectatePlayerIndex;
             Settings.Controls.UI.Next.performed += SpectateNextPlayer;
             Settings.Controls.UI.Previous.performed += SpectatePreviousPlayer;
+            Settings.Controls.UI.Submit.performed += OnSubmit;
             TranslationManager.OnLanguageChanged += OnLanguageChanged;
         }
 
@@ -81,6 +82,7 @@ namespace NSMB.UI.Game {
             Settings.Controls.UI.SpectatePlayerByIndex.performed -= SpectatePlayerIndex;
             Settings.Controls.UI.Next.performed -= SpectateNextPlayer;
             Settings.Controls.UI.Previous.performed -= SpectatePreviousPlayer;
+            Settings.Controls.UI.Submit.performed -= OnSubmit;
             TranslationManager.OnLanguageChanged -= OnLanguageChanged;
         }
 
@@ -122,7 +124,7 @@ namespace NSMB.UI.Game {
             if (!f.Exists(Entity) && f.Global->GameState >= GameState.Starting && CameraAnimator.Mode == CameraAnimator.CameraMode.FollowPlayer) {
                 if (spectating) {
                     // Find a new player to spectate
-                    SpectateNextPlayer();
+                    SpectateNextPlayer(0);
                 } else {
                     // Spectating
                     StartSpectating();
@@ -138,16 +140,28 @@ namespace NSMB.UI.Game {
             TranslationManager tm = GlobalController.Instance.translationManager;
             Frame f = PredictedFrame;
             if (f.Unsafe.TryGetPointer(Entity, out MarioPlayer* mario)) {
-                RuntimePlayer runtimePlayer = f.GetPlayerData(mario->PlayerRef);
-                string username = runtimePlayer.PlayerNickname.ToValidNickname(f, mario->PlayerRef);
+                string nickname = "noname";
+                for (int i = 0; i < f.Global->RealPlayers; i++) {
+                    if (f.Global->PlayerInfo[i].PlayerRef == mario->PlayerRef) {
+                        nickname = f.Global->PlayerInfo[i].Nickname.ToString().ToValidNickname(f, mario->PlayerRef);
+                        break;
+                    }
+                }
 
-                spectatingText.text = tm.GetTranslationWithReplacements("ui.game.spectating", "playername", username);
+                spectatingText.text = tm.GetTranslationWithReplacements("ui.game.spectating", "playername", nickname);
+                spectateModeSwitchPrompt.text = tm.GetTranslation("ui.replay.camera.freecam");
+                spectatingArrows.SetActive(true);
             } else {
                 spectatingText.text = tm.GetTranslation("ui.replay.camera.freecam");
+                spectateModeSwitchPrompt.text = tm.GetTranslation("ui.game.players");
+                spectatingArrows.SetActive(false);
             }
 
             OnCameraFocusChanged?.Invoke();
-            FindFirstObjectByType<MusicManager>().HandleMusic(Game, true);
+
+            if (f.Global->GameState == GameState.Playing) {
+                FindFirstObjectByType<MusicManager>().HandleMusic(Game, true);
+            }
         }
 
         public void StartSpectating() {
@@ -159,18 +173,18 @@ namespace NSMB.UI.Game {
                 }
             }
 
-            SpectateNextPlayer();
+            SpectateNextPlayer(0);
         }
 
-        public void SpectateNextPlayer(InputAction.CallbackContext context) {
-            if (!spectating) {
+        public unsafe void SpectateNextPlayer(InputAction.CallbackContext context) {
+            if (!spectating || cameraAnimator.Mode != CameraAnimator.CameraMode.FollowPlayer || pauseMenu.IsPaused || Game.Frames.Predicted.Global->GameState >= GameState.Ended) {
                 return;
             }
 
-            SpectateNextPlayer();
+            SpectateNextPlayer(1);
         }
-
-        public unsafe void SpectateNextPlayer() {
+        
+        public unsafe void SpectateNextPlayer(int increment) {
             Frame f = PredictedFrame;
 
             int marioCount = f.ComponentCount<MarioPlayer>();
@@ -178,91 +192,82 @@ namespace NSMB.UI.Game {
                 return;
             }
 
-            List<EntityRef> marios = new(marioCount);
+            List<EntityRef> marios = new();
             var marioFilter = f.Filter<MarioPlayer>();
             marioFilter.UseCulling = false;
-            while (marioFilter.NextUnsafe(out EntityRef entity, out _)) {
+            while (marioFilter.NextUnsafe(out EntityRef entity, out MarioPlayer* mario)) {
                 marios.Add(entity);
             }
             marios.Sort((a, b) => {
-                return a.Index - b.Index;
+                int indexA = int.MaxValue;
+                int indexB = int.MaxValue;
+                var marioA = f.Unsafe.GetPointer<MarioPlayer>(a);
+                var marioB = f.Unsafe.GetPointer<MarioPlayer>(b);
+
+                for (int i = 0; i < f.Global->RealPlayers; i++) {
+                    PlayerRef player = f.Global->PlayerInfo[i].PlayerRef;
+                    if (player == marioA->PlayerRef) {
+                        indexA = i;
+                    } else if (player == marioB->PlayerRef) {
+                        indexB = i;
+                    }
+                }
+                return indexA - indexB;
             });
+            
             int currentIndex = marios.IndexOf(Entity);
-            int nextIndex = (int) Mathf.Repeat(currentIndex - 1, marioCount + 1);
-            if (nextIndex == marioCount) {
-                // Freecam
-                CameraAnimator.Mode = CameraAnimator.CameraMode.Freecam;
-                Entity = EntityRef.None;
-            } else {
-                // Follow Player
-                CameraAnimator.Mode = CameraAnimator.CameraMode.FollowPlayer;
-                Entity = marios[nextIndex];
-            }
+            int nextIndex = (int) Mathf.Repeat(currentIndex + increment, marioCount);
+            CameraAnimator.Mode = CameraAnimator.CameraMode.FollowPlayer;
+            Entity = marios[nextIndex];
 
             UpdateSpectateUI();
         }
 
-        public void SpectatePreviousPlayer(InputAction.CallbackContext context) {
-            if (!spectating) {
+        public unsafe void SpectatePreviousPlayer(InputAction.CallbackContext context) {
+            if (!spectating || cameraAnimator.Mode != CameraAnimator.CameraMode.FollowPlayer || pauseMenu.IsPaused || Game.Frames.Predicted.Global->GameState >= GameState.Ended) {
                 return;
             }
 
-            SpectatePreviousPlayer();
+            SpectateNextPlayer(-1);
         }
 
-        public unsafe void SpectatePreviousPlayer() {
-            Frame f = PredictedFrame;
-
-            int marioCount = f.ComponentCount<MarioPlayer>();
-            if (marioCount <= 0) {
-                return;
-            }
-
-            List<EntityRef> marios = new(marioCount);
-            var marioFilter = f.Filter<MarioPlayer>();
-            marioFilter.UseCulling = false;
-            while (marioFilter.NextUnsafe(out EntityRef entity, out _)) {
-                marios.Add(entity);
-            }
-            marios.Sort((a, b) => {
-                return a.Index - b.Index;
-            });
-            int currentIndex = marios.IndexOf(Entity);
-            int nextIndex = (int) Mathf.Repeat(currentIndex - 1, marioCount + 1);
-            if (nextIndex == marioCount) {
-                // Freecam
-                CameraAnimator.Mode = CameraAnimator.CameraMode.Freecam;
-                Entity = EntityRef.None;
-            } else {
-                // Follow Player
-                CameraAnimator.Mode = CameraAnimator.CameraMode.FollowPlayer;
-                Entity = marios[nextIndex];
-            }
-
-            UpdateSpectateUI();
-        }
-
-        private void OnNavigate(InputAction.CallbackContext context) {
-            /*
-            if (!spectating) {
+        private unsafe void OnNavigate(InputAction.CallbackContext context) {
+            if (!spectating || cameraAnimator.Mode != CameraAnimator.CameraMode.FollowPlayer || pauseMenu.IsPaused || Game.Frames.Predicted.Global->GameState >= GameState.Ended) {
+                previousNavigate = Vector2.zero;
                 return;
             }
 
             Vector2 newPosition = context.ReadValue<Vector2>();
             if (previousNavigate.x > -0.3f && newPosition.x <= -0.3f) {
                 // Left
-                SpectatePreviousPlayer();
+                SpectateNextPlayer(-1);
             }
             if (previousNavigate.x < 0.3f && newPosition.x >= 0.3f) {
                 // Right
-                SpectateNextPlayer();
+                SpectateNextPlayer(1);
             }
             previousNavigate = newPosition;
-            */
+        }
+
+        private unsafe void OnSubmit(InputAction.CallbackContext context) {
+            if (!spectating || pauseMenu.IsPaused || Game.Session.IsReplay || Game.Frames.Predicted.Global->GameState >= GameState.Ended) {
+                return;
+            }
+
+            // Change mode
+            if (cameraAnimator.Mode == CameraAnimator.CameraMode.FollowPlayer) {
+                cameraAnimator.Mode = CameraAnimator.CameraMode.Freecam;
+                Entity = EntityRef.None;
+
+            } else if (cameraAnimator.Mode == CameraAnimator.CameraMode.Freecam) {
+                CameraAnimator.Mode = CameraAnimator.CameraMode.FollowPlayer;
+                Entity = scoreboardUpdater.EntityAtPosition(0);
+            }
+            UpdateSpectateUI();
         }
 
         private unsafe void SpectatePlayerIndex(InputAction.CallbackContext context) {
-            if (!spectating || Game.Frames.Predicted.Global->GameState >= GameState.Ended) {
+            if (!spectating || Game.Frames.Predicted.Global->GameState >= GameState.Ended || pauseMenu.IsPaused) {
                 return;
             }
 

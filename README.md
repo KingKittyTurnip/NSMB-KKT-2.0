@@ -51,7 +51,7 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
   <summary><h2>Credits</h2></summary>
   
 ### Contributors:
-* [Amy54Desu](https://github.com/Amy54Desu)
+* [amykaname](https://github.com/amykaname)
 * [AprilShade](https://github.com/AprilShade)
 * [ArianLust](https://github.com/ArianLust)
 * [Atwer](https://github.com/AtwerJ)
@@ -60,6 +60,7 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * [Cubby Crazes](https://github.com/CubbyCrazes)
 * [davart154](https://github.com/davart154)
 * [DonKaiStorm](https://github.com/DonKaiStorm)
+* [dotjp](https://github.com/windows10isnotavailable)
 * [GithubSPerez](https://github.com/GithubSPerez)
 * GradedWarrior
 * [HyperC@T](https://github.com/SuperSonic392)
@@ -69,13 +70,17 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * [Kraken](https://github.com/McKrak)
 * [MiiBumm](https://github.com/MiiBumm)
 * [mindnomad](https://github.com/mindnomad)
+* Mixin
+* Mizzierella
+* [notossdekasaihassei](https://github.com/Amy54Desu)
 * [Pordrack](https://github.com/Pordrack)
 * [skarph](https://github.com/skarph)
 * [Skillz](https://github.com/Skillz808)
 * [TheMoogle](https://github.com/TheMoogle)
 * [Tombuntu](https://github.com/ReXiSp)
-* [xFrostyCake123](https://github.com/xFrostyCake123)
 * [VLC](https://github.com/vlcoo)
+* [Windows10V](https://github.com/Windows10V1)
+* [xFrostyCake123](https://github.com/xFrostyCake123)
 * [Zest](https://github.com/zestydevy)
 * _ZombleBobble
 
@@ -111,6 +116,7 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * Laxan3000 *(it-it)*
 * LyroyTheToad *(it-it)*
 * Maestrike *(it-it)*
+* Maksymilian Król *(pl-pl)*
 * marbo *(pt-br)*
 * Mark19 *(es-es)*
 * MasterMindo *(it-it)*
@@ -130,7 +136,6 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * Snayp *(fr-fr)*
 * Thebababois369 *(id-id)*
 * Tombuntu *(ja-jp)*
-* Watercats *(pl-pl)*
 * Windows10V *(pt-br)*
 * vlco_o *(es-es, ro-ro)*
 
@@ -138,12 +143,15 @@ Windows, Linux, and Mac Builds: https://github.com/ipodtouch0218/NSMB-MarioVsLui
 * AprilShade
 * ArianLust
 * Ave
+* Cleeaf
 * CreativeGhost
 * Cubby Crazes
 * Fawndue
 * Grape
+* Laxan3000
 * MiiBumm
 * mindnomad
+* notossdekasaihassei
 * TheCyVap
 * Vinnnnnnny
 

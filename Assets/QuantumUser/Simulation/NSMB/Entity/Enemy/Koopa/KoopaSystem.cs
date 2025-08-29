@@ -3,7 +3,6 @@ using Quantum.Collections;
 using static IInteractableTile;
 
 namespace Quantum {
-    [UnityEngine.Scripting.Preserve]
     public unsafe class KoopaSystem : SystemMainThreadEntityFilter<Koopa, KoopaSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEnemyRespawned, ISignalOnEntityBumped,
         ISignalOnBobombExplodeEntity, ISignalOnIceBlockBroken, ISignalOnEnemyKilledByStageReset, ISignalOnEnemyTurnaround, ISignalOnEntityCrushed,
         ISignalOnMarioPlayerBecameInvincible {
@@ -33,6 +32,7 @@ namespace Quantum {
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
+            var entity = filter.Entity;
             var enemy = filter.Enemy;
             var koopa = filter.Koopa;
             var transform = filter.Transform;
@@ -62,13 +62,15 @@ namespace Quantum {
                         mario->HeldEntity = default;
                         holdable->PreviousHolder = default;
                         holdable->Holder = default;
+
+                        PhysicsObjectSystem.TryEject(f, entity, stage);
                     }
                 }
             }
 
             // Turn around when hitting a wall.
             if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) {
-                enemy->ChangeFacingRight(f, filter.Entity, physicsObject->IsTouchingLeftWall);
+                enemy->ChangeFacingRight(f, entity, physicsObject->IsTouchingLeftWall);
 
                 if (koopa->IsKicked) {
                     QList<PhysicsContact> contacts = f.ResolveList(physicsObject->Contacts);
@@ -83,12 +85,12 @@ namespace Quantum {
                         var tileInstance = stage.GetTileRelative(f, contact.Tile);
                         StageTile tile = f.FindAsset(tileInstance.Tile);
                         if (tile is IInteractableTile it) {
-                            it.Interact(f, filter.Entity, right ? InteractionDirection.Right : InteractionDirection.Left,
+                            it.Interact(f, entity, right ? InteractionDirection.Right : InteractionDirection.Left,
                                 contact.Tile, tileInstance, out bool tempPlayBumpSound);
                         }
                     }
 
-                    f.Events.PlayBumpSound(filter.Entity);
+                    f.Events.PlayBumpSound(entity);
                 }
             }
 
@@ -128,7 +130,7 @@ namespace Quantum {
                     }
 
                     if (turnaround) {
-                        enemy->ChangeFacingRight(f, filter.Entity, !enemy->FacingRight);
+                        enemy->ChangeFacingRight(f, entity, !enemy->FacingRight);
                     }
                 }
             }

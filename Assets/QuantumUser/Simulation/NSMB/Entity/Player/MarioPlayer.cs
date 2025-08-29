@@ -1,4 +1,6 @@
 using Photon.Deterministic;
+using Quantum.Collections;
+using Quantum.Core;
 using System;
 
 namespace Quantum {
@@ -151,7 +153,7 @@ namespace Quantum {
             ReserveItem = newItem;
         }
 
-        public void Death(Frame f, EntityRef entity, bool fire, bool dropStars, EntityRef attacker) {
+        public void Death(Frame f, EntityRef entity, bool fire, bool dropObjectives, EntityRef attacker) {
             if (IsDead) {
                 return;
             }
@@ -167,8 +169,14 @@ namespace Quantum {
                 f.Signals.OnMarioPlayerDropObjective(entity, 1, attacker);
                 DeathAnimationFrames = (GamemodeData.StarChasers->Stars > 0) ? (byte) 30 : (byte) 36;
             } else {
-                if (dropStars) {
-                    f.Signals.OnMarioPlayerDropObjective(entity, 1, attacker);
+                if (dropObjectives) {
+                    int objectiveCount = 1;
+                    /*
+                    if (f.Unsafe.TryGetPointer(attacker, out MarioPlayer* attackerMario) && attackerMario->IsGroundpoundActive) {
+                        objectiveCount = 3;
+                    }
+                    */
+                    f.Signals.OnMarioPlayerDropObjective(entity, objectiveCount, attacker);
                 }
                 DeathAnimationFrames = 36;
             }
@@ -187,10 +195,11 @@ namespace Quantum {
             IsTurnaround = false;
             IsGroundpounding = false;
             CurrentKnockback = KnockbackStrength.None;
+            KnockbackGetupFrames = 0;
             WallslideRight = false;
             WallslideLeft = false;
             ForceJumpTimer = 0;
-            
+
             /*
             IsWaterWalking = false;
             IsFrozen = false;
@@ -200,7 +209,7 @@ namespace Quantum {
             }
             */
 
-            if (f.Exists(HeldEntity) && f.Unsafe.TryGetPointer(HeldEntity, out Holdable* holdable)) {
+            if (f.Unsafe.TryGetPointer(HeldEntity, out Holdable* holdable)) {
                 holdable->DropWithoutThrowing(f, HeldEntity);
             }
 
@@ -429,10 +438,10 @@ namespace Quantum {
 
             var physics = f.FindAsset(PhysicsAsset);
             FPVector2 knockbackVelocity = strength switch {
-                KnockbackStrength.Groundpound => new(FP.FromString("8.25") / 2, FP.FromString("3.5")),
-                KnockbackStrength.FireballBump => new(FP.FromString("3.75") / 2, 0),
-                KnockbackStrength.CollisionBump => new(FP.FromString("2.5"), FP.FromString("3.5")),
-                KnockbackStrength.Normal or _ => new(FP.FromString("3.75") / 2, FP.FromString("3.5")),
+                KnockbackStrength.Groundpound => new(Constants._8_25 / 2, Constants._3_50),
+                KnockbackStrength.FireballBump => new(Constants._3_75 / 2, 0),
+                KnockbackStrength.CollisionBump => new(Constants._2_50, Constants._3_50),
+                KnockbackStrength.Normal or _ => new(Constants._3_75 / 2, Constants._3_50),
             };
             if (CurrentKnockback == KnockbackStrength.CollisionBump) {
                 knockbackVelocity = FPVector2.Zero;
@@ -443,11 +452,14 @@ namespace Quantum {
                 knockbackVelocity.Y *= physics.KnockbackMiniMultiplier.Y;
             }
 
+            KnockbackTick = f.Number;
+
             bool forceWeak = false;
             if (freezable->IsFrozen(f)) {
-                strength = KnockbackStrength.FireballBump;
                 forceWeak = true;
-            } else if (strength == KnockbackStrength.FireballBump && !physicsObject->IsTouchingGround) {
+                KnockbackTick -= 25;
+            }
+            if (strength == KnockbackStrength.FireballBump && !physicsObject->IsTouchingGround) {
                 // FacingRight = fromRight;
                 knockbackVelocity.X *= FP._0_75;
             }
@@ -461,7 +473,6 @@ namespace Quantum {
             physicsObject->HoverFrames = 0;
 
             KnockbackWasOriginallyFacingRight = FacingRight;
-            KnockbackTick = f.Number;
             KnockForwards = FacingRight != fromRight;
             IsInShell = false;
             IsGroundpounding = false;

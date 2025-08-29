@@ -50,6 +50,7 @@ namespace Quantum {
                     new MarioBrosPlatformSystem(),
                     new EnterablePipeSystem(),
 
+                    new InvisibleBlockSystem(),
                     // new BetterPhysicsObjectSystem()
 
                     new TanoombaSystem(),
