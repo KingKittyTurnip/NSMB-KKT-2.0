@@ -23,9 +23,10 @@ namespace Quantum {
             var starball = filter.Starball;
             var physicsObject = filter.PhysicsObject;
 
-            //Remove And Make It occur At The Right Time (This Code Makes It Collide With The Terrain Correctly, Since it only cares about the Box bounds)
+            //TODO: Place This Code Elsewhere
+            //(This Code Makes It Collide With The Terrain Correctly, Since it only cares about the Box bounds)
             var collider = filter.Collider;
-            collider->Shape.Box.Extents = new FPVector2(Constants._0_40, Constants._0_40);
+            collider->Shape.Box.Extents = new FPVector2(Constants._0_40, Constants._0_40); //new FPVector2(FP._0_01, FP._0_50);
             collider->Shape.Circle.Radius = FP._0_50;
 
 
