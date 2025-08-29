@@ -999,6 +999,36 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Starball))]
+  public unsafe partial class StarballPrototype : ComponentPrototype<Quantum.Starball> {
+    public AssetRef<EntityPrototype> Contains;
+    partial void MaterializeUser(Frame frame, ref Quantum.Starball result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Starball component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Starball result, in PrototypeMaterializationContext context = default) {
+        result.Contains = this.Contains;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Tanoomba))]
+  public unsafe partial class TanoombaPrototype : ComponentPrototype<Quantum.Tanoomba> {
+    public FP JumpVelocity;
+    partial void MaterializeUser(Frame frame, ref Quantum.Tanoomba result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Tanoomba component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Tanoomba result, in PrototypeMaterializationContext context = default) {
+        result.JumpVelocity = this.JumpVelocity;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.ThrowingObject))]
   public unsafe partial class ThrowingObjectPrototype : ComponentPrototype<Quantum.ThrowingObject> {
     public Quantum.QEnum8<ThrowingObjectType> Type;

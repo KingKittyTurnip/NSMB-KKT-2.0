@@ -83,7 +83,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.875, y: 1}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -212,8 +212,6 @@ MonoBehaviour:
   sparkles: {fileID: 7191599241214066530}
   looseCoin: 1
   objectiveCoin: 1
-  spinSpeed: 300
-  minimumSpinSpeed: 300
 --- !u!114 &1839046130397998528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,6 +555,8 @@ MonoBehaviour:
     IsWaterSolid:
       Value: 0
     BreakMegaObjects:
+      Value: 0
+    WindImmune:
       Value: 0
 --- !u!114 &2115189598253090278
 MonoBehaviour:

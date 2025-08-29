@@ -1,0 +1,10 @@
+component Starball {
+	AssetRef<EntityPrototype> Contains;
+
+	[ExcludeFromPrototype] EntityRef Rider;
+	[ExcludeFromPrototype] EntityRef Goal;
+}
+
+event StarBallDestroyed {
+	EntityRef Entity;
+}

@@ -52,6 +52,8 @@ namespace Quantum {
 
                     // new BetterPhysicsObjectSystem()
 
+                    new TanoombaSystem(),
+                    new StarballSystem(),
                     new ThrowingObjectSystem(),
                     new ClockSystem(),
                     new FanSystem()

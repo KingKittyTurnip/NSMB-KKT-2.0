@@ -1,0 +1,32 @@
+component Tanoomba {
+	[ExcludeFromPrototype] TanoombaState State;
+	FP JumpVelocity;
+	
+	[ExcludeFromPrototype] int HitFrame;
+	[ExcludeFromPrototype] byte GetupFrames;
+	[ExcludeFromPrototype] byte LastKnockback;
+	[ExcludeFromPrototype] byte DamageInvincibilityFrames;
+
+	[ExcludeFromPrototype] EntityRef TargetPlayer;
+	[ExcludeFromPrototype] EntityRef TargetCoin;
+	[ExcludeFromPrototype] FPVector2 TargetBlock; //Idk What To Do here yet
+
+	[ExcludeFromPrototype] bool Laughing;
+}
+
+enum TanoombaState : Byte {
+    Idling,
+	Searching,
+	Attacking,
+	KnockedBack,
+	Coin,
+	Block,
+	Star,
+	HeavyStone,
+	Shell,
+}
+
+//event ThrowObjSimple {
+//	EntityRef Entity;
+//	FPVector2 pos;
+//}
