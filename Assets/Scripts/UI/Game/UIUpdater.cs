@@ -26,7 +26,7 @@ namespace NSMB.UI.Game {
         //---Serialized Variables
         [SerializeField] private PlayerElements playerElements;
         [SerializeField] private CanvasGroup toggler;
-        [SerializeField] private TrackIcon playerTrackTemplate, starTrackTemplate, starCoinTrackTemplate, objectiveCoinTrackTemplate;
+        [SerializeField] private TrackIcon playerTrackTemplate, starTrackTemplate, starCoinTrackTemplate, objectiveCoinTrackTemplate, starballgoalTrackTemplate, hazardTrackTemplate;
         [SerializeField] private Sprite storedItemNull;
         [SerializeField] private TMP_Text uiTeamObjective, uiMainObjective, uiCoins, uiDebug, uiLives, uiCountdown;
         [SerializeField] private Image itemReserve, itemColor, deathFade;
@@ -63,6 +63,8 @@ namespace NSMB.UI.Game {
             StarCoinAnimator.StarCoinDestroyed += OnStarCoinDestroyed;
             CoinAnimator.ObjectiveCoinInitialized += OnObjectiveCoinInitialized;
             CoinAnimator.ObjectiveCoinDestroyed += OnObjectiveCoinDestroyed;
+            StarballgoalAnimator.StarballgoalInitialized += OnStarballgoalInitialized;
+            StarballgoalAnimator.StarballgoalDestroyed += OnStarballgoalDestroyed;
             TranslationManager.OnLanguageChanged += OnLanguageChanged;
             Settings.Controls.Debug.ToggleHUD.performed += OnToggleHUD;
             OnLanguageChanged(GlobalController.Instance.translationManager);
@@ -78,6 +80,8 @@ namespace NSMB.UI.Game {
             StarCoinAnimator.StarCoinDestroyed -= OnStarCoinDestroyed;
             CoinAnimator.ObjectiveCoinInitialized -= OnObjectiveCoinInitialized;
             CoinAnimator.ObjectiveCoinDestroyed -= OnObjectiveCoinDestroyed;
+            StarballgoalAnimator.StarballgoalInitialized -= OnStarballgoalInitialized;
+            StarballgoalAnimator.StarballgoalDestroyed -= OnStarballgoalDestroyed;
             TranslationManager.OnLanguageChanged -= OnLanguageChanged;
             Settings.Controls.Debug.ToggleHUD.performed -= OnToggleHUD;
         }
@@ -181,6 +185,14 @@ namespace NSMB.UI.Game {
 
         private void OnObjectiveCoinDestroyed(CoinAnimator objectiveCoin) {
             DestroyTrackIcon(objectiveCoin);
+        }
+
+        private void OnStarballgoalInitialized(Frame f, StarballgoalAnimator starballgoal) {
+            entityTrackIcons[starballgoal] = CreateTrackIcon(Updater, f, starballgoal.EntityRef, starballgoal.transform);
+        }
+
+        private void OnStarballgoalDestroyed(Frame f, StarballgoalAnimator starballgoal) {
+            DestroyTrackIcon(starballgoal);
         }
 
         private void UpdateStoredItemUI(MarioPlayer* mario, bool playAnimation) {
@@ -334,6 +346,10 @@ namespace NSMB.UI.Game {
                 icon = Instantiate(starTrackTemplate, starTrackTemplate.transform.parent);
             } else if (f.Has<StarCoin>(entity)) {
                 icon = Instantiate(starCoinTrackTemplate, starCoinTrackTemplate.transform.parent);
+            } else if (f.Has<Starballgoal>(entity)) {
+                icon = Instantiate(starballgoalTrackTemplate, starballgoalTrackTemplate.transform.parent);
+            } else if (f.Has<Hazard>(entity)) {
+                icon = Instantiate(hazardTrackTemplate, hazardTrackTemplate.transform.parent);
             } else if (f.Has<ObjectiveCoin>(entity)) {
                 if (availablePooledTrackIcons.TryGetValue(typeof(CoinAnimator), out var pool) && pool.Count > 0) {
                     icon = pool[0];

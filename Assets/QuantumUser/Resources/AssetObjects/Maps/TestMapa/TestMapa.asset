@@ -416,6 +416,17 @@ MonoBehaviour:
     - rid: 178332831745835017
     - rid: 178332831745835018
     - rid: 178332831745835019
+  - Components:
+    - rid: 8142161597586997248
+    - rid: 8142161597586997249
+    - rid: 8142161597586997250
+    - rid: 8142161597586997251
+    - rid: 8142161597586997252
+    - rid: 8142161597586997253
+    - rid: 8142161597586997254
+    - rid: 8142161597586997255
+    - rid: 8142161597586997256
+    - rid: 8142161597586997257
   SerializedTriangleDataUncompressedSize: 8
   references:
     version: 2
@@ -3212,7 +3223,7 @@ MonoBehaviour:
             RawValue: 0
           BoxExtents:
             X:
-              RawValue: 11468
+              RawValue: 11469
             Y:
               RawValue: 13763
           PositionOffset:
@@ -3294,7 +3305,7 @@ MonoBehaviour:
             Value: 429607978212108660
         CharacterAsset:
           Id:
-            Value: 485289843648077326
+            Value: 532063855470386108
     - rid: 5920063340326944778
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -4375,6 +4386,179 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+    - rid: 8142161597586997248
+      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        Position:
+          X:
+            RawValue: 798619
+          Y:
+            RawValue: -90136
+        Rotation:
+          RawValue: 0
+    - rid: 8142161597586997249
+      type: {class: PhysicsCollider2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        ShapeConfig:
+          ShapeType: 4
+          PolygonCollider:
+            Id:
+              Value: 323677908924403078
+          CircleRadius:
+            RawValue: 32768
+          CapsuleSize:
+            X:
+              RawValue: 65536
+            Y:
+              RawValue: 65536
+          EdgeExtent:
+            RawValue: 0
+          BoxExtents:
+            X:
+              RawValue: 22938
+            Y:
+              RawValue: 32768
+          PositionOffset:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          RotationOffset:
+            RawValue: 0
+          UserTag: 0
+          IsPersistent: 1
+          CompoundShapes:
+          - ShapeType: 4
+            PolygonCollider:
+              Id:
+                Value: 0
+            CircleRadius:
+              RawValue: 0
+            CapsuleSize:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            EdgeExtent:
+              RawValue: 0
+            BoxExtents:
+              X:
+                RawValue: 26214
+              Y:
+                RawValue: 26214
+            PositionOffset:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            RotationOffset:
+              RawValue: 0
+            UserTag: 0
+            IsSetFromSourceCollider: 0
+          - ShapeType: 1
+            PolygonCollider:
+              Id:
+                Value: 0
+            CircleRadius:
+              RawValue: 32768
+            CapsuleSize:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            EdgeExtent:
+              RawValue: 0
+            BoxExtents:
+              X:
+                RawValue: 26214
+              Y:
+                RawValue: 26214
+            PositionOffset:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            RotationOffset:
+              RawValue: 0
+            UserTag: 0
+            IsSetFromSourceCollider: 0
+        Layer: 0
+        IsTrigger: 0
+        PhysicsMaterial:
+          Id:
+            Value: 0
+    - rid: 8142161597586997250
+      type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        CallbackFlags:
+          Value: 4095
+    - rid: 8142161597586997251
+      type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 16384
+        BroadRadius:
+          RawValue: 32768
+    - rid: 8142161597586997252
+      type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        IsHefty:
+          Value: 1
+        IPWSUntilGround:
+          Value: 0
+        IPWSTime: 0
+        SpawningVelocityRange:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+    - rid: 8142161597586997253
+      type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        ColliderDisabled:
+          Value: 0
+    - rid: 8142161597586997254
+      type: {class: InteractionInitiatorPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        _empty_prototype_dummy_field_: 0
+    - rid: 8142161597586997255
+      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Gravity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: -1376256
+        TerminalVelocity:
+          RawValue: -1638400
+        IsFrozen:
+          Value: 0
+        DisableCollision:
+          Value: 0
+        SlowInLiquids:
+          Value: 1
+        IsWaterSolid:
+          Value: 0
+        BreakMegaObjects:
+          Value: 0
+        WindImmune:
+          Value: 0
+    - rid: 8142161597586997256
+      type: {class: StarballPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        CurrentGoal:
+          Id:
+            Value: 1489641094450961488
+        Contains:
+          Id:
+            Value: 1295981493910502871
+    - rid: 8142161597586997257
+      type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        _empty_prototype_dummy_field_: 0
     - rid: 8334416449858699264
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:

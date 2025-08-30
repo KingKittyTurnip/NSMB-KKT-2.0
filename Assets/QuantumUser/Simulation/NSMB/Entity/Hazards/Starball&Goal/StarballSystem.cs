@@ -223,7 +223,7 @@ namespace Quantum {
             bool attackFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_25;
 
             //Try Make Rider
-            if (starball->Rider == EntityRef.None && FPVector2.Dot(damageDirection, FPVector2.Down) > FP._0_25 && mario->KnockbackGetupFrames <= 0 && mario->CurrentKnockback == KnockbackStrength.None) {
+            if (starball->Rider == EntityRef.None && !mario->RidingStarball && FPVector2.Dot(damageDirection, FPVector2.Down) > FP._0_25 && mario->KnockbackGetupFrames <= 0 && mario->CurrentKnockback == KnockbackStrength.None) {
                 starball->Rider = marioEntity;
                 mario->RidingStarball = true;
                 return;
