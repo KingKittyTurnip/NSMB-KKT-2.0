@@ -1,5 +1,6 @@
 using Photon.Deterministic;
-using static UnityEngine.UI.GridLayoutGroup;
+using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
 
@@ -44,34 +45,46 @@ namespace Quantum {
             var collider = filter.Collider;
 
             // TODO: Countdown To Despawn
-            //if (hazard->LifeTime > 0) {
-            
-            //}
-            
+            if (hazard->LifeTime > 0) {
+                hazard->LifeTime--;
+            } else {
+                if (hazard->IsHazard && hazard->RestrictSpawnPosition) {
+                    f.Global->UsedHazardSpawns.Clear(hazard->index);
+                    f.Global->UsedHazardSpawnCount--;
+                }
+                var position = f.Unsafe.GetPointer<Transform2D>(filter.Entity)->Position;
+                Object.Instantiate(Resources.Load("Prefabs/Particle/SpawnPoof"), new Vector3((float) position.X, (float) position.Y, -5), Quaternion.identity);
+                f.Destroy(filter.Entity);
+            }
+
             // allow interactions
             if (hazard->IPWSUntilGround) {
                 if (physicsObject->IsTouchingGround)
                     hazard->Inactive = false;
             } else if (hazard->IPWSTime > 0) {
                 //if (physicsObject->IsTouchingGround) TODO: Do The Countdowncode
-                    hazard->Inactive = false;
+                hazard->Inactive = false;
             }
         }
 
         public void OnEnemyDespawned(Frame f, EntityRef entity) {
             f.Unsafe.TryGetPointer(entity, out Hazard* hazard);
-            if (hazard->IsHazard) {
+            if (hazard != null && hazard->IsHazard) {
                 f.Destroy(entity);
                 //TODO: Remove From Hazard List
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason) {
+        public void OnDestroy() {
+
+        }
+
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
                 return;
             }
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            //var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
 
             hazard->IsHazard = true;
             // IdeaBulb Carry On Creation :TOTEST:
@@ -97,7 +110,7 @@ namespace Quantum {
 
             // Shot in Random Diraction
             transform->Position = spawnpoint;
-            physicsObject->Velocity = new(hazard->SpawningVelocityRange.X /*Insert RNG Calculator*/, hazard->SpawningVelocityRange.Y);
+            //physicsObject->Velocity = new(hazard->SpawningVelocityRange.X /*Insert RNG Calculator*/, hazard->SpawningVelocityRange.Y);
         }
     }
 }

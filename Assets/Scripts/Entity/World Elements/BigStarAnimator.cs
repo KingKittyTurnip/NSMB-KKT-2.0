@@ -10,7 +10,8 @@ namespace NSMB.Entities.World {
         //---Static Variables
         public static event Action<Frame, BigStarAnimator> BigStarInitialized;
         public static event Action<Frame, BigStarAnimator> BigStarDestroyed;
-        private static Color UncollectableColor = new(1, 1, 1, 0.55f);
+        //private static Color UncollectableColor = new(1, 1, 1, 0.55f);
+        [SerializeField] private GameObject StarModel, TransparentModel;
 
         //---Serialized Variables
         [SerializeField] private float pulseAmount = 0.2f, pulseSpeed = 0.2f, rotationSpeed = 30f, blinkingSpeed = 0.5f;
@@ -77,8 +78,8 @@ namespace NSMB.Entities.World {
                 graphicTransform.localScale = Vector3.one;
                 graphicTransform.Rotate(new(0, 0, rotationSpeed * 30 * (star->FacingRight ? -1 : 1) * Time.deltaTime), Space.Self);
                 float timeRemaining = star->Lifetime / 60f;
-                sRenderer.enabled = !(timeRemaining < 5 && timeRemaining * 2 % (blinkingSpeed * 2) < blinkingSpeed);
-                sRenderer.color = star->UncollectableFrames > 0 ? uncollectableColor : Color.white;
+                StarModel.SetActive(star->UncollectableFrames <= 0 && (!(timeRemaining < 5 && timeRemaining * 2 % (blinkingSpeed * 2) < blinkingSpeed)));
+                TransparentModel.SetActive(star->UncollectableFrames > 0);
                 legacyAnimation.Stop();
             }
         }

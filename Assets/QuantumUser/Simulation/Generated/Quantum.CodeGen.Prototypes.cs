@@ -530,6 +530,7 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Hazard))]
   public unsafe partial class HazardPrototype : ComponentPrototype<Quantum.Hazard> {
+    public QBoolean RestrictSpawnPosition;
     public QBoolean IsHefty;
     public QBoolean IPWSUntilGround;
     public Byte IPWSTime;
@@ -541,10 +542,28 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context = default) {
+        result.RestrictSpawnPosition = this.RestrictSpawnPosition;
         result.IsHefty = this.IsHefty;
         result.IPWSUntilGround = this.IPWSUntilGround;
         result.IPWSTime = this.IPWSTime;
         result.SpawningVelocityRange = this.SpawningVelocityRange;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.HazardManager))]
+  public unsafe partial class HazardManagerPrototype : ComponentPrototype<Quantum.HazardManager> {
+    public UInt16 Lifetime;
+    public Int32 spawnIndex;
+    partial void MaterializeUser(Frame frame, ref Quantum.HazardManager result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.HazardManager component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.HazardManager result, in PrototypeMaterializationContext context = default) {
+        result.Lifetime = this.Lifetime;
+        result.spawnIndex = this.spawnIndex;
         MaterializeUser(frame, ref result, in context);
     }
   }

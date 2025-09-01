@@ -439,8 +439,9 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
             *doSplash = true;
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason) {
-            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out ThrowingObject* Dis)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
                 return;
             }
 

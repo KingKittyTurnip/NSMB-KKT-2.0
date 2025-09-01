@@ -4848,6 +4848,7 @@ GameObject:
   - component: {fileID: 620910420291615496}
   - component: {fileID: 6989136294608042370}
   - component: {fileID: 7318776400371000510}
+  - component: {fileID: 665227778856698051}
   - component: {fileID: -4455576844753479187}
   - component: {fileID: 2210952625023297629}
   - component: {fileID: 3901402401622306172}
@@ -4855,7 +4856,6 @@ GameObject:
   - component: {fileID: 3093743753026942761}
   - component: {fileID: -3897358826683353975}
   - component: {fileID: 868353166419015578}
-  - component: {fileID: 665227778856698051}
   m_Layer: 19
   m_Name: FanThing
   m_TagString: Powerup
@@ -4900,12 +4900,12 @@ MonoBehaviour:
     PositionOffset:
       RawValue: 0
   PhysicsCollider:
+    IsEnabled: 1
     IsTrigger: 0
     Material:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
-    IsEnabled: 1
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -5244,6 +5244,21 @@ MonoBehaviour:
   soundOrigin: {fileID: 1017215213198693199}
   soundRange: 12
   maxPanning: 0.8
+--- !u!114 &665227778856698051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2d9d61899704141827176a3e537665, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Enabled: 1
+  IntensityModifier: 1
+  Particle: {fileID: 6062451340480796212}
 --- !u!114 &-4455576844753479187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5370,21 +5385,6 @@ MonoBehaviour:
   BrokenParticles: {fileID: 8183428628174964079}
   GreenFanTexture: {fileID: 2800000, guid: 7a6f1ed7d2214134db8c985e00fdd4b1, type: 3}
   weatherPar: {fileID: 665227778856698051}
---- !u!114 &665227778856698051
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1017215213198693191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e2d9d61899704141827176a3e537665, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Enabled: 1
-  IntensityModifier: 1
-  Particle: {fileID: 6062451340480796212}
 --- !u!1 &8183428628174964079
 GameObject:
   m_ObjectHideFlags: 0

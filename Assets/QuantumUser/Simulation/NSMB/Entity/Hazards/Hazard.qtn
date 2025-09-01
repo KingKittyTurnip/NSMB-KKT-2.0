@@ -1,6 +1,7 @@
 component Hazard {
 	[ExcludeFromPrototype] bool IsHazard;
 
+	bool RestrictSpawnPosition;
 	bool IsHefty;
 	bool IPWSUntilGround;
 	byte IPWSTime;
@@ -9,6 +10,7 @@ component Hazard {
 	[ExcludeFromPrototype] byte Team;
 	[ExcludeFromPrototype] int LifeTime;
 	[ExcludeFromPrototype] bool Inactive;
+	[ExcludeFromPrototype] byte index;
 }
 
 enum SpawnReason : Byte {
@@ -17,4 +19,4 @@ enum SpawnReason : Byte {
 	Fridge,
 }
 
-signal InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason);
+signal InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index);

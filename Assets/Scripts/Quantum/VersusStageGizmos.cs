@@ -121,6 +121,20 @@ namespace NSMB.Quantum {
                 Gizmos.DrawWireSphere(starSpawn.transform.position, 2);
                 Gizmos.DrawIcon(starSpawn.transform.position, "star", true);
             }
+            foreach (GameObject hazardSpawn in GameObject.FindGameObjectsWithTag("HazardSpawn")) {
+                Gizmos.color = new Color(0, 0, 1, 0.4f);
+                if (game != null) {
+                    f = game.Frames.Predicted;
+                    int index = Array.IndexOf(stage.HazardSpawnpoints, hazardSpawn.transform.position.ToRoundedFPVector2());
+                    if (index != -1) {
+                        if (f.Global->UsedStarSpawns.IsSet(index)) {
+                            Gizmos.color = new Color(1, 0, 0, 0.4f);
+                        }
+                    }
+                }
+                Gizmos.DrawCube(hazardSpawn.transform.position, Vector3.one);
+                Gizmos.DrawIcon(hazardSpawn.transform.position, "item", true);
+            }
         }
 
 #endif

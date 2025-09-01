@@ -1,0 +1,10 @@
+global {
+	ushort TimeTilNextHazard;
+	bitset[64] UsedHazardSpawns;
+	int UsedHazardSpawnCount;
+}
+
+component HazardManager {
+	ushort Lifetime;
+	int spawnIndex;
+}

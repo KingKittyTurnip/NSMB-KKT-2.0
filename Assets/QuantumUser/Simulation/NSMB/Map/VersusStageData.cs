@@ -56,6 +56,7 @@ public unsafe class VersusStageData : AssetObject {
 
     [HideInInspector] public StageTileInstance[] TileData;
     [HideInInspector] public FPVector2[] BigStarSpawnpoints;
+    [HideInInspector] public FPVector2[] HazardSpawnpoints;
 
     public AssetRef<LoopingMusicData> GetCurrentMusic(Frame f) {
         return MainMusic[f.Global->TotalGamesPlayed % MainMusic.Length];

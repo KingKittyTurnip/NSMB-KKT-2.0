@@ -51,6 +51,7 @@ public class WeatherParticleAnimator : MonoBehaviour {
     }
 
     public void UpdateVelocity(Vector3 vel) {
+        velocity = Particle.velocityOverLifetime;
         var x = velocity.x; var y = velocity.y; var z = velocity.z;
 
         velocity.xMultiplier = vel.x;

@@ -58,7 +58,10 @@ namespace Quantum {
                     new StarballgoalSystem(),
                     new ThrowingObjectSystem(),
                     new ClockSystem(),
-                    new FanSystem()
+                    new FanSystem(),
+
+                    new HazardManagerSystem(),
+                    new HazardSystem()
                 )
             );
             systems.Add(new StageSystem());

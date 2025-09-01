@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Quantum.CurrentHazards.HazardDataList;
 using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
@@ -241,23 +242,26 @@ Gp Interactions are weird
                 3
             );
         }
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Fan* fan)) {
                 return;
             }
 
+            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
+
             //Set Sturdy
-            fan->Sturdy = false;
+            fan->Sturdy = hazardata.SpecialValues[0].BaseValue == 1;
 
             //Set Constant Direction
-            fan->Broken = false; // Enable if hazard rules allow (Use Smoke Particles To Indicate)
+            fan->Broken = hazardata.SpecialValues[1].BaseValue == 1;
+            fan->FellOver = hazardata.SpecialValues[2].BaseValue == 1;
 
-            //Starting Diraction
-            fan->FacingRight = false; // Rng this unless specified by hazard rules
+            //Starting Direction
+            fan->FacingRight = (f.RNG->Next() >= FP._0_50);
 
             //Set FanTime
-            fan->FanTime = 10 * 59; // set to Basically 10 seconds
+            fan->FanTime = hazardata.SpecialValues[3].BaseValue * 59; // set to Basically 10 seconds
             fan->TurnEffectorDowntime = 45;
         }
         #endregion

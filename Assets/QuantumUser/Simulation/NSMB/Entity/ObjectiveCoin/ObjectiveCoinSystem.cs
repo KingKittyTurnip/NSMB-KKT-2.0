@@ -1,5 +1,6 @@
 using Photon.Deterministic;
 using Quantum.Physics2D;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using UnityEngine;
 
 namespace Quantum {
@@ -32,6 +33,11 @@ namespace Quantum {
                 if (starCoin->DespawnCounter > 0) {
                     if (QuantumUtils.Decrement(ref starCoin->DespawnCounter)) {
                         f.Events.CollectableDespawned(filter.Entity, filter.Transform->Position + (FPVector2.Down / 4), false);
+                        var hazard = f.Unsafe.GetPointer<Hazard>(filter.Entity);
+                        if (hazard->IsHazard && hazard->RestrictSpawnPosition) {
+                            f.Global->UsedHazardSpawns.Clear(hazard->index);
+                            f.Global->UsedHazardSpawnCount--;
+                        }
                         f.Destroy(filter.Entity);
                     }
                 }

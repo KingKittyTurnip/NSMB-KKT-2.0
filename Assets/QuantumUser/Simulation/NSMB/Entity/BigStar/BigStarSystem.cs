@@ -1,8 +1,11 @@
 using Photon.Deterministic;
 using Quantum.Physics2D;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using UnityEditor.SceneManagement;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
-    public unsafe class BigStarSystem : SystemMainThread, ISignalOnReturnToRoom, ISignalOnMarioPlayerDropObjective {
+    public unsafe class BigStarSystem : SystemMainThread, ISignalOnReturnToRoom, ISignalOnMarioPlayerDropObjective, ISignalInitializeHazard {
 
         public override bool StartEnabled => false;
 
@@ -77,7 +80,7 @@ namespace Quantum {
         }
 
         private void HandleStar(Frame f, ref VersusStageData stage, EntityRef entity, BigStar* bigStar) {
-            if (bigStar->IsStationary) {
+            if (entity == f.Global->MainBigStar) { //bigStar->IsStationary ?? might break something
                 return;
             }
 
@@ -88,7 +91,16 @@ namespace Quantum {
             var transform = f.Unsafe.GetPointer<Transform2D>(entity);
             if (QuantumUtils.Decrement(ref bigStar->Lifetime) || (transform->Position.Y < stage.StageWorldMin.Y && bigStar->UncollectableFrames == 0)) {
                 f.Events.CollectableDespawned(entity, transform->Position, false);
+                var hazard = f.Unsafe.GetPointer<Hazard>(entity);
+                if (hazard->IsHazard && hazard->RestrictSpawnPosition) {
+                    f.Global->UsedHazardSpawns.Clear(hazard->index);
+                    f.Global->UsedHazardSpawnCount--;
+                }
                 f.Destroy(entity);
+                return;
+            }
+
+            if (bigStar->IsStationary) {
                 return;
             }
 
@@ -142,7 +154,7 @@ namespace Quantum {
             mario->GamemodeData.StarChasers->Stars++;
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
 
-            if (star->IsStationary) {
+            if (starEntity == f.Global->MainBigStar) { //bigStar->IsStationary ?? might break something
                 stage.ResetStage(f, false);
                 f.Global->BigStarSpawnTimer = (ushort) (624 - (f.Global->RealPlayers * 12));
             }
@@ -152,6 +164,12 @@ namespace Quantum {
 
             f.Events.MarioPlayerCollectedStar(marioEntity, *mario, f.Unsafe.GetPointer<Transform2D>(starEntity)->Position);
             f.Events.CollectableDespawned(starEntity, f.Unsafe.GetPointer<Transform2D>(starEntity)->Position, true);
+
+            var hazard = f.Unsafe.GetPointer<Hazard>(starEntity);
+            if (hazard->IsHazard && hazard->RestrictSpawnPosition) {
+                f.Global->UsedHazardSpawns.Clear(hazard->index);
+                f.Global->UsedHazardSpawnCount--;
+            }
             f.Destroy(starEntity);
         }
 
@@ -165,6 +183,26 @@ namespace Quantum {
         public void OnMarioPlayerDropObjective(Frame f, EntityRef entity, int amount, EntityRef attacker) {
             if (f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)) {
                 mario->SpawnStars(f, entity, amount);
+            }
+        }
+
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
+                || !f.Unsafe.TryGetPointer(thisEntity, out BigStar* bigstar)) {
+                return;
+            }
+
+            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
+
+            //Set Sturdy
+            bigstar->IsStationary = hazardata.SpecialValues[0].BaseValue == 1;
+            f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->DisableCollision = bigstar->IsStationary;
+            if (!bigstar->IsStationary) {
+                var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+                bigstar->InitializeMovingStar(f, stage, thisEntity, (f.RNG->Next() >= FP._0_50 ? 1 : 2));
+                hazard->RestrictSpawnPosition = false;
+                //f.Global->UsedHazardSpawns.Clear(hazard->index);
+                //f.Global->UsedHazardSpawnCount--;
             }
         }
     }

@@ -106,6 +106,15 @@ namespace NSMB.Quantum {
                 LogError($"The stage has a hard limit of 64 star spawns! (Found {starSpawns.Length})");
             }
 
+            // --- Bake Hazard Spawns HazardSpawnpoints
+            GameObject[] hazardSpawns = GameObject.FindGameObjectsWithTag("HazardSpawn");
+            stage.HazardSpawnpoints = hazardSpawns.Select(go => go.transform.position.ToFPVector2()).Take(64).ToArray();
+            if (hazardSpawns.Length <= 64) {
+                LogInfo($"Automatically found hazard spawns: {stage.HazardSpawnpoints.Length}");
+            } else {
+                LogError($"The stage has a hard limit of 64 hazard spawns! (Found {hazardSpawns.Length})");
+            }
+
             // --- Bake Enemies(' spawnpoints)
             QPrototypeEnemy[] enemies = GameObject.FindObjectsByType<QPrototypeEnemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (var enemy in enemies) {

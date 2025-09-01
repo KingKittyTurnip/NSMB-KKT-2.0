@@ -243,7 +243,7 @@ namespace Quantum {
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Clock* clock)) {
                 return;

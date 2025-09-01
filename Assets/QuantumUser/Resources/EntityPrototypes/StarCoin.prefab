@@ -51,6 +51,7 @@ GameObject:
   - component: {fileID: 4850172880020621341}
   - component: {fileID: 1164990273233542040}
   - component: {fileID: 1137042616318545776}
+  - component: {fileID: 3947890612302958918}
   m_Layer: 19
   m_Name: StarCoin
   m_TagString: Untagged
@@ -91,7 +92,7 @@ MonoBehaviour:
   sfx: {fileID: 4850172880020621341}
   mRenderer: {fileID: 8923656805735628525}
   particles: {fileID: 957916805894090781}
-  solidMaterial: {fileID: 2100000, guid: d84f16d3664fbe34089cc9ac7937ac24, type: 2}
+  solidMaterial: {fileID: 2100000, guid: ffef57cab645fea49a46eaa79d9b5ab2, type: 2}
   transparentMaterial: {fileID: 2100000, guid: 1e0f6573cd6d82b4bbecd5aee1dd1cd7, type: 2}
 --- !u!114 &4107006820136204820
 MonoBehaviour:
@@ -477,6 +478,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8da789e029dba6943bc7e24a87d12c48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3947890612302958918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7203940617686161723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c912ba00eb8780d468a9d5e4288668e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prototype:
+    RestrictSpawnPosition:
+      Value: 1
+    IsHefty:
+      Value: 0
+    IPWSUntilGround:
+      Value: 0
+    IPWSTime: 0
+    SpawningVelocityRange:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
 --- !u!1 &8102190628595041256
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +567,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d84f16d3664fbe34089cc9ac7937ac24, type: 2}
+  - {fileID: 2100000, guid: ffef57cab645fea49a46eaa79d9b5ab2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

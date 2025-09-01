@@ -224,8 +224,9 @@ namespace Quantum {
                 tanoomba->Respawn(f, entity);
             }
         }
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason) {
-            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Tanoomba* tanoomba)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
                 return;
             }
             f.Unsafe.GetPointer<Enemy>(thisEntity)->DisableRespawning = true;

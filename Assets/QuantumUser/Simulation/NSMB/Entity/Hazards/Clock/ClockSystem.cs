@@ -1,6 +1,7 @@
 using Photon.Deterministic;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.EventTrigger;
 
@@ -48,25 +49,33 @@ Use The Correct Sound For Collection
             }
 
             f.Events.ClockCollect(thisEntity, f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position, clock->Time, clock->ResetTime, clock->TickTimeup, f.Global->Timer == 0);
+
+            var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
+            if (hazard->IsHazard && hazard->RestrictSpawnPosition) {
+                f.Global->UsedHazardSpawns.Clear(hazard->index);
+                f.Global->UsedHazardSpawnCount--;
+            }
             f.Destroy(thisEntity);
         }
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Clock* clock)) {
                 return;
             }
 
+            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
+
             //Set TickTimeup
-            clock->TickTimeup = false;
+            clock->TickTimeup = hazardata.SpecialValues[0].BaseValue == 2;
 
             //Set ResetTime
-            clock->ResetTime = false;
+            clock->ResetTime = hazardata.SpecialValues[0].BaseValue == 1;
 
             //SetTime
-            clock->Time = 10;
+            clock->Time = hazardata.SpecialValues[0].BaseValue == 0 ? 10 : -10;
         }
         #endregion
     }

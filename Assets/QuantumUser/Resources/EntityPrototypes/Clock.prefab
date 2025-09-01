@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4524941981527613117}
   m_Layer: 19
   m_Name: Clock
-  m_TagString: Powerup
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -64,12 +64,12 @@ MonoBehaviour:
     PositionOffset:
       RawValue: 0
   PhysicsCollider:
+    IsEnabled: 1
     IsTrigger: 0
     Material:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
-    IsEnabled: 1
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -93,7 +93,7 @@ MonoBehaviour:
         X:
           RawValue: 0
         Y:
-          RawValue: 15155
+          RawValue: 0
       RotationOffset:
         RawValue: 0
       UserTag: 0
@@ -438,6 +438,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
+    RestrictSpawnPosition:
+      Value: 1
     IsHefty:
       Value: 0
     IPWSUntilGround:
@@ -770,7 +772,7 @@ PrefabInstance:
     - target: {fileID: 6441094937726390934, guid: 34b8762c3868b5d43b40a69badde238a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.213
+      value: -0.016
       objectReference: {fileID: 0}
     - target: {fileID: 6441094937726390934, guid: 34b8762c3868b5d43b40a69badde238a,
         type: 3}
@@ -854,7 +856,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 256e7357804f1be4d9b8fc37f7088f22,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.21400878
+      value: -0.016
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 256e7357804f1be4d9b8fc37f7088f22,
         type: 3}
@@ -1264,7 +1266,7 @@ PrefabInstance:
     - target: {fileID: 6441094937726390934, guid: 34b8762c3868b5d43b40a69badde238a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.213
+      value: -0.016
       objectReference: {fileID: 0}
     - target: {fileID: 6441094937726390934, guid: 34b8762c3868b5d43b40a69badde238a,
         type: 3}
