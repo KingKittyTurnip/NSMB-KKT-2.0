@@ -24,10 +24,10 @@ namespace Quantum {
 
             public Hazard* Hazard;
 
-            public Holdable* Holdable;
-            public Freezable* Freezable;
+            //public Holdable* Holdable;
+            //public Freezable* Freezable;
 
-            public Enemy* Enemy;
+            //public Enemy* Enemy;
         }
 
         public override void OnInit(Frame f) {
@@ -46,8 +46,9 @@ namespace Quantum {
 
             // TODO: Countdown To Despawn
             if (hazard->LifeTime > 0) {
-                hazard->LifeTime--;
-            } else {
+                //hazard->LifeTime--;
+            }
+            if (QuantumUtils.Decrement(ref hazard->LifeTime)){
                 if (hazard->IsHazard && hazard->RestrictSpawnPosition) {
                     f.Global->UsedHazardSpawns.Clear(hazard->index);
                     f.Global->UsedHazardSpawnCount--;

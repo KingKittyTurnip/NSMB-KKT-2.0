@@ -1,6 +1,8 @@
 using Photon.Deterministic;
 using Quantum.Physics2D;
+using System.Collections.Generic;
 using UnityEngine;
+using static Quantum.CurrentHazards.HazardDataList;
 
 namespace Quantum {
     public unsafe class HazardManagerSystem : SystemMainThread, ISignalOnReturnToRoom {
@@ -103,12 +105,28 @@ namespace Quantum {
 
             if (QuantumUtils.Decrement(ref hazardspawner->Lifetime)) {
                 //GetHazard
-                var hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData;
-                int pick = f.RNG->Next(0, hazarddata.HazardDatas.Count);
-                //TODO: Hefty Logic
+                List<HazardData> hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas, Heftydata = new();
+                for (int i = 0; i < hazarddata.Count; i++) {
+                    if (hazarddata[i].SpawnRandom.BaseValue != 1) {
+                        //Hazard Can't spawn this way
+                        hazarddata.Remove(hazarddata[i]);
+                        i--;
+                        continue;
+                    }
+                    if (hazarddata[i].Hefty.BaseValue == 1) {
+                        //Hazard Can't spawn this way
+                        //Heftydata.Add(hazarddata[i]);
+                        //hazarddata.Remove(hazarddata[i]);
+                        //i--;
+                    }
+                }
+                int pick = 0;
+                    //bool hefty = f.RNG->Next() <= FP._0_10;
+                    pick = f.RNG->Next(0, hazarddata.Count);
+                    //TODO: Hefty Logic
 
                 //SpawnHazard
-                EntityRef newEntity = f.Create(hazarddata.HazardDatas[pick].hazardAsset);
+                EntityRef newEntity = f.Create(hazarddata[pick].hazardAsset);
                 var newhazardspawnerTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
                 var newhazardspawner = f.Unsafe.GetPointer<Hazard>(newEntity);
 
