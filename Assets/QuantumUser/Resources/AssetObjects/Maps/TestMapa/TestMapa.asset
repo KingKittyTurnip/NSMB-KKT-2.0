@@ -460,6 +460,8 @@ MonoBehaviour:
     - rid: 178332831745835012
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
+        RestrictSpawnPosition:
+          Value: 0
         IsHefty:
           Value: 0
         IPWSUntilGround:
@@ -519,6 +521,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 178332831745835018
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -605,6 +609,8 @@ MonoBehaviour:
     - rid: 505701123152150532
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
+        RestrictSpawnPosition:
+          Value: 0
         IsHefty:
           Value: 0
         IPWSUntilGround:
@@ -664,6 +670,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 505701123152150538
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -845,6 +853,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 561595039415795724
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -1063,6 +1073,8 @@ MonoBehaviour:
     - rid: 2156190019155394564
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
+        RestrictSpawnPosition:
+          Value: 0
         IsHefty:
           Value: 0
         IPWSUntilGround:
@@ -1111,6 +1123,8 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 0
+        GravityInversed:
+          Value: 0
     - rid: 2156190019155394569
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1136,9 +1150,9 @@ MonoBehaviour:
       data:
         Position:
           X:
-            RawValue: -409600
+            RawValue: -534118
           Y:
-            RawValue: 163840
+            RawValue: -77332
         Rotation:
           RawValue: 0
     - rid: 2216907364081074177
@@ -1202,9 +1216,9 @@ MonoBehaviour:
       data:
         Spawnpoint:
           X:
-            RawValue: -409600
+            RawValue: -534118
           Y:
-            RawValue: 163840
+            RawValue: -77332
         IgnorePlayerWhenRespawning:
           Value: 0
         DisableRespawning:
@@ -1292,6 +1306,8 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 0
+        GravityInversed:
+          Value: 1
     - rid: 2216907364081074188
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1361,6 +1377,8 @@ MonoBehaviour:
     - rid: 2521700360339324932
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
+        RestrictSpawnPosition:
+          Value: 0
         IsHefty:
           Value: 0
         IPWSUntilGround:
@@ -1420,6 +1438,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 2521700360339324938
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -1580,6 +1600,8 @@ MonoBehaviour:
     - rid: 3060408405945483268
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
+        RestrictSpawnPosition:
+          Value: 0
         IsHefty:
           Value: 0
         IPWSUntilGround:
@@ -1639,6 +1661,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 3060408405945483274
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -1844,6 +1868,8 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 0
+        GravityInversed:
+          Value: 0
     - rid: 3213641309227057161
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2008,6 +2034,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 3900970058091855884
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -2309,6 +2337,8 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 0
+        GravityInversed:
+          Value: 0
     - rid: 4120355426350923788
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2452,6 +2482,8 @@ MonoBehaviour:
     - rid: 4516508314787381252
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
+        RestrictSpawnPosition:
+          Value: 0
         IsHefty:
           Value: 0
         IPWSUntilGround:
@@ -2512,6 +2544,8 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 1
+        GravityInversed:
+          Value: 0
     - rid: 4516508314787381258
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2663,6 +2697,8 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 0
+        GravityInversed:
+          Value: 0
     - rid: 4618287911442317322
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2732,6 +2768,8 @@ MonoBehaviour:
     - rid: 5305253815027499012
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
+        RestrictSpawnPosition:
+          Value: 0
         IsHefty:
           Value: 0
         IPWSUntilGround:
@@ -2791,6 +2829,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 5305253815027499018
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -3033,6 +3073,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 5920063340326944779
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -3561,6 +3603,8 @@ MonoBehaviour:
     - rid: 7244075672476319748
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
+        RestrictSpawnPosition:
+          Value: 0
         IsHefty:
           Value: 0
         IPWSUntilGround:
@@ -3620,6 +3664,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 7244075672476319754
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -3801,6 +3847,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 7316178054433210380
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -4125,6 +4173,8 @@ MonoBehaviour:
     - rid: 8142161597586997252
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
+        RestrictSpawnPosition:
+          Value: 0
         IsHefty:
           Value: 1
         IPWSUntilGround:
@@ -4165,6 +4215,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 8142161597586997256
       type: {class: StarballPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -4541,6 +4593,8 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
+          Value: 0
+        GravityInversed:
           Value: 0
     - rid: 8870303082055991307
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}

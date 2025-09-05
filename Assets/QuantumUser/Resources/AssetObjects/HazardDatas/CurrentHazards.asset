@@ -18,17 +18,17 @@ MonoBehaviour:
       Value: 477132098760153511
   basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
   HazardGameData:
-    MaxHazards: 1000
-    frequency: 5
+    MaxHazards: 10
+    frequency: 0
     MaxHeftys: 1
     HeftyPriority: 0
     HeftySpawnChance: 15
     FillMapOnStart: 0
     HazardDatas:
-    - Name: Bigstar
+    - Name: Heavystone
       hazardAsset:
         Id:
-          Value: 1295981493910502871
+          Value: 1531969226459579775
       DespawnTime:
         ButtonName: Time Til' Despawn
         ButtonType: 1
@@ -53,7 +53,7 @@ MonoBehaviour:
       SpawnAsGoal:
         ButtonName: Spawn As Goal
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 255
         ValueRange:
           X: 0
           Y: 1
@@ -67,22 +67,94 @@ MonoBehaviour:
       SpawnFridge:
         ButtonName: Appear From Fridge
         ButtonType: 0
-        BaseValue: 0
+        BaseValue: 1
         ValueRange:
           X: 0
           Y: 1
       SpawnBulb:
         ButtonName: Creatable From Bulb
         ButtonType: 0
-        BaseValue: 0
+        BaseValue: 1
         ValueRange:
           X: 0
           Y: 1
       SpecialValues:
-      - ButtonName: Is Stationary
+      - ButtonName: Stickyhold
         ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
-  HazardID: 0
+      - ButtonName: Is Bluestone
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+    - Name: Baseball
+      hazardAsset:
+        Id:
+          Value: 1405620265549088569
+      DespawnTime:
+        ButtonName: Time Til' Despawn
+        ButtonType: 1
+        BaseValue: 80
+        ValueRange:
+          X: 3
+          Y: 180
+      Hefty:
+        ButtonName: Enabled As Hefty
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      Team:
+        ButtonName: Team
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 6
+      SpawnAsGoal:
+        ButtonName: Spawn As Goal
+        ButtonType: 0
+        BaseValue: 255
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnRandom:
+        ButtonName: Spawn Randomly
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnFridge:
+        ButtonName: Appear From Fridge
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnBulb:
+        ButtonName: Creatable From Bulb
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpecialValues:
+      - ButtonName: Stickyhold
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      - ButtonName: Can Teleport
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+  HazardID: 4

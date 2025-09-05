@@ -13,29 +13,31 @@ namespace Quantum {
     
     public unsafe class ThrowingObjectSystem : SystemMainThreadFilterStage<ThrowingObjectSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEntityBumped, //ISignalOnBeforeInteraction,
         ISignalOnTryLiquidSplash, ISignalInitializeHazard {
-/*
----------------------------------------
+        /*
+        ---------------------------------------
 
-Make Player Treat These As semi Solids If Stuck inside If It's A Solid Carryable
+        Make Player Treat These As semi Solids If Stuck inside If It's A Solid Carryable
 
-stone - Add Tarnish Movement - (Playersystem script)
-PropellerBox - Add propeller Ability
-BillBlock - Make & Add Bill Hover Ability
+        Add The Ability For These To Collide With Tiles And Break Them (Not All Of Them)
+        Make Them Not Stump all velocity on carry (heavystone is suposed to kinda do this dw about that)
 
-baseball
-Spring - (Actually Implement)
-RedPow - (Actually Implement)
-BluePow - (Actually Implement)
-Barrel
-Freezie - (Actually Implement)
-CoinBox - (Actually Implement)
-CannonBox
-fridge
 
-Make Cannonbox & Coinbox Change Texutre Depending On Player
+        PropellerBox - animate mario
+        BillBlock - animate billblock & mario
+        baseball - animate, make unsolid
 
----------------------------------------
-*/
+        Spring - (Actually Implement)
+        RedPow - (Actually Implement)
+        BluePow - (Actually Implement)
+        Barrel - (Actually Implement)
+        Freezie - (Actually Implement)
+        CannonBox - (Actually Implement)
+        fridge - (Actually Implement)
+
+        Make Cannonbox & Coinbox Change Texutre Depending On Player
+
+        ---------------------------------------
+        */
         public struct Filter {
             public EntityRef Entity;
             public Transform2D* Transform;
@@ -43,6 +45,8 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
             public Holdable* holdable;
             public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* PhysicsCollider;
+
+            public Hazard* hazard;
         }
 
         public override void OnInit(Frame f) {
@@ -63,6 +67,7 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
             var transform = filter.Transform;
             var collider = filter.PhysicsCollider;
             var holdable = filter.holdable;
+            var hazard = filter.hazard;
 
             // Despawn off bottom of stage
             if (transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
@@ -79,19 +84,38 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                     Dis->BounceTimes += 1;
                     physicsObject->IsTouchingGround = false;
                     physicsObject->Velocity.Y = 4 - Dis->BounceTimes;
-                    physicsObject->Velocity.X *= Constants._0_66;
+                    if (!Dis->IsBall)
+                        physicsObject->Velocity.X *= Constants._0_66;
                 } else {
-                    physicsObject->Velocity.X = 0;
+                    if (!Dis->IsBall)
+                        physicsObject->Velocity.X = 0;
                     Dis->BounceTimes = 0;
                 }
             } else if (physicsObject->Velocity.Y < -6) {
                 Dis->BounceTimes = 1;
-            } else if (physicsObject->IsTouchingGround && physicsObject->Velocity.X != 0) {
+            } else if (physicsObject->IsTouchingGround && physicsObject->Velocity.X != 0 && !Dis->IsBall) {
                 physicsObject->Velocity.X = 0;
+            }
+            if (Dis->IsBall) {
+                if (physicsObject->IsTouchingLeftWall) {
+                    physicsObject->Velocity.X = FPMath.Abs(physicsObject->PreviousFrameVelocity.X);
+                } else if (physicsObject->IsTouchingRightWall) {
+                    physicsObject->Velocity.X = FPMath.Abs(physicsObject->PreviousFrameVelocity.X) * -1;
+                }
+                if (physicsObject->IsTouchingGround) {
+                    physicsObject->Velocity.X *= Constants._0_90;
+                    if (FPMath.Abs(physicsObject->Velocity.X) < 1) {
+                        physicsObject->Velocity.X = 0;
+                    }
+                }
             }
 
             //physicsObject->DisableCollision = false;
             Dis->CanHit = (Dis->Thrown || Dis->BounceTimes != 0);
+
+            if (hazard->IsHazard && holdable->Holder != EntityRef.None) { //?
+                hazard->LifeTime = 80 * 60;//reset despawntimer PROPERLY... (as in giving support for it)
+            }
 
             // Special Updates
             switch (Dis->Type) {
@@ -223,8 +247,7 @@ Make Cannonbox & Coinbox Change Texutre Depending On Player
                     //physicsObject->DisableCollision = true;
                 }
             }
-
-            if (!Dis->Thrown && upDot < Constants.PhysicsGroundMaxAngleCos) {
+            if (!Dis->Thrown && (upDot < Constants.PhysicsGroundMaxAngleCos || Dis->IsBall)) {
                 //Only Allow Carry If No Team Or Same Team --- TOTEST
                 if (hazard->Team != 0 && (mario->GetTeam(f) + 1) != hazard->Team) {
                     return false;

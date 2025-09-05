@@ -178,6 +178,8 @@ namespace Quantum {
                 } else {
                     acc = mario->CurrentPowerupState == PowerupState.BlueShell ? physics.SwimShellAcceleration[stage] : physics.SwimAcceleration[stage];
                 }
+            } else if (mario->StoneBux) {
+                acc = physics.WalkAcceleration[stage] * FP._0_75;
             } else if (physicsObject->IsOnSlipperyGround) {
                 acc = physics.WalkIceAcceleration[stage];
             } else if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
@@ -498,7 +500,7 @@ namespace Quantum {
             }
 
             if (mario->StoneBux) {
-                newY -= physics.JumpTripleBonusVelocity;
+                newY = FPMath.Min(newY, physics.JumpVelocity - (physics.JumpTripleBonusVelocity));
             } else if (canSpecialJump && mario->JumpState == JumpState.SingleJump) {
                 // Double jump
                 mario->JumpState = JumpState.DoubleJump;

@@ -27,6 +27,7 @@ component PhysicsObject {
     [ExcludeFromPrototype] byte UnderwaterCounter;
 
     bool WindImmune;
+    bool GravityInversed;
 }
 
 struct PhysicsObjectData {

@@ -1,6 +1,9 @@
+#define SmoothSlowdownmultiplier 0.97
+
 component ThrowingObject {
     ThrowingObjectType Type;
     bool GroundBounce;
+	bool IsBall;
     bool SlideAlong;
 	bool BouceOffPlayer;
 	FP ThrowForce;

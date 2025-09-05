@@ -279,7 +279,10 @@ namespace Quantum {
         }
 
         public static FPVector2 MoveVertically(Frame f, FPVector2 velocity, ref Filter filter, VersusStageData stage, QList<PhysicsContact>? contacts, out bool hitObject) {
-            
+
+            if (filter.PhysicsObject->GravityInversed)
+                velocity.Y *= -1;
+
             FP velocityY = velocity.Y * f.DeltaTime;
             if (velocityY == 0) {
                 hitObject = false;
@@ -507,7 +510,10 @@ namespace Quantum {
         }
 
         public static FPVector2 MoveHorizontally(Frame f, FPVector2 velocity, ref Filter filter, VersusStageData stage, QList<PhysicsContact>? contacts, out bool hitObject) {
-            
+
+            if (filter.PhysicsObject->GravityInversed)
+                velocity.Y *= -1;
+
             FP velocityX = velocity.X * f.DeltaTime;
             if (velocityX == 0) {
                 hitObject = false;
@@ -763,21 +769,42 @@ namespace Quantum {
 
                 FP verticalDot = FPVector2.Dot(contact.Normal, FPVector2.Up);
                 if (verticalDot > Constants.PhysicsGroundMaxAngleCos) {
-                    physicsObject->IsTouchingGround = true;
+                    if (physicsObject->GravityInversed) {
+                        physicsObject->IsTouchingCeiling = true;
+                    } else {
+                        physicsObject->IsTouchingGround = true;
 
-                    FP angle = FPVector2.RadiansSignedSkipNormalize(contact.Normal, FPVector2.Up) * FP.Rad2Deg;
-                    if (FPMath.Abs(physicsObject->FloorAngle) < FPMath.Abs(angle)) {
-                        physicsObject->FloorAngle = angle;
-                    }
+                        FP angle = FPVector2.RadiansSignedSkipNormalize(contact.Normal, FPVector2.Up) * FP.Rad2Deg;
+                        if (FPMath.Abs(physicsObject->FloorAngle) < FPMath.Abs(angle)) {
+                            physicsObject->FloorAngle = angle;
+                        }
 
-                    if (!f.Exists(contact.Entity)
-                        && f.TryFindAsset(stage.GetTileRelative(f, contact.Tile).Tile, out StageTile tile)) {
+                        if (!f.Exists(contact.Entity)
+                            && f.TryFindAsset(stage.GetTileRelative(f, contact.Tile).Tile, out StageTile tile)) {
 
-                        physicsObject->IsOnSlideableGround |= tile.IsSlideableGround;
-                        physicsObject->IsOnSlipperyGround |= tile.IsSlipperyGround;
+                            physicsObject->IsOnSlideableGround |= tile.IsSlideableGround;
+                            physicsObject->IsOnSlipperyGround |= tile.IsSlipperyGround;
+                        }
                     }
 
                 } else if (verticalDot < -Constants.PhysicsGroundMaxAngleCos) {
+                    if (physicsObject->GravityInversed) {
+                        physicsObject->IsTouchingGround = true;
+
+                        FP angle = FPVector2.RadiansSignedSkipNormalize(contact.Normal, FPVector2.Down) * FP.Rad2Deg;
+                        if (FPMath.Abs(physicsObject->FloorAngle) < FPMath.Abs(angle)) {
+                            physicsObject->FloorAngle = angle;
+                        }
+
+                        if (!f.Exists(contact.Entity)
+                            && f.TryFindAsset(stage.GetTileRelative(f, contact.Tile).Tile, out StageTile tile)) {
+
+                            physicsObject->IsOnSlideableGround |= tile.IsSlideableGround;
+                            physicsObject->IsOnSlipperyGround |= tile.IsSlipperyGround;
+                        }
+                    } else {
+                        physicsObject->IsTouchingCeiling = true;
+                    }
                     physicsObject->IsTouchingCeiling = true;
                 }
             }

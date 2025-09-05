@@ -112,6 +112,7 @@ namespace Quantum.Prototypes.Unity {
     public QBoolean IsWaterSolid;
     public QBoolean BreakMegaObjects;
     public QBoolean WindImmune;
+    public QBoolean GravityInversed;
     partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.PhysicsObjectPrototype prototype);
     public override Quantum.Prototypes.PhysicsObjectPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
       var result = new Quantum.Prototypes.PhysicsObjectPrototype();
@@ -123,6 +124,7 @@ namespace Quantum.Prototypes.Unity {
       converter.Convert(this.IsWaterSolid, out result.IsWaterSolid);
       converter.Convert(this.BreakMegaObjects, out result.BreakMegaObjects);
       converter.Convert(this.WindImmune, out result.WindImmune);
+      converter.Convert(this.GravityInversed, out result.GravityInversed);
       ConvertUser(converter, ref result);
       return result;
     }

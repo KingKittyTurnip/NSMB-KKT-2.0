@@ -65,12 +65,12 @@ MonoBehaviour:
     PositionOffset:
       RawValue: 0
   PhysicsCollider:
+    IsEnabled: 1
     IsTrigger: 0
     Material:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
-    IsEnabled: 1
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -354,6 +354,8 @@ MonoBehaviour:
       Value: 3
     GroundBounce:
       Value: 0
+    IsBall:
+      Value: 0
     SlideAlong:
       Value: 0
     BouceOffPlayer:
@@ -388,12 +390,14 @@ MonoBehaviour:
     DisableCollision:
       Value: 0
     SlowInLiquids:
-      Value: 0
+      Value: 1
     IsWaterSolid:
       Value: 0
     BreakMegaObjects:
       Value: 0
     WindImmune:
+      Value: 0
+    GravityInversed:
       Value: 0
 --- !u!114 &7318776400371000510
 MonoBehaviour:
@@ -527,6 +531,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
+    RestrictSpawnPosition:
+      Value: 0
     IsHefty:
       Value: 0
     IPWSUntilGround:

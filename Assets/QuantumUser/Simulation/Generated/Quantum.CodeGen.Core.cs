@@ -3033,13 +3033,13 @@ namespace Quantum {
     public FPVector2 Gravity;
     [FieldOffset(48)]
     public FP TerminalVelocity;
-    [FieldOffset(12)]
+    [FieldOffset(16)]
     public QBoolean IsFrozen;
     [FieldOffset(8)]
     public QBoolean DisableCollision;
-    [FieldOffset(20)]
+    [FieldOffset(24)]
     public QBoolean SlowInLiquids;
-    [FieldOffset(16)]
+    [FieldOffset(20)]
     public QBoolean IsWaterSolid;
     [FieldOffset(4)]
     public QBoolean BreakMegaObjects;
@@ -3064,12 +3064,12 @@ namespace Quantum {
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public Byte HoverFrames;
-    [FieldOffset(32)]
+    [FieldOffset(36)]
     [ExcludeFromPrototype()]
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
     public QListPtr<PhysicsContact> Contacts;
-    [FieldOffset(28)]
+    [FieldOffset(32)]
     [ExcludeFromPrototype()]
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
@@ -3077,8 +3077,10 @@ namespace Quantum {
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte UnderwaterCounter;
-    [FieldOffset(24)]
+    [FieldOffset(28)]
     public QBoolean WindImmune;
+    [FieldOffset(12)]
+    public QBoolean GravityInversed;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 8311;
@@ -3100,6 +3102,7 @@ namespace Quantum {
         hash = hash * 31 + LiquidContacts.GetHashCode();
         hash = hash * 31 + UnderwaterCounter.GetHashCode();
         hash = hash * 31 + WindImmune.GetHashCode();
+        hash = hash * 31 + GravityInversed.GetHashCode();
         return hash;
       }
     }
@@ -3125,6 +3128,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->UnderwaterCounter);
         QBoolean.Serialize(&p->BreakMegaObjects, serializer);
         QBoolean.Serialize(&p->DisableCollision, serializer);
+        QBoolean.Serialize(&p->GravityInversed, serializer);
         QBoolean.Serialize(&p->IsFrozen, serializer);
         QBoolean.Serialize(&p->IsWaterSolid, serializer);
         QBoolean.Serialize(&p->SlowInLiquids, serializer);
@@ -3555,23 +3559,25 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct ThrowingObject : Quantum.IComponent {
-    public const Int32 SIZE = 48;
+    public const Int32 SIZE = 56;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(2)]
     public ThrowingObjectType Type;
     [FieldOffset(16)]
     public QBoolean GroundBounce;
     [FieldOffset(24)]
+    public QBoolean IsBall;
+    [FieldOffset(28)]
     public QBoolean SlideAlong;
     [FieldOffset(4)]
     public QBoolean BouceOffPlayer;
-    [FieldOffset(40)]
+    [FieldOffset(48)]
     public FP ThrowForce;
     [FieldOffset(1)]
     public Byte StarsToDrop;
     [FieldOffset(20)]
     public QBoolean IgnoreTeamates;
-    [FieldOffset(28)]
+    [FieldOffset(32)]
     [ExcludeFromPrototype()]
     public QBoolean Thrown;
     [FieldOffset(8)]
@@ -3583,7 +3589,7 @@ namespace Quantum {
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public Byte BounceTimes;
-    [FieldOffset(32)]
+    [FieldOffset(40)]
     [ExcludeFromPrototype()]
     public FP ReusableTimer;
     public override Int32 GetHashCode() {
@@ -3591,6 +3597,7 @@ namespace Quantum {
         var hash = 19073;
         hash = hash * 31 + (Byte)Type;
         hash = hash * 31 + GroundBounce.GetHashCode();
+        hash = hash * 31 + IsBall.GetHashCode();
         hash = hash * 31 + SlideAlong.GetHashCode();
         hash = hash * 31 + BouceOffPlayer.GetHashCode();
         hash = hash * 31 + ThrowForce.GetHashCode();
@@ -3614,6 +3621,7 @@ namespace Quantum {
         QBoolean.Serialize(&p->Facing, serializer);
         QBoolean.Serialize(&p->GroundBounce, serializer);
         QBoolean.Serialize(&p->IgnoreTeamates, serializer);
+        QBoolean.Serialize(&p->IsBall, serializer);
         QBoolean.Serialize(&p->SlideAlong, serializer);
         QBoolean.Serialize(&p->Thrown, serializer);
         FP.Serialize(&p->ReusableTimer, serializer);
@@ -3967,6 +3975,14 @@ namespace Quantum {
         return result;
       }
     }
+    /// <summary>0.97</summary>
+    public static FP SmoothSlowdownmultiplier {
+      [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
+        FP result;
+        result.RawValue = 63570;
+        return result;
+      }
+    }
 
     public static unsafe partial class Raw {
       /// <summary>8.5</summary>
@@ -4025,6 +4041,8 @@ namespace Quantum {
       public const Int64 _0_48 = 31457;
       /// <summary>0.235</summary>
       public const Int64 _0_235 = 15401;
+      /// <summary>0.97</summary>
+      public const Int64 SmoothSlowdownmultiplier = 63570;
     }
   }
   public unsafe partial class Frame {
