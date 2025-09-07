@@ -1,0 +1,18 @@
+global {
+	FP SpinpipeSlope;
+}
+
+component Spinpipe {
+	bool FellOver;
+	
+	[ExcludeFromPrototype] bool Right;
+	[ExcludeFromPrototype] int TipTime;
+	[ExcludeFromPrototype] bool Active;
+
+	[ExcludeFromPrototype] byte groundDelay;
+}
+
+event SpinpipeDestroy {
+	EntityRef Entity;
+	bool Broken;
+}

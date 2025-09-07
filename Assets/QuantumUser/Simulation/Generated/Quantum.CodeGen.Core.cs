@@ -1095,7 +1095,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct _globals_ {
-    public const Int32 SIZE = 2904;
+    public const Int32 SIZE = 2912;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(0)]
     public AssetRef<Map> Map;
@@ -1130,7 +1130,7 @@ namespace Quantum {
     public BitSet64 UsedStarSpawns;
     [FieldOffset(1676)]
     public Int32 UsedStarSpawnCount;
-    [FieldOffset(1736)]
+    [FieldOffset(1744)]
     public GameRules Rules;
     [FieldOffset(1650)]
     public GameState GameState;
@@ -1146,7 +1146,7 @@ namespace Quantum {
     public UInt16 AutomaticStageRefreshInterval;
     [FieldOffset(1654)]
     public UInt16 AutomaticStageRefreshTimer;
-    [FieldOffset(1784)]
+    [FieldOffset(1792)]
     [FramePrinter.FixedArrayAttribute(typeof(PlayerInformation), 10)]
     private fixed Byte _PlayerInfo_[1120];
     [FieldOffset(1648)]
@@ -1172,6 +1172,8 @@ namespace Quantum {
     [AllocateOnComponentAdded()]
     public QListPtr<BannedPlayerInfo> BannedPlayerIds;
     [FieldOffset(1728)]
+    public FP SpinpipeSlope;
+    [FieldOffset(1736)]
     public FP Timer;
     public FixedArray<Input> input {
       get {
@@ -1221,6 +1223,7 @@ namespace Quantum {
         hash = hash * 31 + Host.GetHashCode();
         hash = hash * 31 + PlayerDatas.GetHashCode();
         hash = hash * 31 + BannedPlayerIds.GetHashCode();
+        hash = hash * 31 + SpinpipeSlope.GetHashCode();
         hash = hash * 31 + Timer.GetHashCode();
         return hash;
       }
@@ -1268,6 +1271,7 @@ namespace Quantum {
         Quantum.BitSet64.Serialize(&p->UsedHazardSpawns, serializer);
         Quantum.BitSet64.Serialize(&p->UsedStarSpawns, serializer);
         EntityRef.Serialize(&p->MainBigStar, serializer);
+        FP.Serialize(&p->SpinpipeSlope, serializer);
         FP.Serialize(&p->Timer, serializer);
         Quantum.GameRules.Serialize(&p->Rules, serializer);
         FixedArray.Serialize(p->PlayerInfo, serializer, Statics.SerializePlayerInformation);
@@ -3407,6 +3411,44 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Spinpipe : Quantum.IComponent {
+    public const Int32 SIZE = 20;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(12)]
+    public QBoolean FellOver;
+    [FieldOffset(16)]
+    [ExcludeFromPrototype()]
+    public QBoolean Right;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public Int32 TipTime;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean Active;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte groundDelay;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 1039;
+        hash = hash * 31 + FellOver.GetHashCode();
+        hash = hash * 31 + Right.GetHashCode();
+        hash = hash * 31 + TipTime.GetHashCode();
+        hash = hash * 31 + Active.GetHashCode();
+        hash = hash * 31 + groundDelay.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Spinpipe*)ptr;
+        serializer.Stream.Serialize(&p->groundDelay);
+        serializer.Stream.Serialize(&p->TipTime);
+        QBoolean.Serialize(&p->Active, serializer);
+        QBoolean.Serialize(&p->FellOver, serializer);
+        QBoolean.Serialize(&p->Right, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct StarCoin : Quantum.IComponent {
     public const Int32 SIZE = 16;
     public const Int32 ALIGNMENT = 8;
@@ -4239,6 +4281,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Projectile>();
       BuildSignalsArrayOnComponentAdded<Quantum.Spinner>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Spinner>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Spinpipe>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Spinpipe>();
       BuildSignalsArrayOnComponentAdded<Quantum.StarCoin>();
       BuildSignalsArrayOnComponentRemoved<Quantum.StarCoin>();
       BuildSignalsArrayOnComponentAdded<Quantum.Starball>();
@@ -4761,6 +4805,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Shape3D), Shape3D.SIZE);
       typeRegistry.Register(typeof(Quantum.SpawnReason), 1);
       typeRegistry.Register(typeof(Quantum.Spinner), Quantum.Spinner.SIZE);
+      typeRegistry.Register(typeof(Quantum.Spinpipe), Quantum.Spinpipe.SIZE);
       typeRegistry.Register(typeof(SpringJoint), SpringJoint.SIZE);
       typeRegistry.Register(typeof(SpringJoint3D), SpringJoint3D.SIZE);
       typeRegistry.Register(typeof(Quantum.StageTileFlags), 1);
@@ -4781,7 +4826,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 46)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 47)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -4823,6 +4868,7 @@ namespace Quantum {
         .Add<Quantum.Powerup>(Quantum.Powerup.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Projectile>(Quantum.Projectile.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Spinner>(Quantum.Spinner.Serialize, Quantum.Spinner.OnAdded, Quantum.Spinner.OnRemoved, ComponentFlags.None)
+        .Add<Quantum.Spinpipe>(Quantum.Spinpipe.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.StarCoin>(Quantum.StarCoin.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Starball>(Quantum.Starball.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Starballgoal>(Quantum.Starballgoal.Serialize, null, null, ComponentFlags.None)

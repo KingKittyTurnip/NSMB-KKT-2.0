@@ -32,7 +32,7 @@ namespace NSMB.Cameras {
         private VersusStageData stage;
         private float screenshakeTimer;
         private Vector2 previousPointer;
-        private bool clickHeld, freecamMouseDragging;
+        private bool clickHeld, freecamMouseDragging, isRotating;
 
         public override void OnValidate() {
             base.OnValidate();
@@ -83,6 +83,8 @@ namespace NSMB.Cameras {
             if (lmb || !mmb) {
                 previousPointer = ourCamera.ScreenToViewportPoint(Settings.Controls.UI.Point.ReadValue<Vector2>());
             }
+
+            HandleRotation(e);
         }
 
         private void UpdateCameraFollowPlayerMode(CallbackUpdateView e) {
@@ -271,6 +273,27 @@ namespace NSMB.Cameras {
             }
 
             ourCamera.transform.position = newPosition;
+        }
+
+        private float CurrentRot;
+        private void HandleRotation(CallbackUpdateView e) {
+            QuantumGame game = e.Game;
+            Frame f = game.Frames.Predicted;
+            if (!isRotating && f.Global->SpinpipeSlope == 0) {
+                return;
+            }
+
+            //Handle Rotation
+            float spinpipeslope = (float) f.Global->SpinpipeSlope,
+                Rot = CurrentRot + ((CurrentRot - spinpipeslope) * 0.1f);
+
+            //Set Rotation
+            if (isRotating && f.Global->SpinpipeSlope == 0) {
+                Rot = 0;
+            }
+            CurrentRot = Rot;
+            ourCamera.transform.rotation = Quaternion.Euler(0, 0, CurrentRot);
+            isRotating = f.Global->SpinpipeSlope != 0;
         }
 
         private void OnReset(InputAction.CallbackContext context) {

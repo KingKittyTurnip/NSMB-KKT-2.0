@@ -20,6 +20,7 @@ namespace Quantum {
 
         Add The Ability For These To Collide With Tiles And Break Them (Not All Of Them)
         Make Them Not Stump all velocity on carry (heavystone is suposed to kinda do this dw about that)
+        make them uncollidable when carried (unless from above)
 
 
         PropellerBox - animate mario
@@ -104,6 +105,9 @@ namespace Quantum {
                 }
                 if (physicsObject->IsTouchingGround) {
                     physicsObject->Velocity.X *= Constants._0_90;
+                    if (physicsObject->IsOnSlideableGround) {
+                        physicsObject->Velocity.X -= physicsObject->FloorAngle * FP._0_10;
+                    }
                     if (FPMath.Abs(physicsObject->Velocity.X) < 1) {
                         physicsObject->Velocity.X = 0;
                     }
@@ -259,7 +263,11 @@ namespace Quantum {
                     holdable->Pickup(f, thisEntity, marioEntity);
                     var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
                     marioPhysicsObject->Velocity.X = marioPhysicsObject->PreviousFrameVelocity.X;
-
+                    if (!holdable->HoldAboveHead) {
+                        DisCollider->Enabled = false;
+                        //f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = true;
+                        physicsObject->DisableCollision = true;
+                    }
                     // Enable Carryabilites
                     switch (Dis->Type) {
                     case ThrowingObjectType.Stone: {
@@ -404,6 +412,9 @@ namespace Quantum {
             if (!dropped) {
                 f.Events.MarioPlayerThrewObject(marioEntity, entity);
             }
+            f.Unsafe.GetPointer<PhysicsCollider2D>(entity)->Enabled = true;
+            //f.Unsafe.GetPointer<Interactable>(entity)->ColliderDisabled = false;
+            physicsObject->DisableCollision = false;
 
             // Disable Carryabilites
             switch (Dis->Type) {

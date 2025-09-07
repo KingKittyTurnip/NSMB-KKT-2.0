@@ -41,7 +41,8 @@ namespace NSMB.Cameras {
                 if (enable) {
                     float middle = stage.StageWorldMin.X.AsFloat + stage.TileDimensions.X * 0.25f;
                     bool rightHalf = mainCamera.transform.position.x > middle;
-                    transform.localPosition = new(stage.TileDimensions.X * (rightHalf ? -1 : 1) * 0.5f, 0, 0);
+                    //transform.localPosition = new(stage.TileDimensions.X * (rightHalf ? -1 : 1) * 0.5f, 0, 0);
+                    transform.position = new(mainCamera.transform.position.x + (stage.TileDimensions.X * (rightHalf ? -1 : 1) * 0.5f), mainCamera.transform.position.y, mainCamera.transform.position.z);
                 }
             }
 

@@ -15,14 +15,12 @@ GameObject:
   - component: {fileID: 2159869042360392326}
   - component: {fileID: 6989136294608042370}
   - component: {fileID: 7318776400371000510}
-  - component: {fileID: -4455576844753479187}
   - component: {fileID: 2210952625023297629}
   - component: {fileID: 3901402401622306172}
   - component: {fileID: -5656916731996867298}
   - component: {fileID: 3093743753026942761}
   - component: {fileID: -6338529405283914546}
   - component: {fileID: -3897358826683353975}
-  - component: {fileID: -4353356510890767646}
   m_Layer: 19
   m_Name: Baseball
   m_TagString: Powerup
@@ -136,7 +134,7 @@ MonoBehaviour:
     LayerSource: 1
     Layer: 0
     CallbackFlags:
-      Value: 448
+      Value: 4095
   PhysicsBody:
     IsEnabled: 0
     Config2D: 116
@@ -417,28 +415,6 @@ MonoBehaviour:
   soundOrigin: {fileID: 1017215213198693199}
   soundRange: 12
   maxPanning: 0.8
---- !u!114 &-4455576844753479187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1017215213198693191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb8b4489d4860b2429b2badcd175e5ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prototype:
-    Velocity:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    IgnoreMovement:
-      Value: 1
-    CanCrushEntities:
-      Value: 0
 --- !u!114 &2210952625023297629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,7 +485,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1017215213198693191}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58dd3b5982e56d5458968fe9360083fe, type: 3}
   m_Name: 
@@ -518,7 +494,7 @@ MonoBehaviour:
     HoldAboveHead:
       Value: 0
     IsSolidCarryable:
-      Value: 1
+      Value: 0
 --- !u!114 &-3897358826683353975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -544,21 +520,6 @@ MonoBehaviour:
         RawValue: 131072
       Y:
         RawValue: 65536
---- !u!114 &-4353356510890767646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1017215213198693191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 899399899f5ae3e4ba49a12be513a667, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sfx: {fileID: 4207910641862185911}
-  breakPrefab: {fileID: 6779589790155936114, guid: 88cf61688eee6b640a7081bb05599f96,
-    type: 3}
 --- !u!1001 &6987063097045268659
 PrefabInstance:
   m_ObjectHideFlags: 0

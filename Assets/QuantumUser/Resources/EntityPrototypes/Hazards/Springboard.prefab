@@ -71,7 +71,7 @@ MonoBehaviour:
         Value: 0
     SourceCollider: {fileID: 0}
     Shape2D:
-      ShapeType: 4
+      ShapeType: 16
       PolygonCollider:
         Id:
           Value: 0
@@ -98,7 +98,34 @@ MonoBehaviour:
         RawValue: 0
       UserTag: 0
       IsPersistent: 1
-      CompoundShapes: []
+      CompoundShapes:
+      - ShapeType: 4
+        PolygonCollider:
+          Id:
+            Value: 0
+        CircleRadius:
+          RawValue: 0
+        CapsuleSize:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        EdgeExtent:
+          RawValue: 0
+        BoxExtents:
+          X:
+            RawValue: 16384
+          Y:
+            RawValue: 16384
+        PositionOffset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        RotationOffset:
+          RawValue: 0
+        UserTag: 0
+        IsSetFromSourceCollider: 0
     Shape3D:
       ShapeType: 0
       SphereRadius:
@@ -132,7 +159,7 @@ MonoBehaviour:
       IsPersistent: 1
       CompoundShapes: []
     LayerSource: 1
-    Layer: 9
+    Layer: 0
     CallbackFlags:
       Value: 448
   PhysicsBody:
@@ -494,7 +521,7 @@ MonoBehaviour:
     HoldAboveHead:
       Value: 0
     IsSolidCarryable:
-      Value: 1
+      Value: 0
 --- !u!114 &-3897358826683353975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,7 +574,7 @@ Transform:
   m_GameObject: {fileID: 9032870725918412890}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.25, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

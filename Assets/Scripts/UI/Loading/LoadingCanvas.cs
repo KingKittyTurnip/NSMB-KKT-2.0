@@ -4,9 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.UI;
 using static NSMB.Utilities.QuantumViewUtils;
+using NSMB.Utilities;
+using UnityEditor.SceneManagement;
 
 namespace NSMB.UI.Loading {
     public unsafe class LoadingCanvas : MonoBehaviour {
@@ -25,6 +28,8 @@ namespace NSMB.UI.Loading {
         [SerializeField] private Image readyBackground, readyImage;
 
         [SerializeField] private CharacterAsset defaultCharacterAsset;
+
+        [SerializeField] private List<Image> thoseDarnUiElementsExclamationMark;
 
         //---Private Variables
         private Coroutine fadeVolumeCoroutine, endCoroutine;
@@ -65,6 +70,7 @@ namespace NSMB.UI.Loading {
 
                 var characters = f.SimulationConfig.CharacterDatas;
                 character = f.FindAsset(characters[characterIndex % characters.Length]);
+                ApplyUIColor(f);
             }
 
             mario.Initialize(character);
@@ -196,6 +202,16 @@ namespace NSMB.UI.Loading {
 
             if (!fadeIn) {
                 audioSource.Stop();
+            }
+        }
+
+
+        private unsafe void ApplyUIColor(Frame f) {
+            var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+            Color color = stage.UIColor.AsColor;
+
+            foreach (Image e in thoseDarnUiElementsExclamationMark) {
+                e.color = color;
             }
         }
     }

@@ -59,6 +59,7 @@ namespace Quantum {
                     new ThrowingObjectSystem(),
                     new ClockSystem(),
                     new FanSystem(),
+                    new SpinpipeSystem(),
 
                     new HazardManagerSystem(),
                     new HazardSystem()

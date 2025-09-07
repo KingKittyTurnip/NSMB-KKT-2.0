@@ -981,6 +981,21 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Spinpipe))]
+  public unsafe partial class SpinpipePrototype : ComponentPrototype<Quantum.Spinpipe> {
+    public QBoolean FellOver;
+    partial void MaterializeUser(Frame frame, ref Quantum.Spinpipe result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Spinpipe component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Spinpipe result, in PrototypeMaterializationContext context = default) {
+        result.FellOver = this.FellOver;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.StageTileInstance))]
   public unsafe partial class StageTileInstancePrototype : StructPrototype {
     public AssetRef<StageTile> Tile;

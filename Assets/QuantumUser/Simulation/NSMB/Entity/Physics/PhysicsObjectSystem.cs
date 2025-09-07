@@ -202,6 +202,12 @@ namespace Quantum {
                     physicsObject->Velocity += physicsObject->Gravity * f.DeltaTime;
                 }
                 physicsObject->Velocity.Y = FPMath.Max(physicsObject->Velocity.Y, physicsObject->TerminalVelocity);
+
+                if (f.Global->SpinpipeSlope != 0 && physicsObject->IsTouchingGround) {
+                    physicsObject->FloorAngle += f.Global->SpinpipeSlope;
+                    physicsObject->IsOnSlideableGround = true;
+                    //UnityEngine.Debug.Log("Spinpipe slope: " + physicsObject->FloorAngle);
+                }
             }
 
             SendEventsTask((FrameThreadSafe) f);
