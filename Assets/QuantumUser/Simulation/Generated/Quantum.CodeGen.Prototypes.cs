@@ -983,7 +983,7 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Spinpipe))]
   public unsafe partial class SpinpipePrototype : ComponentPrototype<Quantum.Spinpipe> {
-    public QBoolean FellOver;
+    public QBoolean Broken;
     partial void MaterializeUser(Frame frame, ref Quantum.Spinpipe result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Spinpipe component = default;
@@ -991,7 +991,7 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Spinpipe result, in PrototypeMaterializationContext context = default) {
-        result.FellOver = this.FellOver;
+        result.Broken = this.Broken;
         MaterializeUser(frame, ref result, in context);
     }
   }

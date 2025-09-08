@@ -72,6 +72,7 @@ namespace NSMB.Cameras {
             }
 
             secondaryPositioners.RemoveAll(scp => !scp);
+            HandleRotation(e);
             secondaryPositioners.ForEach(scp => scp.UpdatePosition());
 
             if (BackgroundLoop.Instance) {
@@ -83,8 +84,6 @@ namespace NSMB.Cameras {
             if (lmb || !mmb) {
                 previousPointer = ourCamera.ScreenToViewportPoint(Settings.Controls.UI.Point.ReadValue<Vector2>());
             }
-
-            HandleRotation(e);
         }
 
         private void UpdateCameraFollowPlayerMode(CallbackUpdateView e) {
@@ -275,7 +274,8 @@ namespace NSMB.Cameras {
             ourCamera.transform.position = newPosition;
         }
 
-        private float CurrentRot;
+        private float PrevMax;
+        public AnimationCurve Smoother;
         private void HandleRotation(CallbackUpdateView e) {
             QuantumGame game = e.Game;
             Frame f = game.Frames.Predicted;
@@ -285,15 +285,22 @@ namespace NSMB.Cameras {
 
             //Handle Rotation
             float spinpipeslope = (float) f.Global->SpinpipeSlope,
-                Rot = CurrentRot + ((CurrentRot - spinpipeslope) * 0.1f);
+                spinpipeMAX = (float) f.Global->SpinpipeMAX,
+                Rot = 0;
 
+            if (spinpipeMAX != PrevMax) {
+                spinpipeMAX -= (spinpipeMAX/PrevMax) * 0.02f;
+            }
+
+            Rot = spinpipeslope/spinpipeMAX;
+            Rot = Smoother.Evaluate(Rot) * spinpipeMAX * (spinpipeslope / Mathf.Abs(spinpipeslope));
             //Set Rotation
-            if (isRotating && f.Global->SpinpipeSlope == 0) {
+            if (isRotating && spinpipeslope == 0) {
                 Rot = 0;
             }
-            CurrentRot = Rot;
-            ourCamera.transform.rotation = Quaternion.Euler(0, 0, CurrentRot);
-            isRotating = f.Global->SpinpipeSlope != 0;
+            PrevMax = spinpipeMAX;
+            ourCamera.transform.rotation = Quaternion.Euler(0, 0, Rot);
+            isRotating = spinpipeslope != 0;
         }
 
         private void OnReset(InputAction.CallbackContext context) {

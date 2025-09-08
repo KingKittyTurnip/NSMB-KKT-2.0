@@ -23,7 +23,7 @@ namespace Quantum {
         }
 
         public override void OnInit(Frame f) {
-            //f.Context.Interactions.Register<MarioPlayer, Fan>(f, OnFanMarioInteraction);
+            f.Context.Interactions.Register<MarioPlayer, Spinpipe>(f, OnSpinpipeMarioInteraction);
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -34,10 +34,15 @@ namespace Quantum {
 
             //Handle Start And End Tipping
             if (hazard->LifeTime <= 60) {
+                if (spinpipe->Active)
+                    f.Events.SpinpipeLand(filter.Entity, true);
                 spinpipe->Active = false;
-                physicsObject->Velocity.Y = 8;
+                if (!spinpipe->Broken)
+                    physicsObject->Velocity.Y = 6;
                 physicsObject->IsFrozen = hazard->LifeTime <= 40;
             } else if (!spinpipe->Active && (physicsObject->IsTouchingGround || spinpipe->groundDelay > 0)) {
+                if (spinpipe->groundDelay <= 0)
+                    f.Events.SpinpipeLand(filter.Entity, false);
                 physicsObject->DisableCollision = true;
                 spinpipe->groundDelay++;
                 physicsObject->Velocity.Y = -1;
@@ -60,6 +65,9 @@ namespace Quantum {
             while (ExistingPipes.NextUnsafe(out EntityRef OtherEntity, out Spinpipe* Aspinpipe)) {
 
                 if (!MainPipeChecked) { // We Have Not Found A Spinpipe Yet
+                    if (Aspinpipe->Broken) {
+                        continue;
+                    }
                     MainPipeChecked = true;
                     if (spinpipe != Aspinpipe) {
                         return;
@@ -72,7 +80,7 @@ namespace Quantum {
                 if (IsMainPipe) { // If Captain, Then Link All Other "Similar" Fans To It
                     if (Aspinpipe->Active) {
                         TempStrength++;
-                        if (QuantumUtils.Decrement(ref Captain->TipTime)) {
+                        if (QuantumUtils.Decrement(ref Captain->TipTime) && !Aspinpipe->Broken) {
                             Captain->Right = !Captain->Right;
                             Captain->TipTime = 10 * 59;
                         }
@@ -85,8 +93,8 @@ namespace Quantum {
                 continue;
             }
 
-            if (!IsMainPipe)
-                return;
+            //if (!IsMainPipe)
+            //    return;
             if (TempStrength == 0 && SpinpipeUnactive) {
                 //stop all tipping
                 FP intestity = FPMath.Max((f.Global->SpinpipeSlope * 3) - hazard->LifeTime, 0);
@@ -95,58 +103,39 @@ namespace Quantum {
                     f.Global->SpinpipeSlope = 0;
             } else {
                 //tip the stage
-                FP spinpipeturncap = FPMath.Max(32 - (TempStrength * 4), 5);
+                f.Global->SpinpipeMAX = FPMath.Max(32 - (TempStrength * 4), 10);
                 if (TempStrength > 4) {
                     TempStrength = 4;
                 }
-                f.Global->SpinpipeSlope = FPMath.Clamp(f.Global->SpinpipeSlope + ((FP._0_25 + (TempStrength * FP._0_10)) * (spinpipe->Right ? 1 : -1)), -spinpipeturncap, spinpipeturncap);
+                f.Global->SpinpipeSlope = FPMath.Clamp(f.Global->SpinpipeSlope + ((FP._0_25 + (TempStrength * FP._0_05)) * (spinpipe->Right ? 1 : -1)), -f.Global->SpinpipeMAX, f.Global->SpinpipeMAX);
             }
 
         }
 
         #region Interactions
-        public static bool OnFanMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
+        public static bool OnSpinpipeMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
             #region SetValues
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
-            var fan = f.Unsafe.GetPointer<Fan>(thisEntity);
+            var spinpipe = f.Unsafe.GetPointer<Spinpipe>(thisEntity);
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            //var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity); 
             var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
-            var mariophys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            //var mariophys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
 
             QuantumUtils.UnwrapWorldLocations(f, DisTransform->Position + ((DisCollider->Shape.Centroid.Y - DisCollider->Shape.Box.Extents.Y) * FPVector2.Up), marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
-            FP upDot = FPVector2.Dot(damageDirection, FPVector2.Up);
             #endregion
 
-            if (mario->CurrentPowerupState == PowerupState.MegaMushroom && !fan->Sturdy) { //TODO: Add Metal
+            if (mario->CurrentPowerupState == PowerupState.MegaMushroom && !spinpipe->Broken) { //TODO: Add Metal
                 if (hazard->LifeTime > 1200)
                     hazard->LifeTime = 1200;
-                physicsObject->IsFrozen = physicsObject->DisableCollision = f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = true;
-                fan->FellOver = fan->Broken = true;
-                fan->FanTime = fan->TurnEffectorDowntime = 90;
-                fan->FacingRight = false;
-                DisCollider->Enabled = false;
-                DisCollider->Shape.Box.Extents = FPVector2.Zero;
-                DisCollider->Shape.Centroid.Y = -999;
-                f.Events.OnFanHit(thisEntity, true);
+                spinpipe->Broken = true;
+                DisCollider->Shape.Box.Extents = new FPVector2(DisCollider->Shape.Box.Extents.X, FP._0_50);
+                DisCollider->Shape.Centroid.Y = -FP._0_50;
+                f.Events.SpinpipeDestroy(thisEntity, damageDirection.X > 0);
                 return false;
-            } else if (upDot >= Constants.PhysicsGroundMaxAngleCos && (mario->IsGroundpounding || mario->GroundpoundStandFrames > 0) && !fan->Sturdy) {
-                physicsObject->IsTouchingGround = false;
-                physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
-                physicsObject->Velocity.Y = 3;
-                fan->Broken = true;
-                fan->FanTime = 90;
-                mario->IsGroundpounding = mariophys->IsTouchingGround = false;
-                mariophys->Velocity.Y = 6;
-                f.Events.OnFanHit(thisEntity, false);
-                return true;
-            } else if (upDot <= -Constants.PhysicsGroundMaxAngleCos) {
-                physicsObject->IsTouchingGround = false;
-                physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
-                physicsObject->Velocity.Y = 3;
             }
             return false;
         }
@@ -162,7 +151,7 @@ namespace Quantum {
             var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
 
             //Set Constant Direction
-            spinpipe->FellOver = false;
+            spinpipe->Broken = false;
 
             //Starting Direction
             spinpipe->Right = (f.RNG->Next() >= FP._0_50);

@@ -1,9 +1,10 @@
 global {
 	FP SpinpipeSlope;
+	FP SpinpipeMAX;
 }
 
 component Spinpipe {
-	bool FellOver;
+	bool Broken;
 	
 	[ExcludeFromPrototype] bool Right;
 	[ExcludeFromPrototype] int TipTime;
@@ -12,7 +13,12 @@ component Spinpipe {
 	[ExcludeFromPrototype] byte groundDelay;
 }
 
+event SpinpipeLand {
+	EntityRef Entity;
+	bool Despawn;
+}
+
 event SpinpipeDestroy {
 	EntityRef Entity;
-	bool Broken;
+	bool Right;
 }

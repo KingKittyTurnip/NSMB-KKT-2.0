@@ -1095,7 +1095,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct _globals_ {
-    public const Int32 SIZE = 2912;
+    public const Int32 SIZE = 2920;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(0)]
     public AssetRef<Map> Map;
@@ -1130,7 +1130,7 @@ namespace Quantum {
     public BitSet64 UsedStarSpawns;
     [FieldOffset(1676)]
     public Int32 UsedStarSpawnCount;
-    [FieldOffset(1744)]
+    [FieldOffset(1752)]
     public GameRules Rules;
     [FieldOffset(1650)]
     public GameState GameState;
@@ -1146,7 +1146,7 @@ namespace Quantum {
     public UInt16 AutomaticStageRefreshInterval;
     [FieldOffset(1654)]
     public UInt16 AutomaticStageRefreshTimer;
-    [FieldOffset(1792)]
+    [FieldOffset(1800)]
     [FramePrinter.FixedArrayAttribute(typeof(PlayerInformation), 10)]
     private fixed Byte _PlayerInfo_[1120];
     [FieldOffset(1648)]
@@ -1171,9 +1171,11 @@ namespace Quantum {
     [FieldOffset(1696)]
     [AllocateOnComponentAdded()]
     public QListPtr<BannedPlayerInfo> BannedPlayerIds;
-    [FieldOffset(1728)]
-    public FP SpinpipeSlope;
     [FieldOffset(1736)]
+    public FP SpinpipeSlope;
+    [FieldOffset(1728)]
+    public FP SpinpipeMAX;
+    [FieldOffset(1744)]
     public FP Timer;
     public FixedArray<Input> input {
       get {
@@ -1224,6 +1226,7 @@ namespace Quantum {
         hash = hash * 31 + PlayerDatas.GetHashCode();
         hash = hash * 31 + BannedPlayerIds.GetHashCode();
         hash = hash * 31 + SpinpipeSlope.GetHashCode();
+        hash = hash * 31 + SpinpipeMAX.GetHashCode();
         hash = hash * 31 + Timer.GetHashCode();
         return hash;
       }
@@ -1271,6 +1274,7 @@ namespace Quantum {
         Quantum.BitSet64.Serialize(&p->UsedHazardSpawns, serializer);
         Quantum.BitSet64.Serialize(&p->UsedStarSpawns, serializer);
         EntityRef.Serialize(&p->MainBigStar, serializer);
+        FP.Serialize(&p->SpinpipeMAX, serializer);
         FP.Serialize(&p->SpinpipeSlope, serializer);
         FP.Serialize(&p->Timer, serializer);
         Quantum.GameRules.Serialize(&p->Rules, serializer);
@@ -3415,7 +3419,7 @@ namespace Quantum {
     public const Int32 SIZE = 20;
     public const Int32 ALIGNMENT = 4;
     [FieldOffset(12)]
-    public QBoolean FellOver;
+    public QBoolean Broken;
     [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public QBoolean Right;
@@ -3431,7 +3435,7 @@ namespace Quantum {
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 1039;
-        hash = hash * 31 + FellOver.GetHashCode();
+        hash = hash * 31 + Broken.GetHashCode();
         hash = hash * 31 + Right.GetHashCode();
         hash = hash * 31 + TipTime.GetHashCode();
         hash = hash * 31 + Active.GetHashCode();
@@ -3444,7 +3448,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->groundDelay);
         serializer.Stream.Serialize(&p->TipTime);
         QBoolean.Serialize(&p->Active, serializer);
-        QBoolean.Serialize(&p->FellOver, serializer);
+        QBoolean.Serialize(&p->Broken, serializer);
         QBoolean.Serialize(&p->Right, serializer);
     }
   }
@@ -4017,11 +4021,11 @@ namespace Quantum {
         return result;
       }
     }
-    /// <summary>0.97</summary>
+    /// <summary>0.004</summary>
     public static FP SmoothSlowdownmultiplier {
       [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
         FP result;
-        result.RawValue = 63570;
+        result.RawValue = 262;
         return result;
       }
     }
@@ -4083,8 +4087,8 @@ namespace Quantum {
       public const Int64 _0_48 = 31457;
       /// <summary>0.235</summary>
       public const Int64 _0_235 = 15401;
-      /// <summary>0.97</summary>
-      public const Int64 SmoothSlowdownmultiplier = 63570;
+      /// <summary>0.004</summary>
+      public const Int64 SmoothSlowdownmultiplier = 262;
     }
   }
   public unsafe partial class Frame {

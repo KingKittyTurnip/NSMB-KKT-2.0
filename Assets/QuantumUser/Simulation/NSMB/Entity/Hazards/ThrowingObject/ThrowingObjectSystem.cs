@@ -104,12 +104,15 @@ namespace Quantum {
                     physicsObject->Velocity.X = FPMath.Abs(physicsObject->PreviousFrameVelocity.X) * -1;
                 }
                 if (physicsObject->IsTouchingGround) {
-                    physicsObject->Velocity.X *= Constants._0_90;
                     if (physicsObject->IsOnSlideableGround) {
-                        physicsObject->Velocity.X -= physicsObject->FloorAngle * FP._0_10;
+                        physicsObject->Velocity.X += physicsObject->FloorAngle * Constants.SmoothSlowdownmultiplier;
+                    } else {
+                        physicsObject->Velocity.X *= Constants._0_90;
                     }
-                    if (FPMath.Abs(physicsObject->Velocity.X) < 1) {
+                    if (FPMath.Abs(physicsObject->Velocity.X) < FP._0_01) {
                         physicsObject->Velocity.X = 0;
+                    } else {
+                        physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -10, 10);
                     }
                 }
             }

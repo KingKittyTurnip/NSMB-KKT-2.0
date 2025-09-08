@@ -381,6 +381,18 @@ MonoBehaviour:
     - rid: 178332831745835018
     - rid: 178332831745835019
   - Components:
+    - rid: 2584499578992590848
+    - rid: 2584499578992590849
+    - rid: 2584499578992590850
+    - rid: 2584499578992590851
+    - rid: 2584499578992590852
+    - rid: 2584499578992590853
+    - rid: 2584499578992590854
+    - rid: 2584499578992590855
+    - rid: 2584499578992590856
+    - rid: 2584499578992590857
+    - rid: 2584499578992590858
+  - Components:
     - rid: 8142161597586997248
     - rid: 8142161597586997249
     - rid: 8142161597586997250
@@ -402,7 +414,7 @@ MonoBehaviour:
           X:
             RawValue: 376832
           Y:
-            RawValue: -131072
+            RawValue: -106255
         Rotation:
           RawValue: 0
     - rid: 178332831745835009
@@ -431,7 +443,7 @@ MonoBehaviour:
             X:
               RawValue: 0
             Y:
-              RawValue: 16384
+              RawValue: 0
           RotationOffset:
             RawValue: 0
           UserTag: 0
@@ -515,7 +527,7 @@ MonoBehaviour:
         DisableCollision:
           Value: 0
         SlowInLiquids:
-          Value: 0
+          Value: 1
         IsWaterSolid:
           Value: 0
         BreakMegaObjects:
@@ -530,6 +542,8 @@ MonoBehaviour:
         Type:
           Value: 6
         GroundBounce:
+          Value: 0
+        IsBall:
           Value: 0
         SlideAlong:
           Value: 1
@@ -551,7 +565,7 @@ MonoBehaviour:
           X:
             RawValue: 442368
           Y:
-            RawValue: -131072
+            RawValue: -106255
         Rotation:
           RawValue: 0
     - rid: 505701123152150529
@@ -580,7 +594,7 @@ MonoBehaviour:
             X:
               RawValue: 0
             Y:
-              RawValue: 16384
+              RawValue: 0
           RotationOffset:
             RawValue: 0
           UserTag: 0
@@ -664,7 +678,7 @@ MonoBehaviour:
         DisableCollision:
           Value: 0
         SlowInLiquids:
-          Value: 0
+          Value: 1
         IsWaterSolid:
           Value: 0
         BreakMegaObjects:
@@ -679,6 +693,8 @@ MonoBehaviour:
         Type:
           Value: 3
         GroundBounce:
+          Value: 0
+        IsBall:
           Value: 0
         SlideAlong:
           Value: 0
@@ -1015,7 +1031,7 @@ MonoBehaviour:
           X:
             RawValue: 163840
           Y:
-            RawValue: -131072
+            RawValue: -106255
         Rotation:
           RawValue: 0
     - rid: 2156190019155394561
@@ -1044,13 +1060,40 @@ MonoBehaviour:
             X:
               RawValue: 0
             Y:
-              RawValue: 16384
+              RawValue: 0
           RotationOffset:
             RawValue: 0
           UserTag: 0
           IsPersistent: 1
-          CompoundShapes: []
-        Layer: 9
+          CompoundShapes:
+          - ShapeType: 4
+            PolygonCollider:
+              Id:
+                Value: 0
+            CircleRadius:
+              RawValue: 0
+            CapsuleSize:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            EdgeExtent:
+              RawValue: 0
+            BoxExtents:
+              X:
+                RawValue: 16384
+              Y:
+                RawValue: 16384
+            PositionOffset:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            RotationOffset:
+              RawValue: 0
+            UserTag: 0
+            IsSetFromSourceCollider: 0
+        Layer: 0
         IsTrigger: 0
         PhysicsMaterial:
           Id:
@@ -1091,7 +1134,7 @@ MonoBehaviour:
         HoldAboveHead:
           Value: 0
         IsSolidCarryable:
-          Value: 1
+          Value: 0
     - rid: 2156190019155394566
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1116,7 +1159,7 @@ MonoBehaviour:
         DisableCollision:
           Value: 0
         SlowInLiquids:
-          Value: 0
+          Value: 1
         IsWaterSolid:
           Value: 0
         BreakMegaObjects:
@@ -1132,6 +1175,8 @@ MonoBehaviour:
           Value: 2
         GroundBounce:
           Value: 1
+        IsBall:
+          Value: 0
         SlideAlong:
           Value: 0
         BouceOffPlayer:
@@ -1319,7 +1364,7 @@ MonoBehaviour:
           X:
             RawValue: 344064
           Y:
-            RawValue: -131072
+            RawValue: -106255
         Rotation:
           RawValue: 0
     - rid: 2521700360339324929
@@ -1348,7 +1393,7 @@ MonoBehaviour:
             X:
               RawValue: 0
             Y:
-              RawValue: 16384
+              RawValue: 0
           RotationOffset:
             RawValue: 0
           UserTag: 0
@@ -1432,7 +1477,7 @@ MonoBehaviour:
         DisableCollision:
           Value: 0
         SlowInLiquids:
-          Value: 0
+          Value: 1
         IsWaterSolid:
           Value: 0
         BreakMegaObjects:
@@ -1448,6 +1493,8 @@ MonoBehaviour:
           Value: 4
         GroundBounce:
           Value: 0
+        IsBall:
+          Value: 0
         SlideAlong:
           Value: 0
         BouceOffPlayer:
@@ -1458,6 +1505,145 @@ MonoBehaviour:
         IgnoreTeamates:
           Value: 0
     - rid: 2521700360339324939
+      type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        _empty_prototype_dummy_field_: 0
+    - rid: 2584499578992590848
+      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        Position:
+          X:
+            RawValue: -163879
+          Y:
+            RawValue: 114010
+        Rotation:
+          RawValue: 0
+    - rid: 2584499578992590849
+      type: {class: PhysicsCollider2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        ShapeConfig:
+          ShapeType: 4
+          PolygonCollider:
+            Id:
+              Value: 0
+          CircleRadius:
+            RawValue: 0
+          CapsuleSize:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          EdgeExtent:
+            RawValue: 0
+          BoxExtents:
+            X:
+              RawValue: 30147
+            Y:
+              RawValue: 7864
+          PositionOffset:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 7864
+          RotationOffset:
+            RawValue: 0
+          UserTag: 0
+          IsPersistent: 1
+          CompoundShapes: []
+        Layer: 0
+        IsTrigger: 0
+        PhysicsMaterial:
+          Id:
+            Value: 0
+    - rid: 2584499578992590850
+      type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        CallbackFlags:
+          Value: 448
+    - rid: 2584499578992590851
+      type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Offset:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 16384
+        BroadRadius:
+          RawValue: 32768
+    - rid: 2584499578992590852
+      type: {class: FanPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Strength:
+          RawValue: 88474
+        Broken:
+          Value: 0
+        FellOver:
+          Value: 0
+        Sturdy:
+          Value: 0
+        HandleParticles:
+          Value: 0
+    - rid: 2584499578992590853
+      type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        RestrictSpawnPosition:
+          Value: 0
+        IsHefty:
+          Value: 1
+        IPWSUntilGround:
+          Value: 1
+        IPWSTime: 0
+        SpawningVelocityRange:
+          X:
+            RawValue: 196608
+          Y:
+            RawValue: 65536
+    - rid: 2584499578992590854
+      type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        ColliderDisabled:
+          Value: 0
+    - rid: 2584499578992590855
+      type: {class: InteractionInitiatorPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        _empty_prototype_dummy_field_: 0
+    - rid: 2584499578992590856
+      type: {class: MovingPlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Velocity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        IgnoreMovement:
+          Value: 0
+        CanCrushEntities:
+          Value: 0
+    - rid: 2584499578992590857
+      type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Gravity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: -1409024
+        TerminalVelocity:
+          RawValue: -786432
+        IsFrozen:
+          Value: 0
+        DisableCollision:
+          Value: 0
+        SlowInLiquids:
+          Value: 0
+        IsWaterSolid:
+          Value: 0
+        BreakMegaObjects:
+          Value: 0
+        WindImmune:
+          Value: 1
+        GravityInversed:
+          Value: 0
+    - rid: 2584499578992590858
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -1542,7 +1728,7 @@ MonoBehaviour:
           X:
             RawValue: 229376
           Y:
-            RawValue: -131072
+            RawValue: -106255
         Rotation:
           RawValue: 0
     - rid: 3060408405945483265
@@ -1571,7 +1757,7 @@ MonoBehaviour:
             X:
               RawValue: 0
             Y:
-              RawValue: 16384
+              RawValue: 0
           RotationOffset:
             RawValue: 0
           UserTag: 0
@@ -1655,7 +1841,7 @@ MonoBehaviour:
         DisableCollision:
           Value: 0
         SlowInLiquids:
-          Value: 0
+          Value: 1
         IsWaterSolid:
           Value: 0
         BreakMegaObjects:
@@ -1671,6 +1857,8 @@ MonoBehaviour:
           Value: 7
         GroundBounce:
           Value: 1
+        IsBall:
+          Value: 0
         SlideAlong:
           Value: 0
         BouceOffPlayer:
@@ -2183,7 +2371,7 @@ MonoBehaviour:
           X:
             RawValue: 192276
           Y:
-            RawValue: -128336
+            RawValue: -103519
         Rotation:
           RawValue: 0
     - rid: 4120355426350923777
@@ -2249,7 +2437,7 @@ MonoBehaviour:
           X:
             RawValue: 192276
           Y:
-            RawValue: -128336
+            RawValue: -103519
         IgnorePlayerWhenRespawning:
           Value: 0
         DisableRespawning:
@@ -2424,7 +2612,7 @@ MonoBehaviour:
           X:
             RawValue: 360448
           Y:
-            RawValue: -98304
+            RawValue: -73487
         Rotation:
           RawValue: 0
     - rid: 4516508314787381249
@@ -2537,7 +2725,7 @@ MonoBehaviour:
         DisableCollision:
           Value: 0
         SlowInLiquids:
-          Value: 0
+          Value: 1
         IsWaterSolid:
           Value: 0
         BreakMegaObjects:
@@ -2552,6 +2740,8 @@ MonoBehaviour:
         Type:
           Value: 1
         GroundBounce:
+          Value: 0
+        IsBall:
           Value: 0
         SlideAlong:
           Value: 0
@@ -2710,7 +2900,7 @@ MonoBehaviour:
           X:
             RawValue: 298054
           Y:
-            RawValue: -130732
+            RawValue: -105915
         Rotation:
           RawValue: 0
     - rid: 5305253815027499009
@@ -2739,7 +2929,7 @@ MonoBehaviour:
             X:
               RawValue: 0
             Y:
-              RawValue: 16384
+              RawValue: 0
           RotationOffset:
             RawValue: 0
           UserTag: 0
@@ -2823,7 +3013,7 @@ MonoBehaviour:
         DisableCollision:
           Value: 0
         SlowInLiquids:
-          Value: 0
+          Value: 1
         IsWaterSolid:
           Value: 0
         BreakMegaObjects:
@@ -2839,6 +3029,8 @@ MonoBehaviour:
           Value: 8
         GroundBounce:
           Value: 1
+        IsBall:
+          Value: 0
         SlideAlong:
           Value: 0
         BouceOffPlayer:
@@ -3545,7 +3737,7 @@ MonoBehaviour:
           X:
             RawValue: 262609
           Y:
-            RawValue: -131129
+            RawValue: -106312
         Rotation:
           RawValue: 0
     - rid: 7244075672476319745
@@ -3574,7 +3766,7 @@ MonoBehaviour:
             X:
               RawValue: 0
             Y:
-              RawValue: 16384
+              RawValue: 0
           RotationOffset:
             RawValue: 0
           UserTag: 0
@@ -3658,7 +3850,7 @@ MonoBehaviour:
         DisableCollision:
           Value: 0
         SlowInLiquids:
-          Value: 0
+          Value: 1
         IsWaterSolid:
           Value: 0
         BreakMegaObjects:
@@ -3674,6 +3866,8 @@ MonoBehaviour:
           Value: 9
         GroundBounce:
           Value: 1
+        IsBall:
+          Value: 0
         SlideAlong:
           Value: 0
         BouceOffPlayer:
