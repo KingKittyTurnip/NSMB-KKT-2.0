@@ -4,12 +4,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.UI;
 using static NSMB.Utilities.QuantumViewUtils;
-using NSMB.Utilities;
-using UnityEditor.SceneManagement;
 
 namespace NSMB.UI.Loading {
     public unsafe class LoadingCanvas : MonoBehaviour {

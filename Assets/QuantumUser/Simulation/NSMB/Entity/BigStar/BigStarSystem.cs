@@ -1,8 +1,5 @@
 using Photon.Deterministic;
 using Quantum.Physics2D;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using UnityEditor.SceneManagement;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     public unsafe class BigStarSystem : SystemMainThread, ISignalOnReturnToRoom, ISignalOnMarioPlayerDropObjective, ISignalInitializeHazard {
