@@ -173,6 +173,21 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Boss))]
+  public unsafe class BossPrototype : ComponentPrototype<Quantum.Boss> {
+    public Byte Health;
+    public MapEntityId ControllerPlayer;
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Boss component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Boss result, in PrototypeMaterializationContext context = default) {
+        result.Health = this.Health;
+        PrototypeValidator.FindMapEntity(this.ControllerPlayer, in context, out result.ControllerPlayer);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.BreakableObject))]
   public unsafe partial class BreakableObjectPrototype : ComponentPrototype<Quantum.BreakableObject> {
     public FP OriginalHeight;
@@ -781,6 +796,25 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.ObjectiveCoin result, in PrototypeMaterializationContext context = default) {
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Petey))]
+  public unsafe partial class PeteyPrototype : ComponentPrototype<Quantum.Petey> {
+    public Quantum.QEnum8<PeteyState> State;
+    public FPVector2 Hitbox;
+    public FPVector2 FallenBox;
+    partial void MaterializeUser(Frame frame, ref Quantum.Petey result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Petey component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Petey result, in PrototypeMaterializationContext context = default) {
+        result.State = this.State;
+        result.Hitbox = this.Hitbox;
+        result.FallenBox = this.FallenBox;
         MaterializeUser(frame, ref result, in context);
     }
   }

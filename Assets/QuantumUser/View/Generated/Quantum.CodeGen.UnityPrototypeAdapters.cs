@@ -50,6 +50,19 @@ namespace Quantum.Prototypes.Unity {
   #endif //;
   
   [System.SerializableAttribute()]
+  public unsafe partial class BossPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.BossPrototype> {
+    public Byte Health;
+    public Quantum.QuantumEntityPrototype ControllerPlayer;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.BossPrototype prototype);
+    public override Quantum.Prototypes.BossPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.BossPrototype();
+      converter.Convert(this.Health, out result.Health);
+      converter.Convert(this.ControllerPlayer, out result.ControllerPlayer);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
   public unsafe partial class EnterablePipePrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.EnterablePipePrototype> {
     public Quantum.QuantumEntityPrototype OtherPipe;
     public QBoolean IsEnterable;

@@ -1,0 +1,40 @@
+component Petey {
+	PeteyState State;
+	
+	[ExcludeFromPrototype] bool Flying;
+	[ExcludeFromPrototype] FP PreviousLandLevel;
+	[ExcludeFromPrototype] byte ReusableTimer;
+	FPVector2 Hitbox;
+	FPVector2 FallenBox;
+}
+
+enum PeteyState : Byte {
+    Idling,
+	Jumping,
+	Flying,
+	Diving,
+	Fallen,
+	//Player Specific(?)
+	MeleeAttack,
+}
+
+event PeteyWakeup {
+	EntityRef Entity;
+	bool Interupted;
+}
+event PeteyGetUp {
+	EntityRef Entity;
+}
+event PeteyJump {
+	EntityRef Entity;
+}
+event PeteyDive {
+	EntityRef Entity;
+}
+event PeteyLanded {
+	EntityRef Entity;
+}
+event PeteyStomped {
+	EntityRef Entity;
+	bool IsDeath;
+}

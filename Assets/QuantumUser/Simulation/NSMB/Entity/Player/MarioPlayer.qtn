@@ -138,6 +138,9 @@ component MarioPlayer {
 	[ExcludeFromPrototype] bool StoneBux;
 	[ExcludeFromPrototype] bool PropellerBux;
 	[ExcludeFromPrototype] bool BillBux;
+	
+	// Boss Control
+	[ExcludeFromPrototype] bool IsBoss;
 
     [ExcludeFromPrototype] EntityRef CurrentPipe;
 	[ExcludeFromPrototype] FPVector2 PipeDirection;

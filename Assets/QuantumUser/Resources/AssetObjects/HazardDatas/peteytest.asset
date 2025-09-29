@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d5cbd9d0a86fd4ab81898eb4718ac1, type: 3}
+  m_Name: peteytest
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: QuantumUser/Resources/AssetObjects/HazardDatas/peteytest
+    Guid:
+      Value: 478428477322717155
+  basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
+  HazardGameData:
+    MaxHazards: 1
+    frequency: 0
+    MaxHeftys: 1
+    HeftyPriority: 0
+    HeftySpawnChance: 15
+    FillMapOnStart: 0
+    HazardDatas:
+    - Name: Petey
+      hazardAsset:
+        Id:
+          Value: 1357720639578944744
+      DespawnTime:
+        ButtonName: Time Til' Despawn
+        ButtonType: 1
+        BaseValue: 80
+        ValueRange:
+          X: 3
+          Y: 180
+      Hefty:
+        ButtonName: Enabled As Hefty
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      Team:
+        ButtonName: Team
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 6
+      SpawnAsGoal:
+        ButtonName: Spawn As Goal
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnRandom:
+        ButtonName: Spawn Randomly
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnFridge:
+        ButtonName: Appear From Fridge
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnBulb:
+        ButtonName: Creatable From Bulb
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      SpecialValues:
+      - ButtonName: Is Stationary
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+  HazardID: 0

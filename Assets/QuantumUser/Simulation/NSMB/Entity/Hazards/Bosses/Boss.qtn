@@ -1,0 +1,14 @@
+#define GeneralBossHealth 12
+
+component Boss {
+	byte Health; //12 heath, every hit deals one damage, but if you hit their weak spot it deals 4 damage
+	EntityRef ControllerPlayer;
+
+	[ExcludeFromPrototype] bool Dead;
+	[ExcludeFromPrototype] bool FacingRight;
+	[ExcludeFromPrototype] byte deathframes;
+	
+	[ExcludeFromPrototype] byte iframes;
+}
+
+signal BossDeath(EntityRef thisEntity);
