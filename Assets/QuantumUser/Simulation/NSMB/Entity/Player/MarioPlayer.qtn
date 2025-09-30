@@ -140,15 +140,14 @@ component MarioPlayer {
 	[ExcludeFromPrototype] bool BillBux;
 	
 	// Boss Control
-	[ExcludeFromPrototype] bool IsBoss;
+	[ExcludeFromPrototype] EntityRef IsBoss;
+	[ExcludeFromPrototype] bool RidingStarball;
 
     [ExcludeFromPrototype] EntityRef CurrentPipe;
 	[ExcludeFromPrototype] FPVector2 PipeDirection;
 	[ExcludeFromPrototype] bool PipeEntering;
 	[ExcludeFromPrototype] byte PipeFrames;
 	[ExcludeFromPrototype] byte PipeCooldownFrames;
-	
-	[ExcludeFromPrototype] bool RidingStarball;
 
 	[ExcludeFromPrototype] EntityRef CurrentSpinner;
 }

@@ -1,0 +1,13 @@
+component Cauldron {
+	EntityRef ConvertInto;
+	FP Hitboxheight;
+	
+	[ExcludeFromPrototype] EntityRef TransformingEntity;
+	[ExcludeFromPrototype] byte EnteredFrames;
+	[ExcludeFromPrototype] bool Activated;
+}
+
+event ObjectEntered {
+	EntityRef Entity;
+	bool IsDeath;
+}

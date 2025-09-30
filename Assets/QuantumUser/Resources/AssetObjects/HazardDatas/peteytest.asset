@@ -18,13 +18,79 @@ MonoBehaviour:
       Value: 478428477322717155
   basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
   HazardGameData:
-    MaxHazards: 1
+    MaxHazards: 9999
     frequency: 0
     MaxHeftys: 1
     HeftyPriority: 0
     HeftySpawnChance: 15
     FillMapOnStart: 0
     HazardDatas:
+    - Name: Cauldron
+      hazardAsset:
+        Id:
+          Value: 1516621902257113064
+      DespawnTime:
+        ButtonName: Time Til' Despawn
+        ButtonType: 1
+        BaseValue: 80
+        ValueRange:
+          X: 3
+          Y: 180
+      Hefty:
+        ButtonName: Enabled As Hefty
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      Team:
+        ButtonName: Team
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 6
+      SpawnAsGoal:
+        ButtonName: Spawn As Goal
+        ButtonType: 0
+        BaseValue: 255
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnRandom:
+        ButtonName: Spawn Randomly
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnFridge:
+        ButtonName: Appear From Fridge
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnBulb:
+        ButtonName: Creatable From Bulb
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      SpecialValues:
+      - ButtonName: Turns Into
+        ButtonType: 2
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 0
+      - ButtonName: Force Players On Team To Transform
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 0
     - Name: Petey
       hazardAsset:
         Id:
@@ -67,7 +133,7 @@ MonoBehaviour:
       SpawnFridge:
         ButtonName: Appear From Fridge
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
@@ -79,10 +145,10 @@ MonoBehaviour:
           X: 0
           Y: 1
       SpecialValues:
-      - ButtonName: Is Stationary
+      - ButtonName: 
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
-          Y: 1
-  HazardID: 0
+          Y: 0
+  HazardID: 15

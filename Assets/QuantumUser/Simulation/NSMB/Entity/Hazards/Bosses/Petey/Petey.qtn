@@ -4,8 +4,12 @@ component Petey {
 	[ExcludeFromPrototype] bool Flying;
 	[ExcludeFromPrototype] FP PreviousLandLevel;
 	[ExcludeFromPrototype] byte ReusableTimer;
+	[ExcludeFromPrototype] bool HitATarget;
 	FPVector2 Hitbox;
 	FPVector2 FallenBox;
+
+	//ai vars
+	[ExcludeFromPrototype] byte JumpCounter;
 }
 
 enum PeteyState : Byte {
@@ -33,6 +37,7 @@ event PeteyDive {
 }
 event PeteyLanded {
 	EntityRef Entity;
+	bool Weakened;
 }
 event PeteyStomped {
 	EntityRef Entity;

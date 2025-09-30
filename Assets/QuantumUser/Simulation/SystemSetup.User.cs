@@ -61,6 +61,7 @@ namespace Quantum {
                     new FanSystem(),
                     new SpinpipeSystem(),
 
+                    new CauldronSystem(),
                     new PeteySystem(),
 
                     new HazardManagerSystem(),

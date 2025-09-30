@@ -105,7 +105,7 @@ namespace Quantum {
 
             if (QuantumUtils.Decrement(ref hazardspawner->Lifetime)) {
                 //GetHazard
-                List<HazardData> hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas, Heftydata = new();
+                List<HazardData> hazarddata = new(f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas), Heftydata = new();
                 for (int i = 0; i < hazarddata.Count; i++) {
                     if (hazarddata[i].SpawnRandom.BaseValue != 1) {
                         //Hazard Can't spawn this way
@@ -119,6 +119,10 @@ namespace Quantum {
                         //hazarddata.Remove(hazarddata[i]);
                         //i--;
                     }
+
+                    //Add special spawn conditions for:
+                    //potion: spawns when the lobby contains at least 6 players, if one doesn't exist the next hazard is guerenteed to be it (this condition is disabled in advanced lobbies)
+                    //cauldron: spawns only if a boss entity is in the ruleset
                 }
                 int pick = 0;
                     //bool hefty = f.RNG->Next() <= FP._0_10;

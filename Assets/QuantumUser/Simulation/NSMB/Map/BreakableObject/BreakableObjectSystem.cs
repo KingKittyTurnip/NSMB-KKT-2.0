@@ -6,6 +6,7 @@ namespace Quantum {
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<MarioPlayer, BreakableObject>(f, OnMarioBreakableObjectInteract);
             f.Context.Interactions.Register<Starball, BreakableObject>(f, OnStarballBreakableObjectInteract);
+            f.Context.Interactions.Register<Starball, Boss>(f, OnBossBreakableObjectInteract);
             f.Context.RegisterPreContactCallback(f, OnMarioBreakableObjectPreContact);
         }
 
@@ -143,6 +144,9 @@ namespace Quantum {
         }
         private void OnStarballBreakableObjectInteract(Frame f, EntityRef starballEntity, EntityRef breakableEntity) {
             TryGenericInteraction(f, starballEntity, breakableEntity);
+        }
+        private void OnBossBreakableObjectInteract(Frame f, EntityRef bossEntity, EntityRef breakableEntity) {
+            TryGenericInteraction(f, bossEntity, breakableEntity);
         }
 
         private void OnMarioBreakableObjectPreContact(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts) {

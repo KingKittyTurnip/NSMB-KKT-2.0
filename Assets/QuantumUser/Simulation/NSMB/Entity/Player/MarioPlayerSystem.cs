@@ -1944,10 +1944,11 @@ namespace Quantum {
             var entity = filter.Entity;
 
             if (!mario->IsDead) {
-                if (mario->IsBoss) {
-                    filter.PhysicsObject->DisableCollision = true;
-                    f.Unsafe.GetPointer<Interactable>(entity)->ColliderDisabled = true;
+                if (f.Exists(mario->IsBoss)) {
                     return true;
+                }
+                if (mario->IsBoss != EntityRef.None) {
+                    mario->RelieveFromBoss(f, filter.Entity);
                 }
                 if (transform->Position.Y + (collider->Shape.Box.Extents.Y * 2) < stage.StageWorldMin.Y) {
                     // Death via pit

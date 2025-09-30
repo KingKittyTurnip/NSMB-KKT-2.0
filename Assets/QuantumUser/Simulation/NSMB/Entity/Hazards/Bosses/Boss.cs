@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace Quantum {
     public unsafe partial struct Boss {
-        public void BossHarmed(Frame f, EntityRef thisEntity, KnockbackStrength Power) {
+        public void BossHarmed(Frame f, EntityRef thisEntity, KnockbackStrength Damage, bool longiframes) {
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            byte total = Power switch {
+            byte total = Damage switch {
                 KnockbackStrength.Groundpound => 8,
                 KnockbackStrength.FireballBump => 1,
                 KnockbackStrength.Normal => 4,
@@ -22,11 +22,17 @@ namespace Quantum {
                 if (boss->Health > 0) {
                     boss->Health--;
                 } else {
+                    boss->Dead = true;
+                    f.Events.BossDeathAnimation(thisEntity);
                     f.Signals.BossDeath(thisEntity);
-                    break;
+                    return;
                 }
             }
-            boss->iframes = 180;
+            boss->iframes = (byte) (longiframes ? 135 : 30);
+        }
+
+        public void MakeBossControllable(Frame f, EntityRef MarioEntity) {
+            ControllerPlayer = MarioEntity;
         }
     }
 }

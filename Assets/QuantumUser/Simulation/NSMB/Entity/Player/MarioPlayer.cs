@@ -550,5 +550,25 @@ namespace Quantum {
 
             f.Events.MarioPlayerEnteredPipe(mario, CurrentPipe);
         }
+
+        public void SetAsBoss(Frame f, EntityRef mario, EntityRef Boss) {
+            IsBoss = Boss;
+            var otherPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(mario);
+            otherPhysicsObject->IsFrozen = otherPhysicsObject->DisableCollision = true;
+            otherPhysicsObject->Velocity = FPVector2.Zero;
+            f.Unsafe.GetPointer<Interactable>(mario)->ColliderDisabled = true;
+
+            if (f.Unsafe.TryGetPointer(HeldEntity, out Holdable* holdable)) {
+                holdable->DropWithoutThrowing(f, HeldEntity);
+            }
+        }
+        public void RelieveFromBoss(Frame f, EntityRef mario) {
+            IsBoss = EntityRef.None;
+            var otherPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(mario);
+            otherPhysicsObject->IsFrozen = otherPhysicsObject->DisableCollision = false;
+            otherPhysicsObject->Velocity = new FPVector2(0, 12);
+            f.Unsafe.GetPointer<Interactable>(mario)->ColliderDisabled = false;
+            IsGroundpounding = false;
+        }
     }
 }

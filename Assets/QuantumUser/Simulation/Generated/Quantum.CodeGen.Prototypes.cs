@@ -266,6 +266,21 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Cauldron))]
+  public unsafe class CauldronPrototype : ComponentPrototype<Quantum.Cauldron> {
+    public MapEntityId ConvertInto;
+    public FP Hitboxheight;
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Cauldron component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Cauldron result, in PrototypeMaterializationContext context = default) {
+        PrototypeValidator.FindMapEntity(this.ConvertInto, in context, out result.ConvertInto);
+        result.Hitboxheight = this.Hitboxheight;
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Clock))]
   public unsafe partial class ClockPrototype : ComponentPrototype<Quantum.Clock> {
     public Int32 Time;

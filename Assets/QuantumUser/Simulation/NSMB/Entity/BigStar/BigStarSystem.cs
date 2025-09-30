@@ -8,6 +8,7 @@ namespace Quantum {
 
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<BigStar, MarioPlayer>(f, OnBigStarMarioInteraction);
+            f.Context.Interactions.Register<BigStar, Boss>(f, OnBigStarBossInteraction);
         }
 
         public override void Update(Frame f) {
@@ -168,6 +169,13 @@ namespace Quantum {
                 f.Global->UsedHazardSpawnCount--;
             }
             f.Destroy(starEntity);
+        }
+
+        public void OnBigStarBossInteraction(Frame f, EntityRef starEntity, EntityRef bossEntity) {
+            var boss = f.Unsafe.GetPointer<Boss>(bossEntity);
+            if (boss->ControllerPlayer == EntityRef.None)
+                return;
+            OnBigStarMarioInteraction(f, starEntity, boss->ControllerPlayer);
         }
 
         public void OnReturnToRoom(Frame f) {

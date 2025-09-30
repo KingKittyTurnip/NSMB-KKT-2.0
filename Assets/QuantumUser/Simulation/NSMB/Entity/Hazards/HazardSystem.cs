@@ -86,6 +86,7 @@ namespace Quantum {
             }
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             //var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
 
             hazard->IsHazard = true;
             // IdeaBulb Carry On Creation :TOTEST:
@@ -101,8 +102,7 @@ namespace Quantum {
             hazard->Team = 0;
 
             //Set LifeTime
-            //TODO: Set Lifetime
-            hazard->BaseLifeTime = hazard->LifeTime = 80 * 60;
+            hazard->BaseLifeTime = hazard->LifeTime = hazardata.DespawnTime.BaseValue * 60;
 
             // Create Icon on Map
             if (hazard->IsHefty) {
