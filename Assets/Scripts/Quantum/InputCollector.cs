@@ -1,6 +1,7 @@
 using NSMB.UI.Game;
 using Photon.Deterministic;
 using Quantum;
+using Quantum.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

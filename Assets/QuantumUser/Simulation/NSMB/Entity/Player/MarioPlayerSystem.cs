@@ -44,7 +44,11 @@ namespace Quantum {
             if (player.IsValid && (inputPtr = f.GetPlayerInput(player)) != null) {
                 filter.Inputs = *inputPtr;
             } else {
-                filter.Inputs = default;
+                if (f.Unsafe.TryGetPointer(filter.Entity, out Bot* bot) && bot->IsBot) {
+                    filter.Inputs = bot->HandleAi(f, filter.Entity);
+                } else {
+                    filter.Inputs = default;
+                }
             }
 
             var physics = f.FindAsset(filter.MarioPlayer->PhysicsAsset);
@@ -2017,6 +2021,20 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(newEntity, out CoinItem* coinItem)) {
                 coinItem->ParentToPlayer(f, newEntity, marioEntity);
             }
+        }
+
+        public static void BotReserve(Frame f, EntityRef marioEntity) {
+            var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var reserveItem = f.FindAsset(mario->ReserveItem);
+
+            if (reserveItem == null || mario->IsDead || mario->MegaMushroomStartFrames > 0 || (mario->MegaMushroomStationaryEnd && mario->MegaMushroomEndFrames > 0)) {
+                f.Events.MarioPlayerUsedReserveItem(marioEntity, false);
+                return;
+            }
+
+            SpawnItem(f, marioEntity, mario, reserveItem.Prefab, false);
+            mario->ReserveItem = default;
+            f.Events.MarioPlayerUsedReserveItem(marioEntity, true);
         }
 
         public void SpawnReserveItem(Frame f, ref Filter filter) {

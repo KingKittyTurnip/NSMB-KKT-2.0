@@ -31,7 +31,7 @@ public unsafe class StarballAnimator : QuantumEntityViewComponent {
 
         float inputstrength = 0;
         if (starball->Rider != EntityRef.None) {
-            Quantum.Input inputs = *f.GetPlayerInput(f.Unsafe.GetPointer<MarioPlayer>(starball->Rider)->PlayerRef);
+            Quantum.Input inputs = f.Unsafe.GetPointer<MarioPlayer>(starball->Rider)->GetPlayerInput(f, starball->Rider);
             if (inputs.Left.IsDown || inputs.Right.IsDown) {
                 inputstrength = (inputs.Left.IsDown ? 1 : -1) * 40;
             }

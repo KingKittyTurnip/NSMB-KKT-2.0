@@ -46,7 +46,7 @@ namespace Quantum {
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(starball->Rider);
                 if (mario->CurrentKnockback == KnockbackStrength.None && mario->RidingStarball && mario->CurrentPowerupState != PowerupState.MegaMushroom) {
                     //(Make Controlled By The Mouse)
-                    Input inputs = *f.GetPlayerInput(mario->PlayerRef);
+                    Input inputs = mario->GetPlayerInput(f, starball->Rider);
                     if (inputs.Jump.WasPressed) { // Jump buffer
                         starball->JumpBufferFrames = 12;
                     }

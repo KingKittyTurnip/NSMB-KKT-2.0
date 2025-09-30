@@ -1,0 +1,17 @@
+component Bot {
+      bool IsBot;
+    //e
+      [ExcludeFromPrototype] bool Activated;
+    //Randomness
+      [ExcludeFromPrototype] byte GenerateRandomTeam;
+      [ExcludeFromPrototype] byte Personality;
+      [ExcludeFromPrototype] bool Mix;
+    //Target Variables
+      [ExcludeFromPrototype] FPVector2 Target;
+      [ExcludeFromPrototype] FPVector2 Avoid;
+      [ExcludeFromPrototype] byte AvoidType;
+    //Extra Smarts Variables
+      [ExcludeFromPrototype] bool PressingRight;
+      [ExcludeFromPrototype] byte BotWallJumping;
+      [ExcludeFromPrototype] byte BotAtkCooldown;
+}

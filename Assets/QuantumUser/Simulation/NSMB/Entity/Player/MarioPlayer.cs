@@ -2,6 +2,7 @@ using Photon.Deterministic;
 using Quantum.Collections;
 using Quantum.Core;
 using System;
+using System.Drawing.Drawing2D;
 
 namespace Quantum {
     public unsafe partial struct MarioPlayer {
@@ -569,6 +570,9 @@ namespace Quantum {
             otherPhysicsObject->Velocity = new FPVector2(0, 12);
             f.Unsafe.GetPointer<Interactable>(mario)->ColliderDisabled = false;
             IsGroundpounding = false;
+        }
+        public Input GetPlayerInput(Frame f, EntityRef marioEntity) {
+            return (QuantumUtils.GetPlayerData(f, PlayerRef) == null) ? f.Unsafe.GetPointer<Bot>(marioEntity)->HandleAi(f, marioEntity) : *f.GetPlayerInput(PlayerRef);
         }
     }
 }

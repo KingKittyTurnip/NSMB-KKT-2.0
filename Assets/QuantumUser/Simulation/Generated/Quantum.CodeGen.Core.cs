@@ -1605,6 +1605,74 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Bot : Quantum.IComponent {
+    public const Int32 SIZE = 56;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(12)]
+    public QBoolean IsBot;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean Activated;
+    [FieldOffset(3)]
+    [ExcludeFromPrototype()]
+    public Byte GenerateRandomTeam;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public Byte Personality;
+    [FieldOffset(16)]
+    [ExcludeFromPrototype()]
+    public QBoolean Mix;
+    [FieldOffset(40)]
+    [ExcludeFromPrototype()]
+    public FPVector2 Target;
+    [FieldOffset(24)]
+    [ExcludeFromPrototype()]
+    public FPVector2 Avoid;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte AvoidType;
+    [FieldOffset(20)]
+    [ExcludeFromPrototype()]
+    public QBoolean PressingRight;
+    [FieldOffset(2)]
+    [ExcludeFromPrototype()]
+    public Byte BotWallJumping;
+    [FieldOffset(1)]
+    [ExcludeFromPrototype()]
+    public Byte BotAtkCooldown;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 419;
+        hash = hash * 31 + IsBot.GetHashCode();
+        hash = hash * 31 + Activated.GetHashCode();
+        hash = hash * 31 + GenerateRandomTeam.GetHashCode();
+        hash = hash * 31 + Personality.GetHashCode();
+        hash = hash * 31 + Mix.GetHashCode();
+        hash = hash * 31 + Target.GetHashCode();
+        hash = hash * 31 + Avoid.GetHashCode();
+        hash = hash * 31 + AvoidType.GetHashCode();
+        hash = hash * 31 + PressingRight.GetHashCode();
+        hash = hash * 31 + BotWallJumping.GetHashCode();
+        hash = hash * 31 + BotAtkCooldown.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Bot*)ptr;
+        serializer.Stream.Serialize(&p->AvoidType);
+        serializer.Stream.Serialize(&p->BotAtkCooldown);
+        serializer.Stream.Serialize(&p->BotWallJumping);
+        serializer.Stream.Serialize(&p->GenerateRandomTeam);
+        serializer.Stream.Serialize(&p->Personality);
+        QBoolean.Serialize(&p->Activated, serializer);
+        QBoolean.Serialize(&p->IsBot, serializer);
+        QBoolean.Serialize(&p->Mix, serializer);
+        QBoolean.Serialize(&p->PressingRight, serializer);
+        FPVector2.Serialize(&p->Avoid, serializer);
+        FPVector2.Serialize(&p->Target, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct BreakableObject : Quantum.IComponent {
     public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
@@ -4336,6 +4404,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Boo>();
       BuildSignalsArrayOnComponentAdded<Quantum.Boss>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Boss>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Bot>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Bot>();
       BuildSignalsArrayOnComponentAdded<Quantum.BreakableObject>();
       BuildSignalsArrayOnComponentRemoved<Quantum.BreakableObject>();
       BuildSignalsArrayOnComponentAdded<Quantum.BulletBill>();
@@ -4854,6 +4924,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.Bobomb), Quantum.Bobomb.SIZE);
       typeRegistry.Register(typeof(Quantum.Boo), Quantum.Boo.SIZE);
       typeRegistry.Register(typeof(Quantum.Boss), Quantum.Boss.SIZE);
+      typeRegistry.Register(typeof(Quantum.Bot), Quantum.Bot.SIZE);
       typeRegistry.Register(typeof(Quantum.BreakableObject), Quantum.BreakableObject.SIZE);
       typeRegistry.Register(typeof(Quantum.BulletBill), Quantum.BulletBill.SIZE);
       typeRegistry.Register(typeof(Quantum.BulletBillLauncher), Quantum.BulletBillLauncher.SIZE);
@@ -4998,7 +5069,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 50)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 51)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -5006,6 +5077,7 @@ namespace Quantum {
         .Add<Quantum.Bobomb>(Quantum.Bobomb.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Boo>(Quantum.Boo.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Boss>(Quantum.Boss.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.Bot>(Quantum.Bot.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.BreakableObject>(Quantum.BreakableObject.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.BulletBill>(Quantum.BulletBill.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.BulletBillLauncher>(Quantum.BulletBillLauncher.Serialize, null, null, ComponentFlags.None)

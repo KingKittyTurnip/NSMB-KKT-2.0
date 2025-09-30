@@ -56,7 +56,8 @@ namespace Quantum {
             bool HasTarget = !QuantumUtils.Decrement(ref boss->iframes);
             if (boss->ControllerPlayer != EntityRef.None) {
                 //Controlled By Player
-                Input inputs = *f.GetPlayerInput(f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer)->PlayerRef);
+                var mario = f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer);
+                Input inputs = mario->GetPlayerInput(f, boss->ControllerPlayer);
                 f.Unsafe.GetPointer<Transform2D>(boss->ControllerPlayer)->Position = transform->Position;
 
                 Groundpounding = inputs.Down.WasPressed;
