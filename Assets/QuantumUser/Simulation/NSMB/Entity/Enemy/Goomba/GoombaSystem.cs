@@ -8,7 +8,8 @@ namespace Quantum {
 			public EntityRef Entity;
 			public Transform2D* Transform;
             public Enemy* Enemy;
-			public Goomba* Goomba;
+            public Hazard* Hazard;
+            public Goomba* Goomba;
 			public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* Collider;
             public Freezable* Freezable;
@@ -25,6 +26,7 @@ namespace Quantum {
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var enemy = filter.Enemy;
             var goomba = filter.Goomba;
+            var hazard = filter.Hazard;
             var transform = filter.Transform;
             var physicsObject = filter.PhysicsObject;
 
@@ -32,14 +34,14 @@ namespace Quantum {
             if (enemy->IsDead) {
                 // Check if they're fully dead now.
                 if (goomba->DeathAnimationFrames > 0 && QuantumUtils.Decrement(ref goomba->DeathAnimationFrames)) {
-                    enemy->IsActive = false;
+                    hazard->IsActive = false;
                     physicsObject->IsFrozen = true;
                 }
                 return;
             }
 
             // Inactive check 
-            if (!enemy->IsAlive
+            if (!(!enemy->IsDead && hazard->IsActive)
                 || filter.Freezable->IsFrozen(f)) {
                 return;
             }
@@ -137,7 +139,8 @@ namespace Quantum {
         public void OnEntityBumped(Frame f, EntityRef entity, FPVector2 position, EntityRef bumpOwner, QBoolean fromBelow) {
             if (!f.Unsafe.TryGetPointer(entity, out Goomba* goomba)
                 || !f.Unsafe.TryGetPointer(entity, out Enemy* enemy)
-                || !enemy->IsAlive) {
+                || !f.Unsafe.TryGetPointer(entity, out Hazard* hazard)
+                || !(!enemy->IsDead && hazard->IsActive)) {
                 return;
             }
 

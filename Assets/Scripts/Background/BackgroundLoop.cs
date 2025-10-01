@@ -55,20 +55,21 @@ namespace NSMB.Background {
             lastPositions[camera] = camera.transform.position.ToFPVector2();
 
             QuantumUtils.WrappedDistance(stage, cameraTransform.position.ToFPVector2(), lastPosition, out FP xDifference);
-            float absoluteDifference = cameraTransform.position.x - lastPosition.X.AsFloat;
+            QuantumUtils.WrappedDistanceY(stage, cameraTransform.position.ToFPVector2(), lastPosition, out FP yDifference);
+            Vector2 absoluteDifference = (Vector2) cameraTransform.position - new Vector2(lastPosition.X.AsFloat, lastPosition.Y.AsFloat);
 
             for (int i = 0; i < children.Length; i++) {
                 GameObject obj = children[i];
                 float parallaxSpeed = 1 - Mathf.Clamp01(Mathf.Abs(-10f / obj.transform.position.z));
 
-                float difference = xDifference.AsFloat + (obj.transform.position.x - truePositions[i].x);
+                Vector3 difference = new Vector3(xDifference.AsFloat + (obj.transform.position.x - truePositions[i].x), yDifference.AsFloat + (obj.transform.position.y - truePositions[i].y), 0);
 
-                if (Mathf.Abs(absoluteDifference) > 2) {
+                if (Mathf.Abs(absoluteDifference.x) > 2) {
                     truePositions[i].x += ((cameraTransform.position.x > stage.StageWorldMin.X.AsFloat + (stage.TileDimensions.X * 0.25f)) ? 1 : -1) * (stage.TileDimensions.X * 0.5f);
                 }
 
                 if (parallaxSpeed > 0) {
-                    Vector3 newPosition = truePositions[i] + difference * parallaxSpeed * Vector3.right;
+                    Vector3 newPosition = truePositions[i] + difference * parallaxSpeed;
                     truePositions[i] = newPosition;
                     obj.transform.position = newPosition;
                 }

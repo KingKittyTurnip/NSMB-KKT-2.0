@@ -2,15 +2,14 @@ using Photon.Deterministic;
 
 namespace Quantum {
     public unsafe partial struct Enemy {
-        public readonly bool IsAlive => !IsDead && IsActive;
+        //public readonly bool IsAlive => !IsDead && IsActive;
 
         public void Respawn(Frame f, EntityRef entity) {
             var transform = f.Unsafe.GetPointer<Transform2D>(entity);
 
-            IsActive = true;
             IsDead = false;
             FacingRight = false;
-            transform->Teleport(f, Spawnpoint);
+            //transform->Teleport(f, Spawnpoint);
 
             if (f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)) {
                 physicsObject->IsFrozen = false;

@@ -395,9 +395,8 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Enemy))]
   public unsafe partial class EnemyPrototype : ComponentPrototype<Quantum.Enemy> {
-    public FPVector2 Spawnpoint;
-    public QBoolean IgnorePlayerWhenRespawning;
-    public QBoolean DisableRespawning;
+    [HideInInspector()]
+    public Int32 _empty_prototype_dummy_field_;
     partial void MaterializeUser(Frame frame, ref Quantum.Enemy result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Enemy component = default;
@@ -405,9 +404,6 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Enemy result, in PrototypeMaterializationContext context = default) {
-        result.Spawnpoint = this.Spawnpoint;
-        result.IgnorePlayerWhenRespawning = this.IgnorePlayerWhenRespawning;
-        result.DisableRespawning = this.DisableRespawning;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -575,6 +571,8 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Hazard))]
   public unsafe partial class HazardPrototype : ComponentPrototype<Quantum.Hazard> {
+    public FPVector2 Spawnpoint;
+    public QBoolean IgnorePlayerWhenRespawning;
     public QBoolean RestrictSpawnPosition;
     public QBoolean IsHefty;
     public QBoolean IPWSUntilGround;
@@ -587,6 +585,8 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context = default) {
+        result.Spawnpoint = this.Spawnpoint;
+        result.IgnorePlayerWhenRespawning = this.IgnorePlayerWhenRespawning;
         result.RestrictSpawnPosition = this.RestrictSpawnPosition;
         result.IsHefty = this.IsHefty;
         result.IPWSUntilGround = this.IPWSUntilGround;
@@ -674,6 +674,7 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.Interactable))]
   public unsafe partial class InteractablePrototype : ComponentPrototype<Quantum.Interactable> {
     public QBoolean ColliderDisabled;
+    public QBoolean AllowDoubleInteraction;
     partial void MaterializeUser(Frame frame, ref Quantum.Interactable result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Interactable component = default;
@@ -682,6 +683,7 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Interactable result, in PrototypeMaterializationContext context = default) {
         result.ColliderDisabled = this.ColliderDisabled;
+        result.AllowDoubleInteraction = this.AllowDoubleInteraction;
         MaterializeUser(frame, ref result, in context);
     }
   }

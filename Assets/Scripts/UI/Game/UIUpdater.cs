@@ -26,7 +26,7 @@ namespace NSMB.UI.Game {
         //---Serialized Variables
         [SerializeField] private PlayerElements playerElements;
         [SerializeField] private CanvasGroup toggler;
-        [SerializeField] private TrackIcon playerTrackTemplate, starTrackTemplate, starCoinTrackTemplate, objectiveCoinTrackTemplate, starballgoalTrackTemplate, hazardTrackTemplate;
+        [SerializeField] private TrackIcon playerTrackTemplate, starTrackTemplate, starCoinTrackTemplate, objectiveCoinTrackTemplate, starballgoalTrackTemplate, heftyHazardTrackTemplate, hazardTrackTemplate;
         [SerializeField] private Sprite storedItemNull;
         [SerializeField] private TMP_Text uiTeamObjective, uiMainObjective, uiCoins, uiDebug, uiLives, uiCountdown;
         [SerializeField] private Image itemReserve, itemColor, deathFade;
@@ -39,6 +39,7 @@ namespace NSMB.UI.Game {
 
         //---Private 
         private readonly Dictionary<MonoBehaviour, TrackIcon> entityTrackIcons = new();
+        private readonly List<(TrackIcon, bool, EntityRef)> hazardTrackIcons = new();
         private readonly Dictionary<Type, List<TrackIcon>> availablePooledTrackIcons = new();
         private readonly List<Image> backgrounds = new();
         private GameObject teamsParent, starsParent, coinsParent, livesParent, timerParent;
@@ -65,6 +66,8 @@ namespace NSMB.UI.Game {
             CoinAnimator.ObjectiveCoinDestroyed += OnObjectiveCoinDestroyed;
             StarballgoalAnimator.StarballgoalInitialized += OnStarballgoalInitialized;
             StarballgoalAnimator.StarballgoalDestroyed += OnStarballgoalDestroyed;
+            HazardSystem.HazardInitialized += OnHazardInitialized;
+            HazardSystem.HazardDestroyed += OnHazardDestroyed;
             TranslationManager.OnLanguageChanged += OnLanguageChanged;
             Settings.Controls.Debug.ToggleHUD.performed += OnToggleHUD;
             OnLanguageChanged(GlobalController.Instance.translationManager);
@@ -158,7 +161,6 @@ namespace NSMB.UI.Game {
         private void OnMarioInitialized(QuantumGame game, Frame f, MarioPlayerAnimator mario) {
             entityTrackIcons[mario] = CreateTrackIcon(Updater, f, mario.EntityRef, mario.transform);
         }
-
         private void OnMarioDestroyed(QuantumGame game, Frame f, MarioPlayerAnimator mario) {
             DestroyTrackIcon(mario);
         }
@@ -166,7 +168,6 @@ namespace NSMB.UI.Game {
         private void OnBigStarInitialized(Frame f, BigStarAnimator star) {
             entityTrackIcons[star] = CreateTrackIcon(Updater, f, star.EntityRef, star.transform);
         }
-
         private void OnBigStarDestroyed(Frame f, BigStarAnimator star) {
             DestroyTrackIcon(star);
         }
@@ -174,7 +175,6 @@ namespace NSMB.UI.Game {
         private void OnStarCoinInitialized(Frame f, StarCoinAnimator starCoin) {
             entityTrackIcons[starCoin] = CreateTrackIcon(Updater, f, starCoin.EntityRef, starCoin.transform);
         }
-
         private void OnStarCoinDestroyed(Frame f, StarCoinAnimator starCoin) {
             DestroyTrackIcon(starCoin);
         }
@@ -182,7 +182,6 @@ namespace NSMB.UI.Game {
         private void OnObjectiveCoinInitialized(Frame f, CoinAnimator objectiveCoin) {
             entityTrackIcons[objectiveCoin] = CreateTrackIcon(Updater, f, objectiveCoin.EntityRef, objectiveCoin.transform);
         }
-
         private void OnObjectiveCoinDestroyed(CoinAnimator objectiveCoin) {
             DestroyTrackIcon(objectiveCoin);
         }
@@ -190,9 +189,34 @@ namespace NSMB.UI.Game {
         private void OnStarballgoalInitialized(Frame f, StarballgoalAnimator starballgoal) {
             entityTrackIcons[starballgoal] = CreateTrackIcon(Updater, f, starballgoal.EntityRef, starballgoal.transform);
         }
-
         private void OnStarballgoalDestroyed(Frame f, StarballgoalAnimator starballgoal) {
             DestroyTrackIcon(starballgoal);
+        }
+
+        private void OnHazardInitialized(Frame f, EntityRef hazardEntity) {
+            if (Updater == null) {
+                Debug.Log("Couldn't create icon, Updater doesn't exist");
+                return;
+            }
+            if (!f.Exists(hazardEntity)) {
+                Debug.Log("Couldn't create icon, EntityRef Doesn't Exist: " + hazardEntity);
+                return;
+            }
+            StartCoroutine(tryAddHazardIcon(f, hazardEntity));
+        }
+        private void OnHazardDestroyed(Frame f) {
+            DestroyHazardTrackIcon(f);
+        }
+        private IEnumerator tryAddHazardIcon(Frame f, EntityRef hazardEntity) {
+
+            int i = 0;
+            while (Updater.GetView(hazardEntity) == null && i < 120) {
+                i++;
+                yield return null;
+            }
+            if (i < 120) {
+                CreateTrackIcon(Updater, f, hazardEntity, Updater.GetView(hazardEntity).gameObject.transform);
+            }
         }
 
         private void UpdateStoredItemUI(MarioPlayer* mario, bool playAnimation) {
@@ -348,8 +372,26 @@ namespace NSMB.UI.Game {
                 icon = Instantiate(starCoinTrackTemplate, starCoinTrackTemplate.transform.parent);
             } else if (f.Has<Starballgoal>(entity)) {
                 icon = Instantiate(starballgoalTrackTemplate, starballgoalTrackTemplate.transform.parent);
-            } else if (f.Has<Hazard>(entity)) {
-                icon = Instantiate(hazardTrackTemplate, hazardTrackTemplate.transform.parent);
+            } else if (f.Unsafe.TryGetPointer<Hazard>(entity, out Hazard* hazard)) {
+                bool breaked = false;
+                icon = new();
+                for (int i = 0; i < hazardTrackIcons.Count; i++) {
+                    if (hazardTrackIcons[i].Item3 == EntityRef.None && hazard->IsHefty == hazardTrackIcons[i].Item2) {
+                        //Use This Pooled One
+                        icon = hazardTrackIcons[i].Item1;
+                        icon.gameObject.SetActive(true);
+                        hazardTrackIcons[i] = (icon, hazard->IsHefty, entity);
+                        breaked = true;
+                        break;
+                    }
+                }
+
+                if (!breaked) {
+                    //Create A New One There Wasn't Enough
+                    icon = hazard->IsHefty ? Instantiate(heftyHazardTrackTemplate, heftyHazardTrackTemplate.transform.parent) : Instantiate(hazardTrackTemplate, hazardTrackTemplate.transform.parent);
+                    hazardTrackIcons.Add((icon, hazard->IsHefty, entity));
+                }
+
             } else if (f.Has<ObjectiveCoin>(entity)) {
                 if (availablePooledTrackIcons.TryGetValue(typeof(CoinAnimator), out var pool) && pool.Count > 0) {
                     icon = pool[0];
@@ -371,7 +413,7 @@ namespace NSMB.UI.Game {
 
         public void DestroyTrackIcon(MonoBehaviour animator) {
             if (entityTrackIcons.TryGetValue(animator, out TrackIcon icon)) {
-                if (animator is CoinAnimator) {
+                if (animator is CoinAnimator || animator == null) {
                     // Pool.
                     icon.gameObject.SetActive(false);
                     if (!availablePooledTrackIcons.TryGetValue(animator.GetType(), out List<TrackIcon> pool)) {
@@ -382,6 +424,15 @@ namespace NSMB.UI.Game {
                     // Don't pool
                     Destroy(icon.gameObject);
                     entityTrackIcons.Remove(animator);
+                }
+            }
+        }
+        public void DestroyHazardTrackIcon(Frame f) {
+            for (int i = 0; i < hazardTrackIcons.Count; i++) {
+                if (hazardTrackIcons[i].Item1 != null && !f.Exists(hazardTrackIcons[i].Item3)) {
+                    //Pool.
+                    hazardTrackIcons[i].Item1.gameObject.SetActive(false);
+                    hazardTrackIcons[i] = (hazardTrackIcons[i].Item1, hazardTrackIcons[i].Item2, EntityRef.None);
                 }
             }
         }

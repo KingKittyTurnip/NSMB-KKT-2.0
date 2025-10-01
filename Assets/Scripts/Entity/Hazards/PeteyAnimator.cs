@@ -1,19 +1,25 @@
+using NSMB.Utilities.Extensions;
+using Photon.Deterministic;
 using Quantum;
 using Quantum.Profiling;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
 public unsafe class PeteyAnimator : QuantumEntityViewComponent {
 
     [SerializeField] private GameObject Ratater, Model;
     [SerializeField] private Animator Animator;
+    [SerializeField] private AudioSource sfx;
     [Space]
     [SerializeField] private GameObject jumpDust;
     [SerializeField] private GameObject groundpoundDust, BossKillParticle;
-
+    [Space]
+    [SerializeField] private AudioClip Attack;
+    [SerializeField] private AudioClip HeadBonk, Damage, Dizzy, Flap, Slip, Snore, Sleeping;
     //---Serialized Variables
     private bool modelRotateInstantly;
     private quaternion modelRotationTarget;
@@ -27,6 +33,7 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
         QuantumEvent.Subscribe<EventPeteyStomped>(this, OnStomped);
 
         QuantumEvent.Subscribe<EventBossDeathAnimation>(this, OnDeath);
+        QuantumEvent.Subscribe<EventPlayBossHitSound>(this, OnPlayBossHitSound);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -39,7 +46,7 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
         var petey = f.Unsafe.GetPointer<Petey>(EntityRef);
         var Boss = f.Unsafe.GetPointer<Boss>(EntityRef);
         var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
-
+        var transform = f.Unsafe.GetPointer<Transform2D>(EntityRef);
         var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
 
         Model.SetActive(f.Global->GameState >= GameState.Playing && (!(Boss->iframes > 0 && (f.Number * f.DeltaTime.AsFloat) * (Boss->iframes <= 0.75f ? 5 : 2) % 0.2f < 0.1f)));
@@ -51,7 +58,7 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
         }
 
         //Animator
-        Animator.speed = freezable->IsFrozen(f) ? 0 : 1;
+        Animator.speed = freezable->IsFrozen(f) ? 0 : (petey->Flying && petey->State == PeteyState.Flying && transform->Position.Y - (petey->PreviousLandLevel - 1) < 0 ? 1.5f : 1);
         Animator.SetBool("Flying", petey->Flying && petey->State == PeteyState.Flying);
     }
 
@@ -64,6 +71,29 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
             Ratater.transform.rotation = Quaternion.RotateTowards(Ratater.transform.rotation, modelRotationTarget, maxRotation);
         }
     }
+
+    [Preserve]
+    public void PeteyFlap() {
+        sfx.PlayOneShot(Flap);
+    }
+    [Preserve]
+    public void PeteyHeadBonk() {
+        sfx.PlayOneShot(HeadBonk);
+        //play a particle effect?
+    }
+    [Preserve]
+    public void PeteySleeping() {
+        sfx.PlayOneShot(Sleeping);
+    }
+    [Preserve]
+    public void PeteySnoring() {
+        sfx.PlayOneShot(Snore);
+    }
+    [Preserve]
+    public void PeteyDizzy() {
+        sfx.PlayOneShot(Dizzy);
+    }
+
 
     private unsafe void OnWakup(EventPeteyWakeup e) {
         if (e.Entity != EntityRef) {
@@ -81,6 +111,7 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
         if (e.Entity != EntityRef) {
             return;
         }
+        sfx.PlayOneShot(Flap);
         Instantiate(jumpDust, transform.position, Quaternion.identity);
         Animator.SetTrigger("Jump");
     }
@@ -89,11 +120,14 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
             return;
         }
         Animator.SetTrigger("Dive");
+        sfx.PlayOneShot(Attack);
     }
     private unsafe void OnLanded(EventPeteyLanded e) {
         if (e.Entity != EntityRef) {
             return;
         }
+        if (e.Weakened)
+            sfx.PlayOneShot(Slip);
         Instantiate(groundpoundDust, transform.position, Quaternion.identity);
         Animator.SetTrigger(e.Weakened ? "Fell" : "Landed");
     }
@@ -101,6 +135,7 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
         if (e.Entity != EntityRef) {
             return;
         }
+        sfx.PlayOneShot(Damage);
         Animator.SetTrigger(e.IsDeath ? "Death" : "Stomped");
     }
     private unsafe void OnDeath(EventBossDeathAnimation e) {
@@ -109,5 +144,12 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
         }
         Animator.SetTrigger("Death");
         Instantiate(BossKillParticle, transform.position, Quaternion.identity);
+    }
+    private void OnPlayBossHitSound(EventPlayBossHitSound e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+
+        sfx.PlayOneShot(SoundEffect.World_Boss_Hit);
     }
 }

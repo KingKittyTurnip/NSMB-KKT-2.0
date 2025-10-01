@@ -56,6 +56,7 @@ namespace NSMB.Entities.Enemies {
 
             var bobomb = f.Unsafe.GetPointer<Bobomb>(EntityRef);
             var enemy = f.Unsafe.GetPointer<Enemy>(EntityRef);
+            var hazard = f.Unsafe.GetPointer<Hazard>(EntityRef);
             var holdable = f.Unsafe.GetPointer<Holdable>(EntityRef);
 
             bool lit = bobomb->CurrentDetonationFrames > 0;
@@ -73,12 +74,12 @@ namespace NSMB.Entities.Enemies {
             }
 
             // Bodge...
-            if (!enemy->IsAlive) {
+            if (!(!enemy->IsDead && hazard->IsActive)) {
                 sfx.Stop();
             }
 
             sRenderer.SetPropertyBlock(mpb);
-            sRenderer.enabled = enemy->IsActive;
+            sRenderer.enabled = (!enemy->IsDead && hazard->IsActive);
             sRenderer.flipX = !enemy->FacingRight;
 
             Vector3 modifiedZ = transform.position;

@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 6612678236420697831}
   - component: {fileID: -2455541069636724775}
   - component: {fileID: 7712224105823239235}
+  - component: {fileID: -9135026161159835817}
   m_Layer: 19
   m_Name: Spiny
   m_TagString: Untagged
@@ -67,12 +68,12 @@ MonoBehaviour:
     PositionOffset:
       RawValue: 0
   PhysicsCollider:
+    IsEnabled: 1
     IsTrigger: 0
     Material:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
-    IsEnabled: 1
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -262,6 +263,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -8359218312643153770, guid: b73add24eb026c844b85593f8bab1f8c,
     type: 2}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -420,15 +422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
-    Spawnpoint:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    IgnorePlayerWhenRespawning:
-      Value: 0
-    DisableRespawning:
-      Value: 0
+    _empty_prototype_dummy_field_: 0
 --- !u!114 &8889607602468363306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +467,10 @@ MonoBehaviour:
       Value: 0
     BreakMegaObjects:
       Value: 0
+    WindImmune:
+      Value: 0
+    GravityInversed:
+      Value: 0
 --- !u!114 &5305366232122907052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,6 +485,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     HoldAboveHead:
+      Value: 0
+    IsSolidCarryable:
       Value: 0
 --- !u!114 &-3156354585278191863
 MonoBehaviour:
@@ -582,6 +582,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     _empty_prototype_dummy_field_: 0
+--- !u!114 &-9135026161159835817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435431862184428451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c912ba00eb8780d468a9d5e4288668e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prototype:
+    Spawnpoint:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    IgnorePlayerWhenRespawning:
+      Value: 0
+    RestrictSpawnPosition:
+      Value: 0
+    IsHefty:
+      Value: 0
+    IPWSUntilGround:
+      Value: 1
+    IPWSTime: 0
+    SpawningVelocityRange:
+      X:
+        RawValue: 131072
+      Y:
+        RawValue: 65536
 --- !u!1 &2736979299832079342
 GameObject:
   m_ObjectHideFlags: 0
@@ -632,6 +664,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -669,7 +704,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &1376368638781678059
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -683,6 +718,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1

@@ -1,5 +1,6 @@
 component Interactable {
 	bool ColliderDisabled;
+	bool AllowDoubleInteraction;
 }
 
 component InteractionInitiator {

@@ -9,6 +9,7 @@ namespace Quantum {
             public Transform2D* Transform;
             public Boo* Boo;
             public Enemy* Enemy;
+            public Hazard* Hazard;
             public PhysicsObject* PhysicsObject;
         }
 
@@ -19,8 +20,9 @@ namespace Quantum {
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var enemy = filter.Enemy;
+            var hazard = filter.Hazard;
 
-            if (!enemy->IsAlive) {
+            if (!(!enemy->IsDead && hazard->IsActive)) {
                 return;
             }
 

@@ -10,6 +10,7 @@ namespace Quantum {
         public struct Filter {
             public EntityRef Entity;
             public Enemy* Enemy;
+            public Hazard* Hazard;
             public Koopa* Koopa;
             public Transform2D* Transform;
             public PhysicsObject* PhysicsObject;
@@ -34,13 +35,14 @@ namespace Quantum {
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var entity = filter.Entity;
             var enemy = filter.Enemy;
+            var hazard = filter.Hazard;
             var koopa = filter.Koopa;
             var transform = filter.Transform;
             var physicsObject = filter.PhysicsObject;
             var freezable = filter.Freezable;
 
             // Inactive check
-            if (!enemy->IsAlive
+            if (!(!enemy->IsDead && hazard->IsActive)
                 || freezable->IsFrozen(f)) {
                 return;
             }
@@ -211,6 +213,7 @@ namespace Quantum {
             }
 
             var koopaEnemy = f.Unsafe.GetPointer<Enemy>(koopaEntity);
+            var koopaHazard = f.Unsafe.GetPointer<Hazard>(koopaEntity);
             var koopaTransform = f.Unsafe.GetPointer<Transform2D>(koopaEntity);
             var koopaPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(koopaEntity);
             var koopaCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(koopaEntity);
@@ -250,7 +253,7 @@ namespace Quantum {
                     && f.TryFindAsset(koopa->SpawnPowerupWhenStomped, out PowerupAsset powerup)) {
                     // Powerup (for blue koopa): give to mario immediately
                     PowerupReserveResult result = PowerupSystem.CollectPowerup(f, marioEntity, mario, marioPhysicsObject, powerup);
-                    koopaEnemy->IsActive = false;
+                    koopaHazard->IsActive = false;
                     koopaEnemy->IsDead = true;
                     koopaPhysicsObject->IsFrozen = true;
                     f.Events.MarioPlayerCollectedPowerup(marioEntity, result, powerup);
@@ -282,7 +285,7 @@ namespace Quantum {
                         coinItem->Initialize(f, newPowerup, 15, PowerupSpawnReason.BlueKoopa);
                         powerupPhysicsObject->DisableCollision = false;
 
-                        koopaEnemy->IsActive = false;
+                        koopaHazard->IsActive = false;
                         koopaEnemy->IsDead = true;
                         koopaPhysicsObject->IsFrozen = true;
 
@@ -465,7 +468,8 @@ namespace Quantum {
                 || !f.Unsafe.TryGetPointer(entity, out Koopa* koopa)
                 || !f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
                 || !f.Unsafe.TryGetPointer(entity, out Enemy* enemy)
-                || !enemy->IsAlive
+                || !f.Unsafe.TryGetPointer(entity, out Hazard* hazard)
+                || !(!enemy->IsDead && hazard->IsActive)
                 || !f.Unsafe.TryGetPointer(entity, out Holdable* holdable)
                 || f.Exists(holdable->Holder)
                 || holdable->IgnoreOwnerFrames > 0) {

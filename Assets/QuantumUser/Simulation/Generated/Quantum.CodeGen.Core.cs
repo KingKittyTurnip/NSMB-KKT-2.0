@@ -2040,30 +2040,17 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Enemy : Quantum.IComponent {
-    public const Int32 SIZE = 40;
-    public const Int32 ALIGNMENT = 8;
-    [FieldOffset(24)]
-    public FPVector2 Spawnpoint;
-    [FieldOffset(8)]
-    public QBoolean IgnorePlayerWhenRespawning;
-    [FieldOffset(0)]
-    public QBoolean DisableRespawning;
-    [FieldOffset(12)]
-    [ExcludeFromPrototype()]
-    public QBoolean IsActive;
-    [FieldOffset(16)]
+    public const Int32 SIZE = 8;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public QBoolean IsDead;
-    [FieldOffset(4)]
+    [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public QBoolean FacingRight;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 11071;
-        hash = hash * 31 + Spawnpoint.GetHashCode();
-        hash = hash * 31 + IgnorePlayerWhenRespawning.GetHashCode();
-        hash = hash * 31 + DisableRespawning.GetHashCode();
-        hash = hash * 31 + IsActive.GetHashCode();
         hash = hash * 31 + IsDead.GetHashCode();
         hash = hash * 31 + FacingRight.GetHashCode();
         return hash;
@@ -2071,12 +2058,8 @@ namespace Quantum {
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Enemy*)ptr;
-        QBoolean.Serialize(&p->DisableRespawning, serializer);
         QBoolean.Serialize(&p->FacingRight, serializer);
-        QBoolean.Serialize(&p->IgnorePlayerWhenRespawning, serializer);
-        QBoolean.Serialize(&p->IsActive, serializer);
         QBoolean.Serialize(&p->IsDead, serializer);
-        FPVector2.Serialize(&p->Spawnpoint, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -2283,20 +2266,27 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Hazard : Quantum.IComponent {
-    public const Int32 SIZE = 48;
+    public const Int32 SIZE = 72;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(20)]
+    [FieldOffset(24)]
     [ExcludeFromPrototype()]
     public QBoolean IsHazard;
-    [FieldOffset(28)]
+    [FieldOffset(56)]
+    public FPVector2 Spawnpoint;
+    [FieldOffset(20)]
+    [ExcludeFromPrototype()]
+    public QBoolean IsActive;
+    [FieldOffset(16)]
+    public QBoolean IgnorePlayerWhenRespawning;
+    [FieldOffset(36)]
     public QBoolean RestrictSpawnPosition;
-    [FieldOffset(24)]
+    [FieldOffset(28)]
     public QBoolean IsHefty;
     [FieldOffset(12)]
     public QBoolean IPWSUntilGround;
     [FieldOffset(0)]
     public Byte IPWSTime;
-    [FieldOffset(32)]
+    [FieldOffset(40)]
     public FPVector2 SpawningVelocityRange;
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
@@ -2307,9 +2297,9 @@ namespace Quantum {
     [FieldOffset(8)]
     [ExcludeFromPrototype()]
     public Int32 LifeTime;
-    [FieldOffset(16)]
+    [FieldOffset(32)]
     [ExcludeFromPrototype()]
-    public QBoolean Inactive;
+    public QBoolean JustSpawned;
     [FieldOffset(2)]
     [ExcludeFromPrototype()]
     public Byte index;
@@ -2317,6 +2307,9 @@ namespace Quantum {
       unchecked { 
         var hash = 5591;
         hash = hash * 31 + IsHazard.GetHashCode();
+        hash = hash * 31 + Spawnpoint.GetHashCode();
+        hash = hash * 31 + IsActive.GetHashCode();
+        hash = hash * 31 + IgnorePlayerWhenRespawning.GetHashCode();
         hash = hash * 31 + RestrictSpawnPosition.GetHashCode();
         hash = hash * 31 + IsHefty.GetHashCode();
         hash = hash * 31 + IPWSUntilGround.GetHashCode();
@@ -2325,7 +2318,7 @@ namespace Quantum {
         hash = hash * 31 + Team.GetHashCode();
         hash = hash * 31 + BaseLifeTime.GetHashCode();
         hash = hash * 31 + LifeTime.GetHashCode();
-        hash = hash * 31 + Inactive.GetHashCode();
+        hash = hash * 31 + JustSpawned.GetHashCode();
         hash = hash * 31 + index.GetHashCode();
         return hash;
       }
@@ -2338,11 +2331,14 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->BaseLifeTime);
         serializer.Stream.Serialize(&p->LifeTime);
         QBoolean.Serialize(&p->IPWSUntilGround, serializer);
-        QBoolean.Serialize(&p->Inactive, serializer);
+        QBoolean.Serialize(&p->IgnorePlayerWhenRespawning, serializer);
+        QBoolean.Serialize(&p->IsActive, serializer);
         QBoolean.Serialize(&p->IsHazard, serializer);
         QBoolean.Serialize(&p->IsHefty, serializer);
+        QBoolean.Serialize(&p->JustSpawned, serializer);
         QBoolean.Serialize(&p->RestrictSpawnPosition, serializer);
         FPVector2.Serialize(&p->SpawningVelocityRange, serializer);
+        FPVector2.Serialize(&p->Spawnpoint, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -2464,19 +2460,23 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Interactable : Quantum.IComponent {
-    public const Int32 SIZE = 4;
+    public const Int32 SIZE = 8;
     public const Int32 ALIGNMENT = 4;
-    [FieldOffset(0)]
+    [FieldOffset(4)]
     public QBoolean ColliderDisabled;
+    [FieldOffset(0)]
+    public QBoolean AllowDoubleInteraction;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 2039;
         hash = hash * 31 + ColliderDisabled.GetHashCode();
+        hash = hash * 31 + AllowDoubleInteraction.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Interactable*)ptr;
+        QBoolean.Serialize(&p->AllowDoubleInteraction, serializer);
         QBoolean.Serialize(&p->ColliderDisabled, serializer);
     }
   }

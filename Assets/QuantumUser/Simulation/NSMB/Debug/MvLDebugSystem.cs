@@ -38,10 +38,12 @@ namespace Quantum {
                     coinItem->ParentToPlayer(f, newEntity, marioEntity);
                 }
                 if (f.Unsafe.TryGetPointer(newEntity, out Enemy* enemy)) {
-                    enemy->DisableRespawning = true;
                     enemy->FacingRight = mario->FacingRight;
-                    enemy->IsActive = true;
                     enemy->IsDead = false;
+                }
+                if (f.Unsafe.TryGetPointer(newEntity, out Hazard* hazard)) {
+                    hazard->IsHazard = true;
+                    hazard->IsActive = true;
                 }
                 break;
             case DebugCommand.KillSelf:

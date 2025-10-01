@@ -9,6 +9,7 @@ namespace Quantum {
             public Transform2D* Transform;
             public PiranhaPlant* PiranhaPlant;
             public Enemy* Enemy;
+            public Hazard* Hazard;
             public PhysicsCollider2D* Collider;
             public Interactable* Interactable;
             public Freezable* Freezable;
@@ -24,9 +25,10 @@ namespace Quantum {
             var piranhaPlant = filter.PiranhaPlant;
             var transform = filter.Transform;
             var enemy = filter.Enemy;
+            var hazard = filter.Hazard;
             var freezable = filter.Freezable;
 
-            if (!enemy->IsAlive
+            if (!(!enemy->IsDead && hazard->IsActive)
                 || freezable->IsFrozen(f)) {
                 return;
             }
@@ -55,7 +57,7 @@ namespace Quantum {
             piranhaPlant->PopupAnimationTime = FPMath.Clamp01(piranhaPlant->PopupAnimationTime + change);
             filter.Interactable->ColliderDisabled = piranhaPlant->PopupAnimationTime < FP._0_10;
             FPVector2 offset = FPVector2.Up * (FP._0_25 + (piranhaPlant->PopupAnimationTime - 1) * FP._0_75);
-            transform->Position = enemy->Spawnpoint + offset;
+            transform->Position = hazard->Spawnpoint + offset;
 
             freezable->IceBlockSize.Y = Constants._1_10 * piranhaPlant->PopupAnimationTime; 
         }
@@ -102,15 +104,15 @@ namespace Quantum {
         }
 
         public void OnTileChanged(Frame f, IntVector2 tilePosition, StageTileInstance newTile) {
-            var filter = f.Filter<Transform2D, PiranhaPlant, Enemy>();
+            var filter = f.Filter<Transform2D, PiranhaPlant, Enemy, Hazard>();
             VersusStageData stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
 
-            while (filter.NextUnsafe(out EntityRef entity, out Transform2D* transform, out PiranhaPlant* piranhaPlant, out Enemy* enemy)) {
-                if (!enemy->IsAlive) {
+            while (filter.NextUnsafe(out EntityRef entity, out Transform2D* transform, out PiranhaPlant* piranhaPlant, out Enemy* enemy, out Hazard* hazard)) {
+                if (!(!enemy->IsDead && hazard->IsActive)) {
                     continue;
                 }
 
-                IntVector2 tile = QuantumUtils.WorldToRelativeTile(stage, enemy->Spawnpoint);
+                IntVector2 tile = QuantumUtils.WorldToRelativeTile(stage, hazard->Spawnpoint);
                 if (tile.Equals(tilePosition)) {
                     piranhaPlant->Kill(f, entity, EntityRef.None, KillReason.Special);
                 }
@@ -124,9 +126,9 @@ namespace Quantum {
         }
 
         public void OnBreakableObjectChangedHeight(Frame f, EntityRef breakableEntity, FP newHeight) {
-            var filter = f.Filter<Enemy, PiranhaPlant>();
-            while (filter.NextUnsafe(out EntityRef piranhaPlantEntity, out Enemy* enemy, out PiranhaPlant* piranhaPlant)) {
-                if (!enemy->IsAlive) {
+            var filter = f.Filter<Enemy, PiranhaPlant, Hazard>();
+            while (filter.NextUnsafe(out EntityRef piranhaPlantEntity, out Enemy* enemy, out PiranhaPlant* piranhaPlant, out Hazard* hazard)) {
+                if (!(!enemy->IsDead && hazard->IsActive)) {
                     continue;
                 }
                 var breakable = f.Unsafe.GetPointer<BreakableObject>(breakableEntity);

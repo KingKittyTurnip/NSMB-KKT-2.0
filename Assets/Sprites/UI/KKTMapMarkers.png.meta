@@ -123,7 +123,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: KKTMapMarkers_Hazard
+      name: KKTMapMarkers_HeftyHazard
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
       name: KKTMapMarkers_PocketDoor
       rect:
         serializedVersion: 2
-        x: 29
+        x: 41
         y: 0
         width: 16
         height: 22
@@ -170,12 +170,12 @@ TextureImporter:
       name: KKTMapMarkers_StarballGoal
       rect:
         serializedVersion: 2
-        x: 49
+        x: 61
         y: 0
         width: 19
         height: 22
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -184,6 +184,28 @@ TextureImporter:
       bones: []
       spriteID: 8a2a560c9874ec04596e0de931b3226f
       internalID: 2042584619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KKTMapMarkers_Hazard
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 9
+        width: 4
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9537f464c6dc0e647bfeeec7166e45a6
+      internalID: 1449095835
       vertices: []
       indices: 
       edges: []
@@ -202,7 +224,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      KKTMapMarkers_Hazard: -372118742
+      KKTMapMarkers_Hazard: 1449095835
+      KKTMapMarkers_HeftyHazard: -372118742
       KKTMapMarkers_PocketDoor: -2000221879
       KKTMapMarkers_StarballGoal: 2042584619
   mipmapLimitGroupName: 

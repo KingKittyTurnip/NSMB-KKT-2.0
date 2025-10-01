@@ -8,6 +8,7 @@ namespace Quantum {
             public EntityRef Entity;
             public Bobomb* Bobomb;
             public Enemy* Enemy;
+            public Hazard* Hazard;
             public Transform2D* Transform;
             public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* Collider;
@@ -27,8 +28,9 @@ namespace Quantum {
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var bobomb = filter.Bobomb;
             var enemy = filter.Enemy;
+            var hazard = filter.Hazard;
 
-            if (!enemy->IsAlive
+            if (!(!enemy->IsDead && hazard->IsActive)
                 || filter.Freezable->IsFrozen(f)) {
                 return;
             }
@@ -77,6 +79,7 @@ namespace Quantum {
 
         private static void Explode(Frame f, ref Filter filter) {
             var enemy = filter.Enemy;
+            var hazard = filter.Hazard;
             var bobomb = filter.Bobomb;
             var transform = filter.Transform;
             var holdable = filter.Holdable;
@@ -122,7 +125,7 @@ namespace Quantum {
             }
 
             enemy->IsDead = true;
-            enemy->IsActive = false;
+            hazard->IsActive = false;
             physicsObject->Velocity = FPVector2.Zero;
             physicsObject->IsFrozen = true;
             f.Events.BobombExploded(filter.Entity);
@@ -270,7 +273,8 @@ namespace Quantum {
                 || !f.Unsafe.TryGetPointer(entity, out Bobomb* bobomb)
                 || !f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
                 || !f.Unsafe.TryGetPointer(entity, out Enemy* enemy)
-                || !enemy->IsAlive
+                || !f.Unsafe.TryGetPointer(entity, out Hazard* hazard)
+                || !(!enemy->IsDead && hazard->IsActive)
                 || !f.Unsafe.TryGetPointer(entity, out Holdable* holdable)
                 || f.Exists(holdable->Holder)) {
 

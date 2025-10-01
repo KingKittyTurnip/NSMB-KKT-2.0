@@ -1,21 +1,30 @@
 using Photon.Deterministic;
+using System;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
 
-    public unsafe class HazardSystem : SystemMainThreadFilterStage<HazardSystem.Filter>, ISignalOnEnemyDespawned, ISignalInitializeHazard {
+    public unsafe class HazardSystem : SystemMainThreadFilterStage<HazardSystem.Filter>, ISignalOnEnemyDespawned, ISignalInitializeHazard, ISignalOnEnemyRespawned, ISignalOnStageReset {
         /*
          ---------------------------------------
          
            THIS... is The base Hazard Script
                  Say hi!
 
-           This Script Will only Do Things If 
-               It's Spawned As A Hazard 
+           This Script Handles Every Object 
+           That Is Allowed To Be A Hazard
+
+           If It's A Hazard it Runs On A Counter, If It Gets Destroyed Or That Counter Goes Up it's Removed
+           If It's Not, It Spawns In The Stage, And Respawns Whenever A Star Is Collected
+
          
          ---------------------------------------
         */
+        public static event Action<Frame, EntityRef> HazardInitialized;
+        public static event Action<Frame> HazardDestroyed;
+
         public struct Filter {
             public EntityRef Entity;
             public Transform2D* Transform;
@@ -37,8 +46,9 @@ namespace Quantum {
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var hazard = filter.Hazard;
-            if (!hazard->IsHazard)
+            if (!hazard->IsHazard) {
                 return;
+            }
 
             var transform = filter.Transform;
             var physicsObject = filter.PhysicsObject;
@@ -54,17 +64,19 @@ namespace Quantum {
                     f.Global->UsedHazardSpawnCount--;
                 }
                 var position = f.Unsafe.GetPointer<Transform2D>(filter.Entity)->Position;
-                Object.Instantiate(Resources.Load("Prefabs/Particle/SpawnPoof"), new Vector3((float) position.X, (float) position.Y, -5), Quaternion.identity);
-                f.Destroy(filter.Entity);
+                UnityEngine.Object.Instantiate(Resources.Load("Prefabs/Particle/SpawnPoof"), new Vector3((float) position.X, (float) position.Y, -5), Quaternion.identity);
+                HazardSystem.DestroyHazard(f, filter.Entity);
             }
 
             // allow interactions
-            if (hazard->IPWSUntilGround) {
-                if (physicsObject->IsTouchingGround)
-                    hazard->Inactive = false;
-            } else if (hazard->IPWSTime > 0) {
-                //if (physicsObject->IsTouchingGround) TODO: Do The Countdowncode
-                hazard->Inactive = false;
+            if (hazard->JustSpawned) {
+                if (hazard->IPWSUntilGround) {
+                    if (physicsObject->IsTouchingGround)
+                        hazard->JustSpawned = false;
+                } else if (hazard->IPWSTime > 0) {
+                    //if (physicsObject->IsTouchingGround) TODO: Do The Countdowncode
+                    hazard->JustSpawned = false;
+                }
             }
         }
 
@@ -74,10 +86,6 @@ namespace Quantum {
                 f.Destroy(entity);
                 //TODO: Remove From Hazard List
             }
-        }
-
-        public void OnDestroy() {
-
         }
 
         public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
@@ -112,6 +120,87 @@ namespace Quantum {
             // Shot in Random Diraction
             transform->Position = spawnpoint;
             //physicsObject->Velocity = new(hazard->SpawningVelocityRange.X /*Insert RNG Calculator*/, hazard->SpawningVelocityRange.Y);
+
+            HazardInitialized?.Invoke(f, thisEntity);
+        }
+
+        public static void DestroyHazard(Frame f, EntityRef entity) {
+            if (f.Unsafe.TryGetPointer(entity, out Hazard* hazard)) {
+                if (hazard->IsHazard) {
+                    f.Destroy(entity);
+                    HazardDestroyed?.Invoke(f);
+                } else {
+                    hazard->IsActive = false;
+                    if (f.Unsafe.TryGetPointer(entity, out PhysicsCollider2D* collider))
+                        collider->Enabled = false;
+                    if (f.Unsafe.TryGetPointer(entity, out PhysicsObject* physics))
+                        physics->IsFrozen = true;
+                    if (f.Unsafe.TryGetPointer(entity, out Interactable* inter))
+                        inter->ColliderDisabled = true;
+                }
+            } else {
+                UnityEngine.Debug.Log("Object Does Not have The Hazard Script");
+            }
+        }
+
+        public void OnStageReset(Frame f, QBoolean full) {
+            var filter = f.Filter<Hazard, Transform2D>();
+
+            while (filter.NextUnsafe(out EntityRef entity, out Hazard* hazard, out Transform2D* transform)) {
+                if (hazard->IsActive) {
+                    // Check for respawning blocks killing us
+                    if (!f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
+                        || physicsObject->DisableCollision) {
+                        continue;
+                    }
+                    if (!f.Unsafe.TryGetPointer(entity, out PhysicsCollider2D* collider)) {
+                        continue;
+                    }
+
+                    if (PhysicsObjectSystem.BoxInGround(f, transform->Position, collider->Shape, entity: entity)) {
+                        f.Signals.OnEnemyKilledByStageReset(entity);
+                    }
+                } else {
+                    // Check for respawns
+                    if (hazard->IsHazard) { //this is a hazard, we can't respawn
+                        continue;
+                    }
+
+                    if (!hazard->IgnorePlayerWhenRespawning) {
+                        Physics2D.HitCollection playerHits = f.Physics2D.OverlapShape(hazard->Spawnpoint, 0, f.Context.CircleRadiusTwo, f.Context.PlayerOnlyMask);
+                        if (playerHits.Count > 0) {
+                            continue;
+                        }
+                    }
+
+                    if (f.Unsafe.TryGetPointer(entity, out Enemy* enemy)) {
+                        enemy->Respawn(f, entity);
+                    }
+                    f.Signals.OnEnemyRespawned(entity);
+                }
+            }
+        }
+
+        public void OnEnemyRespawned(Frame f, EntityRef entity) {
+            if (f.Unsafe.TryGetPointer(entity, out Hazard* hazard)) {
+                if (!hazard->IsHazard) {
+                    hazard->IsActive = true;
+                    if (f.Unsafe.TryGetPointer(entity, out Transform2D* transform)) {
+                        transform->Teleport(f, hazard->Spawnpoint);
+                    }
+                    if (!f.Has<Enemy>(entity)) {
+                        if (f.Unsafe.TryGetPointer(entity, out PhysicsCollider2D* collider))
+                            collider->Enabled = true;
+                        if (f.Unsafe.TryGetPointer(entity, out PhysicsObject* physics)) {
+                            physics->Velocity = FPVector2.Zero;
+                            physics->IsFrozen = false;
+                        }
+
+                        if (f.Unsafe.TryGetPointer(entity, out Interactable* inter))
+                            inter->ColliderDisabled = false;
+                    }
+                }
+            }
         }
     }
 }

@@ -50,6 +50,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -99,8 +102,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDisplaying: 1
-  runInEditor: 0
   frame: 0
+  runInEditor: 0
   fps: 12
   frames:
   - {fileID: -2665958366948368982, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
@@ -111,6 +114,7 @@ MonoBehaviour:
   - {fileID: 7518829234646223683, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
   - {fileID: 2147156700845412417, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
   - {fileID: -1837141360104208851, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
+  colorblindModeFrames: []
   useUnscaledDelta: 0
   sRenderer: {fileID: 7821411591339125535}
   image: {fileID: 0}
@@ -136,6 +140,7 @@ GameObject:
   - component: {fileID: -2967928457836996957}
   - component: {fileID: 2934046834125206836}
   - component: {fileID: 3527695474151798566}
+  - component: {fileID: 2844971730105225151}
   m_Layer: 19
   m_Name: Goomba
   m_TagString: Untagged
@@ -179,12 +184,12 @@ MonoBehaviour:
     PositionOffset:
       RawValue: 0
   PhysicsCollider:
+    IsEnabled: 1
     IsTrigger: 0
     Material:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
-    IsEnabled: 1
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -375,6 +380,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -8359218312643153770, guid: b73add24eb026c844b85593f8bab1f8c,
     type: 2}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -516,6 +522,10 @@ MonoBehaviour:
       Value: 0
     BreakMegaObjects:
       Value: 0
+    WindImmune:
+      Value: 0
+    GravityInversed:
+      Value: 0
 --- !u!114 &6536869809639107625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -558,15 +568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
-    Spawnpoint:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    IgnorePlayerWhenRespawning:
-      Value: 0
-    DisableRespawning:
-      Value: 0
+    _empty_prototype_dummy_field_: 0
 --- !u!114 &4848679844973023050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,3 +649,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     _empty_prototype_dummy_field_: 0
+--- !u!114 &2844971730105225151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7523289063499453450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c912ba00eb8780d468a9d5e4288668e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prototype:
+    Spawnpoint:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    IgnorePlayerWhenRespawning:
+      Value: 0
+    RestrictSpawnPosition:
+      Value: 0
+    IsHefty:
+      Value: 0
+    IPWSUntilGround:
+      Value: 1
+    IPWSTime: 0
+    SpawningVelocityRange:
+      X:
+        RawValue: 131072
+      Y:
+        RawValue: 65536

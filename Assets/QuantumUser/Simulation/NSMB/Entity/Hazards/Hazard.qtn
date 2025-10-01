@@ -1,16 +1,22 @@
 component Hazard {
+  //General
 	[ExcludeFromPrototype] bool IsHazard;
+	FPVector2 Spawnpoint;
+	[ExcludeFromPrototype] bool IsActive;
+	bool IgnorePlayerWhenRespawning;
 
+  //HazardSpawn Vars
 	bool RestrictSpawnPosition;
 	bool IsHefty;
 	bool IPWSUntilGround;
 	byte IPWSTime;
 	FPVector2 SpawningVelocityRange;
 
+  //Specifics
 	[ExcludeFromPrototype] byte Team;
 	[ExcludeFromPrototype] int BaseLifeTime;
 	[ExcludeFromPrototype] int LifeTime;
-	[ExcludeFromPrototype] bool Inactive;
+	[ExcludeFromPrototype] bool JustSpawned;
 	[ExcludeFromPrototype] byte index;
 }
 

@@ -45,7 +45,7 @@ namespace Quantum {
                             mario->SetAsBoss(f, cauldron->TransformingEntity, filter.Entity);
                         } else {
                             //destroy this object
-                            f.Destroy(cauldron->TransformingEntity);
+                            HazardSystem.DestroyHazard(f, cauldron->TransformingEntity);
                             cauldron->TransformingEntity = EntityRef.None;
                         }
                     } else if (cauldron->EnteredFrames > 130) {
@@ -69,7 +69,7 @@ namespace Quantum {
                         }
                         f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, pick);
                         UnityEngine.Object.Instantiate(Resources.Load("Prefabs/Particle/SpawnPoof"), new Vector3((float) position.X, (float) position.Y, -5), Quaternion.identity);
-                        f.Destroy(filter.Entity);
+                        HazardSystem.DestroyHazard(f, filter.Entity);
                     }
                 } else {
                     var otherTransform = f.Unsafe.GetPointer<Transform2D>(cauldron->TransformingEntity);
@@ -85,7 +85,8 @@ namespace Quantum {
         #region Interactions
         public void OnObjectCauldronInteraction(Frame f, EntityRef otherEntity, EntityRef thisEntity) {
             var cauldron = f.Unsafe.GetPointer<Cauldron>(thisEntity);
-            if (cauldron->TransformingEntity != EntityRef.None || (f.Unsafe.TryGetPointer(otherEntity, out Hazard* hazarde) && hazarde->IsHefty))
+            if (cauldron->TransformingEntity != EntityRef.None || (f.Unsafe.TryGetPointer(otherEntity, out Hazard* hazarde) && hazarde->IsHefty) || (hazarde == null && !f.Has<MarioPlayer>(otherEntity)))
+                //Cauldron Cannot Accept This Object
                 return;
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var PhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);

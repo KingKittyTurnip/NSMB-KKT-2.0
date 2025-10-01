@@ -229,7 +229,6 @@ namespace Quantum {
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
                 return;
             }
-            f.Unsafe.GetPointer<Enemy>(thisEntity)->DisableRespawning = true;
 
             //uhh i would put specific hazard spawn data here
 

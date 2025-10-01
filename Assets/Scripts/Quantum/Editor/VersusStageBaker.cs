@@ -116,12 +116,21 @@ namespace NSMB.Quantum {
             }
 
             // --- Bake Enemies(' spawnpoints)
-            QPrototypeEnemy[] enemies = GameObject.FindObjectsByType<QPrototypeEnemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            /*QPrototypeEnemy[] enemies = GameObject.FindObjectsByType<QPrototypeEnemy>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (var enemy in enemies) {
                 enemy.Prototype.Spawnpoint = enemy.transform.position.ToFPVector2();
                 EditorUtility.SetDirty(enemy);
             }
             LogInfo($"Baked {enemies.Length} enemies");
+            */
+
+            // --- Bake Hazards In Stage(' spawnpoints)
+            QPrototypeHazard[] hazards = GameObject.FindObjectsByType<QPrototypeHazard>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var hazard in hazards) {
+                hazard.Prototype.Spawnpoint = hazard.transform.position.ToFPVector2();
+                EditorUtility.SetDirty(hazard);
+            }
+            LogInfo($"Baked {hazards.Length} hazards & enemies");
 
             /*
             // --- Bake Breakable Objects

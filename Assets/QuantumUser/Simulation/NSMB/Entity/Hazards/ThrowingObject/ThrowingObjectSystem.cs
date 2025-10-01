@@ -74,7 +74,7 @@ namespace Quantum {
             if (transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
                 physicsObject->IsFrozen = true;
 
-                f.Destroy(filter.Entity);
+                HazardSystem.DestroyHazard(f, filter.Entity);
                 return;
             }
 

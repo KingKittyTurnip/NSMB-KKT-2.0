@@ -4,8 +4,9 @@ namespace Quantum {
     public unsafe partial struct BulletBill {
         public void Initialize(Frame f, EntityRef entity, EntityRef owner, bool right) {
             var enemy = f.Unsafe.GetPointer<Enemy>(entity);
+            var hazard = f.Unsafe.GetPointer<Hazard>(entity);
             enemy->FacingRight = right;
-            enemy->IsActive = true;
+            hazard->IsActive = true;
             enemy->IsDead = false;
 
             Owner = owner;
@@ -13,12 +14,13 @@ namespace Quantum {
 
         public readonly void Kill(Frame f, EntityRef bulletBillEntity, EntityRef killerEntity, KillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(bulletBillEntity);
+            var hazard = f.Unsafe.GetPointer<Hazard>(bulletBillEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(bulletBillEntity);
 
             bool playSound;
             if (reason != KillReason.Normal) {
                 // Spawn 
-                enemy->IsActive = false;
+                hazard->IsActive = false;
                 physicsObject->IsFrozen = true;
                 playSound = true;
             } else {

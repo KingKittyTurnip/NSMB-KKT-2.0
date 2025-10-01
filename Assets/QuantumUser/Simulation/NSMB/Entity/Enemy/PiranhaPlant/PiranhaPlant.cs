@@ -10,6 +10,7 @@ namespace Quantum {
 
         public void Kill(Frame f, EntityRef piranhaPlantEntity, EntityRef killerEntity, KillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(piranhaPlantEntity);
+            var hazard = f.Unsafe.GetPointer<Hazard>(piranhaPlantEntity);
 
             var piranhaPlantTransform = f.Unsafe.GetPointer<Transform2D>(piranhaPlantEntity);
             var piranhaPlantCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(piranhaPlantEntity);
@@ -33,7 +34,7 @@ namespace Quantum {
             ChompFrames = 0;
             PopupAnimationTime = 0;
             enemy->IsDead = true;
-            enemy->IsActive = false;
+            hazard->IsActive = false;
 
             f.Unsafe.GetPointer<Interactable>(piranhaPlantEntity)->ColliderDisabled = true;
 

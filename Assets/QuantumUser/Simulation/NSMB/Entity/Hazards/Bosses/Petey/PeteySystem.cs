@@ -97,7 +97,7 @@ namespace Quantum {
                     QuantumUtils.UnwrapWorldLocations(f, transform->Position + FPVector2.Up * FP._0_10, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
                     FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
-                    if (FPMath.Abs(ourPos.X - theirPos.X) > 3 || physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) {
+                    if ((FPMath.Abs(ourPos.X - theirPos.X) > 3 || physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) && petey->State < PeteyState.Diving) {
                         boss->FacingRight = damageDirection.X > 0;
                     }
                     if (petey->Flying) {
@@ -168,6 +168,7 @@ namespace Quantum {
                 if (Groundpounding) {
                     f.Events.PeteyDive(filter.Entity);
                     petey->State = PeteyState.Diving;
+                    petey->HitATarget = false;
                     physicsObject->BreakMegaObjects = true;
                     petey->ReusableTimer = 0;
                 } else if (physicsObject->IsTouchingGround) {
@@ -261,27 +262,39 @@ namespace Quantum {
             bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
             bool vulnrable = petey->State == PeteyState.Fallen;
             bool peteyDiving = petey->State == PeteyState.Diving && petey->ReusableTimer >= 28;
+            bool peteyHarmed = false;
             if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
                 boss->BossHarmed(f, thisEntity, vulnrable ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, true);
-            }
+                peteyHarmed = true;
+                vulnrable |= groundpounded;
 
-            if (attackedFromAbove) {
+            } else if (attackedFromAbove) {
                 if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
                     if (mario->IsGroundpounding) {
                         mario->IsGroundpounding = false;
                         boss->BossHarmed(f, thisEntity, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
+                        peteyHarmed = true;
                     }
                     mario->DoEntityBounce = true;
                 } else {
                     boss->BossHarmed(f, thisEntity, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
+                    peteyHarmed = true;
                     mario->DoEntityBounce = !mario->IsGroundpounding;
                 }
 
                 mario->IsDrilling = false;
 
-            } else if (mario->IsDamageable) {
+            } else if (mario->IsDamageable && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, peteyDiving ? 2 : 1, peteyDiving ? KnockbackStrength.Groundpound : KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity)) {
                 petey->HitATarget = true;
-                mario->DoKnockback(f, marioEntity, damageDirection.X < 0, peteyDiving ? 2 : 1, peteyDiving ? KnockbackStrength.Groundpound : KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity);
+            }
+
+            if (peteyHarmed) {
+                if (vulnrable) {
+                    f.Events.PeteyStomped(thisEntity, boss->Health <= 0);
+                    petey->ReusableTimer = 140;
+                } else {
+                    f.Events.PlayBossHitSound(thisEntity);
+                }
             }
         }
         public void OnProjectilePeteyInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {
@@ -295,6 +308,7 @@ namespace Quantum {
             case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
             case ProjectileEffectType.Fire: {
                 boss->BossHarmed(f, thisEntity, KnockbackStrength.FireballBump, false);
+                f.Events.PlayBossHitSound(thisEntity);
                 break;
             }
             case ProjectileEffectType.Freeze: {
@@ -327,6 +341,7 @@ namespace Quantum {
             if (petey->State == PeteyState.Diving) {
                 petey->HitATarget = true;
                 otherboss->BossHarmed(f, bossEntity, KnockbackStrength.Groundpound, true);
+                f.Events.PeteyStomped(thisEntity, boss->Health <= 0);
             } else {
                 thisPhys->Velocity.X = damageDirection.X > 0 ? -4 : 4;
             }
@@ -340,8 +355,10 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(enemyEntity, out Goomba* goomba)) {
                 goomba->Kill(f, enemyEntity, thisEntity, KillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out Koopa* koopa)) {
-                if (koopa->IsKicked)
+                if (koopa->IsKicked) {
                     boss->BossHarmed(f, thisEntity, KnockbackStrength.FireballBump, false);
+                    f.Events.PlayBossHitSound(thisEntity);
+                }
                 koopa->Kill(f, enemyEntity, enemyEntity, KillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out BulletBill* bill)) {
                 bill->Kill(f, enemyEntity, thisEntity, KillReason.Special);

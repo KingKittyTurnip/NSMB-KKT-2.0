@@ -67,9 +67,9 @@ namespace Quantum {
                 }
             }
 
-            var bulletBills = f.Filter<BulletBill, Transform2D, Enemy, PhysicsObject, Freezable>();
-            while (bulletBills.NextUnsafe(out EntityRef entity, out var bulletBill, out var transform, out var enemy, out var physicsObject, out var freezable)) {
-                if (!enemy->IsAlive) {
+            var bulletBills = f.Filter<BulletBill, Transform2D, Enemy, PhysicsObject, Freezable, Hazard>();
+            while (bulletBills.NextUnsafe(out EntityRef entity, out var bulletBill, out var transform, out var enemy, out var physicsObject, out var freezable, out var hazard)) {
+                if (!(!enemy->IsDead && hazard->IsActive)) {
                     if (bulletBill->DespawnFrames == 0) {
                         bulletBill->DespawnFrames = 255;
                     }

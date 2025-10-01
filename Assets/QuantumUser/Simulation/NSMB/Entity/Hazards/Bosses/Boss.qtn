@@ -15,3 +15,7 @@ signal BossDeath(EntityRef thisEntity);
 event BossDeathAnimation {
 	EntityRef Entity;
 }
+
+event PlayBossHitSound {
+	EntityRef Entity;
+}

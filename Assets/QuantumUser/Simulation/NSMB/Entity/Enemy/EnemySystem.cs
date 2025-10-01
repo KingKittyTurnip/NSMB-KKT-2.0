@@ -1,10 +1,11 @@
 namespace Quantum {
-    public unsafe class EnemySystem : SystemMainThreadEntityFilter<Enemy, EnemySystem.Filter>, ISignalOnStageReset, ISignalOnTryLiquidSplash, ISignalOnBeforeInteraction,
+    public unsafe class EnemySystem : SystemMainThreadEntityFilter<Enemy, EnemySystem.Filter>, ISignalOnTryLiquidSplash, ISignalOnBeforeInteraction,
         ISignalOnEnemyDespawned, ISignalOnEnemyRespawned, ISignalOnMarioPlayerMegaMushroomFootstep {
         public struct Filter {
             public EntityRef Entity;
             public Transform2D* Transform;
             public Enemy* Enemy;
+            public Hazard* Hazard;
             public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* Collider;
         }
@@ -16,20 +17,20 @@ namespace Quantum {
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var enemy = filter.Enemy;
+            var hazard = filter.Hazard;
             var transform = filter.Transform;
             var physicsObject = filter.PhysicsObject;
             var collider = filter.Collider;
 
-            if (!enemy->IsActive) {
+            if (!hazard->IsActive) {
                 return;
             }
 
             // Despawn off bottom of stage
             if (transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
-                enemy->IsActive = false;
                 enemy->IsDead = true;
-                physicsObject->IsFrozen = true;
 
+                HazardSystem.DestroyHazard(f, filter.Entity);
                 f.Signals.OnEnemyDespawned(filter.Entity);
                 return;
             }
@@ -60,51 +61,16 @@ namespace Quantum {
             }
         }
 
-        public void OnStageReset(Frame f, QBoolean full) {
-            var filter = f.Filter<Enemy, Transform2D>();
-
-            while (filter.NextUnsafe(out EntityRef entity, out Enemy* enemy, out Transform2D* transform)) {
-                if (enemy->IsActive) {
-                    // Check for respawning blocks killing us
-                    if (!f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
-                        || physicsObject->DisableCollision) {
-                        continue;
-                    }
-                    if (!f.Unsafe.TryGetPointer(entity, out PhysicsCollider2D* collider)) {
-                        continue;
-                    }
-
-                    if (PhysicsObjectSystem.BoxInGround(f, transform->Position, collider->Shape, entity: entity)) {
-                        f.Signals.OnEnemyKilledByStageReset(entity);
-                    }
-                } else {
-                    // Check for respawns
-                    if (enemy->DisableRespawning) {
-                        continue;
-                    }
-
-                    if (!enemy->IgnorePlayerWhenRespawning) {
-                        Physics2D.HitCollection playerHits = f.Physics2D.OverlapShape(enemy->Spawnpoint, 0, f.Context.CircleRadiusTwo, f.Context.PlayerOnlyMask);
-                        if (playerHits.Count > 0) {
-                            continue;
-                        }
-                    }
-
-                    enemy->Respawn(f, entity);
-                    f.Signals.OnEnemyRespawned(entity);
-                }
-            }
-        }
-
         public void OnTryLiquidSplash(Frame f, EntityRef entity, EntityRef liquid, QBoolean exit, bool* doSplash) {
-            if (f.Unsafe.TryGetPointer(entity, out Enemy* enemy)) {
-                *doSplash &= enemy->IsActive;
+            if (f.Unsafe.TryGetPointer(entity, out Hazard* hazard)) {
+                *doSplash &= hazard->IsActive;
             }
         }
 
         public void OnBeforeInteraction(Frame f, EntityRef entity, bool* allowInteraction) {
-            if (f.Unsafe.TryGetPointer(entity, out Enemy* enemy)) {
-                *allowInteraction &= enemy->IsAlive;
+            if (f.Unsafe.TryGetPointer(entity, out Enemy* enemy) &&
+                f.Unsafe.TryGetPointer(entity, out Hazard* hazard)) {
+                *allowInteraction &= (!enemy->IsDead && hazard->IsActive);
             }
         }
 
@@ -125,7 +91,7 @@ namespace Quantum {
             Filter filter = default;
             while (it.Next(&filter)) {
                 var physicsObject = filter.PhysicsObject;
-                if (!filter.Enemy->IsAlive
+                if (!(!filter.Enemy->IsDead && filter.Hazard->IsActive)
                     || physicsObject->IsFrozen
                     || physicsObject->DisableCollision
                     || !physicsObject->IsTouchingGround) {
