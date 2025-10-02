@@ -2873,6 +2873,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: PiranhaPlant
       objectReference: {fileID: 0}
+    - target: {fileID: 3092060089164163529, guid: 28a7f3ea2c44a564d906449744561724,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.X.RawValue
+      value: 819200
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092060089164163529, guid: 28a7f3ea2c44a564d906449744561724,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.Y.RawValue
+      value: -147456
+      objectReference: {fileID: 0}
     - target: {fileID: 3416259037201337410, guid: 28a7f3ea2c44a564d906449744561724,
         type: 3}
       propertyPath: sceneViewId
@@ -3341,6 +3351,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PiranhaPlant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092060089164163529, guid: 28a7f3ea2c44a564d906449744561724,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.X.RawValue
+      value: 163840
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092060089164163529, guid: 28a7f3ea2c44a564d906449744561724,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.Y.RawValue
+      value: -278528
       objectReference: {fileID: 0}
     - target: {fileID: 3416259037201337410, guid: 28a7f3ea2c44a564d906449744561724,
         type: 3}
@@ -6399,7 +6419,7 @@ Transform:
   m_GameObject: {fileID: 1277131671}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 20}
+  m_LocalPosition: {x: 0, y: 1.5, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7671,7 +7691,7 @@ Transform:
   m_GameObject: {fileID: 1500230910}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 30}
+  m_LocalPosition: {x: 0, y: 1.5, z: 30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

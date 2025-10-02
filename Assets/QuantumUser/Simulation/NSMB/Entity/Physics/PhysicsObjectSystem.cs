@@ -286,7 +286,7 @@ namespace Quantum {
 
         public static FPVector2 MoveVertically(Frame f, FPVector2 velocity, ref Filter filter, VersusStageData stage, QList<PhysicsContact>? contacts, out bool hitObject) {
 
-            if (filter.PhysicsObject->GravityInversed)
+            if (filter.PhysicsObject->IsGravityInversed)
                 velocity.Y *= -1;
 
             FP velocityY = velocity.Y * f.DeltaTime;
@@ -517,7 +517,7 @@ namespace Quantum {
 
         public static FPVector2 MoveHorizontally(Frame f, FPVector2 velocity, ref Filter filter, VersusStageData stage, QList<PhysicsContact>? contacts, out bool hitObject) {
 
-            if (filter.PhysicsObject->GravityInversed)
+            if (filter.PhysicsObject->IsGravityInversed)
                 velocity.Y *= -1;
 
             FP velocityX = velocity.X * f.DeltaTime;
@@ -775,7 +775,7 @@ namespace Quantum {
 
                 FP verticalDot = FPVector2.Dot(contact.Normal, FPVector2.Up);
                 if (verticalDot > Constants.PhysicsGroundMaxAngleCos) {
-                    if (physicsObject->GravityInversed) {
+                    if (physicsObject->IsGravityInversed) {
                         physicsObject->IsTouchingCeiling = true;
                     } else {
                         physicsObject->IsTouchingGround = true;
@@ -794,7 +794,7 @@ namespace Quantum {
                     }
 
                 } else if (verticalDot < -Constants.PhysicsGroundMaxAngleCos) {
-                    if (physicsObject->GravityInversed) {
+                    if (physicsObject->IsGravityInversed) {
                         physicsObject->IsTouchingGround = true;
 
                         FP angle = FPVector2.RadiansSignedSkipNormalize(contact.Normal, FPVector2.Down) * FP.Rad2Deg;
@@ -1428,18 +1428,33 @@ namespace Quantum {
             QuickSortSpan(span, num2 + 1, hi);
         }
 
-        public void OnEntityEnterExitLiquid(Frame f, EntityRef entity, EntityRef liquid, QBoolean underwater) {
+        public void OnEntityEnterExitLiquid(Frame f, EntityRef entity, EntityRef liquid, QBoolean underwater, QBoolean gravinversed) {
             if (!f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)) {
                 return;
             }
 
-            if (underwater) {
-                if (physicsObject->UnderwaterCounter++ == 0) {
-                    f.Signals.OnEntityChangeUnderwaterState(entity, liquid, true);
+            if (f.Unsafe.TryGetPointer(liquid, out Liquid* liquidy) && liquidy->LiquidType != LiquidType.ReversePlane) {
+
+                if (underwater) {
+                    if (physicsObject->UnderwaterCounter++ == 0) {
+                        f.Signals.OnEntityChangeUnderwaterState(entity, liquid, true);
+                    }
+                } else {
+                    if (QuantumUtils.Decrement(ref physicsObject->UnderwaterCounter)) {
+                        f.Signals.OnEntityChangeUnderwaterState(entity, liquid, false);
+                    }
                 }
             } else {
-                if (QuantumUtils.Decrement(ref physicsObject->UnderwaterCounter)) {
-                    f.Signals.OnEntityChangeUnderwaterState(entity, liquid, false);
+                if (gravinversed) {
+                    if (physicsObject->FlipPannelCounter++ == 0) {
+                        physicsObject->Velocity.Y *= -1;
+                        f.Signals.OnEntityChangeFlipPannelState(entity, liquid, true);
+                    }
+                } else {
+                    if (QuantumUtils.Decrement(ref physicsObject->FlipPannelCounter)) {
+                        physicsObject->Velocity.Y *= -1;
+                        f.Signals.OnEntityChangeFlipPannelState(entity, liquid, false);
+                    }
                 }
             }
         }

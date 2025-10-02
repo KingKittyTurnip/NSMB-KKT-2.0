@@ -3,6 +3,7 @@ using Photon.Deterministic;
 namespace Quantum {
     public unsafe partial struct PhysicsObject {
         public readonly bool IsUnderwater => UnderwaterCounter > 0;
+        public readonly bool IsGravityInversed => FlipPannelCounter > 0;
         public bool IsTouchingGround {
             get => HasFlag(CurrentData, PhysicsFlags.IsTouchingGround);
             set => SetFlag(ref CurrentData, PhysicsFlags.IsTouchingGround, value);

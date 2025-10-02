@@ -879,7 +879,6 @@ namespace Quantum.Prototypes {
     public QBoolean IsWaterSolid;
     public QBoolean BreakMegaObjects;
     public QBoolean WindImmune;
-    public QBoolean GravityInversed;
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.PhysicsObject component = default;
         Materialize((Frame)f, ref component, in context);
@@ -894,7 +893,6 @@ namespace Quantum.Prototypes {
         result.IsWaterSolid = this.IsWaterSolid;
         result.BreakMegaObjects = this.BreakMegaObjects;
         result.WindImmune = this.WindImmune;
-        result.GravityInversed = this.GravityInversed;
     }
   }
   [System.SerializableAttribute()]

@@ -3,6 +3,7 @@ using Quantum;
 using Quantum.Collections;
 using Quantum.Physics2D;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using UnityEngine;
@@ -39,6 +40,7 @@ namespace Quantum {
 
             switch (tanoomba->State) {
             #region Base Tanoomba
+            //Tanoomba Wanders
             case TanoombaState.Idling:
                 physicsObject->Velocity.X = (physicsObject->IsTouchingGround ? 1 : FP._1_75) * (enemy->FacingRight ? 1 : -1);
 
@@ -99,16 +101,22 @@ namespace Quantum {
 
                 }
                 break;
+            //Tanoomba Flees And Searches The World Something To Turn into, Away From players Ofc
+            //If he Can't He Waits Idle For A Few Frames And Checks Again
             case TanoombaState.Searching: {
-                //Tanoomba Flees And Searches The World Something To Turn into, Away From players Ofc
-                //If he Can't He Waits Idle For A Few Frames And Checks Again
-
-                tanoomba->State = TanoombaState.Idling;
+                var newForm = GetForm(f, ref filter, stage);
+                if (newForm != TanoombaFormState.Max) {
+                } else {
+                    //Do Nothing Ig...
+                    //tanoomba->State = TanoombaState.Idling;
+                }
                 break;
             }
+            //Tanoomba Runs Up To Attack The Player
             case TanoombaState.Attacking: {
                 break;
             }
+            //This Might Be Removed To Make it Easier To Defeat
             case TanoombaState.KnockedBack: {
                 if (physicsObject->IsTouchingGround)
                     physicsObject->Velocity.X += physicsObject->Velocity.X > 0 ? -FP._0_10 : FP._0_10;
@@ -123,10 +131,60 @@ namespace Quantum {
                 }
                 break;
             }
-#endregion
+            case TanoombaState.Transformed: {
+                break;
+            }
+            #endregion
             }
         }
 
+        public TanoombaFormState GetForm(Frame f, ref Filter filter, VersusStageData stage) {
+            List<TanoombaFormState> AvailibleForms = new List<TanoombaFormState>();
+            for (int i = 0; i < (int) TanoombaFormState.Max; i++) {
+                AvailibleForms.Add((TanoombaFormState) i);
+            }
+            bool Decided = false;
+            TanoombaFormState TryForm = 0;
+
+            while (!Decided || AvailibleForms.Count <= 0) {
+                TryForm = (TanoombaFormState) FPMath.RoundToInt(f.RNG->Next() * AvailibleForms.Count);
+                switch (TryForm) {
+                #region Level Tranforms
+                case TanoombaFormState.Coin: {
+                    var coins = f.Filter<Coin>();
+                    while (coins.NextUnsafe(out EntityRef OtherEntity, out Coin* coin)) {
+                        //Pick A Random Coin
+                    }
+                    break;
+                }
+                case TanoombaFormState.Block: {
+                    break;
+                }
+                case TanoombaFormState.Star: {
+                    //Be Sure To Create The Starspawn Icon
+                    break;
+                }
+                #endregion
+                #region Enemy Transforms
+                case TanoombaFormState.Goomba: {
+                    break;
+                }
+                case TanoombaFormState.KoopaShell: {
+                    break;
+                }
+                #endregion
+                #region Hazard Transforms
+                //Check If Hazards Contains This Object
+                case TanoombaFormState.HeavyStone:
+                case TanoombaFormState.LemmyBall: {
+                    //Check If Hazards Contains This Object
+                    break;
+                }
+                #endregion
+                }
+            }
+            return TryForm;
+        }
 
         #region Interactions
         public static void OnTanoombaMarioInteraction(Frame f, EntityRef thisEntity, EntityRef marioEntity) {

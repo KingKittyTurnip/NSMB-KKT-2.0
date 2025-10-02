@@ -143,6 +143,7 @@ MonoBehaviour:
     - rid: 692988744814297094
     - rid: 692988744814297095
     - rid: 692988744814297096
+    - rid: 692988744814297097
   - Components:
     - rid: 4642328894244913152
     - rid: 4642328894244913153
@@ -153,6 +154,7 @@ MonoBehaviour:
     - rid: 4642328894244913158
     - rid: 4642328894244913159
     - rid: 4642328894244913160
+    - rid: 4642328894244913161
   - Components:
     - rid: 7089375187459637248
     - rid: 7089375187459637249
@@ -779,6 +781,8 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+        AllowDoubleInteraction:
+          Value: 0
     - rid: 692988744814297088
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -844,15 +848,7 @@ MonoBehaviour:
     - rid: 692988744814297092
       type: {class: EnemyPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
-        Spawnpoint:
-          X:
-            RawValue: 163840
-          Y:
-            RawValue: -278528
-        IgnorePlayerWhenRespawning:
-          Value: 1
-        DisableRespawning:
-          Value: 0
+        _empty_prototype_dummy_field_: 0
     - rid: 692988744814297093
       type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -875,15 +871,39 @@ MonoBehaviour:
         IsFlying:
           Value: 0
     - rid: 692988744814297094
+      type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Spawnpoint:
+          X:
+            RawValue: 163840
+          Y:
+            RawValue: -278528
+        IgnorePlayerWhenRespawning:
+          Value: 0
+        RestrictSpawnPosition:
+          Value: 0
+        IsHefty:
+          Value: 0
+        IPWSUntilGround:
+          Value: 0
+        IPWSTime: 90
+        SpawningVelocityRange:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+    - rid: 692988744814297095
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 692988744814297095
+        AllowDoubleInteraction:
+          Value: 0
+    - rid: 692988744814297096
       type: {class: InteractionInitiatorPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
-    - rid: 692988744814297096
+    - rid: 692988744814297097
       type: {class: PiranhaPlantPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Pipe:
@@ -955,6 +975,8 @@ MonoBehaviour:
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
+          Value: 0
+        AllowDoubleInteraction:
           Value: 0
     - rid: 749857818370113536
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
@@ -1274,6 +1296,8 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+        AllowDoubleInteraction:
+          Value: 0
     - rid: 1361145799051837440
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -1469,6 +1493,8 @@ MonoBehaviour:
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
+          Value: 0
+        AllowDoubleInteraction:
           Value: 0
     - rid: 1722277255721254912
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
@@ -1849,6 +1875,8 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+        AllowDoubleInteraction:
+          Value: 0
     - rid: 2894210914100183040
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -2105,6 +2133,8 @@ MonoBehaviour:
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
+          Value: 0
+        AllowDoubleInteraction:
           Value: 0
     - rid: 3285224403868057600
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
@@ -2729,6 +2759,8 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+        AllowDoubleInteraction:
+          Value: 0
     - rid: 4470508785550491648
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -2864,6 +2896,8 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+        AllowDoubleInteraction:
+          Value: 0
     - rid: 4642328894244913152
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -2929,15 +2963,7 @@ MonoBehaviour:
     - rid: 4642328894244913156
       type: {class: EnemyPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
-        Spawnpoint:
-          X:
-            RawValue: 819200
-          Y:
-            RawValue: -147456
-        IgnorePlayerWhenRespawning:
-          Value: 1
-        DisableRespawning:
-          Value: 0
+        _empty_prototype_dummy_field_: 0
     - rid: 4642328894244913157
       type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2960,15 +2986,39 @@ MonoBehaviour:
         IsFlying:
           Value: 0
     - rid: 4642328894244913158
+      type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Spawnpoint:
+          X:
+            RawValue: 819200
+          Y:
+            RawValue: -147456
+        IgnorePlayerWhenRespawning:
+          Value: 0
+        RestrictSpawnPosition:
+          Value: 0
+        IsHefty:
+          Value: 0
+        IPWSUntilGround:
+          Value: 0
+        IPWSTime: 90
+        SpawningVelocityRange:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+    - rid: 4642328894244913159
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 4642328894244913159
+        AllowDoubleInteraction:
+          Value: 0
+    - rid: 4642328894244913160
       type: {class: InteractionInitiatorPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
-    - rid: 4642328894244913160
+    - rid: 4642328894244913161
       type: {class: PiranhaPlantPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Pipe:
@@ -3040,6 +3090,8 @@ MonoBehaviour:
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
+          Value: 0
+        AllowDoubleInteraction:
           Value: 0
     - rid: 4696208758609543168
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
@@ -3176,6 +3228,8 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+        AllowDoubleInteraction:
+          Value: 0
     - rid: 5144414138117652480
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -3250,6 +3304,8 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+        AllowDoubleInteraction:
+          Value: 0
     - rid: 5333697330434539520
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -3323,6 +3379,8 @@ MonoBehaviour:
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
+          Value: 0
+        AllowDoubleInteraction:
           Value: 0
     - rid: 5412905645588348928
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
@@ -3642,6 +3700,8 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+        AllowDoubleInteraction:
+          Value: 0
     - rid: 6161637325680934912
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -3715,6 +3775,8 @@ MonoBehaviour:
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
+          Value: 0
+        AllowDoubleInteraction:
           Value: 0
     - rid: 6379392607822282752
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
@@ -4028,6 +4090,8 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+        AllowDoubleInteraction:
+          Value: 0
     - rid: 7264635249278058496
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -4162,6 +4226,8 @@ MonoBehaviour:
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
+          Value: 0
+        AllowDoubleInteraction:
           Value: 0
     - rid: 7657564706776809472
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
@@ -4480,6 +4546,8 @@ MonoBehaviour:
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
+          Value: 0
+        AllowDoubleInteraction:
           Value: 0
     - rid: 8826982300299296768
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}

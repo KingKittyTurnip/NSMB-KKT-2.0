@@ -25,9 +25,9 @@ component PhysicsObject {
     [ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] list<PhysicsContact> Contacts;
     [ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] hash_set<EntityRef> LiquidContacts;
     [ExcludeFromPrototype] byte UnderwaterCounter;
+    [ExcludeFromPrototype] byte FlipPannelCounter;
 
     bool WindImmune;
-    bool GravityInversed;
 }
 
 struct PhysicsObjectData {
@@ -45,6 +45,7 @@ struct PhysicsContact {
 }
 
 signal OnEntityChangeUnderwaterState(EntityRef entity, EntityRef liquid, bool underwater);
+signal OnEntityChangeFlipPannelState(EntityRef entity, EntityRef liquid, bool flippannel);
 signal OnEntityCrushed(EntityRef entity);
 
 event PhysicsObjectLanded {

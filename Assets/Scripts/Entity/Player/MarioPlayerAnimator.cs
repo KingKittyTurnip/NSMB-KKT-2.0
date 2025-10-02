@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Scripting;
+using UnityEngine.UIElements;
 using static NSMB.Utilities.QuantumViewUtils;
 using Input = Quantum.Input;
 
@@ -274,7 +275,11 @@ namespace NSMB.Entities.Player {
             SetFacingDirection(f, mario, physicsObject);
             InterpolateFacingDirection(mario, freezable->IsFrozen(f));
             UpdateAnimatorVariables(f, mario, physicsObject, freezable, ref inputs);
-            
+            /*if (physicsObject->IsGravityInversed) {
+                models.transform.localPosition = new Vector3(0, (float) f.FindAsset(mario->PhysicsAsset).LargeHitboxHeight, 0);
+            } else {
+                models.transform.localPosition = Vector3.zero;
+            }*/
             previousPosition = transform.position;
             forceUpdate = false;
         }
@@ -545,6 +550,9 @@ namespace NSMB.Entities.Player {
             }
 
             scale.y -= Mathf.Sin(teammateStompTimer * Mathf.PI / 0.15f) * 0.2f;
+            if (physicsObject->IsGravityInversed) {
+                scale.y *= -1;
+            }
             models.transform.SetLossyScale(scale);
 
             // Shader effects

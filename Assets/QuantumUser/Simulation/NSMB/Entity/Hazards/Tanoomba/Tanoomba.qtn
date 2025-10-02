@@ -1,5 +1,6 @@
 component Tanoomba {
 	[ExcludeFromPrototype] TanoombaState State;
+	[ExcludeFromPrototype] TanoombaFormState Form;
 	FP JumpVelocity;
 	
 	[ExcludeFromPrototype] int HitFrame;
@@ -19,11 +20,23 @@ enum TanoombaState : Byte {
 	Searching,
 	Attacking,
 	KnockedBack,
+	Transformed,
+}
+
+enum TanoombaFormState : Byte {
+	//General
 	Coin,
 	Block,
 	Star,
+	Goomba,
+	KoopaShell,
+
+	//Hazards
 	HeavyStone,
-	Shell,
+	LemmyBall, //make stars be tanoomba's face
+
+	//Edge
+	Max,
 }
 
 //event ThrowObjSimple {

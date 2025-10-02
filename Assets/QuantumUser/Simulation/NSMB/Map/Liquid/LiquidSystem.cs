@@ -60,16 +60,17 @@ namespace Quantum {
             FP surface = liquid->GetSurfaceHeight(liquidTransform);
             FP checkHeight = entityTransform->Position.Y + entityCollider->Shape.Centroid.Y;
             bool isEntityUnderwater = checkHeight <= surface;
+            bool isFlipPannel = liquid->LiquidType == LiquidType.ReversePlane;
 
             QHashSet<EntityRef> underwater = f.ResolveHashSet(liquid->UnderwaterEntities);
             if (isEntityUnderwater && !underwater.Contains(physicsObjectEntity)) {
                 // Enter state
                 underwater.Add(physicsObjectEntity);
-                f.Signals.OnEntityEnterExitLiquid(physicsObjectEntity, liquidEntity, true);
+                f.Signals.OnEntityEnterExitLiquid(physicsObjectEntity, liquidEntity, !isFlipPannel, isFlipPannel);
             } else if (!isEntityUnderwater && underwater.Contains(physicsObjectEntity)) {
                 // Exit state
                 underwater.Remove(physicsObjectEntity);
-                f.Signals.OnEntityEnterExitLiquid(physicsObjectEntity, liquidEntity, false);
+                f.Signals.OnEntityEnterExitLiquid(physicsObjectEntity, liquidEntity, false, false);
             }
         }
 
@@ -118,7 +119,7 @@ namespace Quantum {
 
             if (underwater.Remove(physicsObjectEntity)) {
                 // Exit state
-                f.Signals.OnEntityEnterExitLiquid(physicsObjectEntity, liquidEntity, false);
+                f.Signals.OnEntityEnterExitLiquid(physicsObjectEntity, liquidEntity, false, false);
             }
         }
 

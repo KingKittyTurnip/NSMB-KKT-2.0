@@ -7,7 +7,7 @@ using static IInteractableTile;
 namespace Quantum {
     public unsafe class MarioPlayerSystem : SystemMainThreadEntityFilter<MarioPlayer, MarioPlayerSystem.Filter>, ISignalOnComponentRemoved<Projectile>,
         ISignalOnGameStarting, ISignalOnBobombExplodeEntity, ISignalOnTryLiquidSplash, ISignalOnEntityBumped, ISignalOnBeforeInteraction,
-        ISignalOnPlayerDisconnected, ISignalOnIceBlockBroken, ISignalOnStageReset, ISignalOnEntityChangeUnderwaterState, ISignalOnEntityFreeze {
+        ISignalOnPlayerDisconnected, ISignalOnIceBlockBroken, ISignalOnStageReset, ISignalOnEntityChangeUnderwaterState, ISignalOnEntityChangeFlipPannelState, ISignalOnEntityFreeze {
 
         private static readonly FPVector2 DeathUpForce = new FPVector2(0, FP.FromString("6.5"));
         private static readonly FPVector2 DeathUpGravity = new FPVector2(0, FP.FromString("-12.75"));
@@ -43,6 +43,12 @@ namespace Quantum {
             Input* inputPtr;
             if (player.IsValid && (inputPtr = f.GetPlayerInput(player)) != null) {
                 filter.Inputs = *inputPtr;
+                if (filter.PhysicsObject->IsGravityInversed) {
+                    var up = filter.Inputs.Up;
+                    var down = filter.Inputs.Down;
+                    filter.Inputs.Up = down;
+                    filter.Inputs.Down = up;
+                }
             } else {
                 if (f.Unsafe.TryGetPointer(filter.Entity, out Bot* bot) && bot->IsBot) {
                     filter.Inputs = bot->HandleAi(f, filter.Entity);
@@ -1021,7 +1027,7 @@ namespace Quantum {
             bool? playBumpSound = null;
             QList<PhysicsContact> contacts = f.ResolveList(physicsObject->Contacts);
             foreach (var contact in contacts) {
-                if (FPVector2.Dot(contact.Normal, FPVector2.Up) < Constants.PhysicsGroundMaxAngleCos) {
+                if (physicsObject->IsGravityInversed ? FPVector2.Dot(contact.Normal, FPVector2.Down) < Constants.PhysicsGroundMaxAngleCos : FPVector2.Dot(contact.Normal, FPVector2.Up) < Constants.PhysicsGroundMaxAngleCos) {
                     continue;
                 }
 
@@ -1036,7 +1042,7 @@ namespace Quantum {
                     var tileInstance = stage.GetTileRelative(f, contact.Tile);
                     StageTile tile = f.FindAsset(tileInstance.Tile);
                     if (tile is IInteractableTile it) {
-                        continueGroundpound &= it.Interact(f, entity, InteractionDirection.Down,
+                        continueGroundpound &= it.Interact(f, entity, physicsObject->IsGravityInversed ? InteractionDirection.Up : InteractionDirection.Down,
                             contact.Tile, tileInstance, out bool tempPlayBumpSound);
                         interactedAny = true;
 
@@ -1516,7 +1522,7 @@ namespace Quantum {
             var mario = filter.MarioPlayer;
             var physicsObject = filter.PhysicsObject;
 
-            FPVector2 spawnPos = filter.Transform->Position + new FPVector2(mario->FacingRight ? FP._0_25 : -FP._0_25, Constants._0_40);
+            FPVector2 spawnPos = filter.Transform->Position + new FPVector2(mario->FacingRight ? FP._0_25 : -FP._0_25, physicsObject->IsGravityInversed ? -Constants._0_40 : Constants._0_40);
             EntityRef newEntity = f.Create(f.SimulationConfig.HammerPrototype);
 
             var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
@@ -1529,7 +1535,7 @@ namespace Quantum {
             var mario = filter.MarioPlayer;
             var physicsObject = filter.PhysicsObject;
 
-            FPVector2 spawnPos = filter.Transform->Position + new FPVector2(mario->FacingRight ? FP._0_25 : -FP._0_25, Constants._0_35);
+            FPVector2 spawnPos = filter.Transform->Position + new FPVector2(mario->FacingRight ? FP._0_25 : -FP._0_25, physicsObject->IsGravityInversed ? -Constants._0_40 : Constants._0_40);
 
             EntityRef newEntity = f.Create(mario->CurrentPowerupState == PowerupState.IceFlower
                 ? f.SimulationConfig.IceballPrototype
@@ -1772,16 +1778,17 @@ namespace Quantum {
             }
             newExtents *= FPMath.Lerp(1, Constants._3_50 + FP._0_25, megaPercentage);
             newExtents.X *= FPMath.Lerp(1, 1 - FP._0_20, megaPercentage);
+            var centroidoffset = (physicsObject->IsGravityInversed ? FPVector2.Down : FPVector2.Up);
 
             bool sameHitbox = collider->Shape.Box.Extents == newExtents
-                && collider->Shape.Centroid == FPVector2.Up * newExtents.Y;
+                && collider->Shape.Centroid == centroidoffset * newExtents.Y;
 
             if (sameHitbox) {
                 return false;
             }
 
             collider->Shape.Box.Extents = newExtents;
-            collider->Shape.Centroid = FPVector2.Up * newExtents.Y;
+            collider->Shape.Centroid = centroidoffset * newExtents.Y;
             // collider->IsTrigger = mario->IsDead;
 
             filter.Freezable->IceBlockSize = mario->CurrentPowerupState >= PowerupState.Mushroom ? physics.IceBlockBigSize : physics.IceBlockSmallSize;
@@ -1861,11 +1868,14 @@ namespace Quantum {
             using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleBreakingBlocks");
             var mario = filter.MarioPlayer;
 
-            bool? playBumpSound = null;
+            FPVector2 dotdirection = physicsObject->IsGravityInversed ? FPVector2.Up : FPVector2.Down;
+            InteractionDirection interactiondirection = physicsObject->IsGravityInversed ? InteractionDirection.Down : InteractionDirection.Up;
+
+            bool ? playBumpSound = null;
             QList<PhysicsContact> contacts = f.ResolveList(physicsObject->Contacts);
             foreach (var contact in contacts) {
                 if (f.Exists(contact.Entity)
-                    || FPVector2.Dot(contact.Normal, FPVector2.Down) < Constants.PhysicsGroundMaxAngleCos) {
+                    || FPVector2.Dot(contact.Normal, dotdirection) < Constants.PhysicsGroundMaxAngleCos) {
                     continue;
                 }
 
@@ -1875,7 +1885,7 @@ namespace Quantum {
                 if (tile == null) {
                     playBumpSound = false;
                 } else if (tile is IInteractableTile it) {
-                    it.Interact(f, filter.Entity, InteractionDirection.Up,
+                    it.Interact(f, filter.Entity, interactiondirection,
                         contact.Tile, tileInstance, out bool tempPlayBumpSound);
 
                     playBumpSound = (playBumpSound ?? true) & tempPlayBumpSound;
@@ -2713,6 +2723,21 @@ namespace Quantum {
                     mario->ForceJumpTimer = 10;
                 }
                 mario->CantJumpTimer = 0;
+            }
+        }
+        public void OnEntityChangeFlipPannelState(Frame f, EntityRef entity, EntityRef liquid, QBoolean gravinversed) {
+            if (!f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)
+                || f.Exists(mario->CurrentPipe)
+                || !f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
+                || !f.Unsafe.TryGetPointer(entity, out Transform2D* transform)
+                || !f.Unsafe.TryGetPointer(entity, out PhysicsCollider2D* collider)) {
+                return;
+            }
+            //play the starjump anim?
+            if (gravinversed) {
+                transform->Position.Y += collider->Shape.Box.Extents.Y * 2;
+            } else {
+                transform->Position.Y -= collider->Shape.Box.Extents.Y * 2;
             }
         }
 

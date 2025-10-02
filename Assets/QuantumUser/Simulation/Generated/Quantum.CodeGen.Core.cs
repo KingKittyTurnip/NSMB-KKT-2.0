@@ -121,16 +121,22 @@ namespace Quantum {
     MirrorX = 1,
     MirrorY = 2,
   }
+  public enum TanoombaFormState : byte {
+    Coin,
+    Block,
+    Star,
+    Goomba,
+    KoopaShell,
+    HeavyStone,
+    LemmyBall,
+    Max,
+  }
   public enum TanoombaState : byte {
     Idling,
     Searching,
     Attacking,
     KnockedBack,
-    Coin,
-    Block,
-    Star,
-    HeavyStone,
-    Shell,
+    Transformed,
   }
   public enum ThrowingObjectType : byte {
     Basic,
@@ -3252,13 +3258,13 @@ namespace Quantum {
     public FPVector2 Gravity;
     [FieldOffset(48)]
     public FP TerminalVelocity;
-    [FieldOffset(16)]
+    [FieldOffset(12)]
     public QBoolean IsFrozen;
     [FieldOffset(8)]
     public QBoolean DisableCollision;
-    [FieldOffset(24)]
-    public QBoolean SlowInLiquids;
     [FieldOffset(20)]
+    public QBoolean SlowInLiquids;
+    [FieldOffset(16)]
     public QBoolean IsWaterSolid;
     [FieldOffset(4)]
     public QBoolean BreakMegaObjects;
@@ -3280,26 +3286,27 @@ namespace Quantum {
     [FieldOffset(136)]
     [ExcludeFromPrototype()]
     public PhysicsObjectData PreviousData;
-    [FieldOffset(0)]
+    [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte HoverFrames;
-    [FieldOffset(36)]
-    [ExcludeFromPrototype()]
-    [AllocateOnComponentAdded()]
-    [FreeOnComponentRemoved()]
-    public QListPtr<PhysicsContact> Contacts;
     [FieldOffset(32)]
     [ExcludeFromPrototype()]
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
+    public QListPtr<PhysicsContact> Contacts;
+    [FieldOffset(28)]
+    [ExcludeFromPrototype()]
+    [AllocateOnComponentAdded()]
+    [FreeOnComponentRemoved()]
     public QHashSetPtr<EntityRef> LiquidContacts;
-    [FieldOffset(1)]
+    [FieldOffset(2)]
     [ExcludeFromPrototype()]
     public Byte UnderwaterCounter;
-    [FieldOffset(28)]
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte FlipPannelCounter;
+    [FieldOffset(24)]
     public QBoolean WindImmune;
-    [FieldOffset(12)]
-    public QBoolean GravityInversed;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 8311;
@@ -3320,8 +3327,8 @@ namespace Quantum {
         hash = hash * 31 + Contacts.GetHashCode();
         hash = hash * 31 + LiquidContacts.GetHashCode();
         hash = hash * 31 + UnderwaterCounter.GetHashCode();
+        hash = hash * 31 + FlipPannelCounter.GetHashCode();
         hash = hash * 31 + WindImmune.GetHashCode();
-        hash = hash * 31 + GravityInversed.GetHashCode();
         return hash;
       }
     }
@@ -3343,11 +3350,11 @@ namespace Quantum {
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (PhysicsObject*)ptr;
+        serializer.Stream.Serialize(&p->FlipPannelCounter);
         serializer.Stream.Serialize(&p->HoverFrames);
         serializer.Stream.Serialize(&p->UnderwaterCounter);
         QBoolean.Serialize(&p->BreakMegaObjects, serializer);
         QBoolean.Serialize(&p->DisableCollision, serializer);
-        QBoolean.Serialize(&p->GravityInversed, serializer);
         QBoolean.Serialize(&p->IsFrozen, serializer);
         QBoolean.Serialize(&p->IsWaterSolid, serializer);
         QBoolean.Serialize(&p->SlowInLiquids, serializer);
@@ -3755,12 +3762,15 @@ namespace Quantum {
   public unsafe partial struct Tanoomba : Quantum.IComponent {
     public const Int32 SIZE = 56;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(3)]
+    [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public TanoombaState State;
+    [FieldOffset(3)]
+    [ExcludeFromPrototype()]
+    public TanoombaFormState Form;
     [FieldOffset(32)]
     public FP JumpVelocity;
-    [FieldOffset(4)]
+    [FieldOffset(8)]
     [ExcludeFromPrototype()]
     public Int32 HitFrame;
     [FieldOffset(1)]
@@ -3781,13 +3791,14 @@ namespace Quantum {
     [FieldOffset(40)]
     [ExcludeFromPrototype()]
     public FPVector2 TargetBlock;
-    [FieldOffset(8)]
+    [FieldOffset(12)]
     [ExcludeFromPrototype()]
     public QBoolean Laughing;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 9067;
         hash = hash * 31 + (Byte)State;
+        hash = hash * 31 + (Byte)Form;
         hash = hash * 31 + JumpVelocity.GetHashCode();
         hash = hash * 31 + HitFrame.GetHashCode();
         hash = hash * 31 + GetupFrames.GetHashCode();
@@ -3805,6 +3816,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->DamageInvincibilityFrames);
         serializer.Stream.Serialize(&p->GetupFrames);
         serializer.Stream.Serialize(&p->LastKnockback);
+        serializer.Stream.Serialize((Byte*)&p->Form);
         serializer.Stream.Serialize((Byte*)&p->State);
         serializer.Stream.Serialize(&p->HitFrame);
         QBoolean.Serialize(&p->Laughing, serializer);
@@ -3968,7 +3980,7 @@ namespace Quantum {
     void OnTryLiquidSplash(Frame f, EntityRef entity, EntityRef liquid, QBoolean exit, bool* doSplash);
   }
   public unsafe partial interface ISignalOnEntityEnterExitLiquid : ISignal {
-    void OnEntityEnterExitLiquid(Frame f, EntityRef entity, EntityRef liquid, QBoolean underwater);
+    void OnEntityEnterExitLiquid(Frame f, EntityRef entity, EntityRef liquid, QBoolean underwater, QBoolean gravinversed);
   }
   public unsafe partial interface ISignalOnMarioPlayerDied : ISignal {
     void OnMarioPlayerDied(Frame f, EntityRef entity);
@@ -3993,6 +4005,9 @@ namespace Quantum {
   }
   public unsafe partial interface ISignalOnEntityChangeUnderwaterState : ISignal {
     void OnEntityChangeUnderwaterState(Frame f, EntityRef entity, EntityRef liquid, QBoolean underwater);
+  }
+  public unsafe partial interface ISignalOnEntityChangeFlipPannelState : ISignal {
+    void OnEntityChangeFlipPannelState(Frame f, EntityRef entity, EntityRef liquid, QBoolean flippannel);
   }
   public unsafe partial interface ISignalOnEntityCrushed : ISignal {
     void OnEntityCrushed(Frame f, EntityRef entity);
@@ -4338,6 +4353,7 @@ namespace Quantum {
     private ISignalOnMarioPlayerGroundpoundEnded[] _ISignalOnMarioPlayerGroundpoundEndedSystems;
     private ISignalOnMarioPlayerMegaMushroomFootstep[] _ISignalOnMarioPlayerMegaMushroomFootstepSystems;
     private ISignalOnEntityChangeUnderwaterState[] _ISignalOnEntityChangeUnderwaterStateSystems;
+    private ISignalOnEntityChangeFlipPannelState[] _ISignalOnEntityChangeFlipPannelStateSystems;
     private ISignalOnEntityCrushed[] _ISignalOnEntityCrushedSystems;
     private ISignalOnMarioPlayerCollectedPowerup[] _ISignalOnMarioPlayerCollectedPowerupSystems;
     private ISignalOnProjectileHitEntity[] _ISignalOnProjectileHitEntitySystems;
@@ -4385,6 +4401,7 @@ namespace Quantum {
       _ISignalOnMarioPlayerGroundpoundEndedSystems = BuildSignalsArray<ISignalOnMarioPlayerGroundpoundEnded>();
       _ISignalOnMarioPlayerMegaMushroomFootstepSystems = BuildSignalsArray<ISignalOnMarioPlayerMegaMushroomFootstep>();
       _ISignalOnEntityChangeUnderwaterStateSystems = BuildSignalsArray<ISignalOnEntityChangeUnderwaterState>();
+      _ISignalOnEntityChangeFlipPannelStateSystems = BuildSignalsArray<ISignalOnEntityChangeFlipPannelState>();
       _ISignalOnEntityCrushedSystems = BuildSignalsArray<ISignalOnEntityCrushed>();
       _ISignalOnMarioPlayerCollectedPowerupSystems = BuildSignalsArray<ISignalOnMarioPlayerCollectedPowerup>();
       _ISignalOnProjectileHitEntitySystems = BuildSignalsArray<ISignalOnProjectileHitEntity>();
@@ -4758,12 +4775,12 @@ namespace Quantum {
           }
         }
       }
-      public void OnEntityEnterExitLiquid(EntityRef entity, EntityRef liquid, QBoolean underwater) {
+      public void OnEntityEnterExitLiquid(EntityRef entity, EntityRef liquid, QBoolean underwater, QBoolean gravinversed) {
         var array = _f._ISignalOnEntityEnterExitLiquidSystems;
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
-            s.OnEntityEnterExitLiquid(_f, entity, liquid, underwater);
+            s.OnEntityEnterExitLiquid(_f, entity, liquid, underwater, gravinversed);
           }
         }
       }
@@ -4836,6 +4853,15 @@ namespace Quantum {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
             s.OnEntityChangeUnderwaterState(_f, entity, liquid, underwater);
+          }
+        }
+      }
+      public void OnEntityChangeFlipPannelState(EntityRef entity, EntityRef liquid, QBoolean flippannel) {
+        var array = _f._ISignalOnEntityChangeFlipPannelStateSystems;
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
+            s.OnEntityChangeFlipPannelState(_f, entity, liquid, flippannel);
           }
         }
       }
@@ -5058,6 +5084,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.Starball), Quantum.Starball.SIZE);
       typeRegistry.Register(typeof(Quantum.Starballgoal), Quantum.Starballgoal.SIZE);
       typeRegistry.Register(typeof(Quantum.Tanoomba), Quantum.Tanoomba.SIZE);
+      typeRegistry.Register(typeof(Quantum.TanoombaFormState), 1);
       typeRegistry.Register(typeof(Quantum.TanoombaState), 1);
       typeRegistry.Register(typeof(Quantum.ThrowingObject), Quantum.ThrowingObject.SIZE);
       typeRegistry.Register(typeof(Quantum.ThrowingObjectType), 1);
@@ -5148,6 +5175,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<QueryOptions>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.SpawnReason>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.StageTileFlags>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.TanoombaFormState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.TanoombaState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.ThrowingObjectType>();
     }
