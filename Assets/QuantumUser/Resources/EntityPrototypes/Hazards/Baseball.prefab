@@ -396,8 +396,6 @@ MonoBehaviour:
       Value: 0
     WindImmune:
       Value: 0
-    GravityInversed:
-      Value: 0
 --- !u!114 &7318776400371000510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,6 +441,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     ColliderDisabled:
+      Value: 0
+    AllowDoubleInteraction:
       Value: 0
 --- !u!114 &-5656916731996867298
 MonoBehaviour:
@@ -508,13 +508,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
+    Spawnpoint:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    IgnorePlayerWhenRespawning:
+      Value: 0
     RestrictSpawnPosition:
       Value: 0
     IsHefty:
       Value: 0
     IPWSUntilGround:
       Value: 1
-    IPWSTime: 0
+    IPWSTime: 15
     SpawningVelocityRange:
       X:
         RawValue: 131072

@@ -573,6 +573,7 @@ namespace Quantum.Prototypes {
   public unsafe partial class HazardPrototype : ComponentPrototype<Quantum.Hazard> {
     public FPVector2 Spawnpoint;
     public QBoolean IgnorePlayerWhenRespawning;
+    public QBoolean DoNotDespawnInPit;
     public QBoolean RestrictSpawnPosition;
     public QBoolean IsHefty;
     public QBoolean IPWSUntilGround;
@@ -587,6 +588,7 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.Hazard result, in PrototypeMaterializationContext context = default) {
         result.Spawnpoint = this.Spawnpoint;
         result.IgnorePlayerWhenRespawning = this.IgnorePlayerWhenRespawning;
+        result.DoNotDespawnInPit = this.DoNotDespawnInPit;
         result.RestrictSpawnPosition = this.RestrictSpawnPosition;
         result.IsHefty = this.IsHefty;
         result.IPWSUntilGround = this.IPWSUntilGround;

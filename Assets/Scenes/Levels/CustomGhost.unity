@@ -711,6 +711,16 @@ PrefabInstance:
       propertyPath: 'NetworkGuid.RawGuidValue.Array.data[1]'
       value: 2031998216160434843
       objectReference: {fileID: 0}
+    - target: {fileID: 2731341235837001279, guid: 8cf8f49ac0882ed44953ea53ff901f11,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.X.RawValue
+      value: 344064
+      objectReference: {fileID: 0}
+    - target: {fileID: 2731341235837001279, guid: 8cf8f49ac0882ed44953ea53ff901f11,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.Y.RawValue
+      value: 327680
+      objectReference: {fileID: 0}
     - target: {fileID: 7426856683177255955, guid: 8cf8f49ac0882ed44953ea53ff901f11,
         type: 3}
       propertyPath: m_RootOrder
@@ -2306,6 +2316,16 @@ PrefabInstance:
       propertyPath: 'NetworkGuid.RawGuidValue.Array.data[1]'
       value: -3969526424548816968
       objectReference: {fileID: 0}
+    - target: {fileID: 2731341235837001279, guid: 8cf8f49ac0882ed44953ea53ff901f11,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.X.RawValue
+      value: -1851392
+      objectReference: {fileID: 0}
+    - target: {fileID: 2731341235837001279, guid: 8cf8f49ac0882ed44953ea53ff901f11,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.Y.RawValue
+      value: 262144
+      objectReference: {fileID: 0}
     - target: {fileID: 7426856683177255955, guid: 8cf8f49ac0882ed44953ea53ff901f11,
         type: 3}
       propertyPath: m_RootOrder
@@ -2614,7 +2634,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 18
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -3284,7 +3304,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 17
+      m_TileSpriteIndex: 18
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -3294,7 +3314,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 20
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -3964,7 +3984,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 13
+      m_TileSpriteIndex: 20
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -3974,7 +3994,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 20
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -4644,7 +4664,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 13
+      m_TileSpriteIndex: 20
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -4654,7 +4674,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 20
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -5734,7 +5754,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 13
+      m_TileSpriteIndex: 20
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -5744,7 +5764,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 20
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -6424,7 +6444,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 13
+      m_TileSpriteIndex: 20
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -6434,7 +6454,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 25
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -7104,7 +7124,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 22
+      m_TileSpriteIndex: 25
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -11454,7 +11474,7 @@ Tilemap:
   - m_RefCount: 8
     m_Data: {fileID: 5242519309527336308, guid: f4b7221be8b79c94c9c8919163014cb0,
       type: 3}
-  - m_RefCount: 225
+  - m_RefCount: 227
     m_Data: {fileID: -1965115313, guid: 01739c641144da24c80d500fb492af79, type: 3}
   - m_RefCount: 11
     m_Data: {fileID: -907862350, guid: 01739c641144da24c80d500fb492af79, type: 3}
@@ -11462,7 +11482,7 @@ Tilemap:
     m_Data: {fileID: 488882399, guid: 01739c641144da24c80d500fb492af79, type: 3}
   - m_RefCount: 35
     m_Data: {fileID: 1588224677, guid: 01739c641144da24c80d500fb492af79, type: 3}
-  - m_RefCount: 45
+  - m_RefCount: 44
     m_Data: {fileID: 1697482221, guid: 01739c641144da24c80d500fb492af79, type: 3}
   - m_RefCount: 10
     m_Data: {fileID: 449052027, guid: 01739c641144da24c80d500fb492af79, type: 3}
@@ -11472,7 +11492,7 @@ Tilemap:
     m_Data: {fileID: 954490294, guid: 01739c641144da24c80d500fb492af79, type: 3}
   - m_RefCount: 42
     m_Data: {fileID: 1027553117, guid: 01739c641144da24c80d500fb492af79, type: 3}
-  - m_RefCount: 47
+  - m_RefCount: 46
     m_Data: {fileID: 1601917612, guid: 01739c641144da24c80d500fb492af79, type: 3}
   - m_RefCount: 15
     m_Data: {fileID: -2124494356, guid: 01739c641144da24c80d500fb492af79, type: 3}
@@ -13306,6 +13326,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 527788659}
     m_Modifications:
+    - target: {fileID: -8853578860819055547, guid: 85abc82ae8d902a4db8901f38cec75eb,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.X.RawValue
+      value: 1392640
+      objectReference: {fileID: 0}
+    - target: {fileID: -8853578860819055547, guid: 85abc82ae8d902a4db8901f38cec75eb,
+        type: 3}
+      propertyPath: Prototype.Spawnpoint.Y.RawValue
+      value: 114688
+      objectReference: {fileID: 0}
     - target: {fileID: 1504841062901269900, guid: 85abc82ae8d902a4db8901f38cec75eb,
         type: 3}
       propertyPath: SortKey

@@ -1,7 +1,6 @@
 using Photon.Deterministic;
 using System;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
@@ -46,36 +45,41 @@ namespace Quantum {
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var hazard = filter.Hazard;
+            if (!hazard->IsActive)
+                return;
+
+            var transform = filter.Transform;
+            var collider = filter.Collider;
+
+            // Despawn off bottom of stage
+            if (!hazard->DoNotDespawnInPit && transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
+                HazardSystem.DestroyHazard(f, filter.Entity);
+                return;
+            }
+
             if (!hazard->IsHazard) {
                 return;
             }
 
-            var transform = filter.Transform;
             var physicsObject = filter.PhysicsObject;
-            var collider = filter.Collider;
 
-            // TODO: Countdown To Despawn
-            if (hazard->LifeTime > 0) {
-                //hazard->LifeTime--;
-            }
+            // Countdown To Despawn
             if (QuantumUtils.Decrement(ref hazard->LifeTime)){
                 if (hazard->IsHazard && hazard->RestrictSpawnPosition) {
                     f.Global->UsedHazardSpawns.Clear(hazard->index);
                     f.Global->UsedHazardSpawnCount--;
                 }
-                var position = f.Unsafe.GetPointer<Transform2D>(filter.Entity)->Position;
-                UnityEngine.Object.Instantiate(Resources.Load("Prefabs/Particle/SpawnPoof"), new Vector3((float) position.X, (float) position.Y, -5), Quaternion.identity);
+                f.Events.PlayPuffParticle(transform->Position);
                 HazardSystem.DestroyHazard(f, filter.Entity);
             }
 
             // allow interactions
             if (hazard->JustSpawned) {
-                if (hazard->IPWSUntilGround) {
-                    if (physicsObject->IsTouchingGround)
+                if (!hazard->IPWSUntilGround || (hazard->IPWSUntilGround && physicsObject->IsTouchingGround)) {
+                    if (hazard->IPWSTime-- <= 0) {
                         hazard->JustSpawned = false;
-                } else if (hazard->IPWSTime > 0) {
-                    //if (physicsObject->IsTouchingGround) TODO: Do The Countdowncode
-                    hazard->JustSpawned = false;
+                        f.Unsafe.GetPointer<Interactable>(filter.Entity)->ColliderDisabled = false;
+                    }
                 }
             }
         }
@@ -96,12 +100,21 @@ namespace Quantum {
             //var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
 
-            hazard->IsHazard = true;
+            hazard->IsHazard = hazard->JustSpawned = hazard->IsActive = true;
             // IdeaBulb Carry On Creation :TOTEST:
             if (spawnReason == SpawnReason.Bulb && f.Exists(owner)) {
                 f.Unsafe.TryGetPointer(thisEntity, out Holdable* holdable);
                 if (holdable != null) {
                     holdable->Holder = owner;
+                }
+            }
+
+            if ((hazard->IPWSTime != 0 || hazard->IPWSUntilGround) && f.Unsafe.TryGetPointer(thisEntity, out Interactable* inter)) {
+                if (inter != null) {
+                    inter->ColliderDisabled = true;
+                } else {
+                    hazard->IPWSTime = 0;
+                    hazard->IPWSUntilGround = false;
                 }
             }
 
@@ -112,15 +125,11 @@ namespace Quantum {
             //Set LifeTime
             hazard->BaseLifeTime = hazard->LifeTime = hazardata.DespawnTime.BaseValue * 60;
 
-            // Create Icon on Map
-            if (hazard->IsHefty) {
-                //TODO: Placeicon creation code here
-            }
-
-            // Shot in Random Diraction
+            // Shoot in Random Diraction
             transform->Position = spawnpoint;
             //physicsObject->Velocity = new(hazard->SpawningVelocityRange.X /*Insert RNG Calculator*/, hazard->SpawningVelocityRange.Y);
 
+            // Create Icon on Map
             HazardInitialized?.Invoke(f, thisEntity);
         }
 
@@ -131,12 +140,18 @@ namespace Quantum {
                     HazardDestroyed?.Invoke(f);
                 } else {
                     hazard->IsActive = false;
+                    if (f.Unsafe.TryGetPointer(entity, out Transform2D* transform))
+                        transform->Position.Y = -255;
                     if (f.Unsafe.TryGetPointer(entity, out PhysicsCollider2D* collider))
                         collider->Enabled = false;
                     if (f.Unsafe.TryGetPointer(entity, out PhysicsObject* physics))
                         physics->IsFrozen = true;
                     if (f.Unsafe.TryGetPointer(entity, out Interactable* inter))
                         inter->ColliderDisabled = true;
+                    if (f.Unsafe.TryGetPointer(entity, out Enemy* enemy)) {
+                        enemy->IsDead = true;
+                        f.Signals.OnEnemyDespawned(entity);
+                    }
                 }
             } else {
                 UnityEngine.Debug.Log("Object Does Not have The Hazard Script");

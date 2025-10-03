@@ -274,7 +274,7 @@ namespace NSMB.Cameras {
             ourCamera.transform.position = newPosition;
         }
 
-        private float PrevMax;
+        private float PrevMax = 0;
         public AnimationCurve Smoother;
         private void HandleRotation(CallbackUpdateView e) {
             QuantumGame game = e.Game;
@@ -299,7 +299,7 @@ namespace NSMB.Cameras {
                 Rot = 0;
             }
             PrevMax = spinpipeMAX;
-            ourCamera.transform.rotation = Quaternion.Euler(0, 0, Rot);
+            ourCamera.transform.rotation = Quaternion.Euler(0, 0, Rot); //idk why but it ALWAYS errors here when the code first starts
             isRotating = spinpipeslope != 0;
         }
 

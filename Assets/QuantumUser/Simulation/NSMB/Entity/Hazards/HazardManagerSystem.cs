@@ -135,14 +135,14 @@ namespace Quantum {
                 var newhazardspawner = f.Unsafe.GetPointer<Hazard>(newEntity);
 
                 var position = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
-                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, pick);
+                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, pick + 1);
                 if (newhazardspawner->RestrictSpawnPosition) {
                     newhazardspawner->index = (byte) hazardspawner->spawnIndex;
                 } else {
                     f.Global->UsedHazardSpawns.Clear(hazardspawner->spawnIndex);
                     f.Global->UsedHazardSpawnCount--;
                 }
-                Object.Instantiate(Resources.Load("Prefabs/Particle/SpawnPoof"), new Vector3((float) position.X, (float) position.Y , -5), Quaternion.identity);
+                f.Events.PlayPuffParticle(position);
                 f.Destroy(entity);
             }
         }

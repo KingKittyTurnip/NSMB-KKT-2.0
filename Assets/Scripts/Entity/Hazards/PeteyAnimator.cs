@@ -1,13 +1,9 @@
 using NSMB.Utilities.Extensions;
-using Photon.Deterministic;
 using Quantum;
 using Quantum.Profiling;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
-using UnityEngine.UIElements;
 
 public unsafe class PeteyAnimator : QuantumEntityViewComponent {
 

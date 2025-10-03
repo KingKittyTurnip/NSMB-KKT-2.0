@@ -42,7 +42,7 @@ namespace NSMB.Entities.Enemies {
             var goomba = f.Unsafe.GetPointer<Goomba>(EntityRef);
             var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
 
-            sRenderer.enabled = (!enemy->IsDead && hazard->IsActive);
+            sRenderer.enabled = !(enemy->IsDead && !hazard->IsActive);
             legacyAnimation.enabled = (!enemy->IsDead && hazard->IsActive) && !freezable->IsFrozen(f);
             sRenderer.flipX = enemy->FacingRight;
 

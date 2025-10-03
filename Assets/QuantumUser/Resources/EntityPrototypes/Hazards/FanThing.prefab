@@ -44,7 +44,7 @@ ParticleSystem:
   lengthInSec: 10
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 1
+  cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
@@ -4812,7 +4812,7 @@ ParticleSystemRenderer:
   m_SortingFudge: 0
   m_NormalDirection: 1
   m_ShadowBias: 0
-  m_RenderAlignment: 0
+  m_RenderAlignment: 1
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
   m_EnableGPUInstancing: 1
@@ -5310,6 +5310,8 @@ MonoBehaviour:
   Prototype:
     ColliderDisabled:
       Value: 0
+    AllowDoubleInteraction:
+      Value: 0
 --- !u!114 &-5656916731996867298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5357,11 +5359,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
+    Spawnpoint:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    IgnorePlayerWhenRespawning:
+      Value: 0
+    DoNotDespawnInPit:
+      Value: 0
+    RestrictSpawnPosition:
+      Value: 0
     IsHefty:
       Value: 1
     IPWSUntilGround:
       Value: 1
-    IPWSTime: 0
+    IPWSTime: 15
     SpawningVelocityRange:
       X:
         RawValue: 196608

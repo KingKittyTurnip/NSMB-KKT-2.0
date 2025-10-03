@@ -79,7 +79,7 @@ namespace NSMB.Entities.Enemies {
             }
 
             sRenderer.SetPropertyBlock(mpb);
-            sRenderer.enabled = (!enemy->IsDead && hazard->IsActive);
+            sRenderer.enabled = !(enemy->IsDead && !hazard->IsActive);
             sRenderer.flipX = !enemy->FacingRight;
 
             Vector3 modifiedZ = transform.position;

@@ -70,12 +70,12 @@ MonoBehaviour:
       SpawnFridge: 0
       SpawnBulb: 0
       SpecialValues:
-      - ButtonName: Is Stationary
-        ButtonType: 0
-        BaseValue: 1
+      - ButtonName: ClockType
+        ButtonType: 1
+        BaseValue: 0
         ValueRange:
           X: 0
-          Y: 1
+          Y: 3
     - Name: Reset Arrow
       hazardAsset:
         Id:

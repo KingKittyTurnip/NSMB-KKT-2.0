@@ -1,18 +1,17 @@
+#define _0_875 0.875
+
 component Tanoomba {
 	[ExcludeFromPrototype] TanoombaState State;
 	[ExcludeFromPrototype] TanoombaFormState Form;
 	FP JumpVelocity;
 	
-	[ExcludeFromPrototype] int HitFrame;
 	[ExcludeFromPrototype] byte GetupFrames;
-	[ExcludeFromPrototype] byte LastKnockback;
-	[ExcludeFromPrototype] byte DamageInvincibilityFrames;
 
-	[ExcludeFromPrototype] EntityRef TargetPlayer;
-	[ExcludeFromPrototype] EntityRef TargetCoin;
-	[ExcludeFromPrototype] FPVector2 TargetBlock; //Idk What To Do here yet
-
+	[ExcludeFromPrototype] EntityRef TransformedObject;
+	[ExcludeFromPrototype] EntityRef TargetedPlayer;
+	
 	[ExcludeFromPrototype] bool Laughing;
+	[ExcludeFromPrototype] bool PlayerPassedBy;
 }
 
 enum TanoombaState : Byte {
@@ -28,6 +27,8 @@ enum TanoombaFormState : Byte {
 	Coin,
 	Block,
 	Star,
+
+	//Stage Elements ig
 	Goomba,
 	KoopaShell,
 
@@ -39,7 +40,12 @@ enum TanoombaFormState : Byte {
 	Max,
 }
 
-//event ThrowObjSimple {
-//	EntityRef Entity;
-//	FPVector2 pos;
-//}
+event TanoombaFlee {
+	EntityRef Entity;
+}
+event TanoombaAttack {
+	EntityRef Entity;
+}
+event TanoombaLMAO {
+	EntityRef Entity;
+}

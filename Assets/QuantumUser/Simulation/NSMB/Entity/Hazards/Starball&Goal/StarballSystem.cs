@@ -13,6 +13,7 @@ namespace Quantum {
             public Transform2D* Transform;
             public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* Collider;
+            public Hazard* Hazard;
         }
 
         public override void OnInit(Frame f) {
@@ -23,6 +24,7 @@ namespace Quantum {
             var starball = filter.Starball;
             var physicsObject = filter.PhysicsObject;
             var collider = filter.Collider;
+            var hazard = filter.Hazard;
 
             bool Deccel = true;
             // Despawn off bottom of stage
@@ -42,6 +44,8 @@ namespace Quantum {
 
             //Rider Logic
             if (starball->Rider != EntityRef.None) {
+                if (hazard->LifeTime < 60) //Don't Despawn If We Have A Rider
+                    hazard->LifeTime = 60;
                 var marphys = f.Unsafe.GetPointer<PhysicsObject>(starball->Rider);
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(starball->Rider);
                 if (mario->CurrentKnockback == KnockbackStrength.None && mario->RidingStarball && mario->CurrentPowerupState != PowerupState.MegaMushroom) {

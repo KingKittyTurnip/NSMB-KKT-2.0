@@ -4,6 +4,7 @@ component Hazard {
 	FPVector2 Spawnpoint;
 	[ExcludeFromPrototype] bool IsActive;
 	bool IgnorePlayerWhenRespawning;
+	bool DoNotDespawnInPit;
 
   //HazardSpawn Vars
 	bool RestrictSpawnPosition;
@@ -27,3 +28,7 @@ enum SpawnReason : Byte {
 }
 
 signal InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index);
+
+event PlayPuffParticle {
+	FPVector2 Position;
+}

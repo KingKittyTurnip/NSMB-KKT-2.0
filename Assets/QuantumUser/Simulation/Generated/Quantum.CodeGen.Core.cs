@@ -2272,27 +2272,29 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Hazard : Quantum.IComponent {
-    public const Int32 SIZE = 72;
+    public const Int32 SIZE = 80;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(24)]
+    [FieldOffset(28)]
     [ExcludeFromPrototype()]
     public QBoolean IsHazard;
-    [FieldOffset(56)]
+    [FieldOffset(64)]
     public FPVector2 Spawnpoint;
-    [FieldOffset(20)]
+    [FieldOffset(24)]
     [ExcludeFromPrototype()]
     public QBoolean IsActive;
-    [FieldOffset(16)]
+    [FieldOffset(20)]
     public QBoolean IgnorePlayerWhenRespawning;
-    [FieldOffset(36)]
-    public QBoolean RestrictSpawnPosition;
-    [FieldOffset(28)]
-    public QBoolean IsHefty;
     [FieldOffset(12)]
+    public QBoolean DoNotDespawnInPit;
+    [FieldOffset(40)]
+    public QBoolean RestrictSpawnPosition;
+    [FieldOffset(32)]
+    public QBoolean IsHefty;
+    [FieldOffset(16)]
     public QBoolean IPWSUntilGround;
     [FieldOffset(0)]
     public Byte IPWSTime;
-    [FieldOffset(40)]
+    [FieldOffset(48)]
     public FPVector2 SpawningVelocityRange;
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
@@ -2303,7 +2305,7 @@ namespace Quantum {
     [FieldOffset(8)]
     [ExcludeFromPrototype()]
     public Int32 LifeTime;
-    [FieldOffset(32)]
+    [FieldOffset(36)]
     [ExcludeFromPrototype()]
     public QBoolean JustSpawned;
     [FieldOffset(2)]
@@ -2316,6 +2318,7 @@ namespace Quantum {
         hash = hash * 31 + Spawnpoint.GetHashCode();
         hash = hash * 31 + IsActive.GetHashCode();
         hash = hash * 31 + IgnorePlayerWhenRespawning.GetHashCode();
+        hash = hash * 31 + DoNotDespawnInPit.GetHashCode();
         hash = hash * 31 + RestrictSpawnPosition.GetHashCode();
         hash = hash * 31 + IsHefty.GetHashCode();
         hash = hash * 31 + IPWSUntilGround.GetHashCode();
@@ -2336,6 +2339,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->index);
         serializer.Stream.Serialize(&p->BaseLifeTime);
         serializer.Stream.Serialize(&p->LifeTime);
+        QBoolean.Serialize(&p->DoNotDespawnInPit, serializer);
         QBoolean.Serialize(&p->IPWSUntilGround, serializer);
         QBoolean.Serialize(&p->IgnorePlayerWhenRespawning, serializer);
         QBoolean.Serialize(&p->IsActive, serializer);
@@ -3760,70 +3764,55 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Tanoomba : Quantum.IComponent {
-    public const Int32 SIZE = 56;
+    public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(4)]
+    [FieldOffset(2)]
     [ExcludeFromPrototype()]
     public TanoombaState State;
-    [FieldOffset(3)]
+    [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public TanoombaFormState Form;
     [FieldOffset(32)]
     public FP JumpVelocity;
-    [FieldOffset(8)]
-    [ExcludeFromPrototype()]
-    public Int32 HitFrame;
-    [FieldOffset(1)]
-    [ExcludeFromPrototype()]
-    public Byte GetupFrames;
-    [FieldOffset(2)]
-    [ExcludeFromPrototype()]
-    public Byte LastKnockback;
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
-    public Byte DamageInvincibilityFrames;
+    public Byte GetupFrames;
     [FieldOffset(24)]
     [ExcludeFromPrototype()]
-    public EntityRef TargetPlayer;
+    public EntityRef TransformedObject;
     [FieldOffset(16)]
     [ExcludeFromPrototype()]
-    public EntityRef TargetCoin;
-    [FieldOffset(40)]
-    [ExcludeFromPrototype()]
-    public FPVector2 TargetBlock;
-    [FieldOffset(12)]
+    public EntityRef TargetedPlayer;
+    [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public QBoolean Laughing;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean PlayerPassedBy;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 9067;
         hash = hash * 31 + (Byte)State;
         hash = hash * 31 + (Byte)Form;
         hash = hash * 31 + JumpVelocity.GetHashCode();
-        hash = hash * 31 + HitFrame.GetHashCode();
         hash = hash * 31 + GetupFrames.GetHashCode();
-        hash = hash * 31 + LastKnockback.GetHashCode();
-        hash = hash * 31 + DamageInvincibilityFrames.GetHashCode();
-        hash = hash * 31 + TargetPlayer.GetHashCode();
-        hash = hash * 31 + TargetCoin.GetHashCode();
-        hash = hash * 31 + TargetBlock.GetHashCode();
+        hash = hash * 31 + TransformedObject.GetHashCode();
+        hash = hash * 31 + TargetedPlayer.GetHashCode();
         hash = hash * 31 + Laughing.GetHashCode();
+        hash = hash * 31 + PlayerPassedBy.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Tanoomba*)ptr;
-        serializer.Stream.Serialize(&p->DamageInvincibilityFrames);
         serializer.Stream.Serialize(&p->GetupFrames);
-        serializer.Stream.Serialize(&p->LastKnockback);
         serializer.Stream.Serialize((Byte*)&p->Form);
         serializer.Stream.Serialize((Byte*)&p->State);
-        serializer.Stream.Serialize(&p->HitFrame);
         QBoolean.Serialize(&p->Laughing, serializer);
-        EntityRef.Serialize(&p->TargetCoin, serializer);
-        EntityRef.Serialize(&p->TargetPlayer, serializer);
+        QBoolean.Serialize(&p->PlayerPassedBy, serializer);
+        EntityRef.Serialize(&p->TargetedPlayer, serializer);
+        EntityRef.Serialize(&p->TransformedObject, serializer);
         FP.Serialize(&p->JumpVelocity, serializer);
-        FPVector2.Serialize(&p->TargetBlock, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -4251,6 +4240,14 @@ namespace Quantum {
         return result;
       }
     }
+    /// <summary>0.875</summary>
+    public static FP _0_875 {
+      [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
+        FP result;
+        result.RawValue = 57344;
+        return result;
+      }
+    }
     /// <summary>0.004</summary>
     public static FP SmoothSlowdownmultiplier {
       [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
@@ -4317,6 +4314,8 @@ namespace Quantum {
       public const Int64 _0_48 = 31457;
       /// <summary>0.235</summary>
       public const Int64 _0_235 = 15401;
+      /// <summary>0.875</summary>
+      public const Int64 _0_875 = 57344;
       /// <summary>0.004</summary>
       public const Int64 SmoothSlowdownmultiplier = 262;
     }

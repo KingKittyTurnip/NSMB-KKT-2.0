@@ -62,13 +62,14 @@ namespace Quantum {
 
                         EntityRef newEntity = f.Create(avaliblebosses[pick].hazardAsset);
                         f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity.Y = 8;
-                        var position = transform->Position;
                         if (cauldron->TransformingEntity != EntityRef.None) {
                             f.Unsafe.GetPointer<Boss>(newEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
                             f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
                         }
-                        f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, pick);
-                        UnityEngine.Object.Instantiate(Resources.Load("Prefabs/Particle/SpawnPoof"), new Vector3((float) position.X, (float) position.Y, -5), Quaternion.identity);
+                        f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, pick);
+                        f.Events.PlayPuffParticle(transform->Position);
+                        cauldron->TransformingEntity = EntityRef.None;
+                        cauldron->Activated = false;
                         HazardSystem.DestroyHazard(f, filter.Entity);
                     }
                 } else {
@@ -95,7 +96,7 @@ namespace Quantum {
 
             QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
-            bool attackedFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_25;
+            bool attackedFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_05;
 
             if (attackedFromAbove && FPMath.Abs(damageDirection.X) < FP._0_50) {
                 cauldron->TransformingEntity = otherEntity;

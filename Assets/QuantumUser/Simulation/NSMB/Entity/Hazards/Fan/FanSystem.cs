@@ -127,10 +127,9 @@ Gp Interactions are weird
                 if (physobj->DisableCollision || physobj->IsFrozen || physobj->WindImmune)
                     continue;
                 //Is Checking This Expensive?
-                f.Unsafe.TryGetPointer(OtherEntity, out MarioPlayer* mar);
-                if (mar != null && (mar->IsInShell || mar->IsCrouchedInShell || mar->MegaMushroomFrames > 0 || mar->IsGroundpounding
+                if (f.Unsafe.TryGetPointer(OtherEntity, out MarioPlayer* mar) && (mar->IsInShell || mar->IsCrouchedInShell || mar->MegaMushroomFrames > 0 || mar->IsGroundpounding
                     || mar->IsWallsliding || ((physobj->IsTouchingLeftWall || physobj->IsTouchingRightWall))
-                    /*|| mar->StoneBux*/)) //TODO: Metal & Carrying Heavystone here
+                    || mar->StoneBux)) //TODO: Metal Mario
                     continue;
                 f.Unsafe.TryGetPointer(OtherEntity, out Transform2D* trans);
                 f.Unsafe.TryGetPointer(OtherEntity, out PhysicsCollider2D* col);
@@ -249,7 +248,7 @@ Gp Interactions are weird
             }
 
             var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
-
+            UnityEngine.Debug.Log(hazardata.SpecialValues.Length + " " + hazardata.SpecialValues[0] + " " + index);
             //Set Sturdy
             fan->Sturdy = hazardata.SpecialValues[0].BaseValue == 1;
 

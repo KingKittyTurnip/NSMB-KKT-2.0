@@ -917,6 +917,8 @@ MonoBehaviour:
             RawValue: 98304
         IgnorePlayerWhenRespawning:
           Value: 0
+        DoNotDespawnInPit:
+          Value: 0
         RestrictSpawnPosition:
           Value: 0
         IsHefty:
@@ -992,8 +994,6 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
-          Value: 0
-        GravityInversed:
           Value: 0
     - rid: 7591444679539818509
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -1253,6 +1253,8 @@ MonoBehaviour:
             RawValue: -131072
         IgnorePlayerWhenRespawning:
           Value: 0
+        DoNotDespawnInPit:
+          Value: 0
         RestrictSpawnPosition:
           Value: 0
         IsHefty:
@@ -1297,8 +1299,6 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
-          Value: 0
-        GravityInversed:
           Value: 0
     - rid: 8968679368100413451
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}

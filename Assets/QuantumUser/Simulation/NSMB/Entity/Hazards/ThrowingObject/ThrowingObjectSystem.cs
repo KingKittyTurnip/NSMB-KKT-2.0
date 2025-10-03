@@ -1,13 +1,4 @@
 using Photon.Deterministic;
-using Quantum;
-using Quantum.Physics2D;
-using System;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
-using UnityEngine;
-using UnityEngine.UIElements;
-using static IInteractableTile;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
@@ -69,14 +60,6 @@ namespace Quantum {
             var collider = filter.PhysicsCollider;
             var holdable = filter.holdable;
             var hazard = filter.hazard;
-
-            // Despawn off bottom of stage
-            if (transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
-                physicsObject->IsFrozen = true;
-
-                HazardSystem.DestroyHazard(f, filter.Entity);
-                return;
-            }
 
             // Bounce Logic
             if ((Dis->Thrown || Dis->BounceTimes > 0) && physicsObject->IsTouchingGround) {
@@ -203,10 +186,14 @@ namespace Quantum {
         #region Interactions
         public static bool OnThrowingObjectMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
-            if (f.Exists(holdable->Holder))
-                return false;
-            #region SetValues
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            if (f.Exists(holdable->Holder)) {
+                //Force The player To Drop This Item if it's GroundPounded While They Are Carrying It
+                if (mario->IsGroundpounding)
+                    holdable->DropWithoutThrowing(f, thisEntity);
+                return false;
+            }
+            #region SetValues
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
@@ -422,7 +409,7 @@ namespace Quantum {
             // Disable Carryabilites
             switch (Dis->Type) {
             case ThrowingObjectType.Stone: {
-                marioPhysicsObject->Velocity.X /= 2;
+                marioPhysicsObject->Velocity.X /= 4;
                 mario->StoneBux = false;
                 break;
             }

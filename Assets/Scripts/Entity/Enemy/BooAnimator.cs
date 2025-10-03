@@ -43,7 +43,7 @@ namespace NSMB.Entities.Enemies {
 
             animator.SetBool(ParamFacingRight, enemy->FacingRight);
             animator.SetBool(ParamScared, boo->UnscaredFrames > 0);
-            sRenderer.enabled = (!enemy->IsDead && hazard->IsActive);
+            sRenderer.enabled = !(enemy->IsDead && !hazard->IsActive);
 
             if (enemy->IsDead) {
                 transform.rotation *= Quaternion.Euler(0, 0, 400f * (enemy->FacingRight ? -1 : 1) * Time.deltaTime);

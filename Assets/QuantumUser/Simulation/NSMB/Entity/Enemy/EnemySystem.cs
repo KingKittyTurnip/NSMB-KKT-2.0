@@ -25,15 +25,6 @@ namespace Quantum {
             if (!hazard->IsActive) {
                 return;
             }
-
-            // Despawn off bottom of stage
-            if (transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
-                enemy->IsDead = true;
-
-                HazardSystem.DestroyHazard(f, filter.Entity);
-                f.Signals.OnEnemyDespawned(filter.Entity);
-                return;
-            }
         }
 
         public static void EnemyBumpTurnaround(Frame f, EntityRef entityA, EntityRef entityB) {

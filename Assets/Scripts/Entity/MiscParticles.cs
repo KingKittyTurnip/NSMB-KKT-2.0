@@ -1,5 +1,6 @@
 using Quantum;
 using System;
+using System.Windows.Forms;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
 
@@ -15,6 +16,7 @@ public class MiscParticles : QuantumSceneViewComponent {
         QuantumEvent.Subscribe<EventProjectileDestroyed>(this, OnProjectileDestroyed, FilterOutReplayFastForward);
         QuantumEvent.Subscribe<EventCollectableDespawned>(this, OnCollectableDespawned, FilterOutReplayFastForward);
         QuantumEvent.Subscribe<EventEnemyKicked>(this, OnEnemyKicked, FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventPlayPuffParticle>(this, OnPlayPuffParticle, FilterOutReplayFastForward);
         Instance = this;
     }
 
@@ -53,6 +55,13 @@ public class MiscParticles : QuantumSceneViewComponent {
                 view.transform.position + (Vector3.back * 5) + (Vector3.up * 0.1f),
                 Quaternion.identity);
         }
+    }
+
+    private unsafe void OnPlayPuffParticle(EventPlayPuffParticle e) {
+        Instantiate(
+            Enums.PrefabParticle.Enemy_Puff.GetGameObject(),
+            new Vector3(e.Position.X.AsFloat, e.Position.Y.AsFloat, -5),
+            Quaternion.identity);
     }
 
     [Serializable]

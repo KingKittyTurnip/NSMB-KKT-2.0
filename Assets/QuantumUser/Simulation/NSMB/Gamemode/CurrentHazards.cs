@@ -11,7 +11,7 @@ namespace Quantum {
 
         [Serializable]
         public class HazardDataList {
-            public int MaxHazards = 10;
+            public int MaxHazards = 10; //minimum 0, maximum 35 (anything higher than this is likely to overload the physicsobjectsystem?)
             public ushort frequency = 8;
             //hefty
             public int MaxHeftys = 1;

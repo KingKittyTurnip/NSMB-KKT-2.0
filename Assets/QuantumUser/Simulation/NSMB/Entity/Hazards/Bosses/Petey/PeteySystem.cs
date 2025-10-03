@@ -1,16 +1,6 @@
-using JetBrains.Annotations;
 using Photon.Deterministic;
 using Quantum.Collections;
-using System;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
-using System.Globalization;
-using UnityEditor.SceneManagement;
-using UnityEngine;
-using UnityEngine.UIElements;
 using static IInteractableTile;
-using static Quantum.CurrentHazards.HazardDataList;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
@@ -75,7 +65,8 @@ namespace Quantum {
                     if (mar->IsDead)
                         continue;
                     //Find Closest Player
-                    FP e = FPVector2.Distance(transform->Position, f.Unsafe.GetPointer<Transform2D>(OtherEntity)->Position);
+                    QuantumUtils.UnwrapWorldLocations(f, transform->Position, f.Unsafe.GetPointer<Transform2D>(OtherEntity)->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+                    FP e = FPVector2.Distance(ourPos, theirPos);
                     if (e < distance) {
                         TargetEntity = OtherEntity;
                         distance = e;
@@ -317,6 +308,7 @@ namespace Quantum {
                 petey->Flying = true;
                 petey->ReusableTimer = 0;
                 petey->HitATarget = false;
+                f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity = FPVector2.Zero;
                 IceBlockSystem.Freeze(f, thisEntity);
                 break;
             }

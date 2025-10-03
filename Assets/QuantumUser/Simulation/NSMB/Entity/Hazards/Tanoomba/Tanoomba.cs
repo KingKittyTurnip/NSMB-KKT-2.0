@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using UnityEngine.UIElements;
 
 namespace Quantum {
     public unsafe partial struct Tanoomba {
@@ -7,32 +8,67 @@ namespace Quantum {
             f.Unsafe.GetPointer<Interactable>(entity)->ColliderDisabled = false;
             var tanoomba = f.Unsafe.GetPointer<Tanoomba>(entity);
             tanoomba->GetupFrames = 0;
-            tanoomba->DamageInvincibilityFrames = 0;
             tanoomba->State = TanoombaState.Idling;
-            tanoomba->LastKnockback = 255;
+            tanoomba->Form = TanoombaFormState.Max;
+            tanoomba->Laughing = tanoomba->PlayerPassedBy = false;
         }
 
-        public void HurtTanoomba(Frame f, EntityRef thisEntity, EntityRef killerEntity, bool FromRight, byte ThisKnockback) {
+        public void HurtTanoomba(Frame f, EntityRef thisEntity, EntityRef killerEntity, bool FromRight) {
             var tanoomba = f.Unsafe.GetPointer<Tanoomba>(thisEntity);
-            if (tanoomba->LastKnockback == ThisKnockback || (ThisKnockback == (byte) KnockbackStrength.FireballBump && (tanoomba->LastKnockback == (byte) KnockbackStrength.Normal || tanoomba->LastKnockback == (byte) KnockbackStrength.Groundpound)))
+            if (tanoomba->State == TanoombaState.KnockedBack)
                 return;
-            tanoomba->LastKnockback = ThisKnockback;
 
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
 
-            if (tanoomba->State == TanoombaState.KnockedBack) {
-                //Properly Implement Tanoomba Death
-                tanoomba->Kill(f, thisEntity, thisEntity, KillReason.Normal);
-                physicsObject->DisableCollision = true;
-            } else {
-                tanoomba->State = TanoombaState.KnockedBack;
-                physicsObject->Velocity.X = (tanoomba->LastKnockback == (byte) KnockbackStrength.Groundpound ? 4 : 1) * (FromRight ? -1 : 1);
-                physicsObject->Velocity.Y = 2;
-                physicsObject->IsTouchingGround = false;
-                tanoomba->HitFrame = f.Number + 12;
-                tanoomba->GetupFrames = 35;
+            tanoomba->State = TanoombaState.KnockedBack;
+            Form = TanoombaFormState.Max;
+            physicsObject->Velocity.X = (FromRight ? -1 : 1);
+            physicsObject->Velocity.Y = 2;
+            physicsObject->IsTouchingGround = false;
+            tanoomba->GetupFrames = 35;
+            tanoomba->TargetedPlayer = EntityRef.None;
+            tanoomba->Laughing = false;
+        }
+
+        public void TanoombaStartTransform(Frame f, EntityRef thisEntity, EntityRef TurnedIntoObjectOverlay, bool Floating) {
+            var enemy = f.Unsafe.GetPointer<Enemy>(thisEntity);
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+
+            physicsObject->Velocity.X = 0;
+            physicsObject->Velocity.Y = 0;
+            physicsObject->IsFrozen = Floating;
+
+            TransformedObject = TurnedIntoObjectOverlay;
+            if (TransformedObject != EntityRef.None) {
+                transform->Teleport(f, f.Unsafe.GetPointer<Transform2D>(TransformedObject)->Position);
             }
         }
+        public void TanoombaStartTransform(Frame f, EntityRef thisEntity, EntityRef TurnedIntoObjectOverlay, bool Floating, FPVector2 Position) {
+            var enemy = f.Unsafe.GetPointer<Enemy>(thisEntity);
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+
+            physicsObject->Velocity.X = 0;
+            physicsObject->Velocity.Y = 0;
+            physicsObject->IsFrozen = Floating;
+
+            TransformedObject = TurnedIntoObjectOverlay;
+            transform->Teleport(f, Position);
+        }
+
+        public void TanoombaResetTransform(Frame f, EntityRef thisEntity, bool AttackMode) {
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+
+            physicsObject->Velocity.X = 0;
+            physicsObject->Velocity.Y = 0;
+            physicsObject->IsFrozen = false;
+
+            TransformedObject = EntityRef.None;
+            State = AttackMode ? TanoombaState.Attacking : TanoombaState.Idling;
+            Form = TanoombaFormState.Max;
+        }
+
 
         public void Kill(Frame f, EntityRef tanoombaEntity, EntityRef killerEntity, KillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(tanoombaEntity);

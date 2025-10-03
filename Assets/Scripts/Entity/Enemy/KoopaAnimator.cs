@@ -93,7 +93,7 @@ namespace NSMB.Entities.Enemies {
                 sRenderer.transform.rotation = Quaternion.identity;
             }
 
-            sRenderer.enabled = (!enemy->IsDead && hazard->IsActive);
+            sRenderer.enabled = !(enemy->IsDead && !hazard->IsActive);
             sRenderer.flipX = enemy->FacingRight ^ mirrorSprite;
 
             Vector3 modifiedZ = transform.position;

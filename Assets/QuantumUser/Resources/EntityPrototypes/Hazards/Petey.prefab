@@ -443,8 +443,6 @@ MonoBehaviour:
       Value: 0
     WindImmune:
       Value: 0
-    GravityInversed:
-      Value: 0
 --- !u!114 &6536869809639107625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,13 +543,15 @@ MonoBehaviour:
         RawValue: 0
     IgnorePlayerWhenRespawning:
       Value: 0
+    DoNotDespawnInPit:
+      Value: 1
     RestrictSpawnPosition:
       Value: 0
     IsHefty:
       Value: 1
     IPWSUntilGround:
-      Value: 0
-    IPWSTime: 0
+      Value: 1
+    IPWSTime: 30
     SpawningVelocityRange:
       X:
         RawValue: 0

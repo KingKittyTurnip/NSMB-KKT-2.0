@@ -18,13 +18,73 @@ MonoBehaviour:
       Value: 477132098760153511
   basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
   HazardGameData:
-    MaxHazards: 10
-    frequency: 10
+    MaxHazards: 999
+    frequency: 1
     MaxHeftys: 1
     HeftyPriority: 0
     HeftySpawnChance: 15
     FillMapOnStart: 0
     HazardDatas:
+    - Name: Bigstar
+      hazardAsset:
+        Id:
+          Value: 1295981493910502871
+      DespawnTime:
+        ButtonName: Time Til' Despawn
+        ButtonType: 1
+        BaseValue: 80
+        ValueRange:
+          X: 3
+          Y: 180
+      Hefty:
+        ButtonName: Enabled As Hefty
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      Team:
+        ButtonName: Team
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 6
+      SpawnAsGoal:
+        ButtonName: Spawn As Goal
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnRandom:
+        ButtonName: Spawn Randomly
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnFridge:
+        ButtonName: Appear From Fridge
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnBulb:
+        ButtonName: Creatable From Bulb
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      SpecialValues:
+      - ButtonName: Is Stationary
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
     - Name: Baseball
       hazardAsset:
         Id:
@@ -477,7 +537,7 @@ MonoBehaviour:
       SpecialValues:
       - ButtonName: Is Sturdy
         ButtonType: 0
-        BaseValue: 0
+        BaseValue: 1
         ValueRange:
           X: 0
           Y: 1
@@ -489,7 +549,7 @@ MonoBehaviour:
           Y: 1
       - ButtonName: Flipped Over
         ButtonType: 0
-        BaseValue: 0
+        BaseValue: 1
         ValueRange:
           X: 0
           Y: 1
@@ -555,7 +615,7 @@ MonoBehaviour:
       SpecialValues:
       - ButtonName: Is Knocked Over
         ButtonType: 0
-        BaseValue: 0
+        BaseValue: 1
         ValueRange:
           X: 0
           Y: 1
@@ -853,4 +913,4 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 0
-  HazardID: 16
+  HazardID: 17

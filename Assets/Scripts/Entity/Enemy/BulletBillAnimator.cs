@@ -53,7 +53,7 @@ namespace NSMB.Entities.Enemies {
             var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
             bool frozen = freezable->IsFrozen(f);
 
-            sRenderer.enabled = (!enemy->IsDead && hazard->IsActive);
+            sRenderer.enabled = !(enemy->IsDead && !hazard->IsActive);
 
             var emission = trailParticles.emission;
             emission.enabled = (!enemy->IsDead && hazard->IsActive) && !frozen;

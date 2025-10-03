@@ -108,6 +108,7 @@ namespace Quantum {
                 } if (f.Global->GameStartFrames == 78) {
                     // Respawn all players and enable systems
                     f.Global->StartFrame = f.Number;
+                    f.Global->SpinpipeSlope = 0; //Reset The Spinpipe Slope!
                     f.SystemEnable<StartDisabledSystemGroup>();
 
                     foreach (var otherGamemodes in f.SimulationConfig.AllGamemodes) {
@@ -200,7 +201,7 @@ namespace Quantum {
                 }
                 data->IsSpectator = data->ManualSpectator;
             }
-            
+
             f.Global->GameState = GameState.Ended;
             f.Events.GameStateChanged(GameState.Ended);
             f.Global->GameStartFrames = (ushort) ((endedByHost ? Constants._3_50 : 21) * f.UpdateRate);

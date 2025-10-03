@@ -20,17 +20,13 @@ public class WeatherParticleAnimator : MonoBehaviour {
 
     //---Weather Particle Variables
     [SerializeField] private ParticleSystem Particle;
-    private ParticleSystem.ShapeModule area;
-    private ParticleSystem.EmissionModule emission;
-    private ParticleSystem.VelocityOverLifetimeModule velocity;
 
     private VersusStageData stage;
 
     public void Start() {
         // Set Vars
-        area = Particle.shape;
-        emission = Particle.emission;
-        velocity = Particle.velocityOverLifetime;
+        ParticleSystem.ShapeModule area = Particle.shape;
+        ParticleSystem.EmissionModule emission = Particle.emission;
 
         // Enable?
         emission.enabled = Enabled;
@@ -42,16 +38,18 @@ public class WeatherParticleAnimator : MonoBehaviour {
         area.scale = new Vector3(stage.TileDimensions.X / 2, stage.TileDimensions.Y / 2, 1);
         Pos = Particle.transform.position = new Vector3(0,0,-1); // new Vector3(stage.TilemapWorldPosition.X.AsFloat/4, stage.TilemapWorldPosition.Y.AsFloat/4, 1/*-6.5f*/);
     }
+
     public void FixedUpdate() {
         Particle.transform.position = Pos;
     }
 
     public void UpdateEmission(bool enabled) {
+        ParticleSystem.EmissionModule emission = Particle.emission;
         emission.enabled = enabled;
     }
 
     public void UpdateVelocity(Vector3 vel) {
-        velocity = Particle.velocityOverLifetime;
+        ParticleSystem.VelocityOverLifetimeModule velocity = Particle.velocityOverLifetime;
         var x = velocity.x; var y = velocity.y; var z = velocity.z;
 
         velocity.xMultiplier = vel.x;

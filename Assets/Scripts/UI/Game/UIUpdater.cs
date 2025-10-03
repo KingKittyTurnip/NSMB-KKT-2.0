@@ -372,26 +372,6 @@ namespace NSMB.UI.Game {
                 icon = Instantiate(starCoinTrackTemplate, starCoinTrackTemplate.transform.parent);
             } else if (f.Has<Starballgoal>(entity)) {
                 icon = Instantiate(starballgoalTrackTemplate, starballgoalTrackTemplate.transform.parent);
-            } else if (f.Unsafe.TryGetPointer<Hazard>(entity, out Hazard* hazard)) {
-                bool breaked = false;
-                icon = new();
-                for (int i = 0; i < hazardTrackIcons.Count; i++) {
-                    if (hazardTrackIcons[i].Item3 == EntityRef.None && hazard->IsHefty == hazardTrackIcons[i].Item2) {
-                        //Use This Pooled One
-                        icon = hazardTrackIcons[i].Item1;
-                        icon.gameObject.SetActive(true);
-                        hazardTrackIcons[i] = (icon, hazard->IsHefty, entity);
-                        breaked = true;
-                        break;
-                    }
-                }
-
-                if (!breaked) {
-                    //Create A New One There Wasn't Enough
-                    icon = hazard->IsHefty ? Instantiate(heftyHazardTrackTemplate, heftyHazardTrackTemplate.transform.parent) : Instantiate(hazardTrackTemplate, hazardTrackTemplate.transform.parent);
-                    hazardTrackIcons.Add((icon, hazard->IsHefty, entity));
-                }
-
             } else if (f.Has<ObjectiveCoin>(entity)) {
                 if (availablePooledTrackIcons.TryGetValue(typeof(CoinAnimator), out var pool) && pool.Count > 0) {
                     icon = pool[0];
@@ -399,6 +379,28 @@ namespace NSMB.UI.Game {
                 } else {
                     icon = Instantiate(objectiveCoinTrackTemplate, objectiveCoinTrackTemplate.transform.parent);
                 }
+            } else if (f.Unsafe.TryGetPointer<Hazard>(entity, out Hazard* hazard)) {
+                bool breaked = false;
+                for (int i = 0; i < hazardTrackIcons.Count; i++) {
+                    if (hazardTrackIcons[i].Item3 == EntityRef.None && hazard->IsHefty == hazardTrackIcons[i].Item2) {
+                        //Use This Pooled One
+                        icon = hazardTrackIcons[i].Item1;
+                        hazardTrackIcons[i] = (icon, hazard->IsHefty, entity);
+                        breaked = true;
+                        icon.Updater = evu;
+                        icon.Initialize(playerElements, entity, target);
+                        icon.gameObject.SetActive(true);
+                        break;
+                    }
+                }
+
+                if (!breaked) {
+                    return null;
+                }
+                //Create A New One There Wasn't Enough
+                icon = (hazard->IsHefty ? Instantiate(heftyHazardTrackTemplate, heftyHazardTrackTemplate.transform.parent) : Instantiate(hazardTrackTemplate, hazardTrackTemplate.transform.parent));
+                hazardTrackIcons.Add((icon, hazard->IsHefty, entity));
+
             } else if (f.Has<MarioPlayer>(entity)) {
                 icon = Instantiate(playerTrackTemplate, playerTrackTemplate.transform.parent);
             } else {
@@ -429,7 +431,7 @@ namespace NSMB.UI.Game {
         }
         public void DestroyHazardTrackIcon(Frame f) {
             for (int i = 0; i < hazardTrackIcons.Count; i++) {
-                if (hazardTrackIcons[i].Item1 != null && !f.Exists(hazardTrackIcons[i].Item3)) {
+                if (!f.Exists(hazardTrackIcons[i].Item3)) {
                     //Pool.
                     hazardTrackIcons[i].Item1.gameObject.SetActive(false);
                     hazardTrackIcons[i] = (hazardTrackIcons[i].Item1, hazardTrackIcons[i].Item2, EntityRef.None);

@@ -1565,8 +1565,7 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(mario->HeldEntity, out Holdable* holdable)) {
                 if (holdable->HoldAboveHead) {
                     // Drop without throw
-                    mario->HeldEntity = EntityRef.None;
-                    holdable->Holder = EntityRef.None;
+                    holdable->DropWithoutThrowing(f, mario->HeldEntity);
                 } else {
                     holdingSmallObject = true;
                 }
