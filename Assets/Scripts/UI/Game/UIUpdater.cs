@@ -85,6 +85,8 @@ namespace NSMB.UI.Game {
             CoinAnimator.ObjectiveCoinDestroyed -= OnObjectiveCoinDestroyed;
             StarballgoalAnimator.StarballgoalInitialized -= OnStarballgoalInitialized;
             StarballgoalAnimator.StarballgoalDestroyed -= OnStarballgoalDestroyed;
+            HazardSystem.HazardInitialized -= OnHazardInitialized;
+            HazardSystem.HazardDestroyed -= OnHazardDestroyed;
             TranslationManager.OnLanguageChanged -= OnLanguageChanged;
             Settings.Controls.Debug.ToggleHUD.performed -= OnToggleHUD;
         }
@@ -394,7 +396,7 @@ namespace NSMB.UI.Game {
                     }
                 }
 
-                if (!breaked) {
+                if (breaked) {
                     return null;
                 }
                 //Create A New One There Wasn't Enough

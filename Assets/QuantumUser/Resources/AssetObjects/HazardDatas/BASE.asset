@@ -339,7 +339,19 @@ MonoBehaviour:
       SpawnRandom: 1
       SpawnFridge: 1
       SpawnBulb: 0
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Always Try To Transform
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 0
+      - ButtonName: Can Combo
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 0
     - Name: Petey
       hazardAsset:
         Id:

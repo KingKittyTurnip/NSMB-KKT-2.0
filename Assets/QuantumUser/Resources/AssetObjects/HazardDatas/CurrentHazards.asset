@@ -18,8 +18,8 @@ MonoBehaviour:
       Value: 477132098760153511
   basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
   HazardGameData:
-    MaxHazards: 999
-    frequency: 1
+    MaxHazards: 10
+    frequency: 10
     MaxHeftys: 1
     HeftyPriority: 0
     HeftySpawnChance: 15
@@ -537,7 +537,7 @@ MonoBehaviour:
       SpecialValues:
       - ButtonName: Is Sturdy
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
@@ -549,7 +549,7 @@ MonoBehaviour:
           Y: 1
       - ButtonName: Flipped Over
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 1

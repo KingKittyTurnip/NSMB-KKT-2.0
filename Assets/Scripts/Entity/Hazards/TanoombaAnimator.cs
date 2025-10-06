@@ -1,21 +1,22 @@
-using NaughtyAttributes;
 using Quantum;
 using Quantum.Profiling;
-using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using NSMB.Utilities.Extensions;
+using static NSMB.Utilities.QuantumViewUtils;
 
 public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
 
     [SerializeField] private GameObject Models;
     [SerializeField] private GameObject Tears;
     [SerializeField] private Animator Main;
+    [SerializeField] private AudioSource sfx;
     [Header("Have Them In The Same Order As The States In Tanoomba.qtn")]
     [SerializeField] private GameObject[] TransformModels;
     //---Serialized Variables
-    [Space]
-    [SerializeField] private GameObject PoofParticle;
-    [SerializeField] private GameObject FleeParticle;
+    //[Space]
+    //[SerializeField] private GameObject PoofParticle;
+    //[SerializeField] private GameObject FleeParticle;
 
     private MaterialPropertyBlock materialBlock;
     public SkinnedMeshRenderer renderer;
@@ -28,23 +29,12 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
     private static readonly int ParamEyeState = Shader.PropertyToID("_EyeType");
 
     public void Start() {
-        //QuantumEvent.Subscribe<EventClockCollect>(this, ClockCollect);
-        //renderers.AddRange(Main.gameObject.GetComponentsInChildren<MeshRenderer>(true));
-        /*renderers.AddRange(Main.gameObject.GetComponentsInChildren<SkinnedMeshRenderer>(true));
-        foreach (Renderer r in renderers) {
-            // Get a copy of all materials.
-            // This looks jank as hell, but it works, because
-            // assigning to Renderer.material creates a COPY.
-            List<Material> matList = new();
-            r.GetSharedMaterials(matList);
-            r.SetMaterials(matList);
-            matList.Clear();
-            r.GetMaterials(matList);
-            materials[r] = matList;
-        }*/
         QuantumEvent.Subscribe<EventTanoombaAttack>(this, OnAttack);
         QuantumEvent.Subscribe<EventTanoombaFlee>(this, OnFlee);
         QuantumEvent.Subscribe<EventTanoombaLMAO>(this, OnLMAO);
+
+        QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward, onlyIfActiveAndEnabled: true);
+        QuantumEvent.Subscribe<EventPlayBumpSound>(this, OnPlayBumpSound, FilterOutReplayFastForward, onlyIfActiveAndEnabled: true);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -52,10 +42,6 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
         if (!f.Exists(EntityRef)) {
             return;
         }
-
-        //if (materialBlock != null) {
-        //    return;
-        //}
 
         //Vars
         var tanoomba = f.Unsafe.GetPointer<Tanoomba>(EntityRef);
@@ -69,11 +55,12 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
         for (int i = 0; i < TransformModels.Length; i++) {
             TransformModels[i].SetActive(tanoomba->Form == (TanoombaFormState) i);
         }
+        Models.transform.localScale = new Vector3(Main.isActiveAndEnabled ? 1 : (enemy->FacingRight ? -1 : 1), 1, 1);
         Tears.gameObject.SetActive(Main.GetCurrentAnimatorStateInfo(0).IsName("LMAO"));
 
         //rotation
         modelRotationTarget = Quaternion.Euler(0, enemy->FacingRight ? 120 : 240, 0);
-        modelRotateInstantly = (tanoomba->State == TanoombaState.KnockedBack || tanoomba->State == TanoombaState.Searching);
+        modelRotateInstantly = (tanoomba->State == TanoombaState.KnockedBack || tanoomba->State == TanoombaState.Searching || Main.GetCurrentAnimatorStateInfo(0).IsName("Flee"));
         InterpolateFacingDirection(tanoomba);
 
         //Animator
@@ -135,5 +122,21 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
             return;
         }
         Main.SetTrigger("LMAO");
+    }
+
+    private void OnPlayBumpSound(EventPlayBumpSound e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+
+        sfx.PlayOneShot(SoundEffect.World_Block_Bump);
+    }
+
+    private void OnPlayComboSound(EventPlayComboSound e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+
+        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
     }
 }

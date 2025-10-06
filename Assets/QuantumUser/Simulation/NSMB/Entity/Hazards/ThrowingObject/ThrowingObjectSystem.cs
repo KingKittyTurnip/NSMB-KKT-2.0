@@ -52,6 +52,8 @@ namespace Quantum {
             f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteraction);
             f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteractionStationary);
             f.Context.Interactions.Register<MarioPlayer, ThrowingObject>(f, OnThrowingObjectMarioInteraction);
+            f.Context.Interactions.Register<MarioPlayer, ThrowingObject>(f, OnThrowingObjectMarioeInteraction);
+            f.Context.Interactions.Register<Projectile, ThrowingObject>(f, OnThrowingObjectProjectileInteraction);
         }
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var Dis = filter.DisObject;
@@ -186,11 +188,28 @@ namespace Quantum {
         #region Interactions
         public static bool OnThrowingObjectMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+            if (holdable->IsSolidCarryable) {
+                return OnMarInteraction(f, marioEntity, thisEntity);
+            } else {
+                return false;
+            }
+        }
+        public static void OnThrowingObjectMarioeInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
+            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+            if (!holdable->IsSolidCarryable) {
+                OnMarInteraction(f, marioEntity, thisEntity);
+            }
+        }
+
+        public static bool OnMarInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
+            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             if (f.Exists(holdable->Holder)) {
                 //Force The player To Drop This Item if it's GroundPounded While They Are Carrying It
-                if (mario->IsGroundpounding)
+                if (mario->IsGroundpounding) {
                     holdable->DropWithoutThrowing(f, thisEntity);
+                    f.Events.PlayComboSound(thisEntity, 0);
+                }
                 return false;
             }
             #region SetValues
@@ -235,13 +254,13 @@ namespace Quantum {
                     Dis->Thrown = false;
                     physicsObject->Velocity = new FPVector2(hitRight ? -1 : 1, 4);
                     physicsObject->IsTouchingGround = false;
-                    if (Dis->GroundBounce) 
+                    if (Dis->GroundBounce)
                         Dis->BounceTimes = 1;
                 } else {
                     //physicsObject->DisableCollision = true;
                 }
             }
-            if (!Dis->Thrown && (upDot < Constants.PhysicsGroundMaxAngleCos || Dis->IsBall)) {
+            if (!Dis->Thrown && (upDot <= Constants.PhysicsGroundMaxAngleCos || Dis->IsBall)) {
                 //Only Allow Carry If No Team Or Same Team --- TOTEST
                 if (hazard->Team != 0 && (mario->GetTeam(f) + 1) != hazard->Team) {
                     return false;
@@ -376,6 +395,17 @@ namespace Quantum {
                 IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other);
             }
         }
+        public static void OnThrowingObjectProjectileInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {
+            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+            var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
+            if (f.Exists(holdable->Holder) && Dis->Type != ThrowingObjectType.Stone) {
+                //Force The player To Drop This Item if it's hit While They Are Carrying It
+                holdable->DropWithoutThrowing(f, thisEntity);
+                f.Events.PlayComboSound(thisEntity, 0);
+            }
+
+            f.Signals.OnProjectileHitEntity(f, projectileEntity, thisEntity);
+        }
         #endregion
 
         #region Signals
@@ -389,7 +419,7 @@ namespace Quantum {
             }
 
             //TODO: Up key
-            Dis->Thrown = Dis->CanHit = true;
+            Dis->Thrown = Dis->CanHit = !dropped;
             Dis->Facing = mario->FacingRight;
             FP bonusSpeed = FPMath.Abs(marioPhysicsObject->Velocity.X / 2);
             if (FPMath.Sign(marioPhysicsObject->Velocity.X) != (mario->FacingRight ? 1 : -1)) {
@@ -409,6 +439,7 @@ namespace Quantum {
             // Disable Carryabilites
             switch (Dis->Type) {
             case ThrowingObjectType.Stone: {
+                Dis->CanHit = true;
                 marioPhysicsObject->Velocity.X /= 4;
                 mario->StoneBux = false;
                 break;
