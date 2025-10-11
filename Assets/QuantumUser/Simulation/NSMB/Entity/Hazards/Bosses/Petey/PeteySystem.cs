@@ -293,7 +293,11 @@ namespace Quantum {
             if (boss->iframes > 0 || boss->Dead)
                 return;
             var petey = f.Unsafe.GetPointer<Petey>(thisEntity);
-            var projectileAsset = f.FindAsset(f.Unsafe.GetPointer<Projectile>(projectileEntity)->Asset);
+            var projectile = f.Unsafe.GetPointer<Projectile>(projectileEntity);
+            if (projectile->Owner == boss->ControllerPlayer) {
+                return; //hang on, this is OUR projectile!
+            }
+            var projectileAsset = f.FindAsset(projectile->Asset);
 
             switch (projectileAsset.Effect) {
             case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
@@ -337,7 +341,6 @@ namespace Quantum {
             } else {
                 thisPhys->Velocity.X = damageDirection.X > 0 ? -4 : 4;
             }
-            otherPhys->Velocity.X = damageDirection.X > 0 ? 4 : -4;
         }
         public void OnEnemyPeteyInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);

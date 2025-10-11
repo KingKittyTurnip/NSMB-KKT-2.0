@@ -57,12 +57,14 @@ namespace Quantum {
                     new StarballSystem(),
                     new StarballgoalSystem(),
                     new ThrowingObjectSystem(),
+                    new LemmyBallSystem(),
                     new ClockSystem(),
                     new FanSystem(),
                     new SpinpipeSystem(),
 
                     new CauldronSystem(),
                     new PeteySystem(),
+                    new BowserSystem(),
 
                     new HazardManagerSystem(),
                     new HazardSystem()

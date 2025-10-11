@@ -7,6 +7,7 @@ public class ProjectileAsset : AssetObject {
     public bool Bounce = true;
     public FP Speed;
     public FP BounceStrength;
+    public byte LifeTime;
     public FPVector2 Gravity;
     public bool DestroyOnSecondBounce;
     public bool DestroyOnHit = true;

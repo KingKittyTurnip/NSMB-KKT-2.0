@@ -29,4 +29,5 @@ public enum PowerupType {
     Basic,
     Starman,
     ExtraLife,
+    Harmful,
 }

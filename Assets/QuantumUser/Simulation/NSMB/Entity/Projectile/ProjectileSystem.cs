@@ -23,6 +23,12 @@ namespace Quantum {
             var physicsObject = filter.PhysicsObject;
             var asset = f.FindAsset(projectile->Asset);
 
+            if (projectile->Lifetime > 0) {
+                projectile->Lifetime--;
+                if (projectile->Lifetime <= 0)
+                    Destroy(f, filter.Entity, asset.DestroyParticleEffect);
+            }
+
             // Check to instant-despawn if spawned inside a wall
             if (!physicsObject->DisableCollision && !projectile->CheckedCollision) {
                 if (PhysicsObjectSystem.BoxInGround(f, transform->Position, collider->Shape)) {

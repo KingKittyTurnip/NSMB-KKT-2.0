@@ -203,6 +203,29 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Bowser))]
+  public unsafe partial class BowserPrototype : ComponentPrototype<Quantum.Bowser> {
+    public Quantum.QEnum8<BowserState> State;
+    public QBoolean IsDry;
+    public AssetRef<EntityPrototype> Fireball;
+    public AssetRef<EntityPrototype> BlueFire;
+    public AssetRef<EntityPrototype> Bone;
+    partial void MaterializeUser(Frame frame, ref Quantum.Bowser result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Bowser component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Bowser result, in PrototypeMaterializationContext context = default) {
+        result.State = this.State;
+        result.IsDry = this.IsDry;
+        result.Fireball = this.Fireball;
+        result.BlueFire = this.BlueFire;
+        result.Bone = this.Bone;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.BreakableObject))]
   public unsafe partial class BreakableObjectPrototype : ComponentPrototype<Quantum.BreakableObject> {
     public FP OriginalHeight;
@@ -676,7 +699,6 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.Interactable))]
   public unsafe partial class InteractablePrototype : ComponentPrototype<Quantum.Interactable> {
     public QBoolean ColliderDisabled;
-    public QBoolean AllowDoubleInteraction;
     partial void MaterializeUser(Frame frame, ref Quantum.Interactable result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Interactable component = default;
@@ -685,7 +707,6 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Interactable result, in PrototypeMaterializationContext context = default) {
         result.ColliderDisabled = this.ColliderDisabled;
-        result.AllowDoubleInteraction = this.AllowDoubleInteraction;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -745,6 +766,25 @@ namespace Quantum.Prototypes {
         result.KickSpeed = this.KickSpeed;
         result.IceBlockInShellSize = this.IceBlockInShellSize;
         result.IceBlockOutShellSize = this.IceBlockOutShellSize;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.LemmyBall))]
+  public unsafe partial class LemmyBallPrototype : ComponentPrototype<Quantum.LemmyBall> {
+    public FP Speed;
+    public FP PushStrength;
+    public FP PlayerPushStrength;
+    partial void MaterializeUser(Frame frame, ref Quantum.LemmyBall result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.LemmyBall component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.LemmyBall result, in PrototypeMaterializationContext context = default) {
+        result.Speed = this.Speed;
+        result.PushStrength = this.PushStrength;
+        result.PlayerPushStrength = this.PlayerPushStrength;
         MaterializeUser(frame, ref result, in context);
     }
   }

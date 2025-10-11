@@ -115,6 +115,8 @@ component MarioPlayer {
 	[ExcludeFromPrototype] byte MegaMushroomEndFrames;
 	[ExcludeFromPrototype] bool MegaMushroomStationaryEnd;
 	[ExcludeFromPrototype] byte MegaMushroomFootstepFrames;
+	
+	[ExcludeFromPrototype] byte MetalMushroomFrames;
 
 	[ExcludeFromPrototype] byte ProjectileDelayFrames;
 	[ExcludeFromPrototype] byte ProjectileVolleyFrames;

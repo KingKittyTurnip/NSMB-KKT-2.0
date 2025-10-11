@@ -6,7 +6,7 @@ namespace Quantum {
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<MarioPlayer, BreakableObject>(f, OnMarioBreakableObjectInteract);
             f.Context.Interactions.Register<Starball, BreakableObject>(f, OnStarballBreakableObjectInteract);
-            f.Context.Interactions.Register<BreakableObject, Boss>(f, OnBossBreakableObjectInteract);
+            f.Context.Interactions.Register<Boss, BreakableObject>(f, OnBossBreakableObjectInteract);
             f.Context.RegisterPreContactCallback(f, OnMarioBreakableObjectPreContact);
         }
 
@@ -67,8 +67,8 @@ namespace Quantum {
 
             return true;
         }
-        private static bool TryGenericInteraction(Frame f, EntityRef marioEntity, EntityRef breakableObjectEntity, PhysicsContact? contact = null) {
-            var physics = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
+        private static bool TryGenericInteraction(Frame f, EntityRef otherEntity, EntityRef breakableObjectEntity, PhysicsContact? contact = null) {
+            var physics = f.Unsafe.GetPointer<PhysicsObject>(otherEntity);
             if (!physics->BreakMegaObjects) {
                 return true;
             }
@@ -82,7 +82,7 @@ namespace Quantum {
             if (contact != null) {
                 effectiveNormal = -contact.Value.Normal;
             } else {
-                var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
+                var marioTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity);
                 int direction = QuantumUtils.WrappedDirectionSign(f, breakableTransform->Position, marioTransform->Position);
                 effectiveNormal = (direction == 1) ? FPVector2.Right : FPVector2.Left;
             }
@@ -91,7 +91,7 @@ namespace Quantum {
             if (dot > Constants.PhysicsGroundMaxAngleCos) {
                 // Hit the top of a pipe
                 // Shrink by 1, if we can.
-                var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
+                var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(otherEntity);
                 if (breakable->IsDestroyed && breakable->IsStompable && breakable->CurrentHeight >= breakable->MinimumHeight + 1 && !marioPhysicsObject->WasTouchingGround && (breakable->CurrentHeight - 1 > 0)) {
                     ChangeHeight(f, breakableObjectEntity, breakable, breakableCollider, breakable->CurrentHeight - 1, null);
                 }
@@ -103,7 +103,7 @@ namespace Quantum {
                     return false;
                 }
 
-                f.Events.BreakableObjectBroken(breakableObjectEntity, marioEntity, effectiveNormal, breakable->CurrentHeight - breakable->MinimumHeight);
+                f.Events.BreakableObjectBroken(breakableObjectEntity, otherEntity, effectiveNormal, breakable->CurrentHeight - breakable->MinimumHeight);
                 ChangeHeight(f, breakableObjectEntity, breakable, breakableCollider, breakable->MinimumHeight, true);
                 breakable->IsDestroyed = true;
 

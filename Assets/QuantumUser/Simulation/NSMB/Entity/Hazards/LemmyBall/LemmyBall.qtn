@@ -1,0 +1,12 @@
+component LemmyBall {
+	FP Speed;
+	[ExcludeFromPrototype] bool FacingRight;
+	[ExcludeFromPrototype] byte BounceDelay;
+	
+	FP PushStrength;
+	FP PlayerPushStrength;
+}
+
+event LemmyBallLand {
+	EntityRef Entity;
+}

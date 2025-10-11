@@ -42,6 +42,9 @@ namespace Quantum {
         }
 
         public override void OnInit(Frame f) {
+            f.Context.Interactions.Register<MarioPlayer, ThrowingObject>(f, OnThrowingObjectMarioInteraction);
+            f.Context.Interactions.Register<MarioPlayer, ThrowingObject>(f, OnThrowingObjectMarioSolidInteraction);
+
             f.Context.Interactions.Register<ThrowingObject, Coin>(f, OnThrowingObjectCoinInteraction);
             f.Context.Interactions.Register<ThrowingObject, Goomba>(f, OnThrowingObjectGoombaInteraction);
             f.Context.Interactions.Register<ThrowingObject, Koopa>(f, OnThrowingObjectKoopaInteraction);
@@ -51,8 +54,6 @@ namespace Quantum {
             f.Context.Interactions.Register<ThrowingObject, Boo>(f, OnThrowingObjectBooInteraction);
             f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteraction);
             f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteractionStationary);
-            f.Context.Interactions.Register<MarioPlayer, ThrowingObject>(f, OnThrowingObjectMarioInteraction);
-            f.Context.Interactions.Register<MarioPlayer, ThrowingObject>(f, OnThrowingObjectMarioeInteraction);
             f.Context.Interactions.Register<Projectile, ThrowingObject>(f, OnThrowingObjectProjectileInteraction);
         }
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -186,7 +187,7 @@ namespace Quantum {
         }
 
         #region Interactions
-        public static bool OnThrowingObjectMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
+        public static bool OnThrowingObjectMarioSolidInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             if (holdable->IsSolidCarryable) {
                 return OnMarInteraction(f, marioEntity, thisEntity);
@@ -194,7 +195,7 @@ namespace Quantum {
                 return false;
             }
         }
-        public static void OnThrowingObjectMarioeInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
+        public static void OnThrowingObjectMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             if (!holdable->IsSolidCarryable) {
                 OnMarInteraction(f, marioEntity, thisEntity);
@@ -210,6 +211,9 @@ namespace Quantum {
                     holdable->DropWithoutThrowing(f, thisEntity);
                     f.Events.PlayComboSound(thisEntity, 0);
                 }
+                return false;
+            }
+            if (holdable->PreviousHolder == marioEntity && holdable->IgnoreOwnerFrames > 0) {
                 return false;
             }
             #region SetValues

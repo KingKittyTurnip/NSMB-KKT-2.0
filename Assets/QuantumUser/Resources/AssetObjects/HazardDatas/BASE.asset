@@ -371,6 +371,25 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 0
+    - Name: Bowser
+      hazardAsset:
+        Id:
+          Value: 1425013984214867549
+      Icon: {fileID: 0}
+      categorey: 8
+      Hefty: 1
+      Teamable: 1
+      SpawnAsGoal: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpecialValues:
+      - ButtonName: Is Dry
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 0
     - Name: Cauldron
       hazardAsset:
         Id:
@@ -396,3 +415,16 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 0
+    - Name: LemmyBall
+      hazardAsset:
+        Id:
+          Value: 1381489562479131125
+      Icon: {fileID: 0}
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnAsGoal: 0
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpecialValues: []

@@ -135,7 +135,7 @@ namespace Quantum {
                 var newhazardspawner = f.Unsafe.GetPointer<Hazard>(newEntity);
 
                 var position = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
-                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, pick + 1);
+                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, pick/* + 1*/);//??? i'm Super confused
                 if (newhazardspawner->RestrictSpawnPosition) {
                     newhazardspawner->index = (byte) hazardspawner->spawnIndex;
                 } else {

@@ -1,0 +1,57 @@
+component Bowser {
+	BowserState State;
+	bool IsDry;
+	AssetRef<EntityPrototype> Fireball;
+	AssetRef<EntityPrototype> BlueFire;
+	AssetRef<EntityPrototype> Bone;
+
+	[ExcludeFromPrototype] byte ReusableTimer;
+	[ExcludeFromPrototype] byte AttackCooldown;
+	
+	[ExcludeFromPrototype] bool AttackQuery;
+
+	//ai vars
+	[ExcludeFromPrototype] byte waitTime;
+	[ExcludeFromPrototype] byte BigAttackCounter;
+}
+
+enum BowserState : Byte {
+    Roaring,
+	Walking,
+	ChargeJump,
+	Jumping,
+	Knockbacked,
+	Attacking,
+}
+
+enum BowserAttackType : Byte {
+    FireBall,
+	JumpFireBall,
+	MegaAttack,
+	BoneThrow,
+}
+
+event BowserJump {
+	Frame f;
+	EntityRef Entity;
+}
+event BowserLanded {
+	Frame f;
+	EntityRef Entity;
+	bool Roar;
+}
+event BowserKnockbacked {
+	EntityRef Entity;
+}
+event BowserAttack {
+	EntityRef Entity;
+	BowserAttackType AttackType;
+}
+event BowserShoot {
+	EntityRef Entity;
+	bool IsBone;
+}
+
+event BowserFall {
+	EntityRef Entity;
+}

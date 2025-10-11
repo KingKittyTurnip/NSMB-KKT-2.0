@@ -75,8 +75,9 @@ namespace Quantum {
                         f.Context.Interactions.platformInteractors[interaction.InteractorIndex].Invoke(f, entityA, entityB, interaction.Contact);
                     } else {
                         f.Context.Interactions.hitboxInteractors[interaction.InteractorIndex].Invoke(f, entityA, entityB);
-                        if (f.Exists(entityA) && f.Unsafe.GetPointer<Interactable>(entityA)->AllowDoubleInteraction && f.Exists(entityB) && f.Unsafe.GetPointer<Interactable>(entityB)->AllowDoubleInteraction)
-                            f.Context.Interactions.hitboxInteractors[interaction.InteractorIndex].Invoke(f, entityB, entityA);
+                        //if (f.Exists(entityA) && f.Unsafe.TryGetPointer<Interactable>(entityA, out var inter) && inter->AllowDoubleInteraction && 
+                        //    f.Exists(entityB) && f.Unsafe.TryGetPointer<Interactable>(entityB, out var inter2) && inter2->AllowDoubleInteraction)
+                        //    f.Context.Interactions.hitboxInteractors[interaction.InteractorIndex].Invoke(f, entityB, entityA);
                     }
                 }
             }
