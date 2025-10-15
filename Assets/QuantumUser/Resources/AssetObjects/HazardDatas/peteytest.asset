@@ -19,7 +19,7 @@ MonoBehaviour:
   basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
   HazardGameData:
     MaxHazards: 1
-    frequency: 100
+    frequency: 30
     MaxHeftys: 1
     HeftyPriority: 0
     HeftySpawnChance: 15
@@ -81,7 +81,7 @@ MonoBehaviour:
       SpecialValues:
       - ButtonName: Is Dry
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
-        BaseValue: 0
+        BaseValue: 1
         ValueRange:
           X: 0
           Y: 1

@@ -1717,7 +1717,7 @@ namespace Quantum {
     public AssetRef<EntityPrototype> BlueFire;
     [FieldOffset(24)]
     public AssetRef<EntityPrototype> Bone;
-    [FieldOffset(3)]
+    [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public Byte ReusableTimer;
     [FieldOffset(1)]
@@ -1726,12 +1726,15 @@ namespace Quantum {
     [FieldOffset(8)]
     [ExcludeFromPrototype()]
     public QBoolean AttackQuery;
-    [FieldOffset(4)]
+    [FieldOffset(5)]
     [ExcludeFromPrototype()]
     public Byte waitTime;
     [FieldOffset(2)]
     [ExcludeFromPrototype()]
     public Byte BigAttackCounter;
+    [FieldOffset(3)]
+    [ExcludeFromPrototype()]
+    public Byte JumpFromAttackCounter;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 9973;
@@ -1745,6 +1748,7 @@ namespace Quantum {
         hash = hash * 31 + AttackQuery.GetHashCode();
         hash = hash * 31 + waitTime.GetHashCode();
         hash = hash * 31 + BigAttackCounter.GetHashCode();
+        hash = hash * 31 + JumpFromAttackCounter.GetHashCode();
         return hash;
       }
     }
@@ -1753,6 +1757,7 @@ namespace Quantum {
         serializer.Stream.Serialize((Byte*)&p->State);
         serializer.Stream.Serialize(&p->AttackCooldown);
         serializer.Stream.Serialize(&p->BigAttackCounter);
+        serializer.Stream.Serialize(&p->JumpFromAttackCounter);
         serializer.Stream.Serialize(&p->ReusableTimer);
         serializer.Stream.Serialize(&p->waitTime);
         QBoolean.Serialize(&p->AttackQuery, serializer);

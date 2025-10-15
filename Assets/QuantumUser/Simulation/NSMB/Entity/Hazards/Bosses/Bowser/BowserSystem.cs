@@ -87,9 +87,6 @@ namespace Quantum {
                 while (players.NextUnsafe(out EntityRef OtherEntity, out MarioPlayer* mar)) {
                     if (mar->IsDead)
                         continue;
-                    boss->MakeBossControllable(f, OtherEntity);
-                    mar->SetAsBoss(f, OtherEntity, entity);
-                    return;
                     //Find Closest Player
                     QuantumUtils.UnwrapWorldLocations(f, transform->Position, f.Unsafe.GetPointer<Transform2D>(OtherEntity)->Position, out FPVector2 ourPos, out FPVector2 theirPos);
                     FP e = FPVector2.Distance(ourPos, theirPos);
@@ -107,6 +104,10 @@ namespace Quantum {
 
                 if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall)
                     Jump = true;
+                if (bowser->JumpFromAttackCounter > 2) {
+                    Jump = true;
+                    bowser->JumpFromAttackCounter = 0;
+                }
 
                 //Boss Ai
                 if (distance > 10) {
@@ -174,7 +175,7 @@ namespace Quantum {
                     bowser->ReusableTimer++;
                 } else if (bowser->ReusableTimer > 0) {
                     bowser->ReusableTimer++;
-                    if (bowser->ReusableTimer > 180) {
+                    if (bowser->ReusableTimer > 140) {
                         bowser->ReusableTimer = 0;
                         bowser->BigAttackCounter = 3;
                         bowser->waitTime = 30;
@@ -185,7 +186,7 @@ namespace Quantum {
             case BowserState.Walking:
                 if (leftrightinput != 0) {
                     boss->FacingRight = leftrightinput > 0;
-                    FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, 2);
+                    FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, 2 + FP._0_50);
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_50), -clamper, clamper);
                 } else {
                     physicsObject->Velocity.X *= Constants._0_90;
@@ -233,6 +234,10 @@ namespace Quantum {
                 }
                 break;
             case BowserState.Attacking:
+                if (leftrightinput != 0) {
+                    FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, FP._1_50);
+                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_50), -clamper, clamper);
+                }
                 bowser->ReusableTimer++;
                 if (bowser->ReusableTimer > 10) {
                     if ((Sprint || bowser->ReusableTimer > 21)/* && !bowser->JumpFire*/) {
@@ -245,26 +250,27 @@ namespace Quantum {
                                 f.Events.BowserAttack(filter.Entity, BowserAttackType.BoneThrow);
                             }
                             f.Events.BowserShoot(filter.Entity, bowser->IsDry);
-                            CreateProjectile(bowser->IsDry ? bowser->Bone : bowser->Fireball, new FPVector2(1, (((((FP) bowser->ReusableTimer) / Mod) - 4) / 3) + (bowser->IsDry ? 3 : 0)));
+                            FP Direc = (((((FP) bowser->ReusableTimer) / Mod) - 4) / 3);
+                            CreateProjectile(bowser->IsDry ? bowser->Bone : bowser->Fireball, new FPVector2(1, Direc), bowser->IsDry ? 12 + (2 * Direc) : 0);
                         }
                         if (bowser->ReusableTimer > 100 || !Sprint) {
                             bowser->ReusableTimer = 0;
                             bowser->State = BowserState.Walking;
-                            bowser->AttackCooldown = 60;
+                            bowser->AttackCooldown = 70;
                         }
-                    } else {
+                    } else if (bowser->ReusableTimer <= 21) {
                         //create one
                         f.Events.BowserShoot(filter.Entity, false);
 
-                        CreateProjectile(bowser->IsDry ? bowser->BlueFire : bowser->Fireball, new FPVector2(1, updowninput / 3));
+                        CreateProjectile(bowser->IsDry ? bowser->BlueFire : bowser->Fireball, new FPVector2(1, updowninput / 3), 0);
 
-                        bowser->AttackCooldown = 30;
+                        bowser->AttackCooldown = 25;
                         bowser->ReusableTimer = 0;
                         bowser->State = BowserState.Walking;
                     }
                     physicsObject->Velocity.X *= Constants._0_95;
 
-                    void CreateProjectile(AssetRef<EntityPrototype> prototype, FPVector2 Direction) {
+                    void CreateProjectile(AssetRef<EntityPrototype> prototype, FPVector2 Direction, FP VerticalBonus) {
                         FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, Constants._0_66);
                         EntityRef newEntity = f.Create(prototype);
                          var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
@@ -272,7 +278,7 @@ namespace Quantum {
                          var projPhys = f.Unsafe.GetPointer<PhysicsObject>(newEntity);
                         FP radian = FPMath.Atan2(Direction.Y, Direction.X);
                         Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
-                         projPhys->Velocity = Direction * projectile->Speed;
+                         projPhys->Velocity = (Direction * projectile->Speed) + (FPVector2.Up * VerticalBonus);
                          projectile->Speed = projPhys->Velocity.X;
                     }
                 } else {
@@ -379,6 +385,7 @@ namespace Quantum {
             case ProjectileEffectType.Fire: {
                 boss->BossHarmed(f, thisEntity, KnockbackStrength.FireballBump, false);
                 f.Events.PlayBossHitSound(thisEntity);
+                bowser->JumpFromAttackCounter++;
                 break;
             }
             case ProjectileEffectType.Freeze: {

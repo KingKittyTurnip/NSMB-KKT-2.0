@@ -13,6 +13,7 @@ component Bowser {
 	//ai vars
 	[ExcludeFromPrototype] byte waitTime;
 	[ExcludeFromPrototype] byte BigAttackCounter;
+	[ExcludeFromPrototype] byte JumpFromAttackCounter;
 }
 
 enum BowserState : Byte {

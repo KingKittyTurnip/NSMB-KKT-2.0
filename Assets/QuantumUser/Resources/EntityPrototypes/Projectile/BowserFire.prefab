@@ -249,7 +249,7 @@ MonoBehaviour:
     IsFrozen:
       Value: 0
     DisableCollision:
-      Value: 0
+      Value: 1
     SlowInLiquids:
       Value: 0
     IsWaterSolid:
@@ -304,8 +304,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     ColliderDisabled:
-      Value: 0
-    AllowDoubleInteraction:
       Value: 0
 --- !u!114 &5816618518376565689
 MonoBehaviour:
