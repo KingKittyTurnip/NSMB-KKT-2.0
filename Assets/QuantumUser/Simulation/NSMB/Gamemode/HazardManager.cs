@@ -10,6 +10,9 @@ namespace Quantum {
 
         [Serializable]
         public class BaseHazards {
+            public byte HazardCount; //0-30
+            public byte HazardFreq; //0-60
+            public int HeftyPercentage; //if the hazards that exist exceed the percent they cannot spawn, the percent is used to spawn the hefties too
             public byte GlobalTimeTilDespawn; //Multiply value by 60 when applying, base value of 80 (1:20 minutes)
             //TODO: add category specific values(?)
             public HazardBase[] ListOfAvalibleHazards;
@@ -24,7 +27,7 @@ namespace Quantum {
                 [Header("---Subdata---")]
                 public bool Hefty; //Set As Hefty
                 public bool Teamable; //set to 255 to "disable" for the object
-                public bool SpawnAsGoal; //decides if it should spawn from starspawn
+                public bool SpawnAsGoal; //decides if it should spawn from starspawn, set to 255 to "disable" for the object
                 public bool SpawnRandom; //decides if it should spawn randomly
                 public bool SpawnFridge; //decides if it should spawn from a fridge
                 public bool SpawnBulb; //decides if it should spawn from the ideabulb powerup
@@ -57,6 +60,21 @@ namespace Quantum {
         Minigame = 1 << 4, //starball,
         WorldModifier = 1 << 5, //spinpipe, oucherglass
         Improper = 1 << 6, //powerups, stage enemies
+    }
+    public enum HefPercent {
+        zero,
+	five,
+	twelve,
+	twentyfive,
+	fifty,
+	sevendyfive,
+	onehundred,
+	onefifty,
+	twohundred,
+	threehundred,
+	fivehundred,
+	thousand,
+	infinity, //all hazards would be hefty
     }
     #endregion
 }

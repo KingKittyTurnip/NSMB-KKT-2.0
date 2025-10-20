@@ -1526,7 +1526,7 @@ namespace Quantum {
             EntityRef newEntity = f.Create(f.SimulationConfig.HammerPrototype);
 
             var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
-            projectile->InitializeHammer(f, newEntity, filter.Entity, spawnPos, mario->FacingRight, false /* filter.Inputs.Up.IsDown */);
+            projectile->InitializeHammer(f, newEntity, filter.Entity, spawnPos, mario->FacingRight, true, false /* filter.Inputs.Up.IsDown */);
             return projectile;
         }
 
@@ -1542,7 +1542,7 @@ namespace Quantum {
                 : f.SimulationConfig.FireballPrototype);
 
             var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
-            projectile->Initialize(f, newEntity, filter.Entity, spawnPos, mario->FacingRight);
+            projectile->Initialize(f, newEntity, filter.Entity, spawnPos, mario->FacingRight, true);
             return projectile;
         }
 
@@ -2511,7 +2511,7 @@ namespace Quantum {
 
         #region Signals
         public void OnRemoved(Frame f, EntityRef entity, Projectile* component) {
-            if (f.Unsafe.TryGetPointer(component->Owner, out MarioPlayer* mario)) {
+            if (component->SpawnedFromPlayer && f.Unsafe.TryGetPointer(component->Owner, out MarioPlayer* mario)) {
                 mario->CurrentProjectiles--;
             }
         }
@@ -2565,7 +2565,7 @@ namespace Quantum {
                 return;
             }
 
-            if (!fromBelow || mario->IsInKnockback || mario->IsStuckInBlock) {
+            if (!fromBelow || mario->IsInKnockback || mario->IsStuckInBlock || mario->IsBoss != EntityRef.None) {
                 return;
             }
 

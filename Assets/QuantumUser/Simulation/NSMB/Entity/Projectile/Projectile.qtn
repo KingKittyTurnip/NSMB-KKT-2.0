@@ -10,6 +10,8 @@ component Projectile {
 	[ExcludeFromPrototype] bool CheckedCollision;
 	[ExcludeFromPrototype] byte Combo;
 	[ExcludeFromPrototype] byte Lifetime;
+
+	[ExcludeFromPrototype] bool SpawnedFromPlayer;
 }
 
 signal OnProjectileHitEntity(Frame frame, EntityRef projectile, EntityRef hitEntity);

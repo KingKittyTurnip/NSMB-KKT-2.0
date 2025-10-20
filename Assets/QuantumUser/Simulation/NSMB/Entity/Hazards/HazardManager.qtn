@@ -2,6 +2,7 @@ global {
 	ushort TimeTilNextHazard;
 	bitset[64] UsedHazardSpawns;
 	int UsedHazardSpawnCount;
+        byte HeftyCount;
 }
 
 component HazardManager {

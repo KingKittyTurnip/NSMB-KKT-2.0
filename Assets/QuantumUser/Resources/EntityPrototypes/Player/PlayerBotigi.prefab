@@ -1088,8 +1088,6 @@ MonoBehaviour:
       Value: 0
     WindImmune:
       Value: 0
-    GravityInversed:
-      Value: 0
 --- !u!114 &-2541758970786198444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9297,6 +9295,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6437972435980439977, guid: af9d4d0363a46ba45955d6934f065813,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8493105865608791888, guid: af9d4d0363a46ba45955d6934f065813,
         type: 3}

@@ -3,6 +3,7 @@ using Quantum.Profiling;
 using System.Collections.Generic;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
+using NSMB.Utilities.Extensions;
 
 public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
 
@@ -12,6 +13,8 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
     [SerializeField] private Animator animator;
     [SerializeField] private List<Vector3> NosePoints = new(); //Perhaps Put This In The Player Prefs????
 
+
+    [SerializeField] private AudioSource sfx;
     [SerializeField] private Transform Model;
     private Quaternion modelRotationTarget;
     private bool wasTurnaround;
@@ -23,6 +26,7 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
 
     public void Start() {
         QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnCoinBoxCoin);
+        QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
         Nose.localScale = NosePoints[0];
     }
     public override unsafe void OnUpdateView() {
@@ -114,4 +118,12 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
         coinboxRenderer.SetPropertyBlock(materialBlock);
         Instantiate(Breakparticle, transform.position, Quaternion.identity);
     }
+
+        private void OnPlayComboSound(EventPlayComboSound e) {
+            if (e.Entity != EntityRef) {
+                return;
+            }
+
+            sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        }
 }

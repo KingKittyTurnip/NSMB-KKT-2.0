@@ -559,6 +559,12 @@ namespace Quantum {
             otherPhysicsObject->Velocity = FPVector2.Zero;
             f.Unsafe.GetPointer<Interactable>(mario)->ColliderDisabled = true;
 
+            IsSpinnerFlying = IsPropellerFlying = false;
+	    CurrentKnockback = KnockbackStrength.None;
+	    DamageInvincibilityFrames = KnockbackGetupFrames = 0;
+            InvincibilityFrames = MegaMushroomStartFrames = MegaMushroomEndFrames = MegaMushroomFootstepFrames = 0;
+            MegaMushroomFrames = 0;
+
             if (f.Unsafe.TryGetPointer(HeldEntity, out Holdable* holdable)) {
                 holdable->DropWithoutThrowing(f, HeldEntity);
             }

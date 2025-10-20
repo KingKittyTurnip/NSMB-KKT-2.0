@@ -22,7 +22,7 @@ namespace Quantum {
         RedPow - (Actually Implement)
         BluePow - (Actually Implement)
         Barrel - (Actually Implement)
-        Freezie - (Actually Implement)
+        Freezie - (Actually Implement) (players frozen by this are frozen for a long while, with a unique sprite)
         CannonBox - (Actually Implement)
         fridge - (Actually Implement)
 
@@ -44,6 +44,7 @@ namespace Quantum {
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<MarioPlayer, ThrowingObject>(f, OnThrowingObjectMarioInteraction);
             f.Context.Interactions.Register<MarioPlayer, ThrowingObject>(f, OnThrowingObjectMarioSolidInteraction);
+//add pre interaction like the breakable object does
 
             f.Context.Interactions.Register<ThrowingObject, Coin>(f, OnThrowingObjectCoinInteraction);
             f.Context.Interactions.Register<ThrowingObject, Goomba>(f, OnThrowingObjectGoombaInteraction);
@@ -66,10 +67,10 @@ namespace Quantum {
 
             // Bounce Logic
             if ((Dis->Thrown || Dis->BounceTimes > 0) && physicsObject->IsTouchingGround) {
-                Dis->Thrown = false;
+                Dis->HitSomething = true;
                 if (Dis->GroundBounce && Dis->BounceTimes < 3) {
                     Dis->BounceTimes += 1;
-                    physicsObject->IsTouchingGround = false;
+		    physicsObject->IsTouchingGround = false;
                     physicsObject->Velocity.Y = 4 - Dis->BounceTimes;
                     if (!Dis->IsBall)
                         physicsObject->Velocity.X *= Constants._0_66;
@@ -77,6 +78,7 @@ namespace Quantum {
                     if (!Dis->IsBall)
                         physicsObject->Velocity.X = 0;
                     Dis->BounceTimes = 0;
+		    Dis->Thrown = Dis->HitSomething = false;
                 }
             } else if (physicsObject->Velocity.Y < -6) {
                 Dis->BounceTimes = 1;
@@ -106,8 +108,8 @@ namespace Quantum {
             //physicsObject->DisableCollision = false;
             Dis->CanHit = (Dis->Thrown || Dis->BounceTimes != 0);
 
-            if (hazard->IsHazard && holdable->Holder != EntityRef.None) { //?
-                hazard->LifeTime = 80 * 60;//reset despawntimer PROPERLY... (as in giving support for it)
+            if (hazard->IsHazard && holdable->Holder != EntityRef.None && hazard->LifeTime < hazard->BaseLifeTime) { //?
+                hazard->LifeTime = hazard->BaseLifeTime;
             }
 
             // Special Updates
@@ -229,44 +231,47 @@ namespace Quantum {
             bool hitRight = Dis->Thrown ? !Dis->Facing : damageDirection.X > 0;
             #endregion
 
-            if ((Dis->Thrown || (!physicsObject->IsTouchingGround && Dis->BounceTimes == 0)) && mario->IsDamageable) {
+            if ((Dis->Thrown || (!physicsObject->IsTouchingGround && Dis->Type == ThrowingObjectType.Stone)) && mario->IsDamageable) {
                 // Hit Player (Unless Not)
                 if (Dis->BouceOffPlayer) {
+		    Dis->HitSomething = true;
                     Dis->Thrown = false;
                     physicsObject->IsTouchingGround = false;
                     physicsObject->Velocity = new FPVector2(hitRight ? 1 : -1, 4);
                 }
-                if (Dis->GroundBounce) Dis->BounceTimes = 1;
+                if (Dis->GroundBounce) 
+		    Dis->BounceTimes = 1;
                 if (Dis->StarsToDrop != 0) {
-                    bool TeamateItem = !Dis->IgnoreTeamates && (mario->GetTeam(f) + 1) != hazard->Team;
+                    bool TeamateItem = Dis->IgnoreTeamates && mario->GetTeam(f) == hazard->Team;
                     mario->DoKnockback(f, marioEntity, hitRight, TeamateItem ? 0 : Dis->StarsToDrop, /*TeamateItem*/ KnockbackStrength.FireballBump, thisEntity);
                 }
                 return false;
-            } else if (!(upDot >= Constants.PhysicsGroundMaxAngleCos || upDot <= -Constants.PhysicsGroundMaxAngleCos) && mario->CurrentPowerupState == PowerupState.MegaMushroom) {
-                if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
-                    // HOMERUN
-                    f.Events.PlayComboSound(thisEntity, 0);
-                    Dis->Thrown = true;
-                    physicsObject->IsTouchingGround = false;
-                    physicsObject->Velocity = new FPVector2(hitRight ? -8 : 8, 5);
-                    return false;
-                }
-            } else if (upDot < Constants._0_66 && FPMath.Abs(damageDirection.X) < Constants._0_90 && !(physicsObject->IsTouchingGround && upDot <= -Constants.PhysicsGroundMaxAngleCos)) {
+            } else if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
+                // HOMERUN
+                f.Events.PlayComboSound(thisEntity, 0);
+                Dis->Thrown = true;
+		Dis->HitSomething = false;
+                physicsObject->IsTouchingGround = false;
+                physicsObject->Velocity = new FPVector2(hitRight ? -8 : 8, 5);
+                return false;
+            } else if (damageDirection.Y <= Constants._0_66 && FPMath.Abs(damageDirection.X) < Constants._0_90 && !(physicsObject->IsTouchingGround && upDot <= -Constants.PhysicsGroundMaxAngleCos)) {
                 //PlayerInsideObject
                 if (Dis->BouceOffPlayer) {
                     // Bouce Off Player
+		    Dis->HitSomething = true;
                     Dis->Thrown = false;
                     physicsObject->Velocity = new FPVector2(hitRight ? -1 : 1, 4);
                     physicsObject->IsTouchingGround = false;
                     if (Dis->GroundBounce)
                         Dis->BounceTimes = 1;
-                } else {
+                } else {  
                     //physicsObject->DisableCollision = true;
                 }
             }
-            if (!Dis->Thrown && (upDot <= Constants.PhysicsGroundMaxAngleCos || Dis->IsBall)) {
+            if ((!Dis->Thrown || mario->GetTeam(f) == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->GetTeam(f)) 
+              && (damageDirection.Y <= Constants._0_66 || Dis->HitSomething)) {
                 //Only Allow Carry If No Team Or Same Team --- TOTEST
-                if (hazard->Team != 0 && (mario->GetTeam(f) + 1) != hazard->Team) {
+                if (hazard->Team != 255 && mario->GetTeam(f) != hazard->Team) { //Can only pickup if it's on our team... or no team
                     return false;
                 }
 
@@ -406,9 +411,8 @@ namespace Quantum {
                 //Force The player To Drop This Item if it's hit While They Are Carrying It
                 holdable->DropWithoutThrowing(f, thisEntity);
                 f.Events.PlayComboSound(thisEntity, 0);
+                f.Signals.OnProjectileHitEntity(f, projectileEntity, thisEntity);
             }
-
-            f.Signals.OnProjectileHitEntity(f, projectileEntity, thisEntity);
         }
         #endregion
 
@@ -424,13 +428,14 @@ namespace Quantum {
 
             //TODO: Up key
             Dis->Thrown = Dis->CanHit = !dropped;
+	    Dis->HitSomething = false;
             Dis->Facing = mario->FacingRight;
             FP bonusSpeed = FPMath.Abs(marioPhysicsObject->Velocity.X / 2);
             if (FPMath.Sign(marioPhysicsObject->Velocity.X) != (mario->FacingRight ? 1 : -1)) {
                 bonusSpeed *= -1;
             }
             physicsObject->Velocity.X = (Dis->ThrowForce + bonusSpeed) * (mario->FacingRight ? 1 : -1);
-            physicsObject->Velocity.Y = 1;
+            physicsObject->Velocity.Y = 2;
             holdable->IgnoreOwnerFrames = 15;
 
             if (!dropped) {
@@ -505,6 +510,9 @@ namespace Quantum {
             }
 
             //uhh i would put specific hazard spawn data here
+
+            hazard->BaseLifeTime = FPMath.RoundToInt(hazard->BaseLifeTime * FP._0_50);
+UnityEngine.Debug.Log(hazard->BaseLifeTime);
 
             /*switch (Dis->Type) {
             case ThrowingObjectType.Basic:

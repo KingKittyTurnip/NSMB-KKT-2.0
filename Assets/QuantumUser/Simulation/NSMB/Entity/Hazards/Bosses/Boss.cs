@@ -6,9 +6,9 @@ namespace Quantum {
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             byte total = Damage switch {
-                KnockbackStrength.Groundpound => 8,
+                KnockbackStrength.Groundpound => 6,
                 KnockbackStrength.FireballBump => 1,
-                KnockbackStrength.Normal => 4,
+                KnockbackStrength.Normal => 3,
                 _ => 0,
             };
 
@@ -28,7 +28,7 @@ namespace Quantum {
                     return;
                 }
             }
-            boss->iframes = (byte) (longiframes ? 135 : 30);
+            boss->iframes = (byte) (longiframes ? 120 : 25);
         }
 
         public void MakeBossControllable(Frame f, EntityRef MarioEntity) {

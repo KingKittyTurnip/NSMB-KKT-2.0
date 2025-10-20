@@ -6,14 +6,6 @@ using static Quantum.CurrentHazards.HazardDataList;
 
 namespace Quantum {
     public unsafe class HazardManagerSystem : SystemMainThread, ISignalOnReturnToRoom {
-        //temp
-        //generic
-        //hefty
-        private readonly int MaxHeftys = 1;
-        private readonly bool HeftyPriority = false;
-        private readonly int HeftySpawnChance = 15;
-        //misc
-        private readonly bool FillMapOnStart = false;
 
         public override void Update(Frame f) {
             VersusStageData stage = null;
@@ -104,38 +96,41 @@ namespace Quantum {
             }
 
             if (QuantumUtils.Decrement(ref hazardspawner->Lifetime)) {
-                //GetHazard
-                List<HazardData> hazarddata = new(f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas), Heftydata = new();
-                for (int i = 0; i < hazarddata.Count; i++) {
-                    if (hazarddata[i].SpawnRandom.BaseValue != 1) {
-                        //Hazard Can't spawn this way
-                        hazarddata.Remove(hazarddata[i]);
-                        i--;
-                        continue;
+                //(prob save this somewhere instead of calculating it each time tbh...)
+                //Sort Hazards
+                var hazardSettings = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData;
+                List<(HazardData, byte)> hazarddata = new(), heftydata = new(); //new(hazardSettings.HazardDatas)
+		for (byte item = 0; item < hazardSettings.HazardDatas.Count; item++) {
+                    if (hazardSettings.HazardDatas[item].SpawnRandom.BaseValue == 1) {
+                        //Hazard Can Spawn
+                        //Add special spawn conditions for:
+                        //potion: spawns when the lobby contains at least 6 players, if one doesn't exist the next hazard is guerenteed to be it (this condition is disabled in advanced lobbies)
+                        //cauldron: spawns only if a boss entity is in the ruleset
+                        if (hazardSettings.HazardDatas[item].Hefty.BaseValue == 1) { //Hefty Or No...
+                            heftydata.Add((hazardSettings.HazardDatas[item], item));
+                        } else {
+                            hazarddata.Add((hazardSettings.HazardDatas[item], item));
+                        }
                     }
-                    if (hazarddata[i].Hefty.BaseValue == 1) {
-                        //Hazard Can't spawn this way
-                        //Heftydata.Add(hazarddata[i]);
-                        //hazarddata.Remove(hazarddata[i]);
-                        //i--;
-                    }
-
-                    //Add special spawn conditions for:
-                    //potion: spawns when the lobby contains at least 6 players, if one doesn't exist the next hazard is guerenteed to be it (this condition is disabled in advanced lobbies)
-                    //cauldron: spawns only if a boss entity is in the ruleset
                 }
-                int pick = 0;
-                    //bool hefty = f.RNG->Next() <= FP._0_10;
-                    pick = f.RNG->Next(0, hazarddata.Count);
-                    //TODO: Hefty Logic
+                //Get Hazard
+                int pick = 0; //don't use an int, use the value of hazardasset to use less checks (?)
+                FP heftychance = hazardSettings.HeftyPercentage - f.Global->HeftyCount;
+                bool hefty = f.RNG->Next() <= heftychance;
+		if (hefty) {
+		    f.Global->HeftyCount++;
+		    pick = f.RNG->Next(0, heftydata.Count);
+		} else {
+		    pick = f.RNG->Next(0, hazarddata.Count);
+		}
 
                 //SpawnHazard
-                EntityRef newEntity = f.Create(hazarddata[pick].hazardAsset);
+                EntityRef newEntity = f.Create(hefty ? heftydata[pick].Item1.hazardAsset : hazarddata[pick].Item1.hazardAsset);
                 var newhazardspawnerTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
                 var newhazardspawner = f.Unsafe.GetPointer<Hazard>(newEntity);
 
                 var position = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
-                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, pick/* + 1*/);//??? i'm Super confused
+                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, hefty ? heftydata[pick].Item2 : hazarddata[pick].Item2);
                 if (newhazardspawner->RestrictSpawnPosition) {
                     newhazardspawner->index = (byte) hazardspawner->spawnIndex;
                 } else {

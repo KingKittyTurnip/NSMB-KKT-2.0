@@ -64,10 +64,10 @@ namespace Quantum {
 
                 //Groundpounding = inputs.Down.WasPressed;
                 Jump = inputs.Jump.WasPressed;
-                Fireball = (inputs.FireballPowerupAction.WasPressed || bowser->AttackQuery) && bowser->AttackCooldown <= 1;
-                Sprint = inputs.FireballPowerupAction.IsDown ;
+                Fireball = (inputs.PowerupAction.WasPressed || bowser->AttackQuery) && bowser->AttackCooldown <= 1;
+                Sprint = inputs.PowerupAction.IsDown ;
                 if (Sprint && bowser->AttackCooldown > 0) {
-                    bowser->AttackQuery = inputs.FireballPowerupAction.IsDown;
+                    bowser->AttackQuery = inputs.PowerupAction.IsDown;
                 } else {
                     bowser->AttackQuery = false;
                 }
@@ -102,8 +102,6 @@ namespace Quantum {
                 if ((bowser->waitTime > 90 && bowser->State == BowserState.Attacking) || bowser->waitTime <= 90)
                     QuantumUtils.Decrement(ref bowser->waitTime);
 
-                if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall)
-                    Jump = true;
                 if (bowser->JumpFromAttackCounter > 2) {
                     Jump = true;
                     bowser->JumpFromAttackCounter = 0;
@@ -112,8 +110,8 @@ namespace Quantum {
                 //Boss Ai
                 if (distance > 10) {
                     //wander
-                    FPVector2 checkPosition = transform->Position + filter.Collider->Shape.Centroid + (FPVector2.Right * FP._0_05 * (boss->FacingRight ? 1 : -1));
-                    if (!PhysicsObjectSystem.Raycast(f, stage, checkPosition, FPVector2.Down, 1, out var hit)) {
+                    FPVector2 checkPosition = transform->Position + (FPVector2.Right * FP._0_20 * (boss->FacingRight ? 1 : -1));
+                    if (!PhysicsObjectSystem.Raycast(f, stage, checkPosition, FPVector2.Down, 5, out var hit)) {
                         Jump = true;
                     }
                     leftrightinput = boss->FacingRight ? 1 : -1;
@@ -128,8 +126,9 @@ namespace Quantum {
                     FP absDif = FPMath.Abs(ourPos.X - theirPos.X);
 
                     if (absDif < 2) {
+                        bowser->waitTime = 30;
                         leftrightinput = damageDirection.X > 0 ? -1 : 1;
-                        Jump = absDif < 1;
+                        Jump |= absDif < 1;
                     } else if ((absDif > 6 || boss->FacingRight != damageDirection.X > 0) && physicsObject->IsTouchingGround) {
                         leftrightinput = damageDirection.X > 0 ? 1 : -1;
                     } else if (absDif > 8) {
@@ -150,6 +149,9 @@ namespace Quantum {
                         }
                     }
                 }
+                if (leftrightinput != 0 && (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall)) {
+                    Jump = true;
+		}
             }
 
             QuantumUtils.Decrement(ref bowser->AttackCooldown);
@@ -175,7 +177,7 @@ namespace Quantum {
                     bowser->ReusableTimer++;
                 } else if (bowser->ReusableTimer > 0) {
                     bowser->ReusableTimer++;
-                    if (bowser->ReusableTimer > 140) {
+                    if (bowser->ReusableTimer > 140 || boss->Health != Constants.GeneralBossHealth) {
                         bowser->ReusableTimer = 0;
                         bowser->BigAttackCounter = 3;
                         bowser->waitTime = 30;
@@ -274,7 +276,7 @@ namespace Quantum {
                         FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, Constants._0_66);
                         EntityRef newEntity = f.Create(prototype);
                          var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
-                         projectile->Initialize(f, newEntity, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity, spawnPos, boss->FacingRight);
+                         projectile->Initialize(f, newEntity, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity, spawnPos, boss->FacingRight, false);
                          var projPhys = f.Unsafe.GetPointer<PhysicsObject>(newEntity);
                         FP radian = FPMath.Atan2(Direction.Y, Direction.X);
                         Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
@@ -333,7 +335,7 @@ namespace Quantum {
 
             bool bossHarmed = false;
             if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
-                boss->BossHarmed(f, thisEntity, KnockbackStrength.Normal, true);
+                boss->BossHarmed(f, thisEntity, KnockbackStrength.Groundpound, true);
                 bossHarmed = true;
 
             } else if (attackedFromAbove) {

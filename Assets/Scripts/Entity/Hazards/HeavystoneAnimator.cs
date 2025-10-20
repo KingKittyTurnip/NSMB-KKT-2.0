@@ -1,6 +1,7 @@
 using Quantum;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
+using NSMB.Utilities.Extensions;
 
 public unsafe class HeavystoneAnimator : QuantumEntityViewComponent {
 
@@ -9,6 +10,7 @@ public unsafe class HeavystoneAnimator : QuantumEntityViewComponent {
     [SerializeField] private GameObject breakPrefab;
     public void Start() {
         QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnHeavyStoneLand);
+        QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -42,4 +44,12 @@ public unsafe class HeavystoneAnimator : QuantumEntityViewComponent {
             Instantiate(breakPrefab, transform.position, Quaternion.identity);
         }
     }
+
+        private void OnPlayComboSound(EventPlayComboSound e) {
+            if (e.Entity != EntityRef) {
+                return;
+            }
+
+            sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        }
 }

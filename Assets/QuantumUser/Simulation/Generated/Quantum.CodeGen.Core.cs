@@ -1171,7 +1171,7 @@ namespace Quantum {
     public Int32 UsedStarSpawnCount;
     [FieldOffset(1752)]
     public GameRules Rules;
-    [FieldOffset(1650)]
+    [FieldOffset(1651)]
     public GameState GameState;
     [FieldOffset(1664)]
     public Int32 StartFrame;
@@ -1188,9 +1188,9 @@ namespace Quantum {
     [FieldOffset(1800)]
     [FramePrinter.FixedArrayAttribute(typeof(PlayerInformation), 10)]
     private fixed Byte _PlayerInfo_[1120];
-    [FieldOffset(1648)]
-    public Byte RealPlayers;
     [FieldOffset(1649)]
+    public Byte RealPlayers;
+    [FieldOffset(1650)]
     public Byte TotalMarios;
     [FieldOffset(1680)]
     public Int32 WinningTeam;
@@ -1202,6 +1202,8 @@ namespace Quantum {
     public BitSet64 UsedHazardSpawns;
     [FieldOffset(1672)]
     public Int32 UsedHazardSpawnCount;
+    [FieldOffset(1648)]
+    public Byte HeftyCount;
     [FieldOffset(1684)]
     public PlayerRef Host;
     [FieldOffset(1692)]
@@ -1261,6 +1263,7 @@ namespace Quantum {
         hash = hash * 31 + TimeTilNextHazard.GetHashCode();
         hash = hash * 31 + UsedHazardSpawns.GetHashCode();
         hash = hash * 31 + UsedHazardSpawnCount.GetHashCode();
+        hash = hash * 31 + HeftyCount.GetHashCode();
         hash = hash * 31 + Host.GetHashCode();
         hash = hash * 31 + PlayerDatas.GetHashCode();
         hash = hash * 31 + BannedPlayerIds.GetHashCode();
@@ -1292,6 +1295,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->PlayerConnectedCount);
         FixedArray.Serialize(p->input, serializer, Statics.SerializeInput);
         Quantum.BitSet10.Serialize(&p->PlayerLastConnectionState, serializer);
+        serializer.Stream.Serialize(&p->HeftyCount);
         serializer.Stream.Serialize(&p->RealPlayers);
         serializer.Stream.Serialize(&p->TotalMarios);
         serializer.Stream.Serialize((Byte*)&p->GameState);
@@ -3645,13 +3649,13 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Projectile : Quantum.IComponent {
-    public const Int32 SIZE = 40;
+    public const Int32 SIZE = 48;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(16)]
-    public AssetRef<ProjectileAsset> Asset;
-    [FieldOffset(32)]
-    public FP Speed;
     [FieldOffset(24)]
+    public AssetRef<ProjectileAsset> Asset;
+    [FieldOffset(40)]
+    public FP Speed;
+    [FieldOffset(32)]
     [ExcludeFromPrototype()]
     public EntityRef Owner;
     [FieldOffset(8)]
@@ -3669,6 +3673,9 @@ namespace Quantum {
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte Lifetime;
+    [FieldOffset(16)]
+    [ExcludeFromPrototype()]
+    public QBoolean SpawnedFromPlayer;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 16141;
@@ -3680,6 +3687,7 @@ namespace Quantum {
         hash = hash * 31 + CheckedCollision.GetHashCode();
         hash = hash * 31 + Combo.GetHashCode();
         hash = hash * 31 + Lifetime.GetHashCode();
+        hash = hash * 31 + SpawnedFromPlayer.GetHashCode();
         return hash;
       }
     }
@@ -3690,6 +3698,7 @@ namespace Quantum {
         QBoolean.Serialize(&p->CheckedCollision, serializer);
         QBoolean.Serialize(&p->FacingRight, serializer);
         QBoolean.Serialize(&p->HasBounced, serializer);
+        QBoolean.Serialize(&p->SpawnedFromPlayer, serializer);
         AssetRef.Serialize(&p->Asset, serializer);
         EntityRef.Serialize(&p->Owner, serializer);
         FP.Serialize(&p->Speed, serializer);
@@ -3954,9 +3963,9 @@ namespace Quantum {
     public ThrowingObjectType Type;
     [FieldOffset(16)]
     public QBoolean GroundBounce;
-    [FieldOffset(24)]
-    public QBoolean IsBall;
     [FieldOffset(28)]
+    public QBoolean IsBall;
+    [FieldOffset(32)]
     public QBoolean SlideAlong;
     [FieldOffset(4)]
     public QBoolean BouceOffPlayer;
@@ -3964,9 +3973,9 @@ namespace Quantum {
     public FP ThrowForce;
     [FieldOffset(1)]
     public Byte StarsToDrop;
-    [FieldOffset(20)]
+    [FieldOffset(24)]
     public QBoolean IgnoreTeamates;
-    [FieldOffset(32)]
+    [FieldOffset(36)]
     [ExcludeFromPrototype()]
     public QBoolean Thrown;
     [FieldOffset(8)]
@@ -3975,6 +3984,9 @@ namespace Quantum {
     [FieldOffset(12)]
     [ExcludeFromPrototype()]
     public QBoolean Facing;
+    [FieldOffset(20)]
+    [ExcludeFromPrototype()]
+    public QBoolean HitSomething;
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public Byte BounceTimes;
@@ -3995,6 +4007,7 @@ namespace Quantum {
         hash = hash * 31 + Thrown.GetHashCode();
         hash = hash * 31 + CanHit.GetHashCode();
         hash = hash * 31 + Facing.GetHashCode();
+        hash = hash * 31 + HitSomething.GetHashCode();
         hash = hash * 31 + BounceTimes.GetHashCode();
         hash = hash * 31 + ReusableTimer.GetHashCode();
         return hash;
@@ -4009,6 +4022,7 @@ namespace Quantum {
         QBoolean.Serialize(&p->CanHit, serializer);
         QBoolean.Serialize(&p->Facing, serializer);
         QBoolean.Serialize(&p->GroundBounce, serializer);
+        QBoolean.Serialize(&p->HitSomething, serializer);
         QBoolean.Serialize(&p->IgnoreTeamates, serializer);
         QBoolean.Serialize(&p->IsBall, serializer);
         QBoolean.Serialize(&p->SlideAlong, serializer);

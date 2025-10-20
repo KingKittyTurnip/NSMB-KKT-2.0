@@ -1,7 +1,8 @@
 using Quantum;
 using Quantum.Profiling;
-using System.Drawing.Drawing2D;
 using UnityEngine;
+using NSMB.Utilities.Extensions;
+using static NSMB.Utilities.QuantumViewUtils;
 
 public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
 
@@ -9,13 +10,14 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
     [SerializeField] private float propellerVelocity;
     [SerializeField] private Transform Model;
     [SerializeField] private Animator animator;
-
+    [SerializeField] private AudioSource sfx;
 
     private Quaternion modelRotationTarget;
     private bool modelRotateInstantly;
     public bool wasTurnaround;
 
     public void Start() {
+        QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -107,4 +109,12 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
         }
     }
 
+
+        private void OnPlayComboSound(EventPlayComboSound e) {
+            if (e.Entity != EntityRef) {
+                return;
+            }
+
+            sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        }
 }

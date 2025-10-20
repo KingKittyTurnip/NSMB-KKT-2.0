@@ -3,7 +3,7 @@ using Photon.Deterministic;
 namespace Quantum {
     public unsafe partial struct Projectile {
 
-        public void Initialize(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, bool right) {
+        public void Initialize(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, bool right, bool FromPlayer) {
             var asset = f.FindAsset(Asset);
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
@@ -28,13 +28,14 @@ namespace Quantum {
             }
 
             Lifetime = asset.LifeTime;
+            SpawnedFromPlayer = FromPlayer;
 
             // Physics
             transform->Position = spawnpoint;
             physicsObject->Velocity = new(Speed * (FacingRight ? 1 : -1), -Speed);
         }
 
-        public void InitializeHammer(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, bool right, bool playerHoldingUp) {
+        public void InitializeHammer(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, bool right, bool FromPlayer, bool playerHoldingUp) {
             var asset = f.FindAsset(Asset);
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
@@ -48,6 +49,7 @@ namespace Quantum {
             Speed = velocity.X;
 
             Lifetime = asset.LifeTime;
+            SpawnedFromPlayer = FromPlayer;
 
             // Apply
             transform->Position = spawnpoint;

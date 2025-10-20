@@ -242,8 +242,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8359218312643153770, guid: b73add24eb026c844b85593f8bab1f8c,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 5b37bd296278e534a9d438cbf66937ca, type: 3}
-  m_Resource: {fileID: 8300000, guid: 5b37bd296278e534a9d438cbf66937ca, type: 3}
+  m_audioClip: {fileID: 8300000, guid: eb19a8df530de3544a1363521b6393a1, type: 3}
+  m_Resource: {fileID: 8300000, guid: eb19a8df530de3544a1363521b6393a1, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -466,8 +466,6 @@ MonoBehaviour:
   Prototype:
     ColliderDisabled:
       Value: 0
-    AllowDoubleInteraction:
-      Value: 0
 --- !u!114 &-5656916731996867298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -539,6 +537,8 @@ MonoBehaviour:
         RawValue: 0
     IgnorePlayerWhenRespawning:
       Value: 0
+    DoNotDespawnInPit:
+      Value: 0
     RestrictSpawnPosition:
       Value: 0
     IsHefty:
@@ -564,6 +564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6019046297828722700}
+  sfx: {fileID: 4207910641862185911}
   Model: {fileID: 1242223969078471660}
   coinboxRenderer: {fileID: 0}
 --- !u!1 &2394040665678212822

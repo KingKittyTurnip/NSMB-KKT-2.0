@@ -1,9 +1,78 @@
 TODOChecklist
 
+---Lobby Creation Options:
+[lobby type]
+Lobby Type: (This Option has No Default) (Versus, Custom)
+[player]
+readytime: (CustomLobby ? Off : 2:00), (off, 0:15, 0:30, 1:00, 1:30, 2:00, 3:00)
+stagepick: (vote from 3) (vote from 3, host picks, random (soft), random)
+maxplayers: (CustomLobby ? 6 : 10) (CustomLobby ? 1-10 : 1-15)
+[moderation]
+private: (off) (on/off)
+allowBanningPlayers: (off) (on/off)
+[addons]
+addons: (CustomLobby ? allowed : disabled)
+
+---In-Lobby Options:
+[lobby rules]
+readytime: ^^^
+stagepick: ^^^
+team control: (free) (free, host only, computer controlled)
+maxplayers: ^^^
+[Moderation Rules]
+private: ^^^
+allowBanningPlayers: ^^^ (this option isn't editable here to prevent abuse)
+[Rules In both Lobby Types]
+teams: (off) (off, 1, 2, 3, 4, 5) (team added order: red(mushroom), blue(bowser), green(), yellow(question), purple(ghost))
+coinsforpowerup: (5) (1-20)
+lives: (off) (off, 1-20)
+players respawn as bobomb: (on) (on/off) [IDK what to do with this option]
+[Rules In Versus Lobbies]
+Gamemode: um
+Hazards: (on) (on/off)
+Minigame Hazards: (on) (on/off)
+Joke Powerups: (on) (on/off)
+[Rules In Custom Lobbies]
+Hazard Manager: contains all rules related to hazards, powerups, and gamemodes
+
+---Gamemodes:
+  [starchasers]
+rules: (stars to win, 15, 3-30)
+-collect # amount of stars to win!
+-players drop stars (if they have them)
+goal: bigstar
+hazards: normal pool
+  [coinrunners]
+rules: (timer (forced), 3:00, 1:00-20:00)
+-collect as much coins before the time runs out!
+-players drop coins
+goal: starcoin
+hazards: normal pool, but more coin related items and they are purple versions
+  [balloon battle]
+rules: (balloons (2-8), lives (forced), 3, 1-20)
+-pop your foes balloons and be the last one standing!
+-players gain balloons
+goal: (idk what should spawn as the "goal" to allow the stage to reset...)
+hazards: mostly weapon hazards
+  [shinerunners] um
+rules: (elimination timer, 1:00, 0:15-3:00)
+-collect more shines than others to avoid elimination!
+-players drop shines
+goal: shines
+hazards: mostly mobility effecting hazards
+  [race] um
+  [brawl] um
+  [bombchasers]
+rules: (lives (forced) 1, (1-3), bobombrespawn (forced), on, on)
+-evade the bobombs until the time runs out... or explode all the other players!
+-when players die the stage is reset
+Goalhazard: big bomb, chases players down and kills them
+Hazards: 
+
 
 ---Returning Hazards:
 Coinbunch
-  $$$ Goldblock - Pretty Much Done Just Add Every Player Textures (Possibly Move Nose Placement Code)
+  $$$ Goldblock - Pretty Much Done Just Add Every Player Textures (Possibly Move Nose Placement Code) - purple and wing variants
 Cloudbill
   $$$ LemmyBall - Perhaps some sounds?
 Minimario
@@ -28,7 +97,7 @@ Oucherglass
 --NEW Hazards:
 - +Clock - MORE TODO
 - BillBlock - MORE TODO
-Baseball
+- Baseball - Animate
 SMB2 Potion
   $$$ Fan
 CannonBox

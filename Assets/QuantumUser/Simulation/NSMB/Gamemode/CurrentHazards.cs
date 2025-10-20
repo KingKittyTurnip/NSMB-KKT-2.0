@@ -5,20 +5,23 @@ using UnityEngine;
 
 namespace Quantum {
 
+//ideas:
+//make hazards despawn faster if avoided (in tanoomba's case, slower)
+//this would make hazards folks aren't caring about in the moment last less long
+
+
     public class CurrentHazards : AssetObject {
         public HazardBaser basehazards = null;
         public HazardDataList HazardGameData;
 
         [Serializable]
         public class HazardDataList {
-            public int MaxHazards = 10; //minimum 0, maximum 35 (anything higher than this is likely to overload the physicsobjectsystem?)
-            public ushort frequency = 8;
+            public int MaxHazards = 10;
+            public byte frequency = 10; //ushort
             //hefty
-            public int MaxHeftys = 1;
-            public bool HeftyPriority = false;
-            public int HeftySpawnChance = 15;
-            //misc
-            public bool FillMapOnStart = false;
+            public FP HeftyPercentage = 0;
+            public byte DespawnTime = 80;
+
             public List<HazardData> HazardDatas;
 
             [Serializable]
@@ -27,13 +30,13 @@ namespace Quantum {
                 public string Name;
                 public AssetRef<EntityPrototype> hazardAsset;
                 [Header("---Subdata---")]
-                public HValue DespawnTime;
-                public HValue Hefty;
+                public HValue Hefty; //do i allow players to modify this value
                 public HValue Team;
                 public HValue SpawnAsGoal;
                 public HValue SpawnRandom;
                 public HValue SpawnFridge;
                 public HValue SpawnBulb;
+                public HValue Scale;
                 [Header("---SpecialData---")]
                 public HValue[] SpecialValues;
             }
@@ -58,7 +61,6 @@ namespace Quantum {
             HazardGameData.HazardDatas[i].SpawnRandom = new();
             HazardGameData.HazardDatas[i].SpawnFridge = new();
             HazardGameData.HazardDatas[i].SpawnBulb = new();
-            HazardGameData.HazardDatas[i].DespawnTime = new();
             HazardGameData.HazardDatas[i].Team = new();
             HazardGameData.HazardDatas[i].Hefty.ButtonName = "Enabled As Hefty";
              HazardGameData.HazardDatas[i].SpawnAsGoal.ButtonName = "Spawn As Goal";
@@ -82,11 +84,6 @@ namespace Quantum {
              HazardGameData.HazardDatas[i].SpawnFridge.ValueRange =
              HazardGameData.HazardDatas[i].SpawnBulb.ValueRange =
                 new IntVector2(0, 1);
-
-            HazardGameData.HazardDatas[i].DespawnTime.ButtonName = "Time Til' Despawn";
-            HazardGameData.HazardDatas[i].DespawnTime.ButtonType = ValueType.counter;
-            HazardGameData.HazardDatas[i].DespawnTime.BaseValue = basehazards.Hazards.GlobalTimeTilDespawn;
-            HazardGameData.HazardDatas[i].DespawnTime.ValueRange = new IntVector2(3, 180); // 3 seconds - 3 minutes
 
             HazardGameData.HazardDatas[i].Team.ButtonName = "Team";
             HazardGameData.HazardDatas[i].Team.ButtonType = ValueType.counter;

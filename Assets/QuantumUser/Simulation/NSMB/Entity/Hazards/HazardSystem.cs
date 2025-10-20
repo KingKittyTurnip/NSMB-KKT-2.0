@@ -97,8 +97,8 @@ namespace Quantum {
                 return;
             }
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
-            //var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
+            var hazardsettings = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData;
+            var hazardata = hazardsettings.HazardDatas[index];
 
             hazard->IsHazard = hazard->JustSpawned = hazard->IsActive = true;
             // IdeaBulb Carry On Creation :TOTEST:
@@ -119,15 +119,16 @@ namespace Quantum {
             }
 
             //Set hazard team
-            //TODO: Actually Set Team (+1 From That it normally Is)
-            hazard->Team = 0;
+            //TODO: Actually Set Team, code general team mechanics
+            hazard->Team = 255;
 
             //Set LifeTime
-            hazard->BaseLifeTime = hazard->LifeTime = hazardata.DespawnTime.BaseValue * 60;
+            hazard->BaseLifeTime = hazard->LifeTime = hazardsettings.DespawnTime * 60;
 
-            // Shoot in Random Diraction
+            // Shoot in Random Direction
             transform->Position = spawnpoint;
-            //physicsObject->Velocity = new(hazard->SpawningVelocityRange.X /*Insert RNG Calculator*/, hazard->SpawningVelocityRange.Y);
+	    if (hazard->SpawningVelocityRange != FPVector2.Zero && f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject))
+                physicsObject->Velocity = new(hazard->SpawningVelocityRange.X * ((f.RNG->Next() * 2) - 1), hazard->SpawningVelocityRange.Y);
 
             // Create Icon on Map
             HazardInitialized?.Invoke(f, thisEntity);
@@ -136,6 +137,8 @@ namespace Quantum {
         public static void DestroyHazard(Frame f, EntityRef entity) {
             if (f.Unsafe.TryGetPointer(entity, out Hazard* hazard)) {
                 if (hazard->IsHazard) {
+		    if (hazard->IsHefty)
+		        f.Global->HeftyCount--;
                     f.Destroy(entity);
                     HazardDestroyed?.Invoke(f);
                 } else {
@@ -180,6 +183,9 @@ namespace Quantum {
                     if (hazard->IsHazard) { //this is a hazard, we can't respawn
                         continue;
                     }
+
+		    if (full)
+                        hazard->Team = 255;
 
                     if (!hazard->IgnorePlayerWhenRespawning) {
                         Physics2D.HitCollection playerHits = f.Physics2D.OverlapShape(hazard->Spawnpoint, 0, f.Context.CircleRadiusTwo, f.Context.PlayerOnlyMask);

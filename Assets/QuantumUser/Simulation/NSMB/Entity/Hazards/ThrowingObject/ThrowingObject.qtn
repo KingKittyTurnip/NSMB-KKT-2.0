@@ -14,6 +14,7 @@ component ThrowingObject {
 	[ExcludeFromPrototype] bool Thrown;
 	[ExcludeFromPrototype] bool CanHit;
 	[ExcludeFromPrototype] bool Facing;
+	[ExcludeFromPrototype] bool HitSomething;
 	[ExcludeFromPrototype] byte BounceTimes;
 
 	[ExcludeFromPrototype] FP ReusableTimer;

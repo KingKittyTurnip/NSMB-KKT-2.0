@@ -3,12 +3,14 @@ using Quantum.Profiling;
 using System.Drawing.Drawing2D;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
+using NSMB.Utilities.Extensions;
 
 public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
 
     //---Serialized Variables
     //[SerializeField] private GameObject BoostParticles;
     [SerializeField] private Animator animator;
+    [SerializeField] private AudioSource sfx;
 
     [SerializeField] private Transform Model;
     private Quaternion modelRotationTarget;
@@ -21,6 +23,7 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
     private int CurrentType = 0;
 
     public void Start() {
+        QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -84,4 +87,11 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
         }
     }
 
+        private void OnPlayComboSound(EventPlayComboSound e) {
+            if (e.Entity != EntityRef) {
+                return;
+            }
+
+            sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        }
 }
