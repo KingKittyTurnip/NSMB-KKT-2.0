@@ -147,7 +147,7 @@ namespace Quantum {
             goomba->Kill(f, entity, bumpOwner, KillReason.Special);
         }
 
-        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity) {
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
             if (f.Unsafe.TryGetPointer(entity, out Goomba* goomba)) {
                 goomba->Kill(f, entity, bobomb, KillReason.Special);
             }

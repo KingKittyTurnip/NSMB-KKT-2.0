@@ -38,7 +38,7 @@ namespace Quantum {
                     new BlockBumpSystem(),
                     new MarioPlayerSystem(),
                     new CoinSystem(),
-                    new GoldBlockSystem(),
+                    //new GoldBlockSystem(), //Removed Vanilla Gold Block
                     new WrappingObjectSystem(),
                     new BigStarSystem(),
                     new ObjectiveCoinSystem(),

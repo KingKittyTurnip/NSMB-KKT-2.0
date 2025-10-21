@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 3093743753026942761}
   - component: {fileID: -6338529405283914546}
   - component: {fileID: -3897358826683353975}
-  - component: {fileID: 549524369599356153}
   m_Layer: 19
   m_Name: BillBlock
   m_TagString: Powerup
@@ -352,20 +351,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     Type:
-      Value: 9
+      Value: 8
     GroundBounce:
       Value: 1
     IsBall:
+      Value: 0
+    IsFlying:
       Value: 0
     SlideAlong:
       Value: 0
     BouceOffPlayer:
       Value: 1
     ThrowForce:
-      RawValue: 294912
+      RawValue: 327680
     StarsToDrop: 1
     IgnoreTeamates:
       Value: 1
+    ReusableValue: 0
 --- !u!114 &6989136294608042370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,7 +387,7 @@ MonoBehaviour:
       Y:
         RawValue: -1409024
     TerminalVelocity:
-      RawValue: -786432
+      RawValue: -327680
     IsFrozen:
       Value: 0
     DisableCollision:
@@ -551,22 +553,6 @@ MonoBehaviour:
         RawValue: 196608
       Y:
         RawValue: 65536
---- !u!114 &549524369599356153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1017215213198693191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 642619f67a180e44e8ab2221956b27f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 6019046297828722700}
-  sfx: {fileID: 4207910641862185911}
-  Model: {fileID: 1242223969078471660}
-  coinboxRenderer: {fileID: 0}
 --- !u!1 &2394040665678212822
 GameObject:
   m_ObjectHideFlags: 0
@@ -10301,17 +10287,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: b8e90e58bb07b7f44a52bb5d42872cda,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b8e90e58bb07b7f44a52bb5d42872cda,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.86602545
+      value: 0.86602545
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b8e90e58bb07b7f44a52bb5d42872cda,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b8e90e58bb07b7f44a52bb5d42872cda,
         type: 3}
@@ -10321,7 +10307,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: b8e90e58bb07b7f44a52bb5d42872cda,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -120
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b8e90e58bb07b7f44a52bb5d42872cda,
         type: 3}
@@ -10345,6 +10331,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6019046297828722700}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b8e90e58bb07b7f44a52bb5d42872cda,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5397146383721127756}
   m_SourcePrefab: {fileID: 100100000, guid: b8e90e58bb07b7f44a52bb5d42872cda, type: 3}
 --- !u!4 &1242223969078471660 stripped
 Transform:
@@ -10380,3 +10370,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5397146383721127756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906874988000293206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 642619f67a180e44e8ab2221956b27f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 6019046297828722700}
+  Model: {fileID: 1242223969078471660}
+  sfx: {fileID: 4207910641862185911}
+  Fail: {fileID: 8300000, guid: 09705976d1bd4f3438958f4186cb7d9f, type: 3}
+  ExplosionFail: {fileID: 3675436524114575726, guid: 739e2f42b51330f42a7332e15d5dd484,
+    type: 3}
+  coinboxRenderer: {fileID: 0}

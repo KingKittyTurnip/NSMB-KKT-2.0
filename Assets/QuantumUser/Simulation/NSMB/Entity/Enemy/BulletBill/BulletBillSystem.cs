@@ -172,7 +172,7 @@ namespace Quantum {
         #endregion
 
         #region Signals
-        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity) {
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
             if (f.Unsafe.TryGetPointer(entity, out BulletBill* bulletBill)) {
                 bulletBill->Kill(f, entity, bobomb, KillReason.Special);
             }

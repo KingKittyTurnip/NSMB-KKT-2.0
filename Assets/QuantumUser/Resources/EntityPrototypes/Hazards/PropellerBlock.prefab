@@ -352,11 +352,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     Type:
-      Value: 8
+      Value: 7
     GroundBounce:
       Value: 1
     IsBall:
       Value: 0
+    IsFlying:
+      Value: 1
     SlideAlong:
       Value: 0
     BouceOffPlayer:
@@ -567,6 +569,7 @@ MonoBehaviour:
   Model: {fileID: 3041383572715187674}
   animator: {fileID: 716465491843839788}
   sfx: {fileID: 4207910641862185911}
+  PickedUp: {fileID: 8300000, guid: fce256982fd7e6f4c855d4457f161b52, type: 3}
   wasTurnaround: 0
 --- !u!1001 &3296515371113695793
 PrefabInstance:

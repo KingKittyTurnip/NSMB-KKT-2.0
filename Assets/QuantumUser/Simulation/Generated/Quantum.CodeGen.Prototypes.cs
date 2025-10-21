@@ -560,23 +560,6 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.GoldBlock))]
-  public unsafe class GoldBlockPrototype : ComponentPrototype<Quantum.GoldBlock> {
-    public MapEntityId AttachedTo;
-    public Int32 ObjectiveCoinsRemaining;
-    public Byte Timer;
-    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
-        Quantum.GoldBlock component = default;
-        Materialize((Frame)f, ref component, in context);
-        return f.Set(entity, component) == SetResult.ComponentAdded;
-    }
-    public void Materialize(Frame frame, ref Quantum.GoldBlock result, in PrototypeMaterializationContext context = default) {
-        PrototypeValidator.FindMapEntity(this.AttachedTo, in context, out result.AttachedTo);
-        result.ObjectiveCoinsRemaining = this.ObjectiveCoinsRemaining;
-        result.Timer = this.Timer;
-    }
-  }
-  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Goomba))]
   public unsafe partial class GoombaPrototype : ComponentPrototype<Quantum.Goomba> {
     public FP Speed;
@@ -1193,11 +1176,13 @@ namespace Quantum.Prototypes {
     public Quantum.QEnum8<ThrowingObjectType> Type;
     public QBoolean GroundBounce;
     public QBoolean IsBall;
+    public QBoolean IsFlying;
     public QBoolean SlideAlong;
     public QBoolean BouceOffPlayer;
     public FP ThrowForce;
     public Byte StarsToDrop;
     public QBoolean IgnoreTeamates;
+    public Byte ReusableValue;
     partial void MaterializeUser(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.ThrowingObject component = default;
@@ -1208,11 +1193,13 @@ namespace Quantum.Prototypes {
         result.Type = this.Type;
         result.GroundBounce = this.GroundBounce;
         result.IsBall = this.IsBall;
+        result.IsFlying = this.IsFlying;
         result.SlideAlong = this.SlideAlong;
         result.BouceOffPlayer = this.BouceOffPlayer;
         result.ThrowForce = this.ThrowForce;
         result.StarsToDrop = this.StarsToDrop;
         result.IgnoreTeamates = this.IgnoreTeamates;
+        result.ReusableValue = this.ReusableValue;
         MaterializeUser(frame, ref result, in context);
     }
   }

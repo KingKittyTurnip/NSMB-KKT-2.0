@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
 using NSMB.Utilities.Extensions;
+using System.Drawing.Drawing2D;
 
 public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
 
     //---Serialized Variables
     [SerializeField] private GameObject coinFromBlockParticle, Breakparticle;
-    [SerializeField] private Transform Nose;
     [SerializeField] private Animator animator;
-    [SerializeField] private List<Vector3> NosePoints = new(); //Perhaps Put This In The Player Prefs????
+    [SerializeField] private List<GameObject> Faces = new();
 
+    [SerializeField] private AudioClip PickedUp, Damaged, Finished;
 
     [SerializeField] private AudioSource sfx;
     [SerializeField] private Transform Model;
@@ -26,8 +27,9 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
 
     public void Start() {
         QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnCoinBoxCoin);
+
+        QuantumEvent.Subscribe<EventMarioPlayerPickedUpObject>(this, OnMarioPlayerPickedUpObject, FilterOutReplayFastForward);
         QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
-        Nose.localScale = NosePoints[0];
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -37,7 +39,6 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
         }
         var holdable = f.Unsafe.GetPointer<Holdable>(EntityRef);
         var coinbox = f.Unsafe.GetPointer<ThrowingObject>(EntityRef);
-        bool hasHolder = f.Exists(holdable->Holder);
 
         Vector3 modifiedZ = transform.position;
         if (f.Exists(holdable->Holder)) {
@@ -47,19 +48,17 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
         }
         transform.position = modifiedZ;
 
-        //Set Visuals From Owner
-        if (hasHolder && CurrentType == 0) {
-            var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->Holder);
-            for (int i = 0; f.SimulationConfig.CharacterDatas.Length > i; i++) {
-                if (f.SimulationConfig.CharacterDatas[i] == mario->CharacterAsset)
-                    SetMat(i + 1);
-            }
-        } else if (!coinbox->Thrown && !hasHolder && CurrentType != 0) {
-            SetMat(0);
+        //Set Look-Alike
+        bool hasHolder = f.Exists(holdable->Holder);
+        bool ShowOwner = hasHolder || (coinbox->Thrown && f.Exists(holdable->PreviousHolder));
+        for (int i = 0; i < f.SimulationConfig.CharacterDatas.Length; i++) {
+            Faces[i].SetActive(ShowOwner && f.SimulationConfig.CharacterDatas[i] == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset);
         }
 
-            float delta = Time.deltaTime;
-        if (hasHolder) {
+        float delta = Time.deltaTime;
+        if (coinbox->IsFlying) {
+            Model.rotation = Quaternion.Euler(0, 0, 0);
+        } else if (f.Exists(holdable->Holder)) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->Holder);
             var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(holdable->Holder);
 
@@ -69,6 +68,8 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
             Model.rotation = Quaternion.RotateTowards(Model.rotation, Quaternion.Euler(0, Model.rotation.eulerAngles.y + ((float) physicsObject->Velocity.X * 100 * Time.deltaTime), 0), 2000f * Time.deltaTime);
         }
+
+        animator.SetBool("IsFlying", coinbox->IsFlying);
     }
     private unsafe void OnCoinBoxCoin(EventThrowObjSimple e) {
         if (e.Entity != EntityRef) {
@@ -114,16 +115,23 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
             materialBlock = new();
         CurrentType = Type;
         materialBlock.SetFloat(ParamBoxType, Type);
-        Nose.localScale = NosePoints[Type];
         coinboxRenderer.SetPropertyBlock(materialBlock);
         Instantiate(Breakparticle, transform.position, Quaternion.identity);
     }
 
-        private void OnPlayComboSound(EventPlayComboSound e) {
-            if (e.Entity != EntityRef) {
-                return;
-            }
-
-            sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+    private void OnMarioPlayerPickedUpObject(EventMarioPlayerPickedUpObject e) {
+        if (e.OtherEntity != EntityRef) {
+            return;
         }
+
+        sfx.PlayOneShot(PickedUp);
+    }
+
+    private void OnPlayComboSound(EventPlayComboSound e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+
+        sfx.PlayOneShot(Damaged/*QuantumUtils.GetComboSoundEffect(e.Combo)*/);
+    }
 }

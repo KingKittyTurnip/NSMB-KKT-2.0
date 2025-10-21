@@ -489,7 +489,7 @@ namespace Quantum {
             physicsObject->IsTouchingGround = false;
         }
 
-        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity) {
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
             if (f.Unsafe.TryGetPointer(entity, out Koopa* koopa)) {
                 koopa->Kill(f, entity, bobomb, KillReason.Special);
             }

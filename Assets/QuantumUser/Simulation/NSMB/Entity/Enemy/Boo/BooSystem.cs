@@ -145,7 +145,7 @@ namespace Quantum {
             }
         }
 
-        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity) {
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
             if (f.Unsafe.TryGetPointer(entity, out Boo* boo)) {
                 boo->Kill(f, entity, bobomb, KillReason.Special);
             }

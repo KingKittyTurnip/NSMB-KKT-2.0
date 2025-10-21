@@ -10,9 +10,14 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
     //---Serialized Variables
     //[SerializeField] private GameObject BoostParticles;
     [SerializeField] private Animator animator;
+    [SerializeField] private Transform Model;
     [SerializeField] private AudioSource sfx;
 
-    [SerializeField] private Transform Model;
+    [Space]
+    [SerializeField] private AudioClip Fail;
+    [Space]
+    [SerializeField] private GameObject ExplosionFail;
+
     private Quaternion modelRotationTarget;
     private bool wasTurnaround;
 
@@ -23,6 +28,7 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
     private int CurrentType = 0;
 
     public void Start() {
+        QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnBillBlockFail);
         QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
     }
     public override unsafe void OnUpdateView() {
@@ -42,8 +48,6 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
         }
         transform.position = modifiedZ;
 
-        animator.SetBool("Powered", true);
-        animator.SetBool("Failing", true);
         //BoostParticles.SetActive(billblock->CanHit);
         float delta = Time.deltaTime;
         if (f.Exists(holdable->Holder)) {
@@ -54,10 +58,19 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
             InterpolateFacingDirection(mario);
 
             //Model.rotation = Quaternion.Euler(0, holder.AnimationController.Rotation, 0);
+            bool Powered = billblock->ReusableTimer != 0 && f.GetPlayerInput(mario->PlayerRef)->Jump.IsDown;
+            animator.SetBool("Powered", Powered && billblock->ReusableTimer < 240);
+            animator.SetBool("Failing", Powered && billblock->ReusableTimer <= 60);
+        } else if (billblock->Thrown) {
+            Model.rotation = Quaternion.RotateTowards(Model.rotation, Quaternion.Euler(0, billblock->Facing ? 110 : 250, 0), 200f * Time.deltaTime);
+            animator.SetBool("Powered", false);
+            animator.SetBool("Failing", true);
         } else {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
             //Model.rotation = Quaternion.Euler(0, billblock->Facing ? 90 : -90, 0);
             Model.rotation = Quaternion.RotateTowards(Model.rotation, Quaternion.Euler(0, Model.rotation.eulerAngles.y + ((float) physicsObject->Velocity.X * 100 * Time.deltaTime), 0), 2000f * Time.deltaTime);
+            animator.SetBool("Powered", false);
+            animator.SetBool("Failing", false);
         }
 
     }
@@ -86,8 +99,17 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
             Model.rotation = Quaternion.RotateTowards(Model.rotation, modelRotationTarget, maxRotation);
         }
     }
+    private unsafe void OnBillBlockFail(EventThrowObjSimple e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+        sfx.PlayOneShot(Fail);
+        animator.SetTrigger("Fail");
 
-        private void OnPlayComboSound(EventPlayComboSound e) {
+        Instantiate(ExplosionFail, e.pos.ToUnityVector3(), Quaternion.identity);
+    }
+
+    private void OnPlayComboSound(EventPlayComboSound e) {
             if (e.Entity != EntityRef) {
                 return;
             }

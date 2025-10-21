@@ -11,7 +11,7 @@ component Bobomb {
 	[ExcludeFromPrototype] ushort CurrentDetonationFrames;
 }
 
-signal OnBobombExplodeEntity(EntityRef bobomb, EntityRef entity);
+signal OnBobombExplodeEntity(EntityRef bobomb, EntityRef entity, ExplosionType type);
 
 event BobombLit {
 	EntityRef Entity;
@@ -20,4 +20,10 @@ event BobombLit {
 
 event BobombExploded {
 	EntityRef Entity;
+}
+
+enum ExplosionType : Byte {
+	Bomb,
+	Shockwave,
+	GroundedShockwave,
 }

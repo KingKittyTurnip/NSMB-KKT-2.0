@@ -3,6 +3,7 @@ using Quantum.Profiling;
 using UnityEngine;
 using NSMB.Utilities.Extensions;
 using static NSMB.Utilities.QuantumViewUtils;
+using System.Drawing.Drawing2D;
 
 public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
 
@@ -11,6 +12,8 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
     [SerializeField] private Transform Model;
     [SerializeField] private Animator animator;
     [SerializeField] private AudioSource sfx;
+
+    [SerializeField] private AudioClip PickedUp;
 
     private Quaternion modelRotationTarget;
     private bool modelRotateInstantly;
@@ -26,6 +29,7 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
             return;
         }
         var holdable = f.Unsafe.GetPointer<Holdable>(EntityRef);
+        var propellerbox = f.Unsafe.GetPointer<ThrowingObject>(EntityRef);
 
         Vector3 modifiedZ = transform.position;
         if (f.Exists(holdable->Holder)) {
@@ -36,7 +40,11 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
         transform.position = modifiedZ;
 
         float delta = Time.deltaTime;
-        if (f.Exists(holdable->Holder)) {
+        if (propellerbox->IsFlying) {
+            Model.rotation = Quaternion.Euler(0, 180, 0);
+            propellerVelocity = -30;
+            animator.SetFloat("PropellerSpeed", propellerVelocity);
+        } else if (f.Exists(holdable->Holder)) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->Holder);
             var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(holdable->Holder);
             propellerVelocity = Mathf.Clamp(propellerVelocity + (30 * ((mario->IsSpinnerFlying || mario->IsPropellerFlying || mario->UsedPropellerThisJump) ? -1 : 1) * delta), -15, -1);
@@ -109,12 +117,19 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
         }
     }
 
-
-        private void OnPlayComboSound(EventPlayComboSound e) {
-            if (e.Entity != EntityRef) {
-                return;
-            }
-
-            sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+    private void OnMarioPlayerPickedUpObject(EventMarioPlayerPickedUpObject e) {
+        if (e.OtherEntity != EntityRef) {
+            return;
         }
+
+        sfx.PlayOneShot(PickedUp);
+    }
+
+    private void OnPlayComboSound(EventPlayComboSound e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+
+        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+    }
 }

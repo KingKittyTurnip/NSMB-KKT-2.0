@@ -137,8 +137,8 @@ namespace Quantum {
         public static void DestroyHazard(Frame f, EntityRef entity) {
             if (f.Unsafe.TryGetPointer(entity, out Hazard* hazard)) {
                 if (hazard->IsHazard) {
-		    if (hazard->IsHefty)
-		        f.Global->HeftyCount--;
+                    if (hazard->IsHefty)
+                        f.Global->HeftyCount--;
                     f.Destroy(entity);
                     HazardDestroyed?.Invoke(f);
                 } else {
@@ -157,7 +157,7 @@ namespace Quantum {
                     }
                 }
             } else {
-                UnityEngine.Debug.Log("Object Does Not have The Hazard Script");
+                UnityEngine.Debug.Log("Object Does NOT Have The Hazard Script Or Is Invalid.");
             }
         }
 

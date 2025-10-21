@@ -94,7 +94,7 @@ namespace Quantum {
                     continue;
                 }
 
-                f.Signals.OnBobombExplodeEntity(filter.Entity, hit.Entity);
+                f.Signals.OnBobombExplodeEntity(filter.Entity, hit.Entity, ExplosionType.Bomb);
             }
 
             // Destroy tiles
@@ -328,7 +328,7 @@ namespace Quantum {
             holdable->IgnoreOwnerFrames = 15;
         }
 
-        public void OnBobombExplodeEntity(Frame f, EntityRef bobombEntity, EntityRef entity) {
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobombEntity, EntityRef entity, ExplosionType type) {
             if (f.Unsafe.TryGetPointer(entity, out Bobomb* bobomb)) {
                 bobomb->Kill(f, entity, bobombEntity, KillReason.Special);
             }

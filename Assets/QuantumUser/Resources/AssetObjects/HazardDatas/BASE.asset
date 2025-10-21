@@ -105,12 +105,6 @@ MonoBehaviour:
       SpawnFridge: 1
       SpawnBulb: 1
       SpecialValues:
-      - ButtonName: Stickyhold
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
       - ButtonName: Can Teleport
         ButtonType: 0
         BaseValue: 0
@@ -130,12 +124,6 @@ MonoBehaviour:
       SpawnFridge: 1
       SpawnBulb: 1
       SpecialValues:
-      - ButtonName: Stickyhold
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
       - ButtonName: Is Bluestone
         ButtonType: 0
         BaseValue: 0
@@ -155,12 +143,6 @@ MonoBehaviour:
       SpawnFridge: 1
       SpawnBulb: 1
       SpecialValues:
-      - ButtonName: Stickyhold
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
       - ButtonName: Is Broken
         ButtonType: 0
         BaseValue: 0
@@ -180,15 +162,9 @@ MonoBehaviour:
       SpawnFridge: 1
       SpawnBulb: 1
       SpecialValues:
-      - ButtonName: Stickyhold
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
       - ButtonName: Is Red Pow
         ButtonType: 0
-        BaseValue: 0
+        BaseValue: 1
         ValueRange:
           X: 0
           Y: 1
@@ -217,7 +193,13 @@ MonoBehaviour:
       SpawnFridge: 1
       SpawnBulb: 1
       SpecialValues:
-      - ButtonName: Stickyhold
+      - ButtonName: Is Flying
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      - ButtonName: Is Purple
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -316,7 +298,13 @@ MonoBehaviour:
       SpawnRandom: 1
       SpawnFridge: 1
       SpawnBulb: 1
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Is Flying
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 0
     - Name: Propeller Block
       hazardAsset:
         Id:
@@ -329,7 +317,13 @@ MonoBehaviour:
       SpawnRandom: 1
       SpawnFridge: 1
       SpawnBulb: 1
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Is Flying
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 0
     - Name: Tanoomba
       hazardAsset:
         Id:

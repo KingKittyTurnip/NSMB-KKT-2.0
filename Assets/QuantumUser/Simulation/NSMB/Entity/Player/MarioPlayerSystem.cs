@@ -378,6 +378,11 @@ namespace Quantum {
             if (physicsObject->IsTouchingGround) {
                 // Coyote Time
                 mario->CoyoteTimeFrames = physics.CoyoteTimeFrames;
+                if (mario->BillBux) {
+                    if (f.Unsafe.TryGetPointer(mario->HeldEntity, out ThrowingObject* ThrowingObj) && ThrowingObj->Type == ThrowingObjectType.BillBlock) {
+                        ThrowingObj->ReusableTimer = 180;
+                    }
+                }
             }
 
             if (!physicsObject->WasTouchingGround && physicsObject->IsTouchingGround) {
@@ -1417,11 +1422,19 @@ namespace Quantum {
                     PropellerStart(f, ref filter, physics, stage);
                 return;
             } else if (mario->BillBux) {
-                if (inputs.Jump.IsDown && physicsObject->Velocity.Y <= 0 && !physicsObject->IsTouchingGround && f.Unsafe.TryGetPointer(mario->HeldEntity, out ThrowingObject* ThrowingObj) && ThrowingObj->ReusableTimer > 0) {
-                    physicsObject->Velocity.Y *= FP._0_50;
-                    if (FPMath.Abs(physicsObject->Velocity.Y) < FP._0_50)
-                        physicsObject->Velocity.Y = 0;
-                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + ((mario->FacingRight ? 1 : -1) * FP._0_10), -physics.WalkMaxVelocity[3], physics.WalkMaxVelocity[3]);
+                if (inputs.Jump.IsDown && !physicsObject->IsTouchingGround && f.Unsafe.TryGetPointer(mario->HeldEntity, out ThrowingObject* ThrowingObj) && ThrowingObj->Type == ThrowingObjectType.BillBlock && ThrowingObj->ReusableTimer > 0) {
+                    if (physicsObject->Velocity.Y <= 0) {
+                        physicsObject->Velocity.Y *= FP._0_50;
+                        if (FPMath.Abs(physicsObject->Velocity.Y) < FP._0_50)
+                            physicsObject->Velocity.Y = 0;
+                        physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + ((mario->FacingRight ? 1 : -1) * FP._0_10), -physics.WalkMaxVelocity[3], physics.WalkMaxVelocity[3]);
+                    }
+                    if ((physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) && ThrowingObj->ReusableTimer < 180) {
+                        //Bump On Wall
+                        ThrowingObj->ReusableTimer = 1;
+                        physicsObject->Velocity.Y = 6;
+                        physicsObject->Velocity.X = physicsObject->IsTouchingLeftWall ? 4 : -4;
+                    }
                 }
                 return;
             } else if (f.Exists(mario->HeldEntity)) {
@@ -2526,9 +2539,37 @@ namespace Quantum {
             }
         }
 
-        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity) {
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
             if (f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)) {
-                mario->Powerdown(f, entity, false, bobomb);
+                switch (type) {
+                case ExplosionType.Bomb:
+                    mario->Powerdown(f, entity, false, bobomb);
+                    break;
+                case ExplosionType.Shockwave:
+                case ExplosionType.GroundedShockwave:
+                    f.Unsafe.TryGetPointer<Transform2D>(bobomb, out var bombTransform);
+                    if (bombTransform == null || mario->InstakillsEnemies(null, false))
+                        break;
+                    var marioTransform = f.Unsafe.GetPointer<Transform2D>(entity);
+                    var Dis = f.Unsafe.GetPointer<ThrowingObject>(bobomb);
+                    var holdable = f.Unsafe.GetPointer<Holdable>(bobomb);
+                    var hazard = f.Unsafe.GetPointer<Hazard>(bobomb);
+
+                    QuantumUtils.UnwrapWorldLocations(f, bombTransform->Position, marioTransform->Position, out FPVector2 marioAPosition, out FPVector2 marioBPosition);
+                    bool fromRight = marioAPosition.X > marioBPosition.X;
+
+                    UnityEngine.Debug.Log("try explode");
+                    if (Dis->IgnoreTeamates && (holdable->PreviousHolder == entity || mario->GetTeam(f) == hazard->Team)) //owner or on team
+                        break;
+
+                    UnityEngine.Debug.Log("NOT freind");
+
+                    if (Dis->StarsToDrop != 0 && 
+                        (type == ExplosionType.Shockwave || f.Unsafe.GetPointer<PhysicsObject>(entity)->IsTouchingGround))
+                        UnityEngine.Debug.Log("explode.");
+                    mario->DoKnockback(f, entity, fromRight, Dis->StarsToDrop, KnockbackStrength.CollisionBump, bobomb, true);
+                    break;
+                }
             }
         }
 

@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
@@ -55,6 +56,7 @@ namespace Quantum {
             f.Context.Interactions.Register<ThrowingObject, Boo>(f, OnThrowingObjectBooInteraction);
             f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteraction);
             f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteractionStationary);
+            f.Context.Interactions.Register<ThrowingObject, Boss>(f, OnThrowingObjectBossInteraction);
             f.Context.Interactions.Register<Projectile, ThrowingObject>(f, OnThrowingObjectProjectileInteraction);
         }
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -65,51 +67,72 @@ namespace Quantum {
             var holdable = filter.holdable;
             var hazard = filter.hazard;
 
-            // Bounce Logic
-            if ((Dis->Thrown || Dis->BounceTimes > 0) && physicsObject->IsTouchingGround) {
-                Dis->HitSomething = true;
-                if (Dis->GroundBounce && Dis->BounceTimes < 3) {
-                    Dis->BounceTimes += 1;
-		    physicsObject->IsTouchingGround = false;
-                    physicsObject->Velocity.Y = 4 - Dis->BounceTimes;
-                    if (!Dis->IsBall)
-                        physicsObject->Velocity.X *= Constants._0_66;
+            if (Dis->IsFlying) {
+                // Slowly float downwards
+                physicsObject->IsTouchingGround = false;
+                bool closeToGround;
+                if (PhysicsObjectSystem.BoxInGround(f, transform->Position, collider->Shape, stage: stage, entity: filter.Entity)) {
+                    closeToGround = false;
                 } else {
-                    if (!Dis->IsBall)
-                        physicsObject->Velocity.X = 0;
-                    Dis->BounceTimes = 0;
-		    Dis->Thrown = Dis->HitSomething = false;
+                    closeToGround = physicsObject->IsTouchingGround
+                        || (transform->Position.Y - stage.StageWorldMin.Y) <= 4
+                        || PhysicsObjectSystem.Raycast(f, stage, transform->Position + (FPVector2.Left / 4), FPVector2.Down, FP._1_20, out _)
+                        || PhysicsObjectSystem.Raycast(f, stage, transform->Position + (FPVector2.Right / 4), FPVector2.Down, FP._1_20, out _);
                 }
-            } else if (physicsObject->Velocity.Y < -6) {
-                Dis->BounceTimes = 1;
-            } else if (physicsObject->IsTouchingGround && physicsObject->Velocity.X != 0 && !Dis->IsBall) {
-                physicsObject->Velocity.X = 0;
-            }
-            if (Dis->IsBall) {
-                if (physicsObject->IsTouchingLeftWall) {
-                    physicsObject->Velocity.X = FPMath.Abs(physicsObject->PreviousFrameVelocity.X);
-                } else if (physicsObject->IsTouchingRightWall) {
-                    physicsObject->Velocity.X = FPMath.Abs(physicsObject->PreviousFrameVelocity.X) * -1;
-                }
-                if (physicsObject->IsTouchingGround) {
-                    if (physicsObject->IsOnSlideableGround) {
-                        physicsObject->Velocity.X += physicsObject->FloorAngle * Constants.SmoothSlowdownmultiplier;
+                FP targetVel = closeToGround ? Constants._2_50 : -Constants._2_50;
+
+                physicsObject->Velocity.X *= Constants._0_95;
+                physicsObject->Velocity.Y = QuantumUtils.MoveTowards(physicsObject->Velocity.Y - (physicsObject->Gravity.Y * f.DeltaTime), targetVel, 6 * f.DeltaTime);
+            } else {
+                // Bounce Logic
+                if ((Dis->Thrown || Dis->BounceTimes > 0) && physicsObject->IsTouchingGround) {
+                    Dis->HitSomething = true;
+                    if (Dis->GroundBounce && Dis->BounceTimes < 3) {
+                        Dis->BounceTimes += 1;
+                        physicsObject->IsTouchingGround = false;
+                        physicsObject->Velocity.Y = 4 - Dis->BounceTimes;
+                        if (!Dis->IsBall)
+                            physicsObject->Velocity.X *= Constants._0_66;
                     } else {
-                        physicsObject->Velocity.X *= Constants._0_90;
+                        if (!Dis->IsBall)
+                            physicsObject->Velocity.X = 0;
+                        Dis->BounceTimes = 0;
+                        Dis->Thrown = Dis->HitSomething = false;
                     }
-                    if (FPMath.Abs(physicsObject->Velocity.X) < FP._0_01) {
-                        physicsObject->Velocity.X = 0;
-                    } else {
-                        physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -10, 10);
+                } else if (physicsObject->Velocity.Y < -6) {
+                    Dis->BounceTimes = 1;
+                } else if (physicsObject->IsTouchingGround && physicsObject->Velocity.X != 0 && !Dis->IsBall) {
+                    physicsObject->Velocity.X = 0;
+                }
+                if (Dis->IsBall) {
+                    if (physicsObject->IsTouchingLeftWall) {
+                        physicsObject->Velocity.X = FPMath.Abs(physicsObject->PreviousFrameVelocity.X);
+                    } else if (physicsObject->IsTouchingRightWall) {
+                        physicsObject->Velocity.X = FPMath.Abs(physicsObject->PreviousFrameVelocity.X) * -1;
+                    }
+                    if (physicsObject->IsTouchingGround) {
+                        if (physicsObject->IsOnSlideableGround) {
+                            physicsObject->Velocity.X += physicsObject->FloorAngle * Constants.SmoothSlowdownmultiplier;
+                        } else {
+                            physicsObject->Velocity.X *= Constants._0_90;
+                        }
+                        if (FPMath.Abs(physicsObject->Velocity.X) < FP._0_01) {
+                            physicsObject->Velocity.X = 0;
+                        } else {
+                            physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -10, 10);
+                        }
                     }
                 }
             }
 
             //physicsObject->DisableCollision = false;
-            Dis->CanHit = (Dis->Thrown || Dis->BounceTimes != 0);
 
             if (hazard->IsHazard && holdable->Holder != EntityRef.None && hazard->LifeTime < hazard->BaseLifeTime) { //?
                 hazard->LifeTime = hazard->BaseLifeTime;
+            } else if (holdable->PreviousHolder != EntityRef.None && hazard->LifeTime > 1 && !Dis->Thrown) {
+                //if it was already interacted with and ignored, despawn faster
+                //UnityEngine.Debug.Log("Despawning Fast");
+                hazard->LifeTime--;
             }
 
             // Special Updates
@@ -126,8 +149,39 @@ namespace Quantum {
                 #endregion
             }
             case ThrowingObjectType.Spring:
-            case ThrowingObjectType.RedPow:
-            case ThrowingObjectType.BluePow:
+                break;
+            case ThrowingObjectType.Pow:
+                if (!physicsObject->IsFrozen) {
+                    if (Dis->HitSomething /*|| (hazard->IPWSUntilGround && hazard->IPWSTime == 0 && physicsObject->IsTouchingGround)*/ || (Dis->Thrown &&
+                    (physicsObject->IsTouchingGround || physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall || physicsObject->IsTouchingCeiling))) {
+                        f.Unsafe.GetPointer<Interactable>(filter.Entity)->ColliderDisabled = true;
+                        hazard->LifeTime = 15;
+                        physicsObject->IsFrozen = true;
+                    }
+                } else {
+                    if (hazard->LifeTime <= 10 && hazard->LifeTime > 5) {
+                        Shape2D shape = Shape2D.CreateCircle(Dis->ReusableValue == 0 ? 1 : 4);
+                        var hits = f.Physics2D.OverlapShape(*transform, shape);
+                        for (int i = 0; i < hits.Count; i++) {
+                            var hit = hits[i];
+                            if (hit.Entity == filter.Entity) {
+                                continue;
+                            }
+
+                            f.Signals.OnBobombExplodeEntity(filter.Entity, hit.Entity, Dis->ReusableValue == 0 ? ExplosionType.Shockwave : ExplosionType.GroundedShockwave);
+                        }
+                    }
+                    if (!hazard->IsHazard) {
+                        QuantumUtils.Decrement(ref hazard->LifeTime);
+                        if (hazard->LifeTime <= 1) {
+                            HazardSystem.DestroyHazard(f, filter.Entity);
+                            hazard->LifeTime = 0;
+                            Dis->HitSomething = Dis->Thrown = false;
+                        }
+                    }
+                }
+
+                break;
             case ThrowingObjectType.Barrel:
             case ThrowingObjectType.Freezie:
                 break;
@@ -162,22 +216,47 @@ namespace Quantum {
                 #endregion
             }
             case ThrowingObjectType.PropellerBox:
+                break;
             case ThrowingObjectType.BillBlock: {
                 #region BillBlock
-                if (!Dis->Thrown && !f.Exists(holdable->Holder)) {
+                bool holderexists = f.Exists(holdable->Holder);
+                if (Dis->Thrown && Dis->ReusableTimer > 0) {
+                    Dis->ReusableTimer -= 1;
+                    //Throw Hovers for a bit
+                    physicsObject->Velocity.Y = -FP._0_10;
+                    if (Dis->ReusableTimer <= 0) {
+                        f.Events.ThrowObjSimple(filter.Entity, transform->Position);
+                        physicsObject->Velocity.X = Dis->Facing ? FP._1_50 : -FP._1_50;
+                    }
+                } else if (!holderexists) {
+                    //Not hovering, fall
+                    if (Dis->IsFlying) {
+                        //if has wings, fly
+                        if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall)
+                            Dis->Facing = physicsObject->IsTouchingLeftWall;
+                        physicsObject->Velocity.X = QuantumUtils.MoveTowards(physicsObject->Velocity.X, Dis->Facing ? FP._1_50 : -FP._1_50, 2 * f.DeltaTime);
+                    }
+                }
+
+                if (!Dis->Thrown && !holderexists) {
                     Dis->ReusableTimer = 240;
                     break;
                 }
                 var entity = filter.Entity;
-
+                if (!f.Exists(holdable->PreviousHolder)) {
+                    break;
+                }
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder);
                 var marioPhys = f.Unsafe.GetPointer<PhysicsObject>(holdable->PreviousHolder);
                 byte newCoins = (byte) (mario->Coins + 1);
                 bool item = newCoins == f.Global->Rules.CoinsForPowerup;
-                if (marioPhys->IsTouchingGround || marioPhys->WasTouchingGround) {
-                    Dis->ReusableTimer = 240;
-                } else if (f.GetPlayerInput(mario->PlayerRef)->Jump.IsDown) { //get inputs
+                /*if (marioPhys->IsTouchingGround || marioPhys->WasTouchingGround) { //Check if the "wastouchingground" being set to false when mario jumps is needed
+                    Dis->ReusableTimer = 180;
+                } else */
+                if (Dis->ReusableTimer > 0 && f.GetPlayerInput(mario->PlayerRef)->Jump.IsDown && (marioPhys->Velocity.Y <= 0 || Dis->ReusableTimer == 1)) { //get inputs
                     Dis->ReusableTimer -= 1;
+                    if (Dis->ReusableTimer <= 0)
+                        f.Events.ThrowObjSimple(filter.Entity, transform->Position);
                 }
                 break;
                 #endregion
@@ -209,7 +288,7 @@ namespace Quantum {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             if (f.Exists(holdable->Holder)) {
                 //Force The player To Drop This Item if it's GroundPounded While They Are Carrying It
-                if (mario->IsGroundpounding) {
+                if (mario->IsGroundpoundActive) {
                     holdable->DropWithoutThrowing(f, thisEntity);
                     f.Events.PlayComboSound(thisEntity, 0);
                 }
@@ -222,51 +301,57 @@ namespace Quantum {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity); var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
-            var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
+            var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position; var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
 
-            QuantumUtils.UnwrapWorldLocations(f, DisTransform->Position + ((DisCollider->Shape.Centroid.Y - DisCollider->Shape.Box.Extents.Y) * FPVector2.Up), marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+            var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
+            QuantumUtils.UnwrapWorldLocations(f, DisTransform->Position + ((DisCollider->Shape.Centroid.Y - DisCollider->Shape.Box.Extents.Y) * FPVector2.Up), marioTransform, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
             FP upDot = FPVector2.Dot(damageDirection, FPVector2.Up);
             bool hitRight = Dis->Thrown ? !Dis->Facing : damageDirection.X > 0;
             #endregion
 
-            if ((Dis->Thrown || (!physicsObject->IsTouchingGround && Dis->Type == ThrowingObjectType.Stone)) && mario->IsDamageable) {
+            if (Dis->IsFlying && (mario->IsGroundpoundActive || damageDirection.Y < -Constants._0_66)) {
+                Dis->IsFlying = false;
+                physicsObject->Velocity.Y = 5;
+            } else  if ((Dis->Thrown || (!physicsObject->IsTouchingGround && Dis->Type == ThrowingObjectType.Stone)) && mario->IsDamageable && !(holdable->PreviousHolder == marioEntity && Dis->IgnoreTeamates)) {
                 // Hit Player (Unless Not)
                 if (Dis->BouceOffPlayer) {
-		    Dis->HitSomething = true;
+                    Dis->HitSomething = true;
                     Dis->Thrown = false;
                     physicsObject->IsTouchingGround = false;
                     physicsObject->Velocity = new FPVector2(hitRight ? 1 : -1, 4);
                 }
-                if (Dis->GroundBounce) 
-		    Dis->BounceTimes = 1;
+                if (Dis->GroundBounce)
+                    Dis->BounceTimes = 1;
                 if (Dis->StarsToDrop != 0) {
-                    bool TeamateItem = Dis->IgnoreTeamates && mario->GetTeam(f) == hazard->Team;
+                    bool TeamateItem = Dis->IgnoreTeamates && (mario->GetTeam(f) == hazard->Team);
                     mario->DoKnockback(f, marioEntity, hitRight, TeamateItem ? 0 : Dis->StarsToDrop, /*TeamateItem*/ KnockbackStrength.FireballBump, thisEntity);
+                    f.Events.PlayKnockbackEffect(marioEntity, thisEntity, KnockbackStrength.FireballBump,
+                        (f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position) / 2);
                 }
                 return false;
-            } else if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
+            } else if (mario->CurrentPowerupState == PowerupState.MegaMushroom && damageDirection.Y <= Constants._0_66) {
                 // HOMERUN
                 f.Events.PlayComboSound(thisEntity, 0);
                 Dis->Thrown = true;
-		Dis->HitSomething = false;
+                Dis->HitSomething = false;
                 physicsObject->IsTouchingGround = false;
                 physicsObject->Velocity = new FPVector2(hitRight ? -8 : 8, 5);
                 return false;
             } else if (damageDirection.Y <= Constants._0_66 && FPMath.Abs(damageDirection.X) < Constants._0_90 && !(physicsObject->IsTouchingGround && upDot <= -Constants.PhysicsGroundMaxAngleCos)) {
                 //PlayerInsideObject
+                /*
                 if (Dis->BouceOffPlayer) {
                     // Bouce Off Player
-		    Dis->HitSomething = true;
+                    Dis->HitSomething = true;
                     Dis->Thrown = false;
-                    physicsObject->Velocity = new FPVector2(hitRight ? -1 : 1, 4);
+                    physicsObject->Velocity = new FPVector2(Dis->Facing ? -1 : 1, 4);
                     physicsObject->IsTouchingGround = false;
                     if (Dis->GroundBounce)
                         Dis->BounceTimes = 1;
-                } else {  
+                } else {
                     //physicsObject->DisableCollision = true;
-                }
+                }*/
             }
             if ((!Dis->Thrown || mario->GetTeam(f) == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->GetTeam(f)) 
               && (damageDirection.Y <= Constants._0_66 || Dis->HitSomething)) {
@@ -286,6 +371,7 @@ namespace Quantum {
                         //f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = true;
                         physicsObject->DisableCollision = true;
                     }
+                    Dis->HitSomething = Dis->IsFlying = false;
                     // Enable Carryabilites
                     switch (Dis->Type) {
                     case ThrowingObjectType.Stone: {
@@ -314,7 +400,7 @@ namespace Quantum {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
 
-            if (!(Dis->CanHit && f.Exists(holdable->PreviousHolder))) {
+            if (!(Dis->Thrown && f.Exists(holdable->PreviousHolder))) {
                 return;
             }
 
@@ -326,7 +412,7 @@ namespace Quantum {
             var goomba = f.Unsafe.GetPointer<Goomba>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->CanHit || beingHeld) {
+            if (Dis->Thrown || beingHeld) {
                 // Destroy them
                 goomba->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -338,7 +424,7 @@ namespace Quantum {
 
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->CanHit || beingHeld) {
+            if (Dis->Thrown || beingHeld) {
                 // Destroy them
                 koopa->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -349,7 +435,7 @@ namespace Quantum {
             var bobomb = f.Unsafe.GetPointer<Bobomb>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->CanHit || beingHeld) {
+            if (Dis->Thrown || beingHeld) {
                 // Destroy them
                 bobomb->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -359,7 +445,7 @@ namespace Quantum {
             var bill = f.Unsafe.GetPointer<BulletBill>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->CanHit || beingHeld) {
+            if (Dis->Thrown || beingHeld) {
                 // Destroy them
                 bill->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -369,7 +455,7 @@ namespace Quantum {
             var plant = f.Unsafe.GetPointer<PiranhaPlant>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->CanHit || beingHeld) {
+            if (Dis->Thrown || beingHeld) {
                 // Destroy them
                 plant->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -379,7 +465,7 @@ namespace Quantum {
             var boo = f.Unsafe.GetPointer<Boo>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->CanHit || beingHeld) {
+            if (Dis->Thrown || beingHeld) {
                 // Destroy them
                 boo->Kill(f, otherEntity, thisEntity, KillReason.Special);
             }
@@ -389,7 +475,7 @@ namespace Quantum {
             var ice = f.Unsafe.GetPointer<IceBlock>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->CanHit || beingHeld) {
+            if (Dis->Thrown || beingHeld) {
                 // Destroy them
                 IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other);
             }
@@ -399,11 +485,35 @@ namespace Quantum {
             var ice = f.Unsafe.GetPointer<IceBlock>(otherEntity);
             bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
 
-            if (Dis->CanHit || beingHeld) {
+            if (Dis->Thrown || beingHeld) {
                 // Destroy them
                 IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other);
             }
         }
+        public static void OnThrowingObjectBossInteraction(Frame f, EntityRef thisEntity, EntityRef bossEntity) {
+            var boss = f.Unsafe.GetPointer<Boss>(bossEntity);
+            if (boss->iframes > 0 || boss->Dead)
+                return;
+
+            var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
+            if (Dis->Thrown && Dis->StarsToDrop != 0) {
+                var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+                Dis->HitSomething = true;
+                Dis->Thrown = false;
+                physicsObject->Velocity = new FPVector2(Dis->Facing ? -3 : 3, 4);
+                physicsObject->IsTouchingGround = false;
+                if (Dis->GroundBounce)
+                    Dis->BounceTimes = 1;
+
+                f.Events.PlayKnockbackEffect(bossEntity, thisEntity, KnockbackStrength.FireballBump, 
+                    (f.Unsafe.GetPointer<Transform2D>(bossEntity)->Position + f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position) / 2);
+
+                //Damage Boss
+                boss->BossHarmed(f, bossEntity, Dis->StarsToDrop == 1 ? KnockbackStrength.FireballBump : Dis->StarsToDrop == 3 ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, Dis->StarsToDrop > 1);
+                f.Events.PlayBossHitSound(bossEntity);
+            }
+        }
+
         public static void OnThrowingObjectProjectileInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
@@ -427,8 +537,8 @@ namespace Quantum {
             }
 
             //TODO: Up key
-            Dis->Thrown = Dis->CanHit = !dropped;
-	    Dis->HitSomething = false;
+            Dis->Thrown = !dropped && !crouching;
+	        Dis->HitSomething = false;
             Dis->Facing = mario->FacingRight;
             FP bonusSpeed = FPMath.Abs(marioPhysicsObject->Velocity.X / 2);
             if (FPMath.Sign(marioPhysicsObject->Velocity.X) != (mario->FacingRight ? 1 : -1)) {
@@ -436,11 +546,8 @@ namespace Quantum {
             }
             physicsObject->Velocity.X = (Dis->ThrowForce + bonusSpeed) * (mario->FacingRight ? 1 : -1);
             physicsObject->Velocity.Y = 2;
-            holdable->IgnoreOwnerFrames = 15;
+            holdable->IgnoreOwnerFrames = 20; //15
 
-            if (!dropped) {
-                f.Events.MarioPlayerThrewObject(marioEntity, entity);
-            }
             f.Unsafe.GetPointer<PhysicsCollider2D>(entity)->Enabled = true;
             //f.Unsafe.GetPointer<Interactable>(entity)->ColliderDisabled = false;
             physicsObject->DisableCollision = false;
@@ -448,7 +555,7 @@ namespace Quantum {
             // Disable Carryabilites
             switch (Dis->Type) {
             case ThrowingObjectType.Stone: {
-                Dis->CanHit = true;
+                Dis->Thrown = true;
                 marioPhysicsObject->Velocity.X /= 4;
                 mario->StoneBux = false;
                 break;
@@ -464,8 +571,14 @@ namespace Quantum {
                 break;
             case ThrowingObjectType.BillBlock:
                 mario->BillBux = false;
+                physicsObject->Velocity.X = Dis->ThrowForce * (mario->FacingRight ? 1 : -1);
                 marioPhysicsObject->Velocity.Y += 3;
+                Dis->ReusableTimer = 60;
                 break;
+            }
+
+            if (Dis->Thrown) {
+                f.Events.MarioPlayerThrewObject(marioEntity, entity);
             }
         }
 
@@ -485,9 +598,9 @@ namespace Quantum {
             physicsObject->Velocity.Y = 5;
 
             switch (Dis->Type) {
-            case ThrowingObjectType.RedPow:
-            case ThrowingObjectType.BluePow:
+            case ThrowingObjectType.Pow:
                 // Activate These
+                Dis->HitSomething = true;
                 break;
             case ThrowingObjectType.Freezie:
                 // Break This
@@ -505,30 +618,43 @@ namespace Quantum {
 
         public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out ThrowingObject* Dis)
-                || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
+                || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
+                || !f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject)) {
                 return;
             }
 
-            //uhh i would put specific hazard spawn data here
+            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
 
-            hazard->BaseLifeTime = FPMath.RoundToInt(hazard->BaseLifeTime * FP._0_50);
-UnityEngine.Debug.Log(hazard->BaseLifeTime);
-
-            /*switch (Dis->Type) {
+            switch (Dis->Type) {
             case ThrowingObjectType.Basic:
             case ThrowingObjectType.Stone:
             case ThrowingObjectType.Spring:
-            case ThrowingObjectType.RedPow:
-            case ThrowingObjectType.BluePow: //Bluepow And Red Pow Are Considerd Varients Of Eachother
+                break;
+            case ThrowingObjectType.Pow:
+                Dis->ReusableValue = (byte) (hazardata.SpecialValues[0].BaseValue == 1 ? 1 : 0);
+                if (hazardata.SpecialValues[1].BaseValue == 1) {
+                    Dis->HitSomething = true;
+                    hazard->IPWSTime = 0;
+                }
+                if (hazardata.SpecialValues[1].BaseValue == 2) {
+                    physicsObject->Velocity.Y = 20;
+                    //idk maybe play a fling sound
+                }
+                break;
             case ThrowingObjectType.Barrel:
             case ThrowingObjectType.Freezie:
+                break;
             case ThrowingObjectType.CoinBox:
             case ThrowingObjectType.PropellerBox:
             case ThrowingObjectType.BillBlock:
             case ThrowingObjectType.CannonBox:
             case ThrowingObjectType.Fridge:
                 break;
-            }*/
+            }
+
+            if (Dis->IsFlying) {
+                hazard->IPWSUntilGround = false;
+            }
         }
         #endregion
     }

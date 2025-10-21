@@ -1001,9 +1001,9 @@ MonoBehaviour:
       data:
         Position:
           X:
-            RawValue: 770048
+            RawValue: 819200
           Y:
-            RawValue: -245760
+            RawValue: -196608
         Rotation:
           RawValue: 0
     - rid: 4142264567776411649
@@ -1063,9 +1063,9 @@ MonoBehaviour:
       data:
         Spawnpoint:
           X:
-            RawValue: 770048
+            RawValue: 819200
           Y:
-            RawValue: -245760
+            RawValue: -196608
         IgnorePlayerWhenRespawning:
           Value: 0
         DoNotDespawnInPit:
@@ -1119,7 +1119,7 @@ MonoBehaviour:
           Y:
             RawValue: -1409024
         TerminalVelocity:
-          RawValue: -786432
+          RawValue: -327680
         IsFrozen:
           Value: 0
         DisableCollision:
@@ -1136,20 +1136,23 @@ MonoBehaviour:
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Type:
-          Value: 9
+          Value: 8
         GroundBounce:
           Value: 1
         IsBall:
+          Value: 0
+        IsFlying:
           Value: 0
         SlideAlong:
           Value: 0
         BouceOffPlayer:
           Value: 1
         ThrowForce:
-          RawValue: 294912
+          RawValue: 327680
         StarsToDrop: 1
         IgnoreTeamates:
           Value: 1
+        ReusableValue: 0
     - rid: 4142264567776411659
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:

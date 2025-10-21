@@ -45,11 +45,11 @@ public unsafe class HeavystoneAnimator : QuantumEntityViewComponent {
         }
     }
 
-        private void OnPlayComboSound(EventPlayComboSound e) {
-            if (e.Entity != EntityRef) {
-                return;
-            }
-
-            sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+    private void OnPlayComboSound(EventPlayComboSound e) {
+        if (e.Entity != EntityRef) {
+            return;
         }
+
+        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+    }
 }

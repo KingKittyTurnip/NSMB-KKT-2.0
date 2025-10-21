@@ -4,6 +4,7 @@ component ThrowingObject {
     ThrowingObjectType Type;
     bool GroundBounce;
 	bool IsBall;
+	bool IsFlying;
     bool SlideAlong;
 	bool BouceOffPlayer;
 	FP ThrowForce;
@@ -12,20 +13,20 @@ component ThrowingObject {
 	bool IgnoreTeamates;
 
 	[ExcludeFromPrototype] bool Thrown;
-	[ExcludeFromPrototype] bool CanHit;
+	//[ExcludeFromPrototype] bool CanHit;
 	[ExcludeFromPrototype] bool Facing;
 	[ExcludeFromPrototype] bool HitSomething;
 	[ExcludeFromPrototype] byte BounceTimes;
 
 	[ExcludeFromPrototype] FP ReusableTimer;
+	byte ReusableValue;
 }
 
 enum ThrowingObjectType : Byte {
     Basic,
 	Stone, // For Particle When Landing
 	Spring, // For Spring Effect
-	RedPow, // For Explosion
-	BluePow, // For Grounded Explosion
+	Pow, // For Explosion
 	Barrel, // For Damage
 	Freezie, // For Freeze And Split Effect
 	CoinBox, // For Coin Giving

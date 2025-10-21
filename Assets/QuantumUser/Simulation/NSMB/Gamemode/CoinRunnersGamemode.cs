@@ -8,12 +8,12 @@ namespace Quantum {
 
         public override void EnableGamemode(Frame f) {
             f.SystemEnable<ObjectiveCoinSystem>();
-            f.SystemEnable<GoldBlockSystem>();
+            //f.SystemEnable<GoldBlockSystem>(); //removed vanilla gold block, prob should remove gamemode code too.
         }
 
         public override void DisableGamemode(Frame f) {
             f.SystemDisable<ObjectiveCoinSystem>();
-            f.SystemDisable<GoldBlockSystem>();
+            //f.SystemDisable<GoldBlockSystem>(); //ditto above
        }
 
         public override void CheckForGameEnd(Frame f) {

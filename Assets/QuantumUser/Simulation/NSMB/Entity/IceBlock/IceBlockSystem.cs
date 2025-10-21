@@ -227,7 +227,7 @@ namespace Quantum {
             *allowInteraction &= !f.Unsafe.TryGetPointer(entity, out Freezable* freezable) || !freezable->IsFrozen(f);
         }
 
-        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity) {
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
             if (f.Has<IceBlock>(entity)) {
                 Destroy(f, entity, IceBlockBreakReason.None);
             }
