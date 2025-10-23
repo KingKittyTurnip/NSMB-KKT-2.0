@@ -1,5 +1,10 @@
 using Photon.Deterministic;
+using System;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using UnityEditor;
+using UnityEngine;
+using static IInteractableTile;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
@@ -54,6 +59,99 @@ namespace Quantum {
                         starballgoal->DespawnTimer = 0;
                     }
                 }
+            }
+        }
+
+        public static void TryCreateStarballGoal(Frame f, FPVector2 newPos, VersusStageData stage) {
+            EntityRef newEntity = f.Create(f.SimulationConfig.StarballGoal);
+            var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(newEntity);
+            var transform = f.Unsafe.GetPointer<Transform2D>(newEntity);
+
+            #region Loop&RoundHalfTheStagePos
+            //make "X" halfway in the stage
+            FP width = stage.TileDimensions.X * FP._0_50;
+            newPos.X += width / 2;
+            if (newPos.X > stage.StageWorldMax.X) {
+                newPos.X -= width;
+            }
+            //make "Y" halfway in the stage (used for volcano maps)
+            width = stage.CameraMaxPosition.Y - stage.CameraMinPosition.Y;
+            newPos.Y += width / 2;
+            if (newPos.Y > stage.CameraMaxPosition.Y) {
+                newPos.Y -= width;
+            }
+            //round
+            newPos = new FPVector2(FPMath.RoundToInt(newPos.X * 2) / 2, FPMath.RoundToInt(newPos.Y * 2) / 2);
+            #endregion
+
+            Span<PhysicsObjectSystem.LocationTilePair> tiles = stackalloc PhysicsObjectSystem.LocationTilePair[64];
+            int attempts = 0, Xattempts = 0;
+            FPVector2 Checkbonus = FPVector2.Zero;
+            bool upwardscheck = false;
+
+            while (true) { //Place "Y" on the ground
+                #region EndlessFailsafe
+                attempts++;
+                if (attempts > 255) {
+                    //Check Took Too long
+                    f.Destroy(newEntity);
+                    Debug.Log("Failed To |Find A Air Tile| or |ground underneath valid position| For Starballgoal, x checks: " + Xattempts + " checkbonus: " + Checkbonus);
+                    return;
+                }
+                #endregion
+                #region AlreadyInsideTileCheck
+                bool AlreadyInsideTile = false;
+                int overlappingTiles = PhysicsObjectSystem.GetTilesOverlappingHitbox(f, newPos + Checkbonus, collider->Shape, tiles, stage);
+                for (int i = 0; i < overlappingTiles; i++) {
+                    StageTile stageTile = f.FindAsset(tiles[i].Tile.Tile);
+                    if (stageTile != null) {
+                        AlreadyInsideTile = true;
+                    }
+                }
+                if (AlreadyInsideTile) {
+                    Checkbonus.Y += upwardscheck ? FP._0_50 : -FP._0_50;
+                    continue;
+                }
+                if (stage.CameraMinPosition.Y > newPos.Y + Checkbonus.Y) {
+                    if (Checkbonus.Y < 0)
+                        Checkbonus.Y = FP._0_50;
+                    else
+                        Checkbonus.Y += FP._0_50;
+                    upwardscheck = true;
+                    continue;
+                } else if (stage.CameraMaxPosition.Y < newPos.Y + Checkbonus.Y) {
+                    Checkbonus.Y = 0;
+                    upwardscheck = false;
+                    Xattempts++;
+                    Checkbonus.X = GetXOffsetbonus(Xattempts);
+                    continue;
+                }
+                #endregion
+                #region CheckGroundBellow
+                var contacted = PhysicsObjectSystem.Raycast(f, stage, newPos + Checkbonus + (FPVector2.Left / 4), FPVector2.Down, 10, out var point);
+                var contactedr = PhysicsObjectSystem.Raycast(f, stage, newPos + Checkbonus + (FPVector2.Right / 4), FPVector2.Down, 10, out var R);
+                if (contactedr) {
+                    if (point.Position.Y < R.Position.Y) {
+                        point = R;
+                    }
+                } else if (!contacted) {
+                    //huh. above a pit, lets try some more
+                    Xattempts++;
+                    Checkbonus.X = GetXOffsetbonus(Xattempts);
+                    continue;
+                }
+                #endregion
+                //That Wasn't Too Hard Was it?
+                newPos.X += Checkbonus.X;
+                newPos.Y = point.Position.Y;
+                break;
+            }
+
+            transform->Position = newPos;
+
+            FP GetXOffsetbonus(int Xa) {
+                //0=0 // 1=0.5 // 2=-0.5 // 3=1 // 4=-1
+                return (((Xa % 2) * 2) -1) * FPMath.RoundToInt(Xa / 2) * FP._0_50;
             }
         }
 

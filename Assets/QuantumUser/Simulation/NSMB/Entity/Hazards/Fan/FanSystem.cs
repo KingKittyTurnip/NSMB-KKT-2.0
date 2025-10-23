@@ -124,13 +124,25 @@ Gp Interactions are weird
 
             var Objects = f.Filter<PhysicsObject>();
             while (Objects.NextUnsafe(out EntityRef OtherEntity, out PhysicsObject* physobj)) {
-                if (physobj->DisableCollision || physobj->IsFrozen || physobj->WindImmune)
+                if (!f.Exists(OtherEntity) || physobj->DisableCollision || physobj->IsFrozen || physobj->WindImmune)
                     continue;
-                //Is Checking This Expensive?
-                if (f.Unsafe.TryGetPointer(OtherEntity, out MarioPlayer* mar) && (mar->IsInShell || mar->IsCrouchedInShell || mar->MegaMushroomFrames > 0 || mar->IsGroundpounding
-                    || mar->IsWallsliding || ((physobj->IsTouchingLeftWall || physobj->IsTouchingRightWall))
-                    || mar->StoneBux)) //TODO: Metal Mario
-                    continue;
+                FP newStrength = TempStrength;
+                if (f.Has<MarioPlayer>(OtherEntity)) {
+                    //We Are Mario, Grant More Specialized Wind Physics To Make The Hazard Feel better To Play With
+                    var mar = f.Unsafe.GetPointer<MarioPlayer>(OtherEntity);
+                    if (mar->IsInShell || mar->IsCrouchedInShell || mar->IsGroundpounding
+                        || mar->IsWallsliding || physobj->IsTouchingLeftWall || physobj->IsTouchingRightWall || mar->WalljumpFrames > 0 
+                        || mar->StoneBux || mar->MegaMushroomFrames > 0 || mar->MetalMushroomFrames > 0) {
+                        continue; //Skip
+                    }
+                    if ((newStrength > 0) == (physobj->Velocity.X <= 0) && physobj->Velocity.X != 0) {
+                        //Mario Pushing Against The Wind
+                        if (((newStrength > 0) == !mar->FacingRight) && FPMath.Abs(physobj->Velocity.X) > 1)
+                            mar->LastPushingFrame = f.Number;
+                        newStrength -= FPMath.Abs(physobj->Velocity.X / 10) * TempStrength;
+                    }
+                    //newStrength -= FPMath.Abs(physobj->Velocity.X / 10) * TempStrength;
+                }
                 f.Unsafe.TryGetPointer(OtherEntity, out Transform2D* trans);
                 f.Unsafe.TryGetPointer(OtherEntity, out PhysicsCollider2D* col);
                 PhysicsObjectSystem.Filter physicsSystemFilter = new PhysicsObjectSystem.Filter {
@@ -141,9 +153,9 @@ Gp Interactions are weird
                 };
                 if (IsVertical) {
                     if (!physobj->IsTouchingGround)
-                        PhysicsObjectSystem.MoveVertically(f, new FPVector2(0, TempStrength), ref physicsSystemFilter, stage, null, out _);
+                        PhysicsObjectSystem.MoveVertically(f, new FPVector2(0, newStrength), ref physicsSystemFilter, stage, null, out _);
                 } else {
-                    PhysicsObjectSystem.MoveHorizontally(f, new FPVector2(TempStrength, 0), ref physicsSystemFilter, stage, null, out _);
+                    PhysicsObjectSystem.MoveHorizontally(f, new FPVector2(newStrength, 0), ref physicsSystemFilter, stage, null, out _);
                 }
             }
         }

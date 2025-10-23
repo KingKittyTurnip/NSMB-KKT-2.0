@@ -33,10 +33,11 @@ public class WeatherParticleAnimator : MonoBehaviour {
 
         // Set Size And Amount Relitive To The Stage
         stage = (VersusStageData) QuantumUnityDB.GetGlobalAsset(FindFirstObjectByType<QuantumMapData>().Asset.UserAsset);
+        Vector2 Dimensions = new Vector2(stage.TileDimensions.X / 2, (float) (stage.CameraMaxPosition.Y - stage.CameraMinPosition.Y));
 
-        emission.rateOverTimeMultiplier *= ((stage.TileDimensions.X * stage.TileDimensions.Y) / 4);
-        area.scale = new Vector3(stage.TileDimensions.X / 2, stage.TileDimensions.Y / 2, 1);
-        Pos = Particle.transform.position = new Vector3(0,0,-1); // new Vector3(stage.TilemapWorldPosition.X.AsFloat/4, stage.TilemapWorldPosition.Y.AsFloat/4, 1/*-6.5f*/);
+        emission.rateOverTimeMultiplier *= ((Dimensions.x * Dimensions.y) / 6);
+        area.scale = new Vector3(Dimensions.x, Dimensions.y, 1);
+        Pos = Particle.transform.position = new Vector3(0, (float) (stage.CameraMinPosition.Y + ((stage.CameraMaxPosition.Y - stage.CameraMinPosition.Y) / 2)), -1); // new Vector3(stage.TilemapWorldPosition.X.AsFloat/4, stage.TilemapWorldPosition.Y.AsFloat/4, 1/*-6.5f*/);
     }
 
     public void FixedUpdate() {

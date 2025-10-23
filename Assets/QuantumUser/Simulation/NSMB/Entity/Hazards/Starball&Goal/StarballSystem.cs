@@ -26,6 +26,9 @@ namespace Quantum {
             var collider = filter.Collider;
             var hazard = filter.Hazard;
 
+            if (physicsObject->IsFrozen)
+                return;
+
             bool Deccel = true;
             // Despawn off bottom of stage
             if (filter.Transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y || physicsObject->IsUnderwater) {
@@ -35,8 +38,9 @@ namespace Quantum {
                     mario->RidingStarball = false;
                     mario->DoEntityBounce = true;
                 }
+                starball->Rider = EntityRef.None;
 
-                f.Destroy(filter.Entity);
+                HazardSystem.DestroyHazard(f, filter.Entity);
                 return;
             }
             QuantumUtils.Decrement(ref starball->JumpBufferFrames);
@@ -48,8 +52,8 @@ namespace Quantum {
                     hazard->LifeTime = 60;
                 var marphys = f.Unsafe.GetPointer<PhysicsObject>(starball->Rider);
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(starball->Rider);
-                if (mario->CurrentKnockback == KnockbackStrength.None && mario->RidingStarball && mario->CurrentPowerupState != PowerupState.MegaMushroom) {
-                    //(Make Controlled By The Mouse)
+                if (mario->CurrentKnockback == KnockbackStrength.None && mario->RidingStarball && mario->CurrentPowerupState != PowerupState.MegaMushroom && !mario->IsDead && !(physicsObject->IsTouchingGround && physicsObject->IsTouchingCeiling)) {
+                    //(Make Controlled By The Mouse?)
                     Input inputs = mario->GetPlayerInput(f, starball->Rider);
                     if (inputs.Jump.WasPressed) { // Jump buffer
                         starball->JumpBufferFrames = 12;
@@ -58,9 +62,13 @@ namespace Quantum {
                         starball->CoyoteTimeFrames = 5;
                     }
                     //Left/Right
-                    if ((inputs.Left.IsDown || inputs.Right.IsDown) && !mario->IsCrouching) {
-                        physicsObject->Velocity.X += (inputs.Left.IsDown ? -1 : 1) * (FPMath.Abs(physicsObject->Velocity.X) > 3 ? FPMath.Abs(physicsObject->Velocity.X) > 6 ? FP._0_03 : FP._0_10 : Constants._0_1875) * (mario->FacingRight == physicsObject->Velocity.X > 0 ? 1 : 2); //Move
-                        Deccel = false;
+                    if (inputs.Left.IsDown || inputs.Right.IsDown) {
+                        if (mario->IsCrouching && FPMath.Abs(physicsObject->Velocity.X) <= 1) {
+                            physicsObject->Velocity.X = inputs.Left.IsDown ? -1 : 1;
+                        } else {
+                            physicsObject->Velocity.X += (inputs.Left.IsDown ? -1 : 1) * (FPMath.Abs(physicsObject->Velocity.X) > 3 ? FPMath.Abs(physicsObject->Velocity.X) > 6 ? FP._0_03 : FP._0_10 : Constants._0_1875) * (mario->FacingRight == physicsObject->Velocity.X > 0 ? 1 : 2); //Move
+                            Deccel = false;
+                        }
                     }
 
                     //Transfer Collision Logic
@@ -97,16 +105,13 @@ namespace Quantum {
 
                 //Create A Goal if One Doesn't Exist
                 var Objects = f.Filter<Starballgoal>();
-                bool i = true;
+                bool goal = false;
                 while (Objects.NextUnsafe(out EntityRef OtherEntity, out Starballgoal* starballgoal)) {
-                    i = false;
+                    goal = true;
                     break;
                 }
-                if (i) {
-                    EntityRef newStarEntity = f.Create(starball->CurrentGoal);
-                    //var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
-                    var newStarTransform = f.Unsafe.GetPointer<Transform2D>(newStarEntity);
-                    newStarTransform->Position = filter.Transform->Position + new FPVector2(1, -FP._0_50);
+                if (!goal) {
+                    StarballgoalSystem.TryCreateStarballGoal(f, filter.Transform->Position, stage);
                 }
             } else {
                 physicsObject->Gravity.Y = -31;
@@ -118,7 +123,7 @@ namespace Quantum {
                     if (!physicsObject->WasTouchingGround) {
                         physicsObject->Velocity.X = FPMath.Clamp(physicsObject->FloorAngle, -8, 8);
                     }
-                    physicsObject->Velocity.X -= (Constants.WeirdSlopeConstant * physicsObject->FloorAngle) * SlopeBonus;
+                    physicsObject->Velocity.X += physicsObject->FloorAngle * Constants.BallSlopeVelocityMultiplier;
                     Deccel = false;
                 }
                 if (!physicsObject->WasTouchingGround) {
@@ -136,7 +141,7 @@ namespace Quantum {
                 physicsObject->Velocity.Y = 0;
             }
             if (Deccel)
-                physicsObject->Velocity.X *= Constants._0_95;
+                physicsObject->Velocity.X *= Constants.BallSlowDownMultiplier;
             physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -10, 10);
         }
 
@@ -206,7 +211,7 @@ namespace Quantum {
                 GameLogicSystem.CheckForGameEnd(f);
             }*/
 
-            f.Destroy(starballEntity);
+            HazardSystem.DestroyHazard(f, starballEntity);
         }
 
         #region Interactions
@@ -219,6 +224,7 @@ namespace Quantum {
             }
 
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            var marphys = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
 
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity); var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
@@ -227,7 +233,7 @@ namespace Quantum {
             bool attackFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_25;
 
             //Try Make Rider
-            if (starball->Rider == EntityRef.None && !mario->RidingStarball && FPVector2.Dot(damageDirection, FPVector2.Down) > FP._0_25 && mario->KnockbackGetupFrames <= 0 && mario->CurrentKnockback == KnockbackStrength.None) {
+            if (starball->Rider == EntityRef.None && !mario->RidingStarball && FPVector2.Dot(damageDirection, FPVector2.Down) > FP._0_25 && mario->KnockbackGetupFrames <= 0 && mario->CurrentKnockback == KnockbackStrength.None && !marphys->WasTouchingGround) {
                 starball->Rider = marioEntity;
                 mario->RidingStarball = true;
                 return;
@@ -239,7 +245,9 @@ namespace Quantum {
             } else {
                 physicsObject->Velocity.X = (damageDirection.X < 0 ? -3 : 3);
             }
-            if (mario->IsDamageable) {
+            if (FPVector2.Dot(damageDirection, FPVector2.Down) > FP._0_25) {
+                mario->DoEntityBounce = true;
+            } else if (mario->IsDamageable) {
                 mario->DoKnockback(f, marioEntity, damageDirection.X >= 0, 1, attackFromAbove ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, thisEntity, false);
             }
 

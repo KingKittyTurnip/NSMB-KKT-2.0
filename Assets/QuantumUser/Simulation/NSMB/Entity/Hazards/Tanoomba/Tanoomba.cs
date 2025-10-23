@@ -111,6 +111,8 @@ namespace Quantum {
             f.Unsafe.GetPointer<Interactable>(tanoombaEntity)->ColliderDisabled = true;
             enemy->IsDead = true;
 
+            physicsObject->IsFrozen = false;
+
             f.Events.EnemyKilled(tanoombaEntity, killerEntity, reason, center);
         }
     }

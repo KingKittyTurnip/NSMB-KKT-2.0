@@ -2558,16 +2558,12 @@ namespace Quantum {
                     QuantumUtils.UnwrapWorldLocations(f, bombTransform->Position, marioTransform->Position, out FPVector2 marioAPosition, out FPVector2 marioBPosition);
                     bool fromRight = marioAPosition.X > marioBPosition.X;
 
-                    UnityEngine.Debug.Log("try explode");
                     if (Dis->IgnoreTeamates && (holdable->PreviousHolder == entity || mario->GetTeam(f) == hazard->Team)) //owner or on team
                         break;
 
-                    UnityEngine.Debug.Log("NOT freind");
-
-                    if (Dis->StarsToDrop != 0 && 
-                        (type == ExplosionType.Shockwave || f.Unsafe.GetPointer<PhysicsObject>(entity)->IsTouchingGround))
-                        UnityEngine.Debug.Log("explode.");
-                    mario->DoKnockback(f, entity, fromRight, Dis->StarsToDrop, KnockbackStrength.CollisionBump, bobomb, true);
+                    //Hit Player if red shockwave, if grounded shockwave hit them only when grounded, and ignore iframes
+                    if (Dis->StarsToDrop != 0 && (type == ExplosionType.Shockwave || f.Unsafe.GetPointer<PhysicsObject>(entity)->IsTouchingGround))
+                        mario->DoKnockback(f, entity, fromRight, Dis->StarsToDrop, KnockbackStrength.CollisionBump, bobomb, type == ExplosionType.GroundedShockwave);
                     break;
                 }
             }

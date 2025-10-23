@@ -507,8 +507,6 @@ MonoBehaviour:
   Prototype:
     ColliderDisabled:
       Value: 0
-    AllowDoubleInteraction:
-      Value: 0
 --- !u!114 &-5656916731996867298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,6 +560,8 @@ MonoBehaviour:
       Y:
         RawValue: 0
     IgnorePlayerWhenRespawning:
+      Value: 0
+    DoNotDespawnInPit:
       Value: 0
     RestrictSpawnPosition:
       Value: 0

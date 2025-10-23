@@ -180,6 +180,7 @@ namespace Quantum {
     BillBlock,
     CannonBox,
     Fridge,
+    Voidwall,
     Potion,
   }
   [System.FlagsAttribute()]
@@ -2483,32 +2484,32 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct IceBlock : Quantum.IComponent {
-    public const Int32 SIZE = 72;
+    public const Int32 SIZE = 64;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(32)]
-    public FP SlidingSpeed;
     [FieldOffset(24)]
-    [ExcludeFromPrototype()]
-    public EntityRef Entity;
-    [FieldOffset(56)]
-    [ExcludeFromPrototype()]
-    public FPVector2 Size;
-    [FieldOffset(40)]
-    [ExcludeFromPrototype()]
-    public FPVector2 ChildOffset;
-    [FieldOffset(12)]
-    [ExcludeFromPrototype()]
-    public QBoolean IsFlying;
+    public FP SlidingSpeed;
     [FieldOffset(16)]
     [ExcludeFromPrototype()]
-    public QBoolean IsSliding;
+    public EntityRef Entity;
+    [FieldOffset(48)]
+    [ExcludeFromPrototype()]
+    public FPVector2 Size;
+    [FieldOffset(32)]
+    [ExcludeFromPrototype()]
+    public FPVector2 ChildOffset;
     [FieldOffset(8)]
     [ExcludeFromPrototype()]
-    public QBoolean FacingRight;
-    [FieldOffset(0)]
+    public QBoolean IsFlying;
+    [FieldOffset(12)]
     [ExcludeFromPrototype()]
-    public Byte AutoBreakFrames;
+    public QBoolean IsSliding;
     [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public QBoolean FacingRight;
+    [FieldOffset(2)]
+    [ExcludeFromPrototype()]
+    public UInt16 AutoBreakFrames;
+    [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public LiquidType InLiquidType;
     public override Int32 GetHashCode() {
@@ -2528,8 +2529,8 @@ namespace Quantum {
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (IceBlock*)ptr;
-        serializer.Stream.Serialize(&p->AutoBreakFrames);
         serializer.Stream.Serialize((byte*)&p->InLiquidType);
+        serializer.Stream.Serialize(&p->AutoBreakFrames);
         QBoolean.Serialize(&p->FacingRight, serializer);
         QBoolean.Serialize(&p->IsFlying, serializer);
         QBoolean.Serialize(&p->IsSliding, serializer);
@@ -3816,10 +3817,8 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Starball : Quantum.IComponent {
-    public const Int32 SIZE = 40;
+    public const Int32 SIZE = 32;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(16)]
-    public AssetRef<EntityPrototype> CurrentGoal;
     [FieldOffset(8)]
     public AssetRef<EntityPrototype> Contains;
     [FieldOffset(1)]
@@ -3828,16 +3827,15 @@ namespace Quantum {
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public Byte CoyoteTimeFrames;
-    [FieldOffset(32)]
+    [FieldOffset(24)]
     [ExcludeFromPrototype()]
     public EntityRef Rider;
-    [FieldOffset(24)]
+    [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public EntityRef Goal;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 4111;
-        hash = hash * 31 + CurrentGoal.GetHashCode();
         hash = hash * 31 + Contains.GetHashCode();
         hash = hash * 31 + JumpBufferFrames.GetHashCode();
         hash = hash * 31 + CoyoteTimeFrames.GetHashCode();
@@ -3851,7 +3849,6 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->CoyoteTimeFrames);
         serializer.Stream.Serialize(&p->JumpBufferFrames);
         AssetRef.Serialize(&p->Contains, serializer);
-        AssetRef.Serialize(&p->CurrentGoal, serializer);
         EntityRef.Serialize(&p->Goal, serializer);
         EntityRef.Serialize(&p->Rider, serializer);
     }
@@ -3951,7 +3948,7 @@ namespace Quantum {
     public QBoolean BouceOffPlayer;
     [FieldOffset(48)]
     public FP ThrowForce;
-    [FieldOffset(2)]
+    [FieldOffset(1)]
     public Byte StarsToDrop;
     [FieldOffset(20)]
     public QBoolean IgnoreTeamates;
@@ -3970,8 +3967,8 @@ namespace Quantum {
     [FieldOffset(40)]
     [ExcludeFromPrototype()]
     public FP ReusableTimer;
-    [FieldOffset(1)]
-    public Byte ReusableValue;
+    [FieldOffset(2)]
+    public Byte Varient;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 19073;
@@ -3989,15 +3986,15 @@ namespace Quantum {
         hash = hash * 31 + HitSomething.GetHashCode();
         hash = hash * 31 + BounceTimes.GetHashCode();
         hash = hash * 31 + ReusableTimer.GetHashCode();
-        hash = hash * 31 + ReusableValue.GetHashCode();
+        hash = hash * 31 + Varient.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (ThrowingObject*)ptr;
         serializer.Stream.Serialize(&p->BounceTimes);
-        serializer.Stream.Serialize(&p->ReusableValue);
         serializer.Stream.Serialize(&p->StarsToDrop);
+        serializer.Stream.Serialize(&p->Varient);
         serializer.Stream.Serialize((Byte*)&p->Type);
         QBoolean.Serialize(&p->BouceOffPlayer, serializer);
         QBoolean.Serialize(&p->Facing, serializer);
@@ -4374,11 +4371,19 @@ namespace Quantum {
         return result;
       }
     }
-    /// <summary>0.004</summary>
-    public static FP SmoothSlowdownmultiplier {
+    /// <summary>0.00322</summary>
+    public static FP BallSlopeVelocityMultiplier {
       [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
         FP result;
-        result.RawValue = 262;
+        result.RawValue = 211;
+        return result;
+      }
+    }
+    /// <summary>0.975</summary>
+    public static FP BallSlowDownMultiplier {
+      [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
+        FP result;
+        result.RawValue = 63898;
         return result;
       }
     }
@@ -4442,8 +4447,10 @@ namespace Quantum {
       public const Int64 _0_235 = 15401;
       /// <summary>0.875</summary>
       public const Int64 _0_875 = 57344;
-      /// <summary>0.004</summary>
-      public const Int64 SmoothSlowdownmultiplier = 262;
+      /// <summary>0.00322</summary>
+      public const Int64 BallSlopeVelocityMultiplier = 211;
+      /// <summary>0.975</summary>
+      public const Int64 BallSlowDownMultiplier = 63898;
     }
   }
   public unsafe partial class Frame {

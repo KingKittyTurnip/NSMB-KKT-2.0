@@ -77,6 +77,7 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
 
     public override void OnDeactivate() {
         if (!IsReplayFastForwarding) {
+            Instantiate(Enums.PrefabParticle.Enemy_Puff.GetGameObject(), transform.position, Quaternion.identity);
         }
     }
 

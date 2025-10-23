@@ -1,4 +1,5 @@
-#define SmoothSlowdownmultiplier 0.004
+#define BallSlopeVelocityMultiplier 0.0032188
+#define BallSlowDownMultiplier 0.975
 
 component ThrowingObject {
     ThrowingObjectType Type;
@@ -19,7 +20,7 @@ component ThrowingObject {
 	[ExcludeFromPrototype] byte BounceTimes;
 
 	[ExcludeFromPrototype] FP ReusableTimer;
-	byte ReusableValue;
+	byte Varient;
 }
 
 enum ThrowingObjectType : Byte {
@@ -34,6 +35,7 @@ enum ThrowingObjectType : Byte {
 	BillBlock, // For Gliding
 	CannonBox, // For Pewing
 	Fridge, // For pinata
+	Voidwall, //For Voidwall
 	Potion, // For Creating WarpDoor
 }
 

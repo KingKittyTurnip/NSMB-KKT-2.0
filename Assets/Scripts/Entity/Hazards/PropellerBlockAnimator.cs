@@ -125,6 +125,12 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
         sfx.PlayOneShot(PickedUp);
     }
 
+    public override void OnDeactivate() {
+        if (!IsReplayFastForwarding) {
+            Instantiate(Enums.PrefabParticle.Enemy_Puff.GetGameObject(), transform.position, Quaternion.identity);
+        }
+    }
+
     private void OnPlayComboSound(EventPlayComboSound e) {
         if (e.Entity != EntityRef) {
             return;

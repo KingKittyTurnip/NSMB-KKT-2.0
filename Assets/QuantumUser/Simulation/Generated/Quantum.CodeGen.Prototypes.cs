@@ -1126,7 +1126,6 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Starball))]
   public unsafe partial class StarballPrototype : ComponentPrototype<Quantum.Starball> {
-    public AssetRef<EntityPrototype> CurrentGoal;
     public AssetRef<EntityPrototype> Contains;
     partial void MaterializeUser(Frame frame, ref Quantum.Starball result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
@@ -1135,7 +1134,6 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Starball result, in PrototypeMaterializationContext context = default) {
-        result.CurrentGoal = this.CurrentGoal;
         result.Contains = this.Contains;
         MaterializeUser(frame, ref result, in context);
     }
@@ -1182,7 +1180,7 @@ namespace Quantum.Prototypes {
     public FP ThrowForce;
     public Byte StarsToDrop;
     public QBoolean IgnoreTeamates;
-    public Byte ReusableValue;
+    public Byte Varient;
     partial void MaterializeUser(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.ThrowingObject component = default;
@@ -1199,7 +1197,7 @@ namespace Quantum.Prototypes {
         result.ThrowForce = this.ThrowForce;
         result.StarsToDrop = this.StarsToDrop;
         result.IgnoreTeamates = this.IgnoreTeamates;
-        result.ReusableValue = this.ReusableValue;
+        result.Varient = this.Varient;
         MaterializeUser(frame, ref result, in context);
     }
   }

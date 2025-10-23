@@ -36,6 +36,9 @@ namespace Quantum {
                     new CoinItemSystem(),
                     new PowerupSystem(),
                     new BlockBumpSystem(),
+
+                    new ThrowingObjectSystem(),
+
                     new MarioPlayerSystem(),
                     new CoinSystem(),
                     //new GoldBlockSystem(), //Removed Vanilla Gold Block
@@ -56,7 +59,6 @@ namespace Quantum {
                     new TanoombaSystem(),
                     new StarballSystem(),
                     new StarballgoalSystem(),
-                    new ThrowingObjectSystem(),
                     new LemmyBallSystem(),
                     new ClockSystem(),
                     new FanSystem(),
