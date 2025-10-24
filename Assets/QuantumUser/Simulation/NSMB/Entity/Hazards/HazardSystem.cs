@@ -21,8 +21,8 @@ namespace Quantum {
          
          ---------------------------------------
         */
-        public static event Action<Frame, EntityRef> HazardInitialized;
-        public static event Action<Frame> HazardDestroyed;
+        public static event Action<Frame, EntityRef, bool> HazardIconChanged;
+        //public static event Action<Frame, EntityRef> HazardDestroyed;
 
         public struct Filter {
             public EntityRef Entity;
@@ -131,7 +131,7 @@ namespace Quantum {
                 physicsObject->Velocity = new(hazard->SpawningVelocityRange.X * ((f.RNG->Next() * 2) - 1), hazard->SpawningVelocityRange.Y);
 
             // Create Icon on Map
-            HazardInitialized?.Invoke(f, thisEntity);
+            ChangeHazardIcon(f, thisEntity, true);
         }
 
         public static void DestroyHazard(Frame f, EntityRef entity) {
@@ -139,8 +139,8 @@ namespace Quantum {
                 if (hazard->IsHazard) {
                     if (hazard->IsHefty)
                         f.Global->HeftyCount--;
+                    ChangeHazardIcon(f, entity, false);
                     f.Destroy(entity);
-                    HazardDestroyed?.Invoke(f);
                 } else {
                     hazard->IsActive = false;
                     if (f.Unsafe.TryGetPointer(entity, out Transform2D* transform))
@@ -222,6 +222,10 @@ namespace Quantum {
                     }
                 }
             }
+        }
+
+        public static void ChangeHazardIcon(Frame f, EntityRef entity, bool Created) {
+            HazardIconChanged?.Invoke(f, entity, Created);
         }
     }
 }

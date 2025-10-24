@@ -54,6 +54,7 @@ namespace Quantum {
             //bool Groundpounding = false;
             bool Fireball = false;
             bool Jump = false;
+            bool Jumpheld = true;
             bool Sprint = false;
             bool HasTarget = !QuantumUtils.Decrement(ref boss->iframes);
             if (boss->ControllerPlayer != EntityRef.None) {
@@ -64,6 +65,7 @@ namespace Quantum {
 
                 //Groundpounding = inputs.Down.WasPressed;
                 Jump = inputs.Jump.WasPressed;
+                Jumpheld = inputs.Jump.IsDown;
                 Fireball = (inputs.PowerupAction.WasPressed || bowser->AttackQuery) && bowser->AttackCooldown <= 1;
                 Sprint = inputs.PowerupAction.IsDown ;
                 if (Sprint && bowser->AttackCooldown > 0) {
@@ -220,6 +222,9 @@ namespace Quantum {
             case BowserState.Jumping:
                 if (leftrightinput != 0) {
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_20), -7, 7);
+                }
+                if (!Jumpheld) {
+                    physicsObject->Velocity.Y = FPMath.Min(physicsObject->Velocity.Y, 8);
                 }
 
                 if (physicsObject->IsTouchingGround && !physicsObject->WasTouchingGround) {

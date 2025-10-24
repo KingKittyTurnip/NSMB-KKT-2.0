@@ -66,8 +66,7 @@ namespace NSMB.UI.Game {
             CoinAnimator.ObjectiveCoinDestroyed += OnObjectiveCoinDestroyed;
             StarballgoalAnimator.StarballgoalInitialized += OnStarballgoalInitialized;
             StarballgoalAnimator.StarballgoalDestroyed += OnStarballgoalDestroyed;
-            HazardSystem.HazardInitialized += OnHazardInitialized;
-            HazardSystem.HazardDestroyed += OnHazardDestroyed;
+            HazardSystem.HazardIconChanged += OnHazardIconChanged;
             TranslationManager.OnLanguageChanged += OnLanguageChanged;
             Settings.Controls.Debug.ToggleHUD.performed += OnToggleHUD;
             OnLanguageChanged(GlobalController.Instance.translationManager);
@@ -85,8 +84,7 @@ namespace NSMB.UI.Game {
             CoinAnimator.ObjectiveCoinDestroyed -= OnObjectiveCoinDestroyed;
             StarballgoalAnimator.StarballgoalInitialized -= OnStarballgoalInitialized;
             StarballgoalAnimator.StarballgoalDestroyed -= OnStarballgoalDestroyed;
-            HazardSystem.HazardInitialized -= OnHazardInitialized;
-            HazardSystem.HazardDestroyed -= OnHazardDestroyed;
+            HazardSystem.HazardIconChanged -= OnHazardIconChanged;
             TranslationManager.OnLanguageChanged -= OnLanguageChanged;
             Settings.Controls.Debug.ToggleHUD.performed -= OnToggleHUD;
         }
@@ -195,20 +193,22 @@ namespace NSMB.UI.Game {
             DestroyTrackIcon(starballgoal);
         }
 
-        private void OnHazardInitialized(Frame f, EntityRef hazardEntity) {
-            if (Updater == null) {
-                Debug.Log("Couldn't create icon, Updater doesn't exist");
-                return;
+        private void OnHazardIconChanged(Frame f, EntityRef hazardEntity, bool Created) {
+            if (Created) {
+                if (Updater == null) {
+                    Debug.Log("Couldn't create icon, Updater doesn't exist");
+                    return;
+                }
+                if (!f.Exists(hazardEntity)) {
+                    Debug.Log("Couldn't create icon, EntityRef Doesn't Exist: " + hazardEntity);
+                    return;
+                }
+                StartCoroutine(tryAddHazardIcon(f, hazardEntity));
+            } else {
+                DestroyHazardTrackIcon(f, hazardEntity);
             }
-            if (!f.Exists(hazardEntity)) {
-                Debug.Log("Couldn't create icon, EntityRef Doesn't Exist: " + hazardEntity);
-                return;
-            }
-            StartCoroutine(tryAddHazardIcon(f, hazardEntity));
         }
-        private void OnHazardDestroyed(Frame f) {
-            DestroyHazardTrackIcon(f);
-        }
+
         private IEnumerator tryAddHazardIcon(Frame f, EntityRef hazardEntity) {
 
             int i = 0;
@@ -431,9 +431,9 @@ namespace NSMB.UI.Game {
                 }
             }
         }
-        public void DestroyHazardTrackIcon(Frame f) {
+        public void DestroyHazardTrackIcon(Frame f, EntityRef hazardEntity) {
             for (int i = 0; i < hazardTrackIcons.Count; i++) {
-                if (!f.Exists(hazardTrackIcons[i].Item3)) {
+                if (!f.Exists(hazardTrackIcons[i].Item3) || hazardTrackIcons[i].Item3 == hazardEntity) {
                     //Pool.
                     hazardTrackIcons[i].Item1.gameObject.SetActive(false);
                     hazardTrackIcons[i] = (hazardTrackIcons[i].Item1, hazardTrackIcons[i].Item2, EntityRef.None);

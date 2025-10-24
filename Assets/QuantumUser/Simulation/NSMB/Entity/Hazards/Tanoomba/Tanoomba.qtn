@@ -3,6 +3,7 @@
 component Tanoomba {
 	[ExcludeFromPrototype] TanoombaState State;
 	[ExcludeFromPrototype] TanoombaFormState Form;
+	[ExcludeFromPrototype] byte FormVariant;
 	FP JumpVelocity;
 	
 	[ExcludeFromPrototype] byte GetupFrames;
@@ -27,6 +28,7 @@ enum TanoombaFormState : Byte {
 	Coin,
 	Block,
 	Star,
+	Powerup,
 
 	//Stage Elements ig
 	Goomba,

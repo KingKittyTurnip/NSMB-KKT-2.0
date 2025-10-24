@@ -28,6 +28,7 @@ namespace Quantum {
             tanoomba->GetupFrames = 35;
             tanoomba->TargetedPlayer = EntityRef.None;
             tanoomba->Laughing = false;
+            physicsObject->IsFrozen = false;
         }
 
         public void TanoombaStartTransform(Frame f, EntityRef thisEntity, EntityRef TurnedIntoObjectOverlay, bool Floating) {
@@ -43,6 +44,7 @@ namespace Quantum {
             if (TransformedObject != EntityRef.None) {
                 transform->Teleport(f, f.Unsafe.GetPointer<Transform2D>(TransformedObject)->Position);
             }
+            HazardSystem.ChangeHazardIcon(f, thisEntity, false);
         }
         public void TanoombaStartTransform(Frame f, EntityRef thisEntity, EntityRef TurnedIntoObjectOverlay, bool Floating, FPVector2 Position) {
             var enemy = f.Unsafe.GetPointer<Enemy>(thisEntity);
@@ -55,6 +57,7 @@ namespace Quantum {
 
             TransformedObject = TurnedIntoObjectOverlay;
             transform->Teleport(f, Position);
+            HazardSystem.ChangeHazardIcon(f, thisEntity, false);
         }
 
         public void TanoombaResetTransform(Frame f, EntityRef thisEntity, bool AttackMode) {
@@ -67,6 +70,9 @@ namespace Quantum {
             TransformedObject = EntityRef.None;
             State = AttackMode ? TanoombaState.Attacking : TanoombaState.Idling;
             Form = TanoombaFormState.Max;
+
+            if (AttackMode)
+                HazardSystem.ChangeHazardIcon(f, thisEntity, true);
         }
 
 

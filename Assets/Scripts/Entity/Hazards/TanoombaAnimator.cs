@@ -14,6 +14,7 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
     [SerializeField] private AudioClip laugh;
     [Header("Have Them In The Same Order As The States In Tanoomba.qtn")]
     [SerializeField] private GameObject[] TransformModels;
+    [SerializeField] private Animator[] TransformModelsAnimator;
     //---Serialized Variables
     //[Space]
     //[SerializeField] private GameObject PoofParticle;
@@ -54,7 +55,10 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
         Models.SetActive(!(enemy->IsDead && !hazard->IsActive));
         Main.gameObject.SetActive(tanoomba->State != TanoombaState.Searching && tanoomba->State != TanoombaState.Transformed);
         for (int i = 0; i < TransformModels.Length; i++) {
-            TransformModels[i].SetActive(tanoomba->Form == (TanoombaFormState) i);
+            bool activeform = tanoomba->Form == (TanoombaFormState) i;
+            TransformModels[i].SetActive(activeform);
+            if (activeform && TransformModelsAnimator[i] != null)
+                TransformModelsAnimator[i].SetInteger("Variant", tanoomba->FormVariant);
         }
         Models.transform.localScale = new Vector3(Main.isActiveAndEnabled ? 1 : (enemy->FacingRight ? -1 : 1), 1, 1);
         Tears.gameObject.SetActive(Main.GetCurrentAnimatorStateInfo(0).IsName("LMAO"));

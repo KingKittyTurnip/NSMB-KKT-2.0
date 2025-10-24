@@ -592,10 +592,10 @@ MonoBehaviour:
           Value: 0
         ThrowForce:
           RawValue: 294912
-        StarsToDrop: 0
+        StarsToDrop: 1
         IgnoreTeamates:
           Value: 1
-        ReusableValue: 0
+        Varient: 0
     - rid: 178332831745835019
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -756,7 +756,7 @@ MonoBehaviour:
         StarsToDrop: 2
         IgnoreTeamates:
           Value: 1
-        ReusableValue: 0
+        Varient: 0
     - rid: 505701123152150539
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1226,7 +1226,7 @@ MonoBehaviour:
         IsFlying:
           Value: 0
         SlideAlong:
-          Value: 1
+          Value: 0
         BouceOffPlayer:
           Value: 1
         ThrowForce:
@@ -1234,7 +1234,7 @@ MonoBehaviour:
         StarsToDrop: 1
         IgnoreTeamates:
           Value: 1
-        ReusableValue: 0
+        Varient: 0
     - rid: 1228460292044750858
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1410,7 +1410,7 @@ MonoBehaviour:
         StarsToDrop: 0
         IgnoreTeamates:
           Value: 0
-        ReusableValue: 0
+        Varient: 0
     - rid: 2156190019155394570
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1752,7 +1752,7 @@ MonoBehaviour:
         StarsToDrop: 2
         IgnoreTeamates:
           Value: 1
-        ReusableValue: 1
+        Varient: 0
     - rid: 2521700360339324939
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1880,7 +1880,7 @@ MonoBehaviour:
         BreakMegaObjects:
           Value: 0
         WindImmune:
-          Value: 0
+          Value: 1
     - rid: 2575760123704115209
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2115,7 +2115,7 @@ MonoBehaviour:
         StarsToDrop: 1
         IgnoreTeamates:
           Value: 1
-        ReusableValue: 0
+        Varient: 0
     - rid: 3060408405945483275
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -3194,7 +3194,7 @@ MonoBehaviour:
         StarsToDrop: 3
         IgnoreTeamates:
           Value: 0
-        ReusableValue: 0
+        Varient: 0
     - rid: 4516508314787381259
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -3506,7 +3506,7 @@ MonoBehaviour:
         StarsToDrop: 1
         IgnoreTeamates:
           Value: 1
-        ReusableValue: 0
+        Varient: 0
     - rid: 5305253815027499019
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -4229,7 +4229,7 @@ MonoBehaviour:
         StarsToDrop: 1
         IgnoreTeamates:
           Value: 1
-        ReusableValue: 0
+        Varient: 0
     - rid: 7244075672476319755
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -4919,9 +4919,6 @@ MonoBehaviour:
     - rid: 8142161597586997256
       type: {class: StarballPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
-        CurrentGoal:
-          Id:
-            Value: 1489641094450961488
         Contains:
           Id:
             Value: 1295981493910502871

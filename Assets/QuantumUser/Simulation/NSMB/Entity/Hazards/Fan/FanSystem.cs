@@ -131,9 +131,13 @@ Gp Interactions are weird
                     //We Are Mario, Grant More Specialized Wind Physics To Make The Hazard Feel better To Play With
                     var mar = f.Unsafe.GetPointer<MarioPlayer>(OtherEntity);
                     if (mar->IsInShell || mar->IsCrouchedInShell || mar->IsGroundpounding
-                        || mar->IsWallsliding || physobj->IsTouchingLeftWall || physobj->IsTouchingRightWall || mar->WalljumpFrames > 0 
+                        || mar->IsWallsliding || mar->WalljumpFrames > 0 
                         || mar->StoneBux || mar->MegaMushroomFrames > 0 || mar->MetalMushroomFrames > 0) {
                         continue; //Skip
+                    }
+                    if (physobj->IsTouchingLeftWall || physobj->IsTouchingRightWall) {
+                        physobj->Velocity.X = physobj->IsTouchingLeftWall ? -1 : 1;
+                        continue; //skip
                     }
                     if ((newStrength > 0) == (physobj->Velocity.X <= 0) && physobj->Velocity.X != 0) {
                         //Mario Pushing Against The Wind

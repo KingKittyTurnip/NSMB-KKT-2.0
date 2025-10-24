@@ -59,6 +59,7 @@ namespace Quantum {
             f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteraction);
             f.Context.Interactions.Register<ThrowingObject, IceBlock>(f, OnThrowingObjectIceBlockInteractionStationary);
             f.Context.Interactions.Register<ThrowingObject, Boss>(f, OnThrowingObjectBossInteraction);
+
             f.Context.Interactions.Register<Projectile, ThrowingObject>(f, OnThrowingObjectProjectileInteraction);
         }
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -230,6 +231,8 @@ namespace Quantum {
             case ThrowingObjectType.CoinBox: {
                 #region CoinBox
                 if (!Dis->Thrown && !f.Exists(holdable->Holder)) {
+                    if (Dis->ReusableTimer != 5 && f.Exists(holdable->PreviousHolder))
+                        f.Events.PlayComboSound(filter.Entity, 0);
                     Dis->ReusableTimer = 5;
                     break;
                 }
@@ -329,7 +332,8 @@ namespace Quantum {
             }
         }
         private void OnThrowingObjectMarioSolidPreContact(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts) {
-            if (f.Has<MarioPlayer>(entity) && f.Has<ThrowingObject>(contact.Entity)) {
+            if (f.Has<MarioPlayer>(entity) && f.Has<ThrowingObject>(contact.Entity) && f.Unsafe.TryGetPointer<Holdable>(contact.Entity, out var holdable) && !f.Exists(holdable->Holder)) {
+                //Make Precontact if we are not being held
                 keepContacts = OnMarInteraction(f, entity, contact.Entity);
             }
         }
@@ -337,11 +341,17 @@ namespace Quantum {
         public static bool OnMarInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             if (f.Exists(holdable->Holder)) {
                 //Force The player To Drop This Item if it's GroundPounded While They Are Carrying It
                 if (mario->IsGroundpoundActive) {
                     holdable->DropWithoutThrowing(f, thisEntity);
                     f.Events.PlayComboSound(thisEntity, 0);
+                    switch (Dis->Type) {
+                    case ThrowingObjectType.CoinBox:
+                        Dis->ReusableTimer = 5;
+                        break;
+                    }
                 }
                 return false;
             }
@@ -349,7 +359,6 @@ namespace Quantum {
                 return false;
             }
             #region SetValues
-            var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position; var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
@@ -411,7 +420,7 @@ namespace Quantum {
                     //physicsObject->DisableCollision = true;
                 }*/
             }
-            if ((!Dis->Thrown || mario->GetTeam(f) == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->GetTeam(f)) 
+            if ((!Dis->Thrown || (f.Exists(holdable->PreviousHolder) && mario->GetTeam(f) == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->GetTeam(f))) 
               && (damageDirection.Y <= Constants._0_66 || Dis->HitSomething)) {
                 //Only Allow Carry If No Team Or Same Team --- TOTEST
                 if (hazard->Team != 255 && mario->GetTeam(f) != hazard->Team) { //Can only pickup if it's on our team... or no team
@@ -603,15 +612,20 @@ namespace Quantum {
             }
         }
 
-        public static void OnThrowingObjectProjectileInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {
+        public static bool OnThrowingObjectProjectileInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity, PhysicsContact contact) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
-            if (f.Exists(holdable->Holder) && Dis->Type != ThrowingObjectType.Stone) {
+            /*if (f.Exists(holdable->Holder) && Dis->Type != ThrowingObjectType.Stone) {
                 //Force The player To Drop This Item if it's hit While They Are Carrying It
                 holdable->DropWithoutThrowing(f, thisEntity);
                 f.Events.PlayComboSound(thisEntity, 0);
                 f.Signals.OnProjectileHitEntity(f, projectileEntity, thisEntity);
+            }*/
+            if (Dis->Type == ThrowingObjectType.Stone || Dis->Type == ThrowingObjectType.Barrel) {
+                f.Signals.OnProjectileHitEntity(f, projectileEntity, thisEntity);
+                return true;
             }
+            return false;
         }
         #endregion
 

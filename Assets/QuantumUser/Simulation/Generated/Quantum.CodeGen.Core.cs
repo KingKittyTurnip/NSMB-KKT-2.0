@@ -155,6 +155,7 @@ namespace Quantum {
     Coin,
     Block,
     Star,
+    Powerup,
     Goomba,
     KoopaShell,
     HeavyStone,
@@ -1653,10 +1654,10 @@ namespace Quantum {
     [FieldOffset(8)]
     [ExcludeFromPrototype()]
     public QBoolean Activated;
-    [FieldOffset(3)]
+    [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public Byte GenerateRandomTeam;
-    [FieldOffset(4)]
+    [FieldOffset(5)]
     [ExcludeFromPrototype()]
     public Byte Personality;
     [FieldOffset(16)]
@@ -1674,12 +1675,15 @@ namespace Quantum {
     [FieldOffset(20)]
     [ExcludeFromPrototype()]
     public QBoolean PressingRight;
-    [FieldOffset(2)]
+    [FieldOffset(3)]
     [ExcludeFromPrototype()]
     public Byte BotWallJumping;
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte BotAtkCooldown;
+    [FieldOffset(2)]
+    [ExcludeFromPrototype()]
+    public Byte BotTeam;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 419;
@@ -1694,6 +1698,7 @@ namespace Quantum {
         hash = hash * 31 + PressingRight.GetHashCode();
         hash = hash * 31 + BotWallJumping.GetHashCode();
         hash = hash * 31 + BotAtkCooldown.GetHashCode();
+        hash = hash * 31 + BotTeam.GetHashCode();
         return hash;
       }
     }
@@ -1701,6 +1706,7 @@ namespace Quantum {
         var p = (Bot*)ptr;
         serializer.Stream.Serialize(&p->AvoidType);
         serializer.Stream.Serialize(&p->BotAtkCooldown);
+        serializer.Stream.Serialize(&p->BotTeam);
         serializer.Stream.Serialize(&p->BotWallJumping);
         serializer.Stream.Serialize(&p->GenerateRandomTeam);
         serializer.Stream.Serialize(&p->Personality);
@@ -3881,15 +3887,18 @@ namespace Quantum {
   public unsafe partial struct Tanoomba : Quantum.IComponent {
     public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(2)]
+    [FieldOffset(3)]
     [ExcludeFromPrototype()]
     public TanoombaState State;
-    [FieldOffset(1)]
+    [FieldOffset(2)]
     [ExcludeFromPrototype()]
     public TanoombaFormState Form;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte FormVariant;
     [FieldOffset(32)]
     public FP JumpVelocity;
-    [FieldOffset(0)]
+    [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte GetupFrames;
     [FieldOffset(24)]
@@ -3909,6 +3918,7 @@ namespace Quantum {
         var hash = 9067;
         hash = hash * 31 + (Byte)State;
         hash = hash * 31 + (Byte)Form;
+        hash = hash * 31 + FormVariant.GetHashCode();
         hash = hash * 31 + JumpVelocity.GetHashCode();
         hash = hash * 31 + GetupFrames.GetHashCode();
         hash = hash * 31 + TransformedObject.GetHashCode();
@@ -3920,6 +3930,7 @@ namespace Quantum {
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Tanoomba*)ptr;
+        serializer.Stream.Serialize(&p->FormVariant);
         serializer.Stream.Serialize(&p->GetupFrames);
         serializer.Stream.Serialize((Byte*)&p->Form);
         serializer.Stream.Serialize((Byte*)&p->State);

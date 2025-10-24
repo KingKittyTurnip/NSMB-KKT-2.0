@@ -1,14 +1,11 @@
 using Photon.Deterministic;
 using Quantum.Collections;
-using Quantum.Physics2D;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.EventSystems.EventTrigger;
+using static LoopingMusicData;
 
 namespace Quantum {
     
@@ -65,7 +62,7 @@ namespace Quantum {
                 }
 
                 //Check For Player
-                if (!FarFromPlayers(f, ref filter, transform->Position, 3, true) && tanoomba->GetupFrames <= 0) {
+                if (!FarFromPlayers(f, ref filter, transform->Position, 4, true) && tanoomba->GetupFrames <= 0) {
                     tanoomba->GetupFrames++;
                     physicsObject->Velocity.X = 0;
                     physicsObject->Velocity.Y = 3;
@@ -74,7 +71,6 @@ namespace Quantum {
                 } else if (tanoomba->GetupFrames > 0) {
                     if (tanoomba->GetupFrames++ > 45) {
                         tanoomba->State = TanoombaState.Searching;
-                        f.Events.TanoombaFlee(filter.Entity);
                         f.Events.PlayPuffParticle(transform->Position + new FPVector2(enemy->FacingRight ? -FP._0_33 : FP._0_33, 0));
                     }
                 } else {
@@ -123,7 +119,7 @@ namespace Quantum {
                             tanoomba->TargetedPlayer = EntityRef.None;
                             tanoomba->State = TanoombaState.Idling;
                             physicsObject->Velocity.X = 0;
-                            tanoomba->GetupFrames = 0;
+                            tanoomba->GetupFrames = 1;
                         }
                     } else {
                         physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (FP._0_10 * (enemy->FacingRight ? 1 : -1)), -3, 3);
@@ -163,6 +159,30 @@ namespace Quantum {
                 }
 
                 switch (tanoomba->Form) {
+                #region Level Tranforms
+                case TanoombaFormState.Block: {
+                    break;
+                }
+                case TanoombaFormState.Star: {
+                    //check if bigstar is nearby us
+                    int spawnpoints = stage.BigStarSpawnpoints.Length;
+                    for (int i = 0; i < spawnpoints; i++) {
+                        int count = f.RNG->Next(0, spawnpoints);
+                        int index = 0;
+                        for (int j = 0; j < spawnpoints; j++) {
+                            if (count-- == 0) {
+                                index = j;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                case TanoombaFormState.Powerup: {
+                    //powerup movement behavior
+                    break;
+                }
+                #endregion
                 #region Enemy Transforms
                 case TanoombaFormState.Goomba: {
                     physicsObject->Velocity.X = Constants._0_875 * (enemy->FacingRight ? 1 : -1);
@@ -182,7 +202,6 @@ namespace Quantum {
                 #endregion
                 #region Hazard Transforms
                 case TanoombaFormState.LemmyBall: {
-                    //Check If Hazards Contains This Object
                     break;
                 }
                 #endregion
@@ -264,6 +283,7 @@ namespace Quantum {
                 return TanoombaFormState.Max;
             }
             while (!Decided) {
+                tanoomba->FormVariant = 0;
                 TryForm = AvailibleForms[FPMath.RoundToInt(f.RNG->Next() * (AvailibleForms.Count - 1))];
                 List<EntityRef> EntityRefs = new();
 
@@ -305,12 +325,29 @@ namespace Quantum {
                                 break;
                             }
                         }
+                        //Remove This Spawn Location, If possible ofc
+                        if (!f.Global->UsedStarSpawns.IsSet(index)) {
+                            f.Global->UsedStarSpawns.Set(index);
+                            f.Global->UsedStarSpawnCount++;
+                        }
 
                         if (FarFromPlayers(f, ref filter, stage.BigStarSpawnpoints[index], GeneralDistance)) {
                             Decided = true;
                             tanoomba->TanoombaStartTransform(f, filter.Entity, EntityRef.None, true, stage.BigStarSpawnpoints[index]);
                             break;
                         }
+                    }
+                    break;
+                }
+                case TanoombaFormState.Powerup: {
+                    //Get A Random Avalible Powerup
+                    bool thisExists = true;
+                    //eh, add it checks for the existing powerups
+                    tanoomba->FormVariant = (byte) f.RNG->Next(0, 16);
+
+                    if (thisExists) {
+                        Decided = true;
+                        tanoomba->TanoombaStartTransform(f, filter.Entity, EntityRef.None, false, position);
                     }
                     break;
                 }
@@ -334,14 +371,16 @@ namespace Quantum {
                 case TanoombaFormState.KoopaShell: {
                     //See if Koopas Are In The Stage, Become Koopa
                     bool thisExists = false;
+                    List<byte> Variants = new();
                     var stuff = f.Filter<Koopa>();
                     while (stuff.NextUnsafe(out EntityRef OtherEntity, out var e)) {
                         thisExists = true;
-                        break;
+                        Variants.Add((byte) (e->DontWalkOfLedges ? 1 : e->SpawnPowerupWhenStomped != null ? 2 : e->IsSpiny ? 3 : 0));
                     }
                     thisExists |= !thisExists && (IsInHazardList(f, "Koopa")); // allow other koopas?
                     if (thisExists) {
                         Decided = true;
+                        tanoomba->FormVariant = Variants == null ? (byte) 0 : Variants[f.RNG->Next(0, Variants.Count)];
                         tanoomba->TanoombaStartTransform(f, filter.Entity, EntityRef.None, false, position);
                     }
                     break;
@@ -392,7 +431,7 @@ namespace Quantum {
             return TryForm;
         }
 
-        public bool IsInHazardList(Frame f, string name) {
+        public bool IsInHazardList(Frame f, string name) { //add the ability to "out" the special values
             foreach (var h in f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas) {
                 if (h.Name == name) {
                     return true;
@@ -430,7 +469,9 @@ namespace Quantum {
 
             //try 15 times
             for (int i = 0; i < 15; i++) {
-                transform->Position = new FPVector2(stage.StageWorldMin.X + ((stage.StageWorldMax.X - stage.StageWorldMin.X) * f.RNG->Next()), stage.StageWorldMin.Y + ((stage.StageWorldMax.Y - stage.StageWorldMin.Y) * f.RNG->Next()));
+                transform->Position = new FPVector2(
+                    FPMath.RoundToInt(stage.StageWorldMin.X + ((stage.StageWorldMax.X - stage.StageWorldMin.X) * f.RNG->Next())), 
+                    FPMath.RoundToInt(stage.StageWorldMin.Y + ((stage.StageWorldMax.Y - stage.StageWorldMin.Y) * f.RNG->Next())));
 
                 if (PhysicsObjectSystem.BoxInGround(f, transform->Position, filter.PhysicsCollider->Shape, true, stage, filter.Entity, true) && !PhysicsObjectSystem.TryEject(f, filter.Entity, stage)) {
                     //Check if We Are In The Ground, Then Try To Eject, if Can't, Offset Position, if STILL can't, continue
@@ -439,6 +480,19 @@ namespace Quantum {
                         continue;
                     }
                 }
+
+                //Snap to ground bellow
+                var contacted = PhysicsObjectSystem.Raycast(f, stage, transform->Position + (FPVector2.Left / 4), FPVector2.Down, 10, out var point);
+                var contactedr = PhysicsObjectSystem.Raycast(f, stage, transform->Position + (FPVector2.Right / 4), FPVector2.Down, 10, out var R);
+                if (contactedr) {
+                    if (point.Position.Y < R.Position.Y) {
+                        point = R;
+                    }
+                } else if (!contacted) {
+                    //huh. above a pit. can't use this position
+                    continue;
+                }
+                transform->Position.Y = point.Position.Y + FP._0_50;
 
                 if (FarFromPlayers(f, ref filter, transform->Position, 8)) {
                     return transform->Position;
@@ -463,11 +517,11 @@ namespace Quantum {
         public static void OnTanoombaMarioInteraction(Frame f, EntityRef thisEntity, EntityRef marioEntity) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var tanoomba = f.Unsafe.GetPointer<Tanoomba>(thisEntity);
-            if (tanoomba->State == TanoombaState.Searching || (tanoomba->State == TanoombaState.Attacking && tanoomba->GetupFrames < 12) ) {
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            if (tanoomba->State == TanoombaState.Searching || (tanoomba->State == TanoombaState.Attacking && tanoomba->GetupFrames < 12) || (tanoomba->State == TanoombaState.KnockedBack && physicsObject->Velocity.Y > 0)) {
                 return;
             }
             //var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var mariophys = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
 
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity); var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
@@ -481,13 +535,19 @@ namespace Quantum {
             if (mario->InstakillsEnemies(mariophys, false)) {
                 tanoomba->Kill(f, thisEntity, marioEntity, KillReason.Special);
             } else if (tanoomba->State == TanoombaState.Transformed) {
-                mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.Normal, thisEntity, false);
-                tanoomba->TanoombaResetTransform(f, thisEntity, true);
-                tanoomba->TargetedPlayer = marioEntity;
-                tanoomba->GetupFrames = 0;
+                if (FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_75) {
+                    bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
+                    mario->DoEntityBounce = !groundpounded;
+                    tanoomba->HurtTanoomba(f, thisEntity, marioEntity, damageDirection.X > 0);
+                } else {
+                    mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.Normal, thisEntity, false);
+                    tanoomba->TanoombaResetTransform(f, thisEntity, true);
+                    tanoomba->TargetedPlayer = marioEntity;
+                    tanoomba->GetupFrames = 0;
+                }
             } else if (tanoomba->State == TanoombaState.Attacking && (tanoomba->TargetedPlayer == marioEntity || !attackedFromAbove)) {
-                if (tanoomba->GetupFrames < 30) {
-                    mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.CollisionBump, thisEntity, false /*tanoomba->TargetedPlayer == marioEntity && tanoomba->GetupFrames <= 90*/);
+                if (tanoomba->GetupFrames > 30) {
+                    mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.CollisionBump, thisEntity, tanoomba->TargetedPlayer == marioEntity && tanoomba->GetupFrames <= 90 && (mario->DamageInvincibilityFrames > 60 || mario->KnockbackGetupFrames > 0 || mario->IsInKnockback));
                     physicsObject->Velocity.X *= -1;
                     tanoomba->GetupFrames = 90;
                     f.Events.TanoombaAttack(thisEntity);
@@ -507,7 +567,7 @@ namespace Quantum {
             var projectileAsset = f.FindAsset(projectile->Asset);
             var tanoomba = f.Unsafe.GetPointer<Tanoomba>(thisEntity);
 
-            if (tanoomba->State == TanoombaState.Idling || tanoomba->State == TanoombaState.Attacking) {
+            if (!(tanoomba->State == TanoombaState.Searching || (tanoomba->State == TanoombaState.Attacking && tanoomba->GetupFrames < 12))) {
                 switch (projectileAsset.Effect) {
                 case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
                 case ProjectileEffectType.Fire: {
@@ -525,6 +585,8 @@ namespace Quantum {
         }
         public static void OnTanoombaEnemyInteraction(Frame f, EntityRef thisEntity, EntityRef projectileEntity) {
             EnemySystem.EnemyBumpTurnaround(f, thisEntity, projectileEntity);
+
+            //tanoomba interaction ig
         }
         #endregion
 
