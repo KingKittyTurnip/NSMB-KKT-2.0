@@ -12,6 +12,8 @@ component Boss {
 
 signal BossDeath(EntityRef thisEntity);
 
+signal BossToBossInteraction(EntityRef thisEntity, EntityRef otherEntity);
+
 event BossDeathAnimation {
 	EntityRef Entity;
 }

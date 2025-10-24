@@ -127,7 +127,7 @@ namespace NSMB.Quantum {
                     f = game.Frames.Predicted;
                     int index = Array.IndexOf(stage.HazardSpawnpoints, hazardSpawn.transform.position.ToRoundedFPVector2());
                     if (index != -1) {
-                        if (f.Global->UsedStarSpawns.IsSet(index)) {
+                        if (f.Global->UsedHazardSpawns.IsSet(index)) {
                             Gizmos.color = new Color(1, 0, 0, 0.4f);
                         }
                     }

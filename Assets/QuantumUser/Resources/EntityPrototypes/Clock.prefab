@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 6930211675347735981}
   - component: {fileID: -5656916731996867298}
   - component: {fileID: 4524941981527613117}
+  - component: {fileID: 6395213386723720012}
   m_Layer: 19
   m_Name: Clock
   m_TagString: Untagged
@@ -394,8 +395,6 @@ MonoBehaviour:
   Prototype:
     ColliderDisabled:
       Value: 0
-    AllowDoubleInteraction:
-      Value: 0
 --- !u!114 &6930211675347735981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,6 +460,38 @@ MonoBehaviour:
         RawValue: 0
       Y:
         RawValue: 0
+--- !u!114 &6395213386723720012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 385320c580a374c44b3da48163df570b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prototype:
+    Gravity:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    TerminalVelocity:
+      RawValue: 0
+    IsFrozen:
+      Value: 1
+    DisableCollision:
+      Value: 0
+    SlowInLiquids:
+      Value: 0
+    IsWaterSolid:
+      Value: 0
+    BreakMegaObjects:
+      Value: 0
+    WindImmune:
+      Value: 0
 --- !u!1001 &1257495901162909846
 PrefabInstance:
   m_ObjectHideFlags: 0

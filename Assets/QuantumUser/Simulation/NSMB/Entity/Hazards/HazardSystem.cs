@@ -39,8 +39,8 @@ namespace Quantum {
         }
 
         public override void OnInit(Frame f) {
-            f.Context.PlayerOnlyMask = f.Layers.GetLayerMask("Player");
-            f.Context.CircleRadiusTwo = Shape2D.CreateCircle(2);
+            //f.Context.PlayerOnlyMask = f.Layers.GetLayerMask("Player");
+            //f.Context.CircleRadiusTwo = Shape2D.CreateCircle(2);
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {

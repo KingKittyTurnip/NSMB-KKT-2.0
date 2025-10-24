@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31d5cbd9d0a86fd4ab81898eb4718ac1, type: 3}
-  m_Name: Stars
+  m_Name: TanoombasGalor
   m_EditorClassIdentifier: 
   Identifier:
-    Path: QuantumUser/Resources/AssetObjects/HazardDatas/Stars
+    Path: QuantumUser/Resources/AssetObjects/HazardDatas/BasicRulesets/TanoombasGalor
     Guid:
-      Value: 483435783125105854
+      Value: 351873253197575764
   basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
   HazardGameData:
-    MaxHazards: 5
-    frequency: 10
+    MaxHazards: 10
+    frequency: 1
     HeftyPercentage:
-      RawValue: 7864
+      RawValue: 0
     DespawnTime: 80
     HazardDatas:
-    - Name: Bigstar
+    - Name: Tanoomba
       hazardAsset:
         Id:
-          Value: 1295981493910502871
+          Value: 1331816873224772261
       Hefty:
         ButtonName: Enabled As Hefty
         ButtonType: 0
@@ -38,14 +38,14 @@ MonoBehaviour:
       Team:
         ButtonName: Team
         ButtonType: 1
-        BaseValue: 0
+        BaseValue: 255
         ValueRange:
-          X: 0
-          Y: 6
+          X: 255
+          Y: 255
       SpawnAsGoal:
         ButtonName: Spawn As Goal
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 255
         ValueRange:
           X: 0
           Y: 1
@@ -59,7 +59,7 @@ MonoBehaviour:
       SpawnFridge:
         ButtonName: Appear From Fridge
         ButtonType: 0
-        BaseValue: 0
+        BaseValue: 1
         ValueRange:
           X: 0
           Y: 1
@@ -70,64 +70,24 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-      SpecialValues:
-      - ButtonName: Is Stationary
-        ButtonType: 0
-        BaseValue: 1
-        ValueRange:
-          X: 0
-          Y: 1
-    - Name: Bigstar
-      hazardAsset:
-        Id:
-          Value: 1295981493910502871
-      Hefty:
-        ButtonName: Enabled As Hefty
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
-      Team:
-        ButtonName: Team
-        ButtonType: 1
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 1
-        ValueRange:
-          X: 0
-          Y: 1
-      SpawnRandom:
-        ButtonName: Spawn Randomly
-        ButtonType: 0
-        BaseValue: 1
-        ValueRange:
-          X: 0
-          Y: 1
-      SpawnFridge:
-        ButtonName: Appear From Fridge
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
-      SpawnBulb:
-        ButtonName: Creatable From Bulb
+      Scale:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
       SpecialValues:
-      - ButtonName: Is Stationary
+      - ButtonName: Always Try To Transform
         ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 1
+          Y: 0
+      - ButtonName: Can Combo
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 0
   HazardID: 0

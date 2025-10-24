@@ -7,7 +7,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
-    public unsafe class BowserSystem : SystemMainThreadFilterStage<BowserSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalOnIceBlockBroken {
+    public unsafe class BowserSystem : SystemMainThreadFilterStage<BowserSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
         public struct Filter {
             public EntityRef Entity;
             public Bowser* Bowser;
@@ -405,22 +405,8 @@ namespace Quantum {
             var otherboss = f.Unsafe.GetPointer<Boss>(bossEntity);
             if (boss->iframes > 0 || boss->Dead || otherboss->iframes > 0 || otherboss->Dead)
                 return;
-            var bowser = f.Unsafe.GetPointer<Bowser>(thisEntity);
-            var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
-            var otherTransform = f.Unsafe.GetPointer<Transform2D>(bossEntity);
-            var thisPhys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(bossEntity);
-
-            QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
-            FPVector2 damageDirection = (theirPos - ourPos).Normalized;
-
-            f.Events.BowserKnockbacked(thisEntity);
-            bowser->State = BowserState.Knockbacked;
-            bowser->ReusableTimer = 0;
-            boss->FacingRight = damageDirection.X > 0;
-            thisPhys->Velocity.X = damageDirection.X > 0 ? -7 : 7;
-
-            //use signals for boss interactions instead
+            f.Signals.BossToBossInteraction(thisEntity, bossEntity);
+            f.Signals.BossToBossInteraction(bossEntity, thisEntity);
         }
         public void OnEnemyBowserInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
@@ -492,6 +478,26 @@ namespace Quantum {
             //relocate
             //boss->ControllerPlayer
             bowser->IsDry = hazardata.SpecialValues[0].BaseValue == 1;
+        }
+        public void BossToBossInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Boss* boss)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Bowser* bowser)) {
+                return;
+            }
+
+            var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+            var otherTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity);
+            var thisPhys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(otherEntity);
+
+            QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+            FPVector2 damageDirection = (theirPos - ourPos).Normalized;
+
+            f.Events.BowserKnockbacked(thisEntity);
+            bowser->State = BowserState.Knockbacked;
+            bowser->ReusableTimer = 0;
+            boss->FacingRight = damageDirection.X > 0;
+            thisPhys->Velocity.X = damageDirection.X > 0 ? -7 : 7;
         }
         #endregion
     }

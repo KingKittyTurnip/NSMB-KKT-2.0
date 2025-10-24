@@ -4,7 +4,7 @@ using static IInteractableTile;
 
 namespace Quantum {
     
-    public unsafe class PeteySystem : SystemMainThreadFilterStage<PeteySystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalOnIceBlockBroken {
+    public unsafe class PeteySystem : SystemMainThreadFilterStage<PeteySystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
         public struct Filter {
             public EntityRef Entity;
             public Petey* Petey;
@@ -331,22 +331,8 @@ namespace Quantum {
             var otherboss = f.Unsafe.GetPointer<Boss>(bossEntity);
             if (boss->iframes > 0 || boss->Dead || otherboss->iframes > 0 || otherboss->Dead)
                 return;
-            var petey = f.Unsafe.GetPointer<Petey>(thisEntity);
-            var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
-            var otherTransform = f.Unsafe.GetPointer<Transform2D>(bossEntity);
-            var thisPhys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(bossEntity);
-
-            QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
-            FPVector2 damageDirection = (theirPos - ourPos).Normalized;
-
-            if (petey->State == PeteyState.Diving) {
-                petey->HitATarget = true;
-                otherboss->BossHarmed(f, bossEntity, KnockbackStrength.Groundpound, true);
-                f.Events.PeteyStomped(thisEntity, boss->Health <= 0);
-            } else {
-                thisPhys->Velocity.X = damageDirection.X > 0 ? -4 : 4;
-            }
+            f.Signals.BossToBossInteraction(thisEntity, bossEntity);
+            f.Signals.BossToBossInteraction(bossEntity, thisEntity);
         }
         public void OnEnemyPeteyInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
@@ -417,6 +403,30 @@ namespace Quantum {
 
             //relocate
             //boss->ControllerPlayer
+        }
+
+        public void BossToBossInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Boss* boss)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Petey* petey)) {
+                return;
+            }
+
+            var otherboss = f.Unsafe.GetPointer<Boss>(otherEntity);
+            var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+            var otherTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity);
+            var thisPhys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(otherEntity);
+
+            QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+            FPVector2 damageDirection = (theirPos - ourPos).Normalized;
+
+            if (petey->State == PeteyState.Diving) {
+                petey->HitATarget = true;
+                otherboss->BossHarmed(f, otherEntity, KnockbackStrength.Groundpound, true);
+                f.Events.PeteyStomped(thisEntity, boss->Health <= 0);
+            } else {
+                thisPhys->Velocity.X = damageDirection.X > 0 ? -4 : 4;
+            }
         }
         #endregion
     }

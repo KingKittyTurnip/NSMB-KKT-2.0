@@ -4037,6 +4037,9 @@ namespace Quantum {
   public unsafe partial interface ISignalBossDeath : ISignal {
     void BossDeath(Frame f, EntityRef thisEntity);
   }
+  public unsafe partial interface ISignalBossToBossInteraction : ISignal {
+    void BossToBossInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity);
+  }
   public unsafe partial interface ISignalOnBreakableObjectChangedHeight : ISignal {
     void OnBreakableObjectChangedHeight(Frame f, EntityRef breakable, FP newHeight);
   }
@@ -4458,6 +4461,7 @@ namespace Quantum {
     private ISignalOnEntityBumped[] _ISignalOnEntityBumpedSystems;
     private ISignalOnBobombExplodeEntity[] _ISignalOnBobombExplodeEntitySystems;
     private ISignalBossDeath[] _ISignalBossDeathSystems;
+    private ISignalBossToBossInteraction[] _ISignalBossToBossInteractionSystems;
     private ISignalOnBreakableObjectChangedHeight[] _ISignalOnBreakableObjectChangedHeightSystems;
     private ISignalOnMarioPlayerCollectedCoin[] _ISignalOnMarioPlayerCollectedCoinSystems;
     private ISignalOnCoinItemSpawnEnded[] _ISignalOnCoinItemSpawnEndedSystems;
@@ -4506,6 +4510,7 @@ namespace Quantum {
       _ISignalOnEntityBumpedSystems = BuildSignalsArray<ISignalOnEntityBumped>();
       _ISignalOnBobombExplodeEntitySystems = BuildSignalsArray<ISignalOnBobombExplodeEntity>();
       _ISignalBossDeathSystems = BuildSignalsArray<ISignalBossDeath>();
+      _ISignalBossToBossInteractionSystems = BuildSignalsArray<ISignalBossToBossInteraction>();
       _ISignalOnBreakableObjectChangedHeightSystems = BuildSignalsArray<ISignalOnBreakableObjectChangedHeight>();
       _ISignalOnMarioPlayerCollectedCoinSystems = BuildSignalsArray<ISignalOnMarioPlayerCollectedCoin>();
       _ISignalOnCoinItemSpawnEndedSystems = BuildSignalsArray<ISignalOnCoinItemSpawnEnded>();
@@ -4744,6 +4749,15 @@ namespace Quantum {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
             s.BossDeath(_f, thisEntity);
+          }
+        }
+      }
+      public void BossToBossInteraction(EntityRef thisEntity, EntityRef otherEntity) {
+        var array = _f._ISignalBossToBossInteractionSystems;
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
+            s.BossToBossInteraction(_f, thisEntity, otherEntity);
           }
         }
       }

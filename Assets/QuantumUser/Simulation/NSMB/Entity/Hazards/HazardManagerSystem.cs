@@ -57,7 +57,7 @@ namespace Quantum {
                 }
 
                 int count = f.RNG->Next(0, spawnpoints - f.Global->UsedHazardSpawnCount);
-                int index = 0;
+                int index = -1;
                 for (int j = 0; j < spawnpoints; j++) {
                     if (!usedSpawnpoints.IsSet(j)) {
                         if (count-- == 0) {
@@ -66,6 +66,11 @@ namespace Quantum {
                             break;
                         }
                     }
+                }
+                if (index == -1) {
+                    //All Spawn Locations Are In Use...?
+                    f.Global->TimeTilNextHazard = 1;
+                    continue;
                 }
                 usedSpawnpoints.Set(index);
                 f.Global->UsedHazardSpawnCount++;
@@ -100,7 +105,7 @@ namespace Quantum {
                 //Sort Hazards
                 var hazardSettings = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData;
                 List<(HazardData, byte)> hazarddata = new(), heftydata = new(); //new(hazardSettings.HazardDatas)
-		for (byte item = 0; item < hazardSettings.HazardDatas.Count; item++) {
+                for (byte item = 0; item < hazardSettings.HazardDatas.Count; item++) {
                     if (hazardSettings.HazardDatas[item].SpawnRandom.BaseValue == 1) {
                         //Hazard Can Spawn
                         //Add special spawn conditions for:
@@ -117,12 +122,12 @@ namespace Quantum {
                 int pick = 0; //don't use an int, use the value of hazardasset to use less checks (?)
                 FP heftychance = hazardSettings.HeftyPercentage - f.Global->HeftyCount;
                 bool hefty = f.RNG->Next() <= heftychance;
-		if (hefty) {
-		    f.Global->HeftyCount++;
-		    pick = f.RNG->Next(0, heftydata.Count);
-		} else {
-		    pick = f.RNG->Next(0, hazarddata.Count);
-		}
+                if (hefty) {
+                    f.Global->HeftyCount++;
+                    pick = f.RNG->Next(0, heftydata.Count);
+                } else {
+                    pick = f.RNG->Next(0, hazarddata.Count);
+                }
 
                 //SpawnHazard
                 EntityRef newEntity = f.Create(hefty ? heftydata[pick].Item1.hazardAsset : hazarddata[pick].Item1.hazardAsset);

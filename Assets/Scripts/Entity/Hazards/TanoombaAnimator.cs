@@ -11,6 +11,7 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
     [SerializeField] private GameObject Tears;
     [SerializeField] private Animator Main;
     [SerializeField] private AudioSource sfx;
+    [SerializeField] private AudioClip laugh;
     [Header("Have Them In The Same Order As The States In Tanoomba.qtn")]
     [SerializeField] private GameObject[] TransformModels;
     //---Serialized Variables
@@ -110,18 +111,22 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
             return;
         }
         Main.SetTrigger("Attack");
+
+        sfx.PlayOneShot(SoundEffect.Powerup_HammerSuit_Throw);
     }
     private unsafe void OnFlee(EventTanoombaFlee e) {
         if (e.Entity != EntityRef) {
             return;
         }
         Main.SetTrigger("Flee");
+        sfx.PlayOneShot(SoundEffect.Powerup_MiniMushroom_Jump);
     }
     private unsafe void OnLMAO(EventTanoombaLMAO e) {
         if (e.Entity != EntityRef) {
             return;
         }
         Main.SetTrigger("LMAO");
+        sfx.PlayOneShot(laugh);
     }
 
     private void OnPlayBumpSound(EventPlayBumpSound e) {

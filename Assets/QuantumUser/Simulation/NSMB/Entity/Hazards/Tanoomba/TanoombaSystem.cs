@@ -486,10 +486,12 @@ namespace Quantum {
                 tanoomba->TargetedPlayer = marioEntity;
                 tanoomba->GetupFrames = 0;
             } else if (tanoomba->State == TanoombaState.Attacking && (tanoomba->TargetedPlayer == marioEntity || !attackedFromAbove)) {
-                mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.CollisionBump, thisEntity, false /*tanoomba->TargetedPlayer == marioEntity && tanoomba->GetupFrames <= 90*/);
-                physicsObject->Velocity.X *= -1;
-                tanoomba->GetupFrames = 90;
-                f.Events.TanoombaAttack(thisEntity);
+                if (tanoomba->GetupFrames < 30) {
+                    mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.CollisionBump, thisEntity, false /*tanoomba->TargetedPlayer == marioEntity && tanoomba->GetupFrames <= 90*/);
+                    physicsObject->Velocity.X *= -1;
+                    tanoomba->GetupFrames = 90;
+                    f.Events.TanoombaAttack(thisEntity);
+                }
             } else if (attackedFromAbove) {
                 bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
                 mario->DoEntityBounce = !groundpounded;
