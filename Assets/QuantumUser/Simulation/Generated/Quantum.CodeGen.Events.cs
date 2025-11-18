@@ -52,7 +52,7 @@ namespace Quantum {
   public unsafe partial class Frame {
     public unsafe partial struct FrameEvents {
       static partial void GetEventTypeCountCodeGen(ref Int32 eventCount) {
-        eventCount = 107;
+        eventCount = 111;
       }
       static partial void GetParentEventIDCodeGen(Int32 eventID, ref Int32 parentEventID) {
         switch (eventID) {
@@ -167,6 +167,10 @@ namespace Quantum {
           case EventTileChanged.ID: result = typeof(EventTileChanged); return;
           case EventTileBroken.ID: result = typeof(EventTileBroken); return;
           case EventTimerExpired.ID: result = typeof(EventTimerExpired); return;
+          case EventWhompKingJump.ID: result = typeof(EventWhompKingJump); return;
+          case EventWhompKingpitfall.ID: result = typeof(EventWhompKingpitfall); return;
+          case EventWhompKingLand.ID: result = typeof(EventWhompKingLand); return;
+          case EventWhompKingKnockbacked.ID: result = typeof(EventWhompKingKnockbacked); return;
           default: break;
         }
       }
@@ -919,6 +923,31 @@ namespace Quantum {
       public EventTimerExpired TimerExpired(Frame Frame) {
         var ev = _f.Context.AcquireEvent<EventTimerExpired>(EventTimerExpired.ID);
         ev.Frame = Frame;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventWhompKingJump WhompKingJump(EntityRef Entity) {
+        var ev = _f.Context.AcquireEvent<EventWhompKingJump>(EventWhompKingJump.ID);
+        ev.Entity = Entity;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventWhompKingpitfall WhompKingpitfall(EntityRef Entity) {
+        var ev = _f.Context.AcquireEvent<EventWhompKingpitfall>(EventWhompKingpitfall.ID);
+        ev.Entity = Entity;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventWhompKingLand WhompKingLand(EntityRef Entity, QBoolean Slam) {
+        var ev = _f.Context.AcquireEvent<EventWhompKingLand>(EventWhompKingLand.ID);
+        ev.Entity = Entity;
+        ev.Slam = Slam;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventWhompKingKnockbacked WhompKingKnockbacked(EntityRef Entity) {
+        var ev = _f.Context.AcquireEvent<EventWhompKingKnockbacked>(EventWhompKingKnockbacked.ID);
+        ev.Entity = Entity;
         _f.AddEvent(ev);
         return ev;
       }
@@ -3720,6 +3749,108 @@ namespace Quantum {
       unchecked {
         var hash = 647;
         hash = hash * 31 + Frame.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventWhompKingJump : EventBase {
+    public new const Int32 ID = 107;
+    public EntityRef Entity;
+    protected EventWhompKingJump(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventWhompKingJump() : 
+        base(107, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 653;
+        hash = hash * 31 + Entity.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventWhompKingpitfall : EventBase {
+    public new const Int32 ID = 108;
+    public EntityRef Entity;
+    protected EventWhompKingpitfall(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventWhompKingpitfall() : 
+        base(108, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 659;
+        hash = hash * 31 + Entity.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventWhompKingLand : EventBase {
+    public new const Int32 ID = 109;
+    public EntityRef Entity;
+    public QBoolean Slam;
+    protected EventWhompKingLand(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventWhompKingLand() : 
+        base(109, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 661;
+        hash = hash * 31 + Entity.GetHashCode();
+        hash = hash * 31 + Slam.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventWhompKingKnockbacked : EventBase {
+    public new const Int32 ID = 110;
+    public EntityRef Entity;
+    protected EventWhompKingKnockbacked(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventWhompKingKnockbacked() : 
+        base(110, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 673;
+        hash = hash * 31 + Entity.GetHashCode();
         return hash;
       }
     }

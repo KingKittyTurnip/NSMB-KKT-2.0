@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b61df374e3437304394f4264b4fc701f
+guid: 1589de5ecfa665241b9644cbef8310ec
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,23 +7,23 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Bolts
-    second: {fileID: 2100000, guid: c27422a15e654ef4cb8dbadbe3b608a8, type: 2}
+      name: BlockKillerMat01
+    second: {fileID: 2100000, guid: 083ce87375424944aa77c9e12bd6c26c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: BulletMat
-    second: {fileID: 2100000, guid: f58177b7ba35c534a84b91edbe5b88ed, type: 2}
+      name: BoxKillerMat00
+    second: {fileID: 2100000, guid: 85c6308d705a8854ebd592324ab47571, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: CannonBoxMat
-    second: {fileID: 2100000, guid: 202e73c3f7c3b8749855e76db17aa954, type: 2}
+      name: BoxKillerMat01
+    second: {fileID: 2100000, guid: c65532f16f0608b47942d12f318ed5c0, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Edge
-    second: {fileID: 2100000, guid: f36fbcbe57f3369429ccb29742742663, type: 2}
+      name: BoxKillerMat02
+    second: {fileID: 2100000, guid: 55fdd928bdde0ab48a2c84dd9bac9477, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -36,8 +36,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -91,14 +89,14 @@ ModelImporter:
     strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 1
+    normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 1
+  importAnimation: 0
   humanDescription:
     serializedVersion: 3
     human: []
@@ -111,7 +109,7 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     globalScale: 1
-    rootMotionBoneName: 
+    rootMotionBoneName: Armature
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
@@ -119,7 +117,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0

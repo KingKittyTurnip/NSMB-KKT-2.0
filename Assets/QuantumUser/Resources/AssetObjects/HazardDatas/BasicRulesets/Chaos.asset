@@ -1104,4 +1104,118 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 0
-  HazardID: 16
+    - Name: Whomp King
+      hazardAsset:
+        Id:
+          Value: 1500840674427279327
+      Hefty:
+        ButtonName: Enabled As Hefty
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      Team:
+        ButtonName: Team
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 6
+      SpawnAsGoal:
+        ButtonName: Spawn As Goal
+        ButtonType: 0
+        BaseValue: 255
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnRandom:
+        ButtonName: Spawn Randomly
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnFridge:
+        ButtonName: Appear From Fridge
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnBulb:
+        ButtonName: Creatable From Bulb
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      Scale:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      SpecialValues: []
+    - Name: Cannon Box
+      hazardAsset:
+        Id:
+          Value: 1358951826669536181
+      Hefty:
+        ButtonName: Enabled As Hefty
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      Team:
+        ButtonName: Team
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 6
+      SpawnAsGoal:
+        ButtonName: Spawn As Goal
+        ButtonType: 0
+        BaseValue: 255
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnRandom:
+        ButtonName: Spawn Randomly
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnFridge:
+        ButtonName: Appear From Fridge
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnBulb:
+        ButtonName: Creatable From Bulb
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      Scale:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      SpecialValues:
+      - ButtonName: Launch Item
+        ButtonType: 2
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 0
+  HazardID: 21

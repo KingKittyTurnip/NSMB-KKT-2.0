@@ -184,6 +184,14 @@ namespace Quantum {
     Voidwall,
     Potion,
   }
+  public enum WhompKingState : byte {
+    Walling,
+    Idling,
+    Jumping,
+    SlamAttacking,
+    SlamHit,
+    Knockbacked,
+  }
   [System.FlagsAttribute()]
   public enum InputButtons : int {
     Up = 1 << 0,
@@ -4021,6 +4029,51 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct WhompKing : Quantum.IComponent {
+    public const Int32 SIZE = 56;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(2)]
+    public WhompKingState State;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte ReusableTimer;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public QBoolean HitATarget;
+    [FieldOffset(24)]
+    public FPVector2 Hitbox;
+    [FieldOffset(40)]
+    public FPVector2 HurtingHitbox;
+    [FieldOffset(8)]
+    public FPVector2 FallenBox;
+    [FieldOffset(1)]
+    [ExcludeFromPrototype()]
+    public Byte SlamCooldown;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 13577;
+        hash = hash * 31 + (Byte)State;
+        hash = hash * 31 + ReusableTimer.GetHashCode();
+        hash = hash * 31 + HitATarget.GetHashCode();
+        hash = hash * 31 + Hitbox.GetHashCode();
+        hash = hash * 31 + HurtingHitbox.GetHashCode();
+        hash = hash * 31 + FallenBox.GetHashCode();
+        hash = hash * 31 + SlamCooldown.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (WhompKing*)ptr;
+        serializer.Stream.Serialize(&p->ReusableTimer);
+        serializer.Stream.Serialize(&p->SlamCooldown);
+        serializer.Stream.Serialize((Byte*)&p->State);
+        QBoolean.Serialize(&p->HitATarget, serializer);
+        FPVector2.Serialize(&p->FallenBox, serializer);
+        FPVector2.Serialize(&p->Hitbox, serializer);
+        FPVector2.Serialize(&p->HurtingHitbox, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct WrappingObject : Quantum.IComponent {
     public const Int32 SIZE = 4;
     public const Int32 ALIGNMENT = 4;
@@ -4697,6 +4750,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Transform3D>();
       BuildSignalsArrayOnComponentAdded<View>();
       BuildSignalsArrayOnComponentRemoved<View>();
+      BuildSignalsArrayOnComponentAdded<Quantum.WhompKing>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.WhompKing>();
       BuildSignalsArrayOnComponentAdded<Quantum.WrappingObject>();
       BuildSignalsArrayOnComponentRemoved<Quantum.WrappingObject>();
     }
@@ -5255,11 +5310,13 @@ namespace Quantum {
       typeRegistry.Register(typeof(Transform2DVertical), Transform2DVertical.SIZE);
       typeRegistry.Register(typeof(Transform3D), Transform3D.SIZE);
       typeRegistry.Register(typeof(View), View.SIZE);
+      typeRegistry.Register(typeof(Quantum.WhompKing), Quantum.WhompKing.SIZE);
+      typeRegistry.Register(typeof(Quantum.WhompKingState), 1);
       typeRegistry.Register(typeof(Quantum.WrappingObject), Quantum.WrappingObject.SIZE);
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 52)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 53)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -5312,6 +5369,7 @@ namespace Quantum {
         .Add<Quantum.Starballgoal>(Quantum.Starballgoal.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Tanoomba>(Quantum.Tanoomba.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.ThrowingObject>(Quantum.ThrowingObject.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.WhompKing>(Quantum.WhompKing.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.WrappingObject>(Quantum.WrappingObject.Serialize, null, null, ComponentFlags.None)
         .Finish();
     }
@@ -5345,6 +5403,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.TanoombaFormState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.TanoombaState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.ThrowingObjectType>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.WhompKingState>();
     }
   }
 }

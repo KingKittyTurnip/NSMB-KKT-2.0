@@ -1,0 +1,35 @@
+component WhompKing {
+	WhompKingState State;
+	
+	[ExcludeFromPrototype] byte ReusableTimer;
+	[ExcludeFromPrototype] bool HitATarget;
+	FPVector2 Hitbox;
+	FPVector2 HurtingHitbox;
+	FPVector2 FallenBox;
+	[ExcludeFromPrototype] byte SlamCooldown;
+
+	//ai vars
+}
+
+enum WhompKingState : Byte {
+    Walling,
+    Idling,
+	Jumping,
+	SlamAttacking,
+	SlamHit,
+	Knockbacked,
+}
+
+event WhompKingJump {
+	EntityRef Entity;
+}
+event WhompKingpitfall {
+	EntityRef Entity;
+}
+event WhompKingLand {
+	EntityRef Entity;
+	bool Slam;
+}
+event WhompKingKnockbacked {
+	EntityRef Entity;
+}

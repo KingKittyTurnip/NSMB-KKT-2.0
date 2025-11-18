@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
 using NSMB.Utilities.Extensions;
+using System.Collections.Generic;
 
 public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
 
@@ -23,13 +24,16 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
 
     //TODO: This Code
     private MaterialPropertyBlock materialBlock;
-    [SerializeField] private Renderer coinboxRenderer = new();
+    List<Renderer> renderers = new();
     private static readonly int ParamBoxType = Shader.PropertyToID("BoxType");
-    private int CurrentType = 0;
 
     public void Start() {
         QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnBillBlockFail);
         QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
+
+        renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
+        renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
+        materialBlock = new();
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -73,6 +77,20 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
             animator.SetBool("Failing", false);
         }
 
+        //Set Color
+        int i = 0;
+        if (f.Exists(holdable->Holder) || (billblock->Thrown && f.Exists(holdable->PreviousHolder))) {
+            for (i = 0; i < f.SimulationConfig.CharacterDatas.Length; i++) {
+                if (f.SimulationConfig.CharacterDatas[i] == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset) {
+                    i++;
+                    break;
+                }
+            }
+        }
+        materialBlock.SetInt(ParamBoxType, i);
+        foreach (Renderer r in renderers) {
+            r.SetPropertyBlock(materialBlock);
+        }
     }
 
     public override void OnDeactivate() {

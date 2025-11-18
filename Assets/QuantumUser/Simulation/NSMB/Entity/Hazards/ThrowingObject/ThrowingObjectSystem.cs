@@ -305,7 +305,40 @@ namespace Quantum {
                 #endregion
             }
             case ThrowingObjectType.CannonBox:
-                //TODO:
+                bool holder = f.Exists(holdable->Holder);
+                if (!holder) {
+                    Dis->ReusableTimer += 1;
+                    if (Dis->ReusableTimer > 180) {
+                        Dis->ReusableTimer = 0;
+                        goto Bullet;
+                    }
+                    return;
+                }
+                if (Dis->ReusableTimer > 30) {
+                    Dis->ReusableTimer += 1;
+                    if (Dis->ReusableTimer > 70)
+                        Dis->ReusableTimer = 0;
+                    break;
+                }
+                var mario2 = f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder);
+                Dis->Facing = mario2->FacingRight;
+                Input* input = f.GetPlayerInput(mario2->PlayerRef);
+                if (input->PowerupAction.IsDown) {
+                    if (Dis->ReusableTimer < 30)
+                        Dis->ReusableTimer += 1;
+                    break;
+                } else if (Dis->ReusableTimer == 0) {
+                    break;
+                }
+                Bullet:
+                FPVector2 spawnPos = filter.Transform->Position + new FPVector2(Dis->Facing ? FP._0_25 : -FP._0_25, 0);
+                EntityRef newEntity = f.Create(f.SimulationConfig.CannonBoxBulletPrototype);
+                var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
+                projectile->Initialize(f, newEntity, holdable->PreviousHolder, spawnPos, Dis->Facing, false);
+                if (Dis->ReusableTimer >= 30)
+                    projectile->Speed *= 2;
+                Dis->ReusableTimer = 31;
+                f.Events.ThrowObjSimple(filter.Entity, transform->Position);
                 break;
             case ThrowingObjectType.Fridge:
                 //TODO: (?)

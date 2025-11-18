@@ -80,6 +80,7 @@ namespace Quantum {
                 if (inputs.Up.IsDown || inputs.Down.IsDown) {
                     updowninput = (inputs.Up.IsDown == inputs.Down.IsDown) ? 0 : (inputs.Down.IsDown ? -1 : 1);
                 }
+                mario->FacingRight = boss->FacingRight;
             } else {
                 //Find Closest Player
                 EntityRef TargetEntity = EntityRef.None;
@@ -179,7 +180,7 @@ namespace Quantum {
                     bowser->ReusableTimer++;
                 } else if (bowser->ReusableTimer > 0) {
                     bowser->ReusableTimer++;
-                    if (bowser->ReusableTimer > 140 || boss->Health != Constants.GeneralBossHealth) {
+                    if (bowser->ReusableTimer > 140 || boss->iframes != 0) {
                         bowser->ReusableTimer = 0;
                         bowser->BigAttackCounter = 3;
                         bowser->waitTime = 30;
@@ -210,13 +211,16 @@ namespace Quantum {
                 break;
             case BowserState.ChargeJump:
                 bowser->ReusableTimer++;
-                if (bowser->ReusableTimer > 25) {
+                if (bowser->ReusableTimer > 15) {
                     bowser->ReusableTimer = 0;
                     bowser->State = BowserState.Jumping;
                     physicsObject->IsTouchingGround = false;
                     physicsObject->Velocity.Y = 16;
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * 4), -7, 7);
                     physicsObject->TerminalVelocity = -20;
+                } else if (Fireball) {
+                    bowser->State = BowserState.Attacking;
+                    f.Events.BowserAttack(filter.Entity, BowserAttackType.FireBall);
                 }
                 break;
             case BowserState.Jumping:
@@ -225,6 +229,10 @@ namespace Quantum {
                 }
                 if (!Jumpheld) {
                     physicsObject->Velocity.Y = FPMath.Min(physicsObject->Velocity.Y, 8);
+                }
+                if (Fireball) {
+                    bowser->State = BowserState.Attacking;
+                    f.Events.BowserAttack(filter.Entity, BowserAttackType.FireBall);
                 }
 
                 if (physicsObject->IsTouchingGround && !physicsObject->WasTouchingGround) {
@@ -242,7 +250,7 @@ namespace Quantum {
                 break;
             case BowserState.Attacking:
                 if (leftrightinput != 0) {
-                    FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, FP._1_50);
+                    FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, FP._1_25);
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_50), -clamper, clamper);
                 }
                 bowser->ReusableTimer++;
@@ -326,7 +334,7 @@ namespace Quantum {
             var bowser = f.Unsafe.GetPointer<Bowser>(thisEntity);
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->iframes > 0 || boss->Dead)
+            if (boss->Dead)
                 return;
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
@@ -361,7 +369,10 @@ namespace Quantum {
 
             } else if (mario->IsDamageable) {
                 mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 1, KnockbackStrength.Normal, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity);
-                
+                if (damageDirection.Y < 0) {
+                    bowser->State = BowserState.Jumping;
+                    f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.Y = 6;
+                }
             }
 
             if (bossHarmed) {
@@ -371,14 +382,12 @@ namespace Quantum {
                     bowser->ReusableTimer = 0;
                     boss->FacingRight = damageDirection.X > 0;
                     f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.X = damageDirection.X > 0 ? -7 : 7;
-                } else {
-                    f.Events.PlayBossHitSound(thisEntity);
                 }
             }
         }
         public void OnProjectileBowserInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->iframes > 0 || boss->Dead)
+            if (boss->Dead)
                 return;
             var bowser = f.Unsafe.GetPointer<Bowser>(thisEntity);
             var projectile = f.Unsafe.GetPointer<Projectile>(projectileEntity);
@@ -391,7 +400,6 @@ namespace Quantum {
             case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
             case ProjectileEffectType.Fire: {
                 boss->BossHarmed(f, thisEntity, KnockbackStrength.FireballBump, false);
-                f.Events.PlayBossHitSound(thisEntity);
                 bowser->JumpFromAttackCounter++;
                 break;
             }
@@ -408,14 +416,14 @@ namespace Quantum {
         public void OnBossBowserInteraction(Frame f, EntityRef bossEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             var otherboss = f.Unsafe.GetPointer<Boss>(bossEntity);
-            if (boss->iframes > 0 || boss->Dead || otherboss->iframes > 0 || otherboss->Dead)
+            if (boss->Dead || otherboss->Dead)
                 return;
             f.Signals.BossToBossInteraction(thisEntity, bossEntity);
             f.Signals.BossToBossInteraction(bossEntity, thisEntity);
         }
         public void OnEnemyBowserInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->iframes > 0 || boss->Dead)
+            if (boss->Dead)
                 return;
 
             if (f.Unsafe.TryGetPointer(enemyEntity, out Goomba* goomba)) {
@@ -423,7 +431,6 @@ namespace Quantum {
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out Koopa* koopa)) {
                 if (koopa->IsKicked) {
                     boss->BossHarmed(f, thisEntity, KnockbackStrength.FireballBump, false);
-                    f.Events.PlayBossHitSound(thisEntity);
                 }
                 koopa->Kill(f, enemyEntity, enemyEntity, KillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out BulletBill* bill)) {
@@ -451,7 +458,6 @@ namespace Quantum {
                 //Controlled By Player
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer);
                 mario->RelieveFromBoss(f, boss->ControllerPlayer);
-                mario->DoKnockback(f, boss->ControllerPlayer, !boss->FacingRight, 2, KnockbackStrength.Groundpound, EntityRef.None, true);
             } else {
                 //spawn star(s?)
                 var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
@@ -490,6 +496,7 @@ namespace Quantum {
                 return;
             }
 
+            var otherboss = f.Unsafe.GetPointer<Boss>(otherEntity);
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var otherTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity);
             var thisPhys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
@@ -497,12 +504,17 @@ namespace Quantum {
 
             QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
-
-            f.Events.BowserKnockbacked(thisEntity);
-            bowser->State = BowserState.Knockbacked;
-            bowser->ReusableTimer = 0;
-            boss->FacingRight = damageDirection.X > 0;
-            thisPhys->Velocity.X = damageDirection.X > 0 ? -7 : 7;
+            if (damageDirection.Y < 0) {
+                bowser->State = BowserState.Jumping;
+                f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.Y = 6;
+                otherboss->BossHarmed(f, otherEntity, KnockbackStrength.Normal, true);
+            } else {
+                f.Events.BowserKnockbacked(thisEntity);
+                bowser->State = BowserState.Knockbacked;
+                bowser->ReusableTimer = 0;
+                boss->FacingRight = damageDirection.X > 0;
+                thisPhys->Velocity.X = damageDirection.X > 0 ? -7 : 7;
+            }
         }
         #endregion
     }

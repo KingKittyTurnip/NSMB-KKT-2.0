@@ -52,7 +52,7 @@ namespace Quantum {
                         //create boss hazard
                         List<HazardData> hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas, avaliblebosses = new();
                         for (int i = 0; i < hazarddata.Count; i++) {
-                            if (hazarddata[i].Name == "Petey" || hazarddata[i].Name == "Bowser") {
+                            if (hazarddata[i].Name == "Petey" || hazarddata[i].Name == "Bowser" || hazarddata[i].Name == "Whomp King" || hazarddata[i].Name == "King Boo") {
                                 //This is A Boss Entity
                                 avaliblebosses.Add(hazarddata[i]);
                                 continue;

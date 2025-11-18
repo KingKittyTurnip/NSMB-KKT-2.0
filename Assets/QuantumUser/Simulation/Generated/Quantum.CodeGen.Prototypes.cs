@@ -1202,6 +1202,27 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.WhompKing))]
+  public unsafe partial class WhompKingPrototype : ComponentPrototype<Quantum.WhompKing> {
+    public Quantum.QEnum8<WhompKingState> State;
+    public FPVector2 Hitbox;
+    public FPVector2 HurtingHitbox;
+    public FPVector2 FallenBox;
+    partial void MaterializeUser(Frame frame, ref Quantum.WhompKing result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.WhompKing component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.WhompKing result, in PrototypeMaterializationContext context = default) {
+        result.State = this.State;
+        result.Hitbox = this.Hitbox;
+        result.HurtingHitbox = this.HurtingHitbox;
+        result.FallenBox = this.FallenBox;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.WrappingObject))]
   public unsafe partial class WrappingObjectPrototype : ComponentPrototype<Quantum.WrappingObject> {
     [HideInInspector()]

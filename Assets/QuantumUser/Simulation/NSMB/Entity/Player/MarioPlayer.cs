@@ -573,9 +573,10 @@ namespace Quantum {
             IsBoss = EntityRef.None;
             var otherPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(mario);
             otherPhysicsObject->IsFrozen = otherPhysicsObject->DisableCollision = false;
-            otherPhysicsObject->Velocity = new FPVector2(0, 12);
             f.Unsafe.GetPointer<Interactable>(mario)->ColliderDisabled = false;
             IsGroundpounding = false;
+            ResetKnockback();
+            DoEntityBounce = true;
         }
         public Input GetPlayerInput(Frame f, EntityRef marioEntity) {
             return (QuantumUtils.GetPlayerData(f, PlayerRef) == null) ? f.Unsafe.GetPointer<Bot>(marioEntity)->HandleAi(f, marioEntity) : *f.GetPlayerInput(PlayerRef);
