@@ -8,6 +8,7 @@ component WhompKing {
 	FPVector2 FallenBox;
 	[ExcludeFromPrototype] byte SlamCooldown;
 
+	[ExcludeFromPrototype] bool PrevSlamPounded;
 	//ai vars
 }
 

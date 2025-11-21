@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 075af0e881e112348abe562216ddc298, type: 3}
+  m_Name: MusicBossTower
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: QuantumUser/Resources/AssetObjects/Music/MusicBossTower
+    Guid:
+      Value: 517553602319409099
+  clip: {fileID: 8300000, guid: d1056bb665b52f9478b9c894b859d2b8, type: 3}
+  fastClip: {fileID: 8300000, guid: 8c00cdbd0a55eb241bab8dbbc482db27, type: 3}
+  loopStartSeconds: 0
+  loopEndSeconds: 999
+  speedupFactor: 1
+  UseMusicEvents: 0
+  EventData:
+    LoopEventData: 0
+    StartEvents: []
+    Events: []

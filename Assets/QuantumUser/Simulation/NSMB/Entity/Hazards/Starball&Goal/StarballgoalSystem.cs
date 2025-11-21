@@ -44,14 +44,16 @@ namespace Quantum {
             }
 
             starballgoal->DespawnTimer++;
-            if (starballgoal->DespawnTimer > 121) {
-                if (starballgoal->DespawnTimer == 122) {
+            if (starballgoal->DespawnTimer > 201) {
+                if (starballgoal->DespawnTimer == 202) {
                     f.Unsafe.GetPointer<Interactable>(filter.Entity)->ColliderDisabled = true;
                     f.Unsafe.GetPointer<PhysicsCollider2D>(filter.Entity)->Enabled = false;
                     f.Events.StarBallDestroyed(EntityRef.None, filter.Entity);
                 }
-                if (starballgoal->DespawnTimer > 161)
+                if (starballgoal->DespawnTimer > 221) {
                     f.Destroy(filter.Entity);
+                    f.Global->StarBallGoalExists = false;
+                }
             } else {
                 var Objects = f.Filter<Starball>();
                 while (Objects.NextUnsafe(out EntityRef OtherEntity, out Starball* starball)) {
@@ -148,6 +150,8 @@ namespace Quantum {
             }
 
             transform->Position = newPos;
+
+            f.Global->StarBallGoalExists = true;
 
             FP GetXOffsetbonus(int Xa) {
                 //0=0 // 1=0.5 // 2=-0.5 // 3=1 // 4=-1

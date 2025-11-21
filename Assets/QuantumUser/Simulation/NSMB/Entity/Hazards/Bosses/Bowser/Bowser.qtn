@@ -6,6 +6,7 @@ component Bowser {
 	AssetRef<EntityPrototype> Bone;
 
 	[ExcludeFromPrototype] byte ReusableTimer;
+	[ExcludeFromPrototype] byte VolleyCooldown;
 	[ExcludeFromPrototype] byte AttackCooldown;
 	
 	[ExcludeFromPrototype] bool AttackQuery;

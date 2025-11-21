@@ -57,12 +57,12 @@ public unsafe class WhompKingAnimator : QuantumEntityViewComponent {
         Model.SetActive(f.Global->GameState >= GameState.Playing && (!(Boss->iframes > 0 && (f.Number * f.DeltaTime.AsFloat) * (Boss->iframes <= 0.75f ? 5 : 2) % 0.2f < 0.1f) || Animator.GetCurrentAnimatorStateInfo(0).IsName("Knockbacked")));
 
         //rotation=
-        if (whompking->State == WhompKingState.SlamAttacking) {
-            modelRotationTarget = Quaternion.Euler(Mathf.Min(whompking->ReusableTimer * 3, 90), Boss->FacingRight ? 130 : -130, 0);
+        if (whompking->State == WhompKingState.SlamAttacking && whompking->ReusableTimer <= 120) {
+            modelRotationTarget = Quaternion.Euler(Mathf.Min(whompking->ReusableTimer * 3, 90), Boss->FacingRight ? 125 : -125, 0);
             Ratater.transform.localPosition = new Vector3((Boss->FacingRight ? -1 : 1) * Mathf.Min(whompking->ReusableTimer * 0.0266f, 0.8f), Mathf.Min(whompking->ReusableTimer * 0.005f, 0.15f), -3);
         } else {
             Ratater.transform.localPosition = Vector3.zero;
-            modelRotationTarget = Quaternion.Euler(0, Boss->FacingRight ? 130 : -130, 0);
+            modelRotationTarget = Quaternion.Euler(0, Boss->FacingRight ? 125 : -125, 0);
         }
         InterpolateFacingDirection();
 

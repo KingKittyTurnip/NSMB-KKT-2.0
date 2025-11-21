@@ -1220,16 +1220,18 @@ namespace Quantum {
     public Byte HeftyCount;
     [FieldOffset(1684)]
     public PlayerRef Host;
-    [FieldOffset(1692)]
+    [FieldOffset(1696)]
     [AllocateOnComponentAdded()]
     public QDictionaryPtr<PlayerRef, EntityRef> PlayerDatas;
-    [FieldOffset(1696)]
+    [FieldOffset(1700)]
     [AllocateOnComponentAdded()]
     public QListPtr<BannedPlayerInfo> BannedPlayerIds;
     [FieldOffset(1736)]
     public FP SpinpipeSlope;
     [FieldOffset(1728)]
     public FP SpinpipeMAX;
+    [FieldOffset(1692)]
+    public QBoolean StarBallGoalExists;
     [FieldOffset(1744)]
     public FP Timer;
     public FixedArray<Input> input {
@@ -1283,6 +1285,7 @@ namespace Quantum {
         hash = hash * 31 + BannedPlayerIds.GetHashCode();
         hash = hash * 31 + SpinpipeSlope.GetHashCode();
         hash = hash * 31 + SpinpipeMAX.GetHashCode();
+        hash = hash * 31 + StarBallGoalExists.GetHashCode();
         hash = hash * 31 + Timer.GetHashCode();
         return hash;
       }
@@ -1326,6 +1329,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->WinningTeam);
         PlayerRef.Serialize(&p->Host, serializer);
         QBoolean.Serialize(&p->HasWinner, serializer);
+        QBoolean.Serialize(&p->StarBallGoalExists, serializer);
         QDictionary.Serialize(&p->PlayerDatas, serializer, Statics.SerializePlayerRef, Statics.SerializeEntityRef);
         QList.Serialize(&p->BannedPlayerIds, serializer, Statics.SerializeBannedPlayerInfo);
         Quantum.BitSet64.Serialize(&p->UsedHazardSpawns, serializer);
@@ -1743,13 +1747,16 @@ namespace Quantum {
     [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public Byte ReusableTimer;
+    [FieldOffset(5)]
+    [ExcludeFromPrototype()]
+    public Byte VolleyCooldown;
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte AttackCooldown;
     [FieldOffset(8)]
     [ExcludeFromPrototype()]
     public QBoolean AttackQuery;
-    [FieldOffset(5)]
+    [FieldOffset(6)]
     [ExcludeFromPrototype()]
     public Byte waitTime;
     [FieldOffset(2)]
@@ -1767,6 +1774,7 @@ namespace Quantum {
         hash = hash * 31 + BlueFire.GetHashCode();
         hash = hash * 31 + Bone.GetHashCode();
         hash = hash * 31 + ReusableTimer.GetHashCode();
+        hash = hash * 31 + VolleyCooldown.GetHashCode();
         hash = hash * 31 + AttackCooldown.GetHashCode();
         hash = hash * 31 + AttackQuery.GetHashCode();
         hash = hash * 31 + waitTime.GetHashCode();
@@ -1782,6 +1790,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->BigAttackCounter);
         serializer.Stream.Serialize(&p->JumpFromAttackCounter);
         serializer.Stream.Serialize(&p->ReusableTimer);
+        serializer.Stream.Serialize(&p->VolleyCooldown);
         serializer.Stream.Serialize(&p->waitTime);
         QBoolean.Serialize(&p->AttackQuery, serializer);
         QBoolean.Serialize(&p->IsDry, serializer);
@@ -4030,7 +4039,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct WhompKing : Quantum.IComponent {
-    public const Int32 SIZE = 56;
+    public const Int32 SIZE = 64;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(2)]
     public WhompKingState State;
@@ -4040,15 +4049,18 @@ namespace Quantum {
     [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public QBoolean HitATarget;
-    [FieldOffset(24)]
+    [FieldOffset(32)]
     public FPVector2 Hitbox;
-    [FieldOffset(40)]
+    [FieldOffset(48)]
     public FPVector2 HurtingHitbox;
-    [FieldOffset(8)]
+    [FieldOffset(16)]
     public FPVector2 FallenBox;
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte SlamCooldown;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean PrevSlamPounded;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 13577;
@@ -4059,6 +4071,7 @@ namespace Quantum {
         hash = hash * 31 + HurtingHitbox.GetHashCode();
         hash = hash * 31 + FallenBox.GetHashCode();
         hash = hash * 31 + SlamCooldown.GetHashCode();
+        hash = hash * 31 + PrevSlamPounded.GetHashCode();
         return hash;
       }
     }
@@ -4068,6 +4081,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->SlamCooldown);
         serializer.Stream.Serialize((Byte*)&p->State);
         QBoolean.Serialize(&p->HitATarget, serializer);
+        QBoolean.Serialize(&p->PrevSlamPounded, serializer);
         FPVector2.Serialize(&p->FallenBox, serializer);
         FPVector2.Serialize(&p->Hitbox, serializer);
         FPVector2.Serialize(&p->HurtingHitbox, serializer);

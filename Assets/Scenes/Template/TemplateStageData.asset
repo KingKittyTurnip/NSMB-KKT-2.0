@@ -16,6 +16,7 @@ MonoBehaviour:
     Path: Scenes/Template/TemplateStageData
     Guid:
       Value: 4412267672456022196
+  ShowAuthorAndComposer: 0
   StageAuthor: ipodtouch0218
   MusicComposer: 
   TranslationKey: 
@@ -24,11 +25,11 @@ MonoBehaviour:
   Icon: {fileID: 0}
   OverrideAutomaticTilemapSettings: 0
   TileDimensions:
-    x: 64
-    y: 8
+    X: 0
+    Y: 0
   TileOrigin:
-    x: -32
-    y: -13
+    X: 0
+    Y: 0
   TilemapWorldPosition:
     X:
       RawValue: 0
@@ -76,6 +77,9 @@ MonoBehaviour:
   MegaMushroomMusic:
     Id:
       Value: 451321131049702687
+  StarballMusic:
+    Id:
+      Value: 491395174244541078
   TileData:
   - Tile:
       Id:
@@ -2666,3 +2670,4 @@ MonoBehaviour:
       RawValue: 196608
     Y:
       RawValue: -163839
+  HazardSpawnpoints: []

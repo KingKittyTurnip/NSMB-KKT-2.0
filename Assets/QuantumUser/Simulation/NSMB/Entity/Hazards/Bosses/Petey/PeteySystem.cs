@@ -128,7 +128,7 @@ namespace Quantum {
                     if (petey->ReusableTimer == 0)
                         f.Events.PeteyWakeup(filter.Entity, false);
                     petey->ReusableTimer++;
-                    if (petey->ReusableTimer > 180 || boss->iframes != 0) {
+                    if (petey->ReusableTimer > 100 || boss->iframes != 0) {
                         collider->Shape.Centroid.X = 0;
                         collider->Shape.Centroid.Y = petey->Hitbox.Y;
                         collider->Shape.Box.Extents = petey->Hitbox;
@@ -282,8 +282,9 @@ namespace Quantum {
                 }
 
                 mario->IsDrilling = false;
+                marioPhysicsObject->Velocity.X = FPMath.Clamp(marioPhysicsObject->Velocity.X + (((theirPos - ourPos) * 10).Normalized.X * 3), -5, 5);
 
-            } else if (mario->IsDamageable && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, peteyDiving ? 2 : 1, peteyDiving ? KnockbackStrength.Groundpound : KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity)) {
+            } else if ((!mario->IsInKnockback || peteyDiving) && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, peteyDiving ? 2 : 1, peteyDiving ? KnockbackStrength.Groundpound : KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity)) {
                 petey->HitATarget = true;
                 if (damageDirection.Y < 0)
                     f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.Y = 6;

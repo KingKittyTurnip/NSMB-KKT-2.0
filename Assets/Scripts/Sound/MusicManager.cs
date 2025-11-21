@@ -58,7 +58,7 @@ namespace NSMB.Sound {
                 return;
             }
 
-            bool starball = false;
+            bool boss = false;
             bool invincible = false;
             bool mega = false;
             bool speedup = false;
@@ -90,7 +90,7 @@ namespace NSMB.Sound {
                 speedup |= rules.IsLivesEnabled && mario->Lives == 1;
                 mega |= Settings.Instance.audioSpecialPowerupMusic.HasFlag(Enums.SpecialPowerupMusic.MegaMushroom) && mario->MegaMushroomFrames > 0;
                 invincible |= Settings.Instance.audioSpecialPowerupMusic.HasFlag(Enums.SpecialPowerupMusic.Starman) && mario->IsStarmanInvincible;
-                starball |= /*Settings.Instance.audioSpecialPowerupMusic.HasFlag(Enums.SpecialPowerupMusic.StarBall) &&*/ mario->RidingStarball;
+                boss |= mario->IsBoss != EntityRef.None;
             }
 
             speedup |= rules.IsTimerEnabled && f.Global->Timer <= 60;
@@ -108,11 +108,13 @@ namespace NSMB.Sound {
             }
 
             VersusStageData stage = ViewContext.Stage;
-            if (mega) {
+            if (boss) {
+                musicPlayer.Play(f.FindAsset(f.SimulationConfig.BossMusic[f.Global->TotalGamesPlayed % f.SimulationConfig.BossMusic.Length]));
+            } else if (mega) {
                 musicPlayer.Play(f.FindAsset(stage.MegaMushroomMusic));
             } else if (invincible) {
                 musicPlayer.Play(f.FindAsset(stage.InvincibleMusic));
-            } else if (starball) {
+            } else if (f.Global->StarBallGoalExists) {
                 musicPlayer.Play(f.FindAsset(stage.StarballMusic));
             } else {
                 musicPlayer.Play(f.FindAsset(stage.GetCurrentMusic(f)));

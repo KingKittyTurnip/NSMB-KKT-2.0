@@ -15,6 +15,9 @@ namespace Quantum {
         public AssetRef<EntityPrototype> MainSpawn, HazardSpawn;
         public AssetRef<EntityPrototype> StarballGoal;
 
+        [Header("Global Music")]
+        public AssetRef<LoopingMusicData>[] BossMusic;
+
         [Space]
         public AssetRef<CurrentHazards> CurrentHazards;
     }

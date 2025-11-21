@@ -40,7 +40,7 @@ namespace Quantum {
                         return;
                     }
                 }
-                boss->iframes = 30;
+                boss->iframes = (byte)(longiframes ? 25 : 10);
             }
             physicsObject->Velocity.X = 0;
             physicsObject->IsTouchingGround = false;

@@ -1619,15 +1619,18 @@ MonoBehaviour:
           Value: 1
         IsBall:
           Value: 1
+        IsFlying:
+          Value: 0
         SlideAlong:
-          Value: 1
+          Value: 0
         BouceOffPlayer:
           Value: 1
         ThrowForce:
           RawValue: 327680
         StarsToDrop: 1
         IgnoreTeamates:
-          Value: 0
+          Value: 1
+        Varient: 0
     - rid: 6089527766833692682
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:

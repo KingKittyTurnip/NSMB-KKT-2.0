@@ -1,3 +1,6 @@
+global {
+	bool StarBallGoalExists;
+}
 component Starballgoal {
 	[ExcludeFromPrototype] byte DespawnTimer;
 

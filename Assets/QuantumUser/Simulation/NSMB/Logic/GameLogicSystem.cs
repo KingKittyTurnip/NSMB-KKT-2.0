@@ -109,6 +109,7 @@ namespace Quantum {
                     // Respawn all players and enable systems
                     f.Global->StartFrame = f.Number;
                     f.Global->SpinpipeSlope = 0; //Reset The Spinpipe Slope!
+                    f.Global->StarBallGoalExists = false;
                     f.SystemEnable<StartDisabledSystemGroup>();
 
                     foreach (var otherGamemodes in f.SimulationConfig.AllGamemodes) {

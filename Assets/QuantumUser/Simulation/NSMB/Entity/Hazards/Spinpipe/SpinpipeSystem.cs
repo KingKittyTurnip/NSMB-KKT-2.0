@@ -109,7 +109,7 @@ namespace Quantum {
                 }
                 f.Global->SpinpipeSlope = FPMath.Clamp(f.Global->SpinpipeSlope + ((FP._0_25 + (TempStrength * FP._0_05)) * (spinpipe->Right ? 1 : -1)), -f.Global->SpinpipeMAX, f.Global->SpinpipeMAX);
             }
-
+            //f.DeltaTime = FP._0_02;
         }
 
         #region Interactions

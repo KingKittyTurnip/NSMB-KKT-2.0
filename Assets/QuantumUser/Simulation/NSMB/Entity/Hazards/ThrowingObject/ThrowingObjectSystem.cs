@@ -173,7 +173,7 @@ namespace Quantum {
                 } else {
                     var type = Dis->Varient == 1 ? ExplosionType.Shockwave : ExplosionType.GroundedShockwave;
                     if ((hazard->LifeTime <= 10 && hazard->LifeTime > 5) || type == ExplosionType.GroundedShockwave) {
-                        Shape2D shape = Shape2D.CreateCircle(Dis->Varient == 1 ? 2 : 8);
+                        Shape2D shape = Shape2D.CreateCircle(Dis->Varient == 1 ? 2+FP._0_50 : 9);
                         var hits = f.Physics2D.OverlapShape(*transform, shape);
                         for (int i = 0; i < hits.Count; i++) {
                             var hit = hits[i];
