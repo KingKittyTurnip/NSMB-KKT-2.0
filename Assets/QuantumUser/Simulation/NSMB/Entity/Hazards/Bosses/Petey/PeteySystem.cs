@@ -42,6 +42,7 @@ namespace Quantum {
 
             //Decide Action
             FP leftrightinput = 0;
+            bool Spinattacking = false;
             bool Groundpounding = false;
             bool HasTarget = !QuantumUtils.Decrement(ref boss->iframes);
             if (boss->ControllerPlayer != EntityRef.None) {
@@ -50,6 +51,7 @@ namespace Quantum {
                 Input inputs = mario->GetPlayerInput(f, boss->ControllerPlayer);
                 f.Unsafe.GetPointer<Transform2D>(boss->ControllerPlayer)->Position = transform->Position;
 
+                Spinattacking = inputs.PowerupAction.WasPressed;
                 Groundpounding = inputs.Down.WasPressed;
                 petey->Flying = inputs.Jump.IsDown;
                 if (inputs.Left.IsDown || inputs.Right.IsDown) {
@@ -104,6 +106,8 @@ namespace Quantum {
                         petey->Flying = true;
                     } else if (physicsObject->IsTouchingGround && petey->State == PeteyState.Jumping) {
                         petey->JumpCounter++;
+                    } else if (FPMath.Abs(ourPos.X - theirPos.X) < 1 && (ourPos.Y - theirPos.Y) < 1 && (ourPos.Y - theirPos.Y) > -1) {
+                        Spinattacking = true;
                     }
                 }
                 leftrightinput = boss->FacingRight ? 1 : -1;
@@ -119,7 +123,22 @@ namespace Quantum {
                 petey->JumpCounter = 0;
                 petey->HitATarget = false;
             }
-
+            #region ControlArea
+            void peteyspeedcontrol(FP maxvel, FP accel) {
+                if (leftrightinput != 0)
+                    boss->FacingRight = leftrightinput > 0;
+                FP Cap = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - accel, maxvel);
+                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * accel), -Cap, Cap);
+            }
+            void TryActivateAttack() {
+                if (Spinattacking) {
+                    petey->State = PeteyState.MeleeAttack;
+                    petey->ReusableTimer = 0;
+                    physicsObject->Velocity.Y = 2;
+                    physicsObject->Gravity.Y = -10;
+                }
+            }
+            #endregion
             //State Calcs
             switch (petey->State) {
             case PeteyState.Idling:
@@ -138,41 +157,37 @@ namespace Quantum {
                 }
                 break;
             case PeteyState.Jumping:
-                if (leftrightinput != 0)
-                    boss->FacingRight = leftrightinput > 0;
-                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_20), -6, 6);
+                peteyspeedcontrol(6, FP._0_20);
                 if (physicsObject->IsTouchingGround) {
                     f.Events.PeteyJump(filter.Entity);
                     physicsObject->IsTouchingGround = false;
                     physicsObject->Velocity.Y = 6;
                     physicsObject->Velocity.X = FPMath.Clamp(leftrightinput * FPMath.Max(FPMath.Abs(physicsObject->Velocity.X), 1), -6, 6);
                     petey->PreviousLandLevel = FPMath.Min(transform->Position.Y + 4, stage.StageWorldMax.Y - 1);
-                }
-                if (petey->Flying) {
+                } else if (petey->Flying) {
                     petey->State = PeteyState.Flying;
                     petey->ReusableTimer = 0;
                     physicsObject->Gravity.Y = 0;
                 }
+                TryActivateAttack();
                 BrickInteraction(f, ref filter);
                 break;
             case PeteyState.Flying:
-                if (leftrightinput != 0)
-                    boss->FacingRight = leftrightinput > 0;
-                FP Cap = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_10, Constants._3_50);
-                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_10), -Cap, Cap);
+                peteyspeedcontrol(Constants._3_50, FP._0_10);
                 physicsObject->Velocity.Y = FPMath.Clamp(petey->Flying ? physicsObject->Velocity.Y + (physicsObject->Velocity.Y < 0 ? FP._0_50 : FP._0_33) : physicsObject->Velocity.Y-FP._0_33, -6, FPMath.Min((petey->PreviousLandLevel - transform->Position.Y) + physicsObject->Velocity.Y, 5));
                 if (Groundpounding) {
                     f.Events.PeteyDive(filter.Entity);
                     petey->State = PeteyState.Diving;
                     petey->HitATarget = false;
                     physicsObject->BreakMegaObjects = true;
-		    physicsObject->Velocity.Y = 4;
+                    physicsObject->Velocity.Y = 4;
                     petey->ReusableTimer = 0;
                 } else if (physicsObject->IsTouchingGround) {
                     petey->State = PeteyState.Jumping;
                     petey->ReusableTimer = 0;
                     physicsObject->Gravity.Y = -10;
                 }
+                TryActivateAttack();
                 BrickInteraction(f, ref filter);
                 break;
             case PeteyState.Diving:
@@ -196,7 +211,7 @@ namespace Quantum {
                 BrickInteraction(f, ref filter);
                 break;
             case PeteyState.Fallen:
-                physicsObject->Velocity.X *= Constants._0_95;
+                physicsObject->Velocity.X *= Constants._0_90;
                 petey->ReusableTimer++;
                 if (petey->ReusableTimer > (petey->HitATarget ? 0 : 100)) {
                     if (physicsObject->Gravity.Y == 0) {
@@ -213,6 +228,19 @@ namespace Quantum {
                     petey->ReusableTimer = 0;
                     petey->Flying = false;
                 }
+                break;
+            case PeteyState.MeleeAttack:
+                peteyspeedcontrol(Constants._3_50, FP._0_20);
+                if (petey->ReusableTimer == 0) {
+                    EntityRef newEntity = f.Create(petey->StandardSpinAttack);
+                    var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
+                    projectile->Initialize(f, newEntity, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity, transform->Position + collider->Shape.Centroid, boss->FacingRight, false);
+                    f.Events.PeteyAttack(filter.Entity);
+                } else if (physicsObject->IsTouchingGround) {
+                    petey->State = PeteyState.Jumping;
+                    petey->ReusableTimer = 0;
+                }
+                petey->ReusableTimer++;
                 break;
             }
 
@@ -257,13 +285,13 @@ namespace Quantum {
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
             bool peteyDiving = petey->State == PeteyState.Diving && petey->ReusableTimer >= 8;
-            bool attackedFromAbove = !peteyDiving && FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_25 && !mario->IsInKnockback;
+            bool attackedFromAbove = !peteyDiving && FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_50 && !mario->IsInKnockback;
             bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
             bool vulnrable = petey->State == PeteyState.Fallen;
             bool peteyHarmed = false;
 
             if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
-                boss->BossHarmed(f, thisEntity, vulnrable ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, true);
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, true);
                 peteyHarmed = true;
                 vulnrable |= groundpounded;
 
@@ -271,12 +299,12 @@ namespace Quantum {
                 if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
                     if (mario->IsGroundpounding) {
                         mario->IsGroundpounding = false;
-                        boss->BossHarmed(f, thisEntity, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
+                        boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
                         peteyHarmed = true;
                     }
                     mario->DoEntityBounce = true;
                 } else {
-                    boss->BossHarmed(f, thisEntity, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
+                    boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
                     peteyHarmed = true;
                     mario->DoEntityBounce = !mario->IsGroundpounding;
                 }
@@ -284,10 +312,17 @@ namespace Quantum {
                 mario->IsDrilling = false;
                 marioPhysicsObject->Velocity.X = FPMath.Clamp(marioPhysicsObject->Velocity.X + (((theirPos - ourPos) * 10).Normalized.X * 3), -5, 5);
 
-            } else if ((!mario->IsInKnockback || peteyDiving) && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, peteyDiving ? 2 : 1, peteyDiving ? KnockbackStrength.Groundpound : KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity)) {
+            } else if (peteyDiving && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 2, KnockbackStrength.Groundpound, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity)) {
                 petey->HitATarget = true;
-                if (damageDirection.Y < 0)
-                    f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.Y = 6;
+
+            } else if (!mario->IsInKnockback) {
+                // Bump
+                if (marioPhysicsObject->IsTouchingGround && !vulnrable) {
+                    petey->HitATarget |= mario->DoKnockback(f, marioEntity, damageDirection.X < 0, peteyDiving ? 2 : 1, peteyDiving ? KnockbackStrength.Groundpound : KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity);
+                    boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
+                } else {
+                    marioPhysicsObject->Velocity.X = (marioPhysicsObject->Velocity.X/2) + boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
+                }
             }
 
             if (peteyHarmed) {
@@ -303,7 +338,7 @@ namespace Quantum {
                 return;
             var petey = f.Unsafe.GetPointer<Petey>(thisEntity);
             var projectile = f.Unsafe.GetPointer<Projectile>(projectileEntity);
-            if (projectile->Owner == boss->ControllerPlayer) {
+            if (projectile->Owner == thisEntity || projectile->Owner == boss->ControllerPlayer) {
                 return; //hang on, this is OUR projectile!
             }
             var projectileAsset = f.FindAsset(projectile->Asset);
@@ -311,7 +346,7 @@ namespace Quantum {
             switch (projectileAsset.Effect) {
             case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
             case ProjectileEffectType.Fire: {
-                boss->BossHarmed(f, thisEntity, KnockbackStrength.FireballBump, false);
+                boss->BossHarmed(f, thisEntity, projectile->FacingRight, KnockbackStrength.FireballBump, false);
                 break;
             }
             case ProjectileEffectType.Freeze: {
@@ -345,7 +380,7 @@ namespace Quantum {
                 goomba->Kill(f, enemyEntity, thisEntity, KillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out Koopa* koopa)) {
                 if (koopa->IsKicked) {
-                    boss->BossHarmed(f, thisEntity, KnockbackStrength.FireballBump, false);
+                    boss->BossHarmed(f, thisEntity, f.Unsafe.GetPointer<Enemy>(enemyEntity)->FacingRight, KnockbackStrength.FireballBump, false);
                 }
                 koopa->Kill(f, enemyEntity, enemyEntity, KillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out BulletBill* bill)) {
@@ -422,15 +457,11 @@ namespace Quantum {
 
             if (petey->State == PeteyState.Diving) {
                 petey->HitATarget = true;
-                otherboss->BossHarmed(f, otherEntity, KnockbackStrength.Groundpound, true);
+                otherboss->BossHarmed(f, otherEntity, damageDirection.X < 0, KnockbackStrength.Groundpound, true);
                 f.Events.PeteyStomped(thisEntity, boss->Health <= 0);
             } else {
-                if (damageDirection.Y < 0) {
-                    f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.Y = 6;
-                    otherboss->BossHarmed(f, otherEntity, KnockbackStrength.Normal, true);
-                } else {
-                    thisPhys->Velocity.X = damageDirection.X > 0 ? -4 : 4;
-                }
+                boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
+                otherboss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
             }
         }
         #endregion

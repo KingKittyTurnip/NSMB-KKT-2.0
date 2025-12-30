@@ -23,6 +23,11 @@ namespace Quantum {
             var physicsObject = filter.PhysicsObject;
             var asset = f.FindAsset(projectile->Asset);
 
+            if (asset.IsMelee) {
+                //place to owner location
+                transform->Position = f.Unsafe.GetPointer<Transform2D>(projectile->Owner)->Position + f.Unsafe.GetPointer<PhysicsCollider2D>(projectile->Owner)->Shape.Centroid;
+            }
+
             if (projectile->Lifetime > 0) {
                 projectile->Lifetime--;
                 if (projectile->Lifetime <= 0)

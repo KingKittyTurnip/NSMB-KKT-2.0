@@ -1,5 +1,6 @@
 component Petey {
 	PeteyState State;
+	AssetRef<EntityPrototype> StandardSpinAttack;
 	
 	[ExcludeFromPrototype] bool Flying;
 	[ExcludeFromPrototype] FP PreviousLandLevel;
@@ -42,4 +43,7 @@ event PeteyLanded {
 event PeteyStomped {
 	EntityRef Entity;
 	bool IsDeath;
+}
+event PeteyAttack {
+	EntityRef Entity;
 }

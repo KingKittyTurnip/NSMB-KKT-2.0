@@ -639,7 +639,7 @@ namespace Quantum {
                         (f.Unsafe.GetPointer<Transform2D>(bossEntity)->Position + f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position) / 2);
 
                     //Damage Boss
-                    boss->BossHarmed(f, bossEntity, Dis->StarsToDrop == 1 ? KnockbackStrength.FireballBump : Dis->StarsToDrop == 3 ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, Dis->StarsToDrop > 1);
+                    boss->BossHarmed(f, bossEntity, Dis->Facing, Dis->StarsToDrop == 1 ? KnockbackStrength.FireballBump : Dis->StarsToDrop == 3 ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, Dis->StarsToDrop > 1);
                     f.Events.PlayBossHitSound(bossEntity);
                 }
             }

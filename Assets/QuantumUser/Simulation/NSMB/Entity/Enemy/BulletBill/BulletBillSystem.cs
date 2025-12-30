@@ -1,7 +1,7 @@
 using Photon.Deterministic;
 
 namespace Quantum {
-    public unsafe class BulletBillSystem : SystemMainThread, ISignalOnBobombExplodeEntity, ISignalOnComponentRemoved<BulletBill>, ISignalOnIceBlockBroken {
+    public unsafe class BulletBillSystem : SystemMainThread, ISignalOnBobombExplodeEntity, ISignalOnComponentRemoved<BulletBill>, ISignalOnIceBlockBroken, ISignalInitializeHazard {
 
         private static readonly FPVector2 SpawnOffset = new FPVector2(0, FP.FromString("-0.45"));
 
@@ -190,6 +190,17 @@ namespace Quantum {
                 bulletBill->Kill(f, iceBlock->Entity, brokenIceBlock, KillReason.Special);
                 f.Events.PlayComboSound(iceBlock->Entity, 0);
             }
+        }
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
+                || !f.Unsafe.TryGetPointer(thisEntity, out BulletBill* bill)
+                || bill->Cloud == null) {
+                return;
+            }
+
+            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
+
+            //create cloud and set it's vars
         }
         #endregion
     }

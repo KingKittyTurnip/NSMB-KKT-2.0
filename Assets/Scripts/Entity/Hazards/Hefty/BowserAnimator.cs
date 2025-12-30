@@ -69,13 +69,14 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
 
         //rotation
         if (bowser->State != BowserState.Roaring) {
-            modelRotationTarget = Quaternion.Euler(0, Boss->FacingRight ? 120 : -120, 0);
+            modelRotationTarget = Quaternion.Euler(0, bowser->State == BowserState.Groundpound ? 180 : Boss->FacingRight ? 120 : -120, 0);
             InterpolateFacingDirection();
         }
 
         //Animator
         Animator.SetFloat("VelX", Mathf.Abs(physicsObject->Velocity.X.AsFloat));
         Animator.SetBool("Falling", !physicsObject->IsTouchingGround && !physicsObject->WasTouchingGround && physicsObject->Velocity.Y < 0);
+        Animator.SetBool("GroundPound", bowser->State == BowserState.Groundpound && bowser->ReusableTimer < 17);
     }
 
     private void InterpolateFacingDirection() {

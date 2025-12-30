@@ -249,6 +249,7 @@ namespace Quantum.Prototypes {
   public unsafe partial class BulletBillPrototype : ComponentPrototype<Quantum.BulletBill> {
     public FP Speed;
     public FP DespawnRadius;
+    public AssetRef<EntityPrototype> Cloud;
     partial void MaterializeUser(Frame frame, ref Quantum.BulletBill result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.BulletBill component = default;
@@ -258,6 +259,7 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.BulletBill result, in PrototypeMaterializationContext context = default) {
         result.Speed = this.Speed;
         result.DespawnRadius = this.DespawnRadius;
+        result.Cloud = this.Cloud;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -334,6 +336,23 @@ namespace Quantum.Prototypes {
         result.Time = this.Time;
         result.TickTimeup = this.TickTimeup;
         result.ResetTime = this.ResetTime;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.CloudBillPlatform))]
+  public unsafe partial class CloudBillPlatformPrototype : ComponentPrototype<Quantum.CloudBillPlatform> {
+    [BitSetAttribute(64)]
+    [ArrayLengthAttribute(1)]
+    public UInt64[] Clouds = new UInt64[1];
+    partial void MaterializeUser(Frame frame, ref Quantum.CloudBillPlatform result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.CloudBillPlatform component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.CloudBillPlatform result, in PrototypeMaterializationContext context = default) {
+        result.Clouds = BitSet64.FromArray(this.Clouds);
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -860,6 +879,7 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.Petey))]
   public unsafe partial class PeteyPrototype : ComponentPrototype<Quantum.Petey> {
     public Quantum.QEnum8<PeteyState> State;
+    public AssetRef<EntityPrototype> StandardSpinAttack;
     public FPVector2 Hitbox;
     public FPVector2 FallenBox;
     partial void MaterializeUser(Frame frame, ref Quantum.Petey result, in PrototypeMaterializationContext context);
@@ -870,6 +890,7 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Petey result, in PrototypeMaterializationContext context = default) {
         result.State = this.State;
+        result.StandardSpinAttack = this.StandardSpinAttack;
         result.Hitbox = this.Hitbox;
         result.FallenBox = this.FallenBox;
         MaterializeUser(frame, ref result, in context);

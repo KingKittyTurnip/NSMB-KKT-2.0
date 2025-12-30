@@ -24,6 +24,7 @@ enum BowserState : Byte {
 	Jumping,
 	Knockbacked,
 	Attacking,
+	Groundpound,
 }
 
 enum BowserAttackType : Byte {

@@ -1,0 +1,11 @@
+component CloudBillPlatform {
+	bitset[64] Clouds;
+
+	[ExcludeFromPrototype] byte Length;
+	[ExcludeFromPrototype] FPVector2 StartingLocation;
+	[ExcludeFromPrototype] EntityRef CloudBill;
+}
+
+event PoofCloud {
+	EntityRef Entity;
+}

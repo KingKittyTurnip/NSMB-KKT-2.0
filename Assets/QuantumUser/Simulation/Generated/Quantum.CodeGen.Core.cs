@@ -62,6 +62,7 @@ namespace Quantum {
     Jumping,
     Knockbacked,
     Attacking,
+    Groundpound,
   }
   [System.Flags()]
   public enum CoinType : byte {
@@ -1842,18 +1843,20 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct BulletBill : Quantum.IComponent {
-    public const Int32 SIZE = 32;
+    public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(24)]
+    [FieldOffset(32)]
     public FP Speed;
-    [FieldOffset(16)]
+    [FieldOffset(24)]
     public FP DespawnRadius;
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public Byte DespawnFrames;
-    [FieldOffset(8)]
+    [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public EntityRef Owner;
+    [FieldOffset(8)]
+    public AssetRef<EntityPrototype> Cloud;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 6047;
@@ -1861,12 +1864,14 @@ namespace Quantum {
         hash = hash * 31 + DespawnRadius.GetHashCode();
         hash = hash * 31 + DespawnFrames.GetHashCode();
         hash = hash * 31 + Owner.GetHashCode();
+        hash = hash * 31 + Cloud.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (BulletBill*)ptr;
         serializer.Stream.Serialize(&p->DespawnFrames);
+        AssetRef.Serialize(&p->Cloud, serializer);
         EntityRef.Serialize(&p->Owner, serializer);
         FP.Serialize(&p->DespawnRadius, serializer);
         FP.Serialize(&p->Speed, serializer);
@@ -2018,6 +2023,39 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->Time);
         QBoolean.Serialize(&p->ResetTime, serializer);
         QBoolean.Serialize(&p->TickTimeup, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct CloudBillPlatform : Quantum.IComponent {
+    public const Int32 SIZE = 40;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(8)]
+    public BitSet64 Clouds;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte Length;
+    [FieldOffset(24)]
+    [ExcludeFromPrototype()]
+    public FPVector2 StartingLocation;
+    [FieldOffset(16)]
+    [ExcludeFromPrototype()]
+    public EntityRef CloudBill;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 11597;
+        hash = hash * 31 + Clouds.GetHashCode();
+        hash = hash * 31 + Length.GetHashCode();
+        hash = hash * 31 + StartingLocation.GetHashCode();
+        hash = hash * 31 + CloudBill.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (CloudBillPlatform*)ptr;
+        serializer.Stream.Serialize(&p->Length);
+        Quantum.BitSet64.Serialize(&p->Clouds, serializer);
+        EntityRef.Serialize(&p->CloudBill, serializer);
+        FPVector2.Serialize(&p->StartingLocation, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -3337,14 +3375,16 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Petey : Quantum.IComponent {
-    public const Int32 SIZE = 56;
+    public const Int32 SIZE = 64;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(2)]
     public PeteyState State;
+    [FieldOffset(16)]
+    public AssetRef<EntityPrototype> StandardSpinAttack;
     [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public QBoolean Flying;
-    [FieldOffset(16)]
+    [FieldOffset(24)]
     [ExcludeFromPrototype()]
     public FP PreviousLandLevel;
     [FieldOffset(1)]
@@ -3353,9 +3393,9 @@ namespace Quantum {
     [FieldOffset(8)]
     [ExcludeFromPrototype()]
     public QBoolean HitATarget;
-    [FieldOffset(40)]
+    [FieldOffset(48)]
     public FPVector2 Hitbox;
-    [FieldOffset(24)]
+    [FieldOffset(32)]
     public FPVector2 FallenBox;
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
@@ -3364,6 +3404,7 @@ namespace Quantum {
       unchecked { 
         var hash = 4861;
         hash = hash * 31 + (Byte)State;
+        hash = hash * 31 + StandardSpinAttack.GetHashCode();
         hash = hash * 31 + Flying.GetHashCode();
         hash = hash * 31 + PreviousLandLevel.GetHashCode();
         hash = hash * 31 + ReusableTimer.GetHashCode();
@@ -3381,6 +3422,7 @@ namespace Quantum {
         serializer.Stream.Serialize((Byte*)&p->State);
         QBoolean.Serialize(&p->Flying, serializer);
         QBoolean.Serialize(&p->HitATarget, serializer);
+        AssetRef.Serialize(&p->StandardSpinAttack, serializer);
         FP.Serialize(&p->PreviousLandLevel, serializer);
         FPVector2.Serialize(&p->FallenBox, serializer);
         FPVector2.Serialize(&p->Hitbox, serializer);
@@ -4656,6 +4698,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<CharacterController3D>();
       BuildSignalsArrayOnComponentAdded<Quantum.Clock>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Clock>();
+      BuildSignalsArrayOnComponentAdded<Quantum.CloudBillPlatform>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.CloudBillPlatform>();
       BuildSignalsArrayOnComponentAdded<Quantum.Coin>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Coin>();
       BuildSignalsArrayOnComponentAdded<Quantum.CoinItem>();
@@ -5192,6 +5236,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(CharacterController2D), CharacterController2D.SIZE);
       typeRegistry.Register(typeof(CharacterController3D), CharacterController3D.SIZE);
       typeRegistry.Register(typeof(Quantum.Clock), Quantum.Clock.SIZE);
+      typeRegistry.Register(typeof(Quantum.CloudBillPlatform), Quantum.CloudBillPlatform.SIZE);
       typeRegistry.Register(typeof(Quantum.Coin), Quantum.Coin.SIZE);
       typeRegistry.Register(typeof(Quantum.CoinItem), Quantum.CoinItem.SIZE);
       typeRegistry.Register(typeof(Quantum.CoinRunnersData), Quantum.CoinRunnersData.SIZE);
@@ -5330,7 +5375,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 53)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 54)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -5346,6 +5391,7 @@ namespace Quantum {
         .Add<Quantum.CameraController>(Quantum.CameraController.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Cauldron>(Quantum.Cauldron.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Clock>(Quantum.Clock.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.CloudBillPlatform>(Quantum.CloudBillPlatform.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Coin>(Quantum.Coin.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.CoinItem>(Quantum.CoinItem.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.ComboKeeper>(Quantum.ComboKeeper.Serialize, null, null, ComponentFlags.None)

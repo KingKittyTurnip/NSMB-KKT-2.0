@@ -125,7 +125,7 @@ namespace Quantum {
 
             if (transform->Position.Y < stage.StageWorldMin.Y) {
                 f.Events.WhompKingpitfall(filter.Entity);
-                boss->BossHarmed(f, entity, KnockbackStrength.FireballBump, false);
+                boss->BossHarmed(f, entity, !boss->FacingRight, KnockbackStrength.FireballBump, false);
                 physicsObject->Velocity.Y = 16;
                 whompking->ReusableTimer = 0;
                 whompking->State = WhompKingState.Jumping;
@@ -320,7 +320,7 @@ namespace Quantum {
             bool kingHarmed = false;
 
             if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
-                boss->BossHarmed(f, thisEntity, vulnrable ? groundpounded ? KnockbackStrength.Groundpound : KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? groundpounded ? KnockbackStrength.Groundpound : KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
                 kingHarmed = true;
                 vulnrable |= groundpounded;
 
@@ -328,12 +328,12 @@ namespace Quantum {
                 if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
                     if (mario->IsGroundpounding) {
                         mario->IsGroundpounding = false;
-                        boss->BossHarmed(f, thisEntity, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
+                        boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
                         kingHarmed = true;
                     }
                     mario->DoEntityBounce = true;
                 } else {
-                    boss->BossHarmed(f, thisEntity, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
+                    boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
                     kingHarmed = true;
                     mario->DoEntityBounce = !mario->IsGroundpounding;
                 }
@@ -377,7 +377,7 @@ namespace Quantum {
                 switch (projectileAsset.Effect) {
                 case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
                 case ProjectileEffectType.Fire: {
-                    boss->BossHarmed(f, thisEntity, KnockbackStrength.FireballBump, false);
+                    boss->BossHarmed(f, thisEntity, projectile->FacingRight, KnockbackStrength.FireballBump, false);
                     break;
                 }
                 case ProjectileEffectType.Freeze: {
@@ -417,7 +417,7 @@ namespace Quantum {
                 goomba->Kill(f, enemyEntity, thisEntity, KillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out Koopa* koopa)) {
                 if (koopa->IsKicked && !Invulnrable) {
-                    boss->BossHarmed(f, thisEntity, KnockbackStrength.FireballBump, false);
+                    boss->BossHarmed(f, thisEntity, f.Unsafe.GetPointer<Enemy>(enemyEntity)->FacingRight, KnockbackStrength.FireballBump, false);
                 }
                 koopa->Kill(f, enemyEntity, enemyEntity, KillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out BulletBill* bill)) {
@@ -495,11 +495,11 @@ namespace Quantum {
 
             if (whompking->State == WhompKingState.SlamAttacking && !thisPhys->IsFrozen) {
                 whompking->HitATarget = true;
-                otherboss->BossHarmed(f, otherEntity, KnockbackStrength.Groundpound, true);
+                otherboss->BossHarmed(f, otherEntity, damageDirection.X < 0, KnockbackStrength.Groundpound, true);
             } else {
                 if (damageDirection.Y < 0) {
                     f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.Y = 6;
-                    otherboss->BossHarmed(f, otherEntity, KnockbackStrength.Normal, true);
+                    otherboss->BossHarmed(f, otherEntity, damageDirection.X < 0, KnockbackStrength.Normal, true);
                 } else {
                     thisPhys->Velocity.X = damageDirection.X > 0 ? -4 : 4;
                 }

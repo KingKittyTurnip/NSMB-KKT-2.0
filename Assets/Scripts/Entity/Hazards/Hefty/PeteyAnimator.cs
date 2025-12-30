@@ -27,6 +27,7 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
         QuantumEvent.Subscribe<EventPeteyDive>(this, OnDive);
         QuantumEvent.Subscribe<EventPeteyLanded>(this, OnLanded);
         QuantumEvent.Subscribe<EventPeteyStomped>(this, OnStomped);
+        QuantumEvent.Subscribe<EventPeteyAttack>(this, OnAttack);
 
         QuantumEvent.Subscribe<EventBossDeathAnimation>(this, OnDeath);
         QuantumEvent.Subscribe<EventPlayBossHitSound>(this, OnPlayBossHitSound);
@@ -133,6 +134,12 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
         }
         sfx.PlayOneShot(Damage);
         Animator.SetTrigger(e.IsDeath ? "Death" : "Stomped");
+    }
+    private unsafe void OnAttack(EventPeteyAttack e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+        Animator.SetTrigger("Melee");
     }
     private unsafe void OnDeath(EventBossDeathAnimation e) {
         if (e.Entity != EntityRef) {
