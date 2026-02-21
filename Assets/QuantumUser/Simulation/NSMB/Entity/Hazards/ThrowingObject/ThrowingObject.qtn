@@ -21,6 +21,8 @@ component ThrowingObject {
 
 	[ExcludeFromPrototype] FP ReusableTimer;
 	byte Varient;
+
+	[ExcludeFromPrototype] EntityRef ConnectedObject;
 }
 
 enum ThrowingObjectType : Byte {
@@ -37,6 +39,8 @@ enum ThrowingObjectType : Byte {
 	Fridge, // For pinata
 	Voidwall, //For Voidwall
 	Potion, // For Creating WarpDoor
+	ChainPost, // For Chainchomp's Post
+	KingBooStone, // For KingBoo
 }
 
 event ThrowObjSimple {

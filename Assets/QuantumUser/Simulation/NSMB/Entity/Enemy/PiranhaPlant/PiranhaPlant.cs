@@ -10,6 +10,9 @@ namespace Quantum {
 
         public void Kill(Frame f, EntityRef piranhaPlantEntity, EntityRef killerEntity, KillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(piranhaPlantEntity);
+            if (enemy->IsDead) {
+                return;
+            }
             var hazard = f.Unsafe.GetPointer<Hazard>(piranhaPlantEntity);
 
             var piranhaPlantTransform = f.Unsafe.GetPointer<Transform2D>(piranhaPlantEntity);

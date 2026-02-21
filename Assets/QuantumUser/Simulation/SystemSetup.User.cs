@@ -68,6 +68,9 @@ namespace Quantum {
                     new PeteySystem(),
                     new BowserSystem(),
                     new WhompKingSystem(),
+                    new KingBooSystem(),
+
+                    new VoidwallSystem(),
 
                     new HazardManagerSystem(),
                     new HazardSystem()

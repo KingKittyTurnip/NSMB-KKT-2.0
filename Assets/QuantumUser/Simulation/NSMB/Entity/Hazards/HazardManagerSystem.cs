@@ -26,28 +26,10 @@ namespace Quantum {
             ref BitSet64 usedSpawnpoints = ref f.Global->UsedHazardSpawns;
             var hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData;
 
-            #region HazardCapCheck
-            int CurrentHazards = 0;
-            var allStars = f.Filter<Hazard>();
-            while (allStars.NextUnsafe(out EntityRef entity, out Hazard* hazard)) {
-                if (hazard->IsHazard) {
-                    CurrentHazards++;
-                }
-            }
-            if (CurrentHazards >= hazarddata.MaxHazards) {
-                f.Global->TimeTilNextHazard = 180;
+            if (HazardCapReached(f)) {
+                f.Global->TimeTilNextHazard = 60;
                 return;
             }
-
-            var hazardspawners = f.Filter<HazardManager>();
-            while (hazardspawners.NextUnsafe(out EntityRef entity, out HazardManager* dis)) {
-                CurrentHazards++;
-            }
-            if (CurrentHazards >= hazarddata.MaxHazards) {
-                f.Global->TimeTilNextHazard = 180;
-                return;
-            }
-            #endregion
 
             bool spawnedHazardSpawn = false;
             for (int i = 0; i < spawnpoints; i++) {
@@ -69,7 +51,7 @@ namespace Quantum {
                 }
                 if (index == -1) {
                     //All Spawn Locations Are In Use...?
-                    f.Global->TimeTilNextHazard = 1;
+                    f.Global->TimeTilNextHazard = 60;
                     continue;
                 }
                 usedSpawnpoints.Set(index);
@@ -91,8 +73,37 @@ namespace Quantum {
             }
 
             if (!spawnedHazardSpawn) {
-                f.Global->TimeTilNextHazard = 180;
+                //max hazards exist
+                f.Global->TimeTilNextHazard = 60;
             }
+        }
+
+        public static bool HazardCapReached(Frame f, byte Bonus = 0) {
+            var Cap = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.MaxHazards + Bonus;
+
+            byte CurrentHazards = 0;
+            var allStars = f.Filter<Hazard>();
+            while (allStars.NextUnsafe(out EntityRef entity, out Hazard* hazard)) {
+                if (hazard->IsHazard) {
+                    CurrentHazards++;
+                }
+            }
+            if (CurrentHazards >= Cap) {
+                return true;
+            }
+
+            var hazardspawners = f.Filter<HazardManager>();
+            while (hazardspawners.NextUnsafe(out EntityRef entity, out HazardManager* dis)) {
+                CurrentHazards++;
+            }
+            if (CurrentHazards >= Cap) {
+                return true;
+            }
+            return false;
+        }
+
+        public static EntityRef GetHazardInListFromReference(Frame f) {
+            return EntityRef.None;
         }
 
         private void HandleSpawner(Frame f, ref VersusStageData stage, EntityRef entity, HazardManager* hazardspawner) {

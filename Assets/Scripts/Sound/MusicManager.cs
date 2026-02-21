@@ -12,7 +12,8 @@ namespace NSMB.Sound {
 
         //---Serialized Variables
         [SerializeField] private LoopingMusicPlayer musicPlayer;
-
+        private int CurrentBossMusic;
+        private bool PreviouslyBossMusic;
         public void OnValidate() {
             this.SetIfNull(ref musicPlayer);
         }
@@ -109,7 +110,10 @@ namespace NSMB.Sound {
 
             VersusStageData stage = ViewContext.Stage;
             if (boss) {
-                musicPlayer.Play(f.FindAsset(f.SimulationConfig.BossMusic[f.Global->TotalGamesPlayed % f.SimulationConfig.BossMusic.Length]));
+                if (!PreviouslyBossMusic) {
+                    CurrentBossMusic = f.RNG->Next(0, f.SimulationConfig.BossMusic.Length); //maybe we want unique boss music for each boss?
+                }
+                musicPlayer.Play(f.FindAsset(f.SimulationConfig.BossMusic[CurrentBossMusic]));
             } else if (mega) {
                 musicPlayer.Play(f.FindAsset(stage.MegaMushroomMusic));
             } else if (invincible) {
@@ -119,6 +123,7 @@ namespace NSMB.Sound {
             } else {
                 musicPlayer.Play(f.FindAsset(stage.GetCurrentMusic(f)));
             }
+            PreviouslyBossMusic = boss;
 
             musicPlayer.FastMusic = speedup;
         }

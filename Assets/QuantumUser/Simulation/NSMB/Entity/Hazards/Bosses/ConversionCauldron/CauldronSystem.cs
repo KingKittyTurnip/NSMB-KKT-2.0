@@ -50,23 +50,24 @@ namespace Quantum {
                         }
                     } else if (cauldron->EnteredFrames > 130) {
                         //create boss hazard
-                        List<HazardData> hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas, avaliblebosses = new();
+                        List<HazardData> hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas;
+                        List<(HazardData, int)> avaliblebosses = new();
                         for (int i = 0; i < hazarddata.Count; i++) {
                             if (hazarddata[i].Name == "Petey" || hazarddata[i].Name == "Bowser" || hazarddata[i].Name == "Whomp King" || hazarddata[i].Name == "King Boo") {
                                 //This is A Boss Entity
-                                avaliblebosses.Add(hazarddata[i]);
+                                avaliblebosses.Add((hazarddata[i], i));
                                 continue;
                             }
                         }
                         int pick = f.RNG->Next(0, avaliblebosses.Count);
 
-                        EntityRef newEntity = f.Create(avaliblebosses[pick].hazardAsset);
+                        EntityRef newEntity = f.Create(avaliblebosses[pick].Item1.hazardAsset);
                         f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity.Y = 8;
                         if (cauldron->TransformingEntity != EntityRef.None) {
                             f.Unsafe.GetPointer<Boss>(newEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
                             f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
                         }
-                        f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, pick);
+                        f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, avaliblebosses[pick].Item2);
                         f.Events.PlayPuffParticle(transform->Position);
                         cauldron->TransformingEntity = EntityRef.None;
                         cauldron->Activated = false;

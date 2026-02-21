@@ -745,6 +745,23 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.KingBoo))]
+  public unsafe partial class KingBooPrototype : ComponentPrototype<Quantum.KingBoo> {
+    public Quantum.QEnum8<KingBooState> State;
+    public AssetRef<EntityPrototype> BlueFire;
+    partial void MaterializeUser(Frame frame, ref Quantum.KingBoo result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.KingBoo component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.KingBoo result, in PrototypeMaterializationContext context = default) {
+        result.State = this.State;
+        result.BlueFire = this.BlueFire;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Koopa))]
   public unsafe partial class KoopaPrototype : ComponentPrototype<Quantum.Koopa> {
     public AssetRef<PowerupAsset> SpawnPowerupWhenStomped;
@@ -1219,6 +1236,25 @@ namespace Quantum.Prototypes {
         result.StarsToDrop = this.StarsToDrop;
         result.IgnoreTeamates = this.IgnoreTeamates;
         result.Varient = this.Varient;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Voidwall))]
+  public unsafe partial class VoidwallPrototype : ComponentPrototype<Quantum.Voidwall> {
+    public QBoolean IsHorizontal;
+    public FP increment;
+    public FP DamageCooldown;
+    partial void MaterializeUser(Frame frame, ref Quantum.Voidwall result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Voidwall component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Voidwall result, in PrototypeMaterializationContext context = default) {
+        result.IsHorizontal = this.IsHorizontal;
+        result.increment = this.increment;
+        result.DamageCooldown = this.DamageCooldown;
         MaterializeUser(frame, ref result, in context);
     }
   }

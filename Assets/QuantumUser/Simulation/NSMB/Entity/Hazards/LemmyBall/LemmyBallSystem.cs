@@ -43,10 +43,10 @@ namespace Quantum {
                     physicsObject->Velocity = FPVector2.Zero;
                 }
             } else {
-                physicsObject->Velocity.X = lemmyBall->Speed * (lemmyBall->FacingRight ? 1 : -1);
+                FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, FPMath.Abs(lemmyBall->Speed));
+                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (lemmyBall->FacingRight ? 1 : -1), -clamper, clamper);
+                lemmyBall->FacingRight = physicsObject->Velocity.X > 0;
             }
-
-            //Model.transform.rotation = Quaternion.Euler(0, -55, Model.transform.eulerAngles.z + (left ? 3 : -3));
         }
 
         #region Interactions

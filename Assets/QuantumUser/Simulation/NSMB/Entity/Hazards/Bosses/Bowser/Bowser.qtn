@@ -8,6 +8,7 @@ component Bowser {
 	[ExcludeFromPrototype] byte ReusableTimer;
 	[ExcludeFromPrototype] byte VolleyCooldown;
 	[ExcludeFromPrototype] byte AttackCooldown;
+	[ExcludeFromPrototype] bool ActualFacing;
 	
 	[ExcludeFromPrototype] bool AttackQuery;
 

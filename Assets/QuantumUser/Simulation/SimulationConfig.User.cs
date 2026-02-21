@@ -11,9 +11,16 @@ namespace Quantum {
         public AssetRef<CharacterAsset>[] CharacterDatas;
         public AssetRef<PaletteSet>[] Palettes;
         public AssetRef<TeamAsset>[] Teams;
-        public AssetRef<EntityPrototype> FireballPrototype, IceballPrototype, HammerPrototype, BlockBumpPrototype, IceBlockPrototype, CannonBoxBulletPrototype;
-        public AssetRef<EntityPrototype> MainSpawn, HazardSpawn;
+        [Header("Projectiles")]
+        public AssetRef<EntityPrototype> FireballPrototype;
+        public AssetRef<EntityPrototype> IceballPrototype, HammerPrototype, BlockBumpPrototype, IceBlockPrototype, CannonBoxBulletPrototype;
+        [Header("Technical")]
+        public AssetRef<EntityPrototype> MainSpawn;
+        public AssetRef<EntityPrototype> HazardSpawn;
+        [Header("Enenties To Create Via Some Random Script")]
+        public AssetRef<EntityPrototype> VoidWallWall;
         public AssetRef<EntityPrototype> StarballGoal;
+        public AssetRef<EntityPrototype> Chainchomp;
 
         [Header("Global Music")]
         public AssetRef<LoopingMusicData>[] BossMusic;

@@ -1,83 +1,120 @@
 TODOChecklist
 
----Lobby Creation Options:
-[lobby type]
-Lobby Type: (This Option has No Default) (Versus, Custom)
-[player]
-readytime: (CustomLobby ? Off : 2:00), (off, 0:15, 0:30, 1:00, 1:30, 2:00, 3:00)
-stagepick: (vote from 3) (vote from 3, host picks, random (soft), random)
-maxplayers: (CustomLobby ? 6 : 10) (CustomLobby ? 1-10 : 1-15)
-[moderation]
-private: (off) (on/off)
-allowBanningPlayers: (off) (on/off)
-[addons]
-addons: (CustomLobby ? allowed : disabled)
+--Additive Gamemodes:
+[Base]
+  Wincondition: (this is what ends the game)
+  Rules: (this is what rules it adds into play)
+  Effects: (this is what happens to the match)
+  Requirements: (what the game mode requires in order to start a game)
+    a win condition must exist
+  Extra Hazards: (any hazards that only work in the mode)
+[star chasers]
+  Wincondition:
+    collect x stars
+  Rules:
+    Stars to Collect
+    Star Frequency
+  Effects:
+    players drop stars if they have any
+    bigstars spawn one at a time around the stage, they reset the stage upon collected
+  Requirements:
+    a set goal
+    Resetarrow
+  Extra Hazards:
+    bigstar
+[Stage Coins]
+  Wincondition:
+    None
+  Rules:
+    Coins For item
+    Item Menu
+  Effects:
+    The stage is filled with coins
+    enemies drop coins
+    ? blocks give coins
+  Requirements:
+  Extra Hazards:
+    Loosecoin
+[Lives]
+  Wincondition:
+    Be the last one standing
+  Rules:
+    Lives
+  Effects:
+    players are disqualified when they are out
+  Requirements:
+  Extra Hazards:
+    1up Mushroom
+[Timer]
+  Wincondition:
+    timer ending
+  Rules:
+    Time
+    Winning Team On Timeup (Draw is also an option)
+  Effects:
+    A Timer Ticks Down, Game Ends When It Reaches 0
+  Requirements:
+  Extra Hazards:
+    Clock
+[Hazards]
+  Wincondition:
+  Rules:
+    Hazard Menu
+  Effects:
+    Random Objects Spawn Throughout The Stage
+  Requirements:
+  Extra Hazards:
+    Null
+[Teams]
+  Wincondition:
+    the team with the most stuff when the game ends wins
+  Rules:
+    teams (per player rule)
+  Effects:
+    teamate players and hazards won't harm harshly
+  Requirements:
+  Extra Hazards:
+    Null
 
----In-Lobby Options:
-[lobby rules]
-readytime: ^^^
-stagepick: ^^^
-team control: (free) (free, host only, computer controlled)
-maxplayers: ^^^
-[Moderation Rules]
-private: ^^^
-allowBanningPlayers: ^^^ (this option isn't editable here to prevent abuse)
-[Rules In both Lobby Types]
-teams: (off) (off, 1, 2, 3, 4, 5) (team added order: red(mushroom), blue(bowser), green(), yellow(question), purple(ghost))
-coinsforpowerup: (5) (1-20)
-lives: (off) (off, 1-20)
-players respawn as bobomb: (on) (on/off) [IDK what to do with this option]
-[Rules In Versus Lobbies]
-Gamemode: um
-Hazards: (on) (on/off)
-Minigame Hazards: (on) (on/off)
-Joke Powerups: (on) (on/off)
-[Rules In Custom Lobbies]
-Hazard Manager: contains all rules related to hazards, powerups, and gamemodes
+//future betas
 
----Gamemodes:
-  [starchasers]
-rules: (stars to win, 15, 3-30)
--collect # amount of stars to win!
--players drop stars (if they have them)
-goal: bigstar
-hazards: normal pool
-  [coinrunners]
-rules: (timer (forced), 3:00, 1:00-20:00)
--collect as much coins before the time runs out!
--players drop coins
-goal: starcoin
-hazards: normal pool, but more coin related items and they are purple versions
-  [balloon battle]
-rules: (balloons (2-8), lives (forced), 3, 1-20)
--pop your foes balloons and be the last one standing!
--players gain balloons
-goal: (idk what should spawn as the "goal" to allow the stage to reset...)
-hazards: mostly weapon hazards
-  [shinerunners] um
-rules: (elimination timer, 1:00, 0:15-3:00)
--collect more shines than others to avoid elimination!
--players drop shines
-goal: shines
-hazards: mostly mobility effecting hazards
-  [race] um
-  [brawl] um
-  [bombchasers]
-rules: (lives (forced) 1, (1-3), bobombrespawn (forced), on, on)
--evade the bobombs until the time runs out... or explode all the other players!
--when players die the stage is reset
-Goalhazard: big bomb, chases players down and kills them
-Hazards: 
+[coin runners]
+  Wincondition:
+    Collect as much coins as possible until the timer runs out
+  Rules:
+    Coins To Collect To Reset Precentage
+  Effects:
+    players drop coins if they have any
+    coins appear in the stage
+  Requirements:
+    A Resetarrow or a starcoin
+    Timer Gamemode
+  Extra Hazards:
+    Starcoin
+    Purple Gold Block
+[Balloon Battle]
+[Shinerunners]
+[Bombchasers]
+  Wincondition:
+    Explode All Players
+  Rules:
+  Effects:
+    nullified the lives game ending rules if a bomb exists
+  Requirements:
+    Lives Mode or King Bobomb+Hazards
+  Extra Hazards:
+    King Bobomb
+  
 
 
 ---Returning Hazards:
 (Coinbunch - remove this it's STUPID...)
-  $$$ Goldblock - Pretty Much Done Just Add Every Player Textures - purple and wing variants
+  $$$ Goldblock - Pretty Much Done Just Add Every Player Textures - purple variant too
 Cloudbill
   $$$ LemmyBall - Perhaps some sounds?
 Minimario
   $$$ Heavystone
-Springboard - MORE TODO
+  $$$ Springboard
   $$$ Red pow
   $$$ Blue Pow - make it give spike knockback (implement later)
 Barrel
@@ -86,7 +123,7 @@ Fridge - (New idea: Give it health, When it Reaches 0 it Explodes Into Several h
   $$$ PropellerBlock
 
 Spikebass
-Voidwall
+- Voidwall
 Tornado
   $$$ Spinpipe - fix a small bug with mega break functionality
 Bowser Shell
@@ -107,9 +144,10 @@ Coinshell
   $$$ Starball - Give Mario unique Anims, add anything containable functionality
   $$$ Petey - Perperly play the dizzy sound
   $$$ Bowser - Make Fire, and fix the cyote sound not stopping at times,
-KingBoo - Throws A Unique ThrowingObject As An Attack, CanFly, makes ghosts be on the minimap (hiding other players), if it was already enabled it hides everything from the minimap
+- KingBoo - Spits flaming blocks as an attack, once they land they burn out and can be carried by players, once king boo stops coughing them out he will suck them back in his mouth, they will light on fire again(if a player is is carrying/carried it it will be ignored), they have a lifetime of 10 seconds    CanFly, makes ghosts be on the minimap (hiding other players), if it was already enabled it hides everything from the minimap
 - King Whomp - Slam attack, hitting a target will propell him forward, he has a small jump that causes a shockwave upon landing
 - Cauldron - Animate
+- chain post + chain chomp - 
 
 
 ---Characters--- More Expressions --- Coinbox,billblock,cannonbox,propellerbox all have unique colors per character ---
@@ -139,3 +177,9 @@ Sonic
 KKTurnip
 CaptainToad
 Bombecture (& Bobomb)
+
+---Map Types---
+KKT Mod Maps - blue tab - Default Maps
+Maps From Other Mods - yellow tab- Promotional
+Vanilla Maps - red tab - Backwards Compatability
+Restricted - Maps That Only Work under Certain Rules (races, spleef, upsidown map, etc), also contains unused maps

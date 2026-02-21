@@ -1,0 +1,9 @@
+component Voidwall {
+	bool IsHorizontal;
+	FP increment;
+	FP DamageCooldown;
+}
+
+event OnVoidwallDamaged {
+	EntityRef Entity;
+}

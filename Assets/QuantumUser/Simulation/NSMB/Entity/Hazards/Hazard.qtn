@@ -25,6 +25,8 @@ enum SpawnReason : Byte {
 	Normal,
 	Bulb,
 	Fridge,
+	Forced, //used for objects that are created outside of the hazardlist
+	WasCreatedFromNested, //used for objects that Can be nested Endlessly
 }
 
 signal InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index);

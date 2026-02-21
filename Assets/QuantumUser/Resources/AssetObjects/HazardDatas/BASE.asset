@@ -371,7 +371,7 @@ MonoBehaviour:
       SpecialValues:
       - ButtonName: Is Dry
         ButtonType: 0
-        BaseValue: 0
+        BaseValue: 1
         ValueRange:
           X: 0
           Y: 0
@@ -422,7 +422,7 @@ MonoBehaviour:
       SpecialValues:
       - ButtonName: Turns Into
         ButtonType: 2
-        BaseValue: 0
+        BaseValue: 255
         ValueRange:
           X: 0
           Y: 0
@@ -489,3 +489,66 @@ MonoBehaviour:
         ValueRange:
           X: 2
           Y: 30
+    - Name: Chain Post
+      hazardAsset:
+        Id:
+          Value: 1266191120316739523
+      Icon: {fileID: 0}
+      categorey: 4
+      Hefty: 0
+      Teamable: 1
+      SpawnAsGoal: 0
+      SpawnRandom: 1
+      SpawnFridge: 0
+      SpawnBulb: 0
+      SpecialValues:
+      - ButtonName: LongChain
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      - ButtonName: Chained Object
+        ButtonType: 2
+        BaseValue: 255
+        ValueRange:
+          X: 0
+          Y: 0
+    - Name: Voidwall
+      hazardAsset:
+        Id:
+          Value: 1528374188268676239
+      Icon: {fileID: 0}
+      categorey: 36
+      Hefty: 1
+      Teamable: 1
+      SpawnAsGoal: 0
+      SpawnRandom: 1
+      SpawnFridge: 0
+      SpawnBulb: 0
+      SpecialValues:
+      - ButtonName: LongChain
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      - ButtonName: Chained Object
+        ButtonType: 2
+        BaseValue: 255
+        ValueRange:
+          X: 0
+          Y: 0
+    - Name: King Boo
+      hazardAsset:
+        Id:
+          Value: 1417407889661057047
+      Icon: {fileID: 0}
+      categorey: 40
+      Hefty: 1
+      Teamable: 1
+      SpawnAsGoal: 0
+      SpawnRandom: 1
+      SpawnFridge: 0
+      SpawnBulb: 0
+      SpecialValues: []

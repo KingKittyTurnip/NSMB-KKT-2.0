@@ -7,7 +7,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
-    public unsafe class BowserSystem : SystemMainThreadFilterStage<BowserSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
+    public unsafe class BowserSystem : SystemMainThreadEntityFilter<Bowser, BowserSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
         public struct Filter {
             public EntityRef Entity;
             public Bowser* Bowser;
@@ -249,9 +249,10 @@ namespace Quantum {
                 TryFireball(filter.Entity);
                 TryGroundpound();
 
-                if (physicsObject->IsTouchingGround && !physicsObject->WasTouchingGround) {
+                if (physicsObject->IsTouchingGround) {
                     bowser->State = BowserState.Walking;
-                    f.Events.BowserLanded(f, filter.Entity, false);
+                    if (!physicsObject->WasTouchingGround)
+                     f.Events.BowserLanded(f, filter.Entity, false);
                 }
                 break;
             case BowserState.Knockbacked:
@@ -302,6 +303,9 @@ namespace Quantum {
                     }
                     bowser->ReusableTimer = 0;
                     bowser->State = BowserState.Walking;
+                } else if (leftrightinput != 0) {
+                    //Allow Turnaround In Startup Phase
+                    boss->FacingRight = leftrightinput > 0;
                 }
 
                 void CreateProjectile(AssetRef<EntityPrototype> prototype, FPVector2 Direction, FP VerticalBonus) {
@@ -319,7 +323,7 @@ namespace Quantum {
             case BowserState.Groundpound:
                 if (bowser->ReusableTimer <= 15) {
                     bowser->ReusableTimer++;
-                    FP Cap = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_20, 1);
+                    FP Cap = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_20, 0);
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_20), -Cap, Cap);
                     physicsObject->Velocity.Y = 1;
                 } else {
@@ -533,6 +537,7 @@ namespace Quantum {
 
             //relocate
             //boss->ControllerPlayer
+            UnityEngine.Debug.Log(index);
             bowser->IsDry = hazardata.SpecialValues[0].BaseValue == 1;
         }
         public void BossToBossInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {

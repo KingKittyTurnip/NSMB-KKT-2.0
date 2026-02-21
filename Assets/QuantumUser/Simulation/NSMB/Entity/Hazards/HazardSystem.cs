@@ -98,7 +98,7 @@ namespace Quantum {
             }
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var hazardsettings = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData;
-            var hazardata = hazardsettings.HazardDatas[index];
+            //var hazardata = hazardsettings.HazardDatas[index];
 
             hazard->IsHazard = hazard->JustSpawned = hazard->IsActive = true;
             // IdeaBulb Carry On Creation :TOTEST:

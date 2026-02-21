@@ -14,6 +14,9 @@ namespace Quantum {
 
         public readonly void Kill(Frame f, EntityRef bulletBillEntity, EntityRef killerEntity, KillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(bulletBillEntity);
+            if (enemy->IsDead) {
+                return;
+            }
             var hazard = f.Unsafe.GetPointer<Hazard>(bulletBillEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(bulletBillEntity);
 

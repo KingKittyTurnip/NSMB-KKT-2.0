@@ -4,7 +4,7 @@ using static IInteractableTile;
 
 namespace Quantum {
     
-    public unsafe class PeteySystem : SystemMainThreadFilterStage<PeteySystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
+    public unsafe class PeteySystem : SystemMainThreadEntityFilter<Petey, PeteySystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
         public struct Filter {
             public EntityRef Entity;
             public Petey* Petey;

@@ -1,0 +1,54 @@
+component KingBoo {
+	KingBooState State;
+	AssetRef<EntityPrototype> BlueFire;
+
+	[ExcludeFromPrototype] byte ReusableTimer;
+	
+	[ExcludeFromPrototype] byte ProjectileShots;
+
+	//ai vars
+	[ExcludeFromPrototype] byte waitTime;
+	[ExcludeFromPrototype] byte BigAttackCounter;
+	[ExcludeFromPrototype] byte JumpFromAttackCounter;
+}
+
+enum KingBooState : Byte {
+    Laughing,
+	Floating,
+	Teleporting,
+	Barfing,
+	Sucking,
+	Knockback,
+}
+/*
+enum BowserAttackType : Byte {
+    FireBall,
+	JumpFireBall,
+	MegaAttack,
+	BoneThrow,
+}
+
+event BowserJump {
+	Frame f;
+	EntityRef Entity;
+}
+event BowserLanded {
+	Frame f;
+	EntityRef Entity;
+	bool Roar;
+}
+event BowserKnockbacked {
+	EntityRef Entity;
+}
+event BowserAttack {
+	EntityRef Entity;
+	BowserAttackType AttackType;
+}
+event BowserShoot {
+	EntityRef Entity;
+	bool IsBone;
+}
+
+event BowserFall {
+	EntityRef Entity;
+}*/

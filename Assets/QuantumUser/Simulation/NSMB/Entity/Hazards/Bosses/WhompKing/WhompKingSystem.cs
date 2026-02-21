@@ -5,7 +5,7 @@ using static IInteractableTile;
 
 namespace Quantum {
     
-    public unsafe class WhompKingSystem : SystemMainThreadFilterStage<WhompKingSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
+    public unsafe class WhompKingSystem : SystemMainThreadEntityFilter<WhompKing, WhompKingSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
         public struct Filter {
             public EntityRef Entity;
             public WhompKing* WhompKing;

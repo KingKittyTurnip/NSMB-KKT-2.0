@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 3093743753026942761}
   - component: {fileID: -6338529405283914546}
   - component: {fileID: -3897358826683353975}
+  - component: {fileID: 676166319094480005}
   m_Layer: 19
   m_Name: Springboard
   m_TagString: Powerup
@@ -86,14 +87,14 @@ MonoBehaviour:
         RawValue: 0
       BoxExtents:
         X:
-          RawValue: 16384
+          RawValue: 13107
         Y:
-          RawValue: 16384
+          RawValue: 14746
       PositionOffset:
         X:
           RawValue: 0
         Y:
-          RawValue: 0
+          RawValue: -1638
       RotationOffset:
         RawValue: 0
       UserTag: 0
@@ -161,7 +162,7 @@ MonoBehaviour:
     LayerSource: 1
     Layer: 9
     CallbackFlags:
-      Value: 448
+      Value: 4095
   PhysicsBody:
     IsEnabled: 0
     Config2D: 116
@@ -267,9 +268,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8359218312643153770, guid: b73add24eb026c844b85593f8bab1f8c,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 5b37bd296278e534a9d438cbf66937ca, type: 3}
-  m_Resource: {fileID: 8300000, guid: 5b37bd296278e534a9d438cbf66937ca, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 8300000, guid: 55d318c40cdf79e4280d3252a6f908ca, type: 3}
+  m_Resource: {fileID: 8300000, guid: 55d318c40cdf79e4280d3252a6f908ca, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -382,6 +383,8 @@ MonoBehaviour:
       Value: 1
     IsBall:
       Value: 0
+    IsFlying:
+      Value: 0
     SlideAlong:
       Value: 0
     BouceOffPlayer:
@@ -390,7 +393,8 @@ MonoBehaviour:
       RawValue: 294912
     StarsToDrop: 0
     IgnoreTeamates:
-      Value: 0
+      Value: 1
+    Varient: 0
 --- !u!114 &6989136294608042370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,6 +558,20 @@ MonoBehaviour:
         RawValue: 196608
       Y:
         RawValue: 65536
+--- !u!114 &676166319094480005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7ed2cf85fb777e429d42225db36150c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfx: {fileID: 4207910641862185911}
+  animator: {fileID: 7951034468652964222}
 --- !u!1 &9032870725918412890
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,9 +668,9 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9032870725918412890}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cfd1434218392ed4eb331d99d4e31062, type: 2}
+  m_Controller: {fileID: 9100000, guid: 6edebfa8986377542817c242c9451e5d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
