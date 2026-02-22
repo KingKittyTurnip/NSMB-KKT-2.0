@@ -1,10 +1,12 @@
 using Photon.Deterministic;
+using System;
 using System.Drawing.Drawing2D;
 using UnityEngine;
+using static IInteractableTile;
 
 namespace Quantum {
     
-    public unsafe class ThrowingObjectSystem : SystemMainThreadFilterStage<ThrowingObjectSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEntityBumped, //ISignalOnBeforeInteraction,
+    public unsafe class ThrowingObjectSystem : SystemMainThreadEntityFilter<ThrowingObject, ThrowingObjectSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEntityBumped, //ISignalOnBeforeInteraction,
         ISignalOnTryLiquidSplash, ISignalInitializeHazard {
         /*
         ---------------------------------------
@@ -56,8 +58,10 @@ namespace Quantum {
             f.Context.Interactions.Register<ThrowingObject, Boss>(f, OnThrowingObjectBossInteraction);
 
             f.Context.Interactions.Register<Projectile, ThrowingObject>(f, OnThrowingObjectProjectileInteraction);
+            f.Context.Interactions.Register<ThrowingObject, ThrowingObject>(f, OnThrowingObjectThrowingObjectInteraction);
 
             f.Context.Interactions.Register<PhysicsObject, ThrowingObject>(f, OnThrowingObjectAnythingInteraction); //this is exclusively used for the springboard :sob:
+            f.Context.RegisterPreContactCallback(f, OnPreContactCallback); //this is exclusivly used for the chainpost even sobber :sob:
         }
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var Dis = filter.DisObject;
@@ -450,25 +454,48 @@ namespace Quantum {
                 }
                 break;
             case ThrowingObjectType.KingBooStone:
+                if (Dis->HitSomething) {
+                    HazardSystem.DestroyHazard(f, filter.Entity);
+                    return;
+                }
                 if (f.Exists(holdable->PreviousHolder) && !f.Has<Boss>(holdable->PreviousHolder) && !(f.Unsafe.TryGetPointer<MarioPlayer>(holdable->PreviousHolder, out var mar) && mar->IsBoss != EntityRef.None)) {
                     //We've Been Pickedup By A Player, ignore all other code
                     Dis->Varient = 3;
-                    if (f.Exists(holdable->Holder))
+                    if (f.Exists(holdable->Holder)) {
                         hazard->LifeTime = 300;
+                    } else if (Dis->HitSomething) {
+                        hazard->LifeTime = 1;
+                    }
                 } else if (Dis->Varient == 2) {
                     //We've Hit Ground, Allow Us To Fall Into The Pit
 
-                } else if (PhysicsObjectSystem.BoxInGround(f, transform->Position, collider->Shape, false, stage)) {
-                    if (Dis->Varient == 1) {
-                        //We Hit Ground, Allow Carryable
-                        physicsObject->Gravity.Y = -3;
-                        physicsObject->Velocity.Y = 2;
-                        Dis->Thrown = false;
-                        Dis->Varient = 2;
-                    }
                 } else {
-                    //We Are outside of ground
-                    Dis->Varient = 1;
+                    bool TouchingTiles = false;
+                    Span<PhysicsObjectSystem.LocationTilePair> tiles = stackalloc PhysicsObjectSystem.LocationTilePair[64];
+                    int overlappingTiles = PhysicsObjectSystem.GetTilesOverlappingHitbox(f, transform->Position, filter.PhysicsCollider->Shape, tiles, stage);
+                    for (int i = 0; i < overlappingTiles; i++) {
+                        var tile = f.FindAsset(tiles[i].Tile.Tile);
+                        if (tile && (tile.CollisionData.IsFullTile /*|| (tiles[i].Position.Y < transform->Position.Y && physicsObject->Velocity.Y < 0)*/)) { //TODO: make semis work
+                            TouchingTiles = true;
+                            break;
+                        }
+                    }
+                    if (TouchingTiles) {
+                        if (Dis->Varient == 1) {
+                            //We Hit Ground, Allow Carryable
+                            physicsObject->Gravity.Y = -10;
+                            physicsObject->Velocity.X = physicsObject->Velocity.X > 0 ? 2 : -2;
+                            physicsObject->Velocity.Y = 3;
+                            Dis->Thrown = false;
+                            Dis->Varient = 2;
+                            Dis->ReusableTimer = 11;
+                            hazard->LifeTime = 200;
+                            f.Events.PlayComboSound(filter.Entity, 0);
+                        }
+                    } else {
+                        //We Are outside of ground
+                        Dis->Varient = 1;
+                    }
                 }
                 break;
             }
@@ -534,7 +561,7 @@ namespace Quantum {
             FP upDot = FPVector2.Dot(damageDirection, FPVector2.Up);
             bool hitRight = Dis->Thrown ? !Dis->Facing : damageDirection.X > 0;
 
-            bool MarioGroundpounding = mario->IsGroundpoundActive || damageDirection.Y < -Constants._0_66;
+            bool MarioGroundpounding = mario->IsGroundpoundActive && damageDirection.Y < -Constants._0_66;
             #endregion
 
             //Special Interactions
@@ -589,8 +616,14 @@ namespace Quantum {
                 }
             }
 
+            //IsOwned, Counts Teamates
+            bool IsOwned = f.Exists(holdable->PreviousHolder) && f.Unsafe.TryGetPointer<MarioPlayer>(holdable->PreviousHolder, out var holdermar) && mario->GetTeam(f) == holdermar->GetTeam(f) && Dis->IgnoreTeamates;
+            
             //Try To Hit
-            if ((Dis->Thrown || (!physicsObject->IsTouchingGround && Dis->Type == ThrowingObjectType.Stone)) && mario->IsDamageable && !(holdable->PreviousHolder == marioEntity && Dis->IgnoreTeamates)) {
+            if ((Dis->Thrown || (!physicsObject->IsTouchingGround && Dis->Type == ThrowingObjectType.Stone)) && !IsOwned) {
+                if (!mario->IsDamageable) {
+                    return true;
+                }
                 // Hit Player (Unless Not)
                 if (Dis->BouceOffPlayer) {
                     Dis->HitSomething = true;
@@ -601,21 +634,21 @@ namespace Quantum {
                 if (Dis->GroundBounce)
                     Dis->BounceTimes = 1;
                 if (Dis->StarsToDrop != 0) {
-                    bool TeamateItem = Dis->IgnoreTeamates && (mario->GetTeam(f) == hazard->Team);
-                    if (Dis->Type == ThrowingObjectType.Freezie && !TeamateItem) {
+                    if (Dis->Type == ThrowingObjectType.Freezie) {
                         Dis->HitSomething = true;
                         f.Unsafe.GetPointer<IceBlock>(IceBlockSystem.Freeze(f, marioEntity))->AutoBreakFrames = 360;
                     } else {
-                        mario->DoKnockback(f, marioEntity, hitRight, TeamateItem ? 0 : Dis->StarsToDrop, /*TeamateItem*/ KnockbackStrength.FireballBump, thisEntity);
-                        f.Events.PlayKnockbackEffect(marioEntity, thisEntity, KnockbackStrength.FireballBump,
-                            (f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position) / 2);
+                        if (mario->DoKnockback(f, marioEntity, hitRight, Dis->StarsToDrop, /*TeamateItem*/ KnockbackStrength.FireballBump, thisEntity)) {
+                            f.Events.PlayKnockbackEffect(marioEntity, thisEntity, KnockbackStrength.FireballBump,
+                                (f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position) / 2);
+                        }
                     }
                 }
                 return false;
             }
-
+            Dis->HitSomething = false;
             //Try To Pickup
-            if ((!Dis->Thrown || (f.Exists(holdable->PreviousHolder) && mario->GetTeam(f) == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->GetTeam(f)))
+            if ((!Dis->Thrown || IsOwned)
               && (damageDirection.Y <= Constants._0_66 || Dis->HitSomething)) {
                 //Only Allow Carry If No Team Or Same Team --- TOTEST
                 if (hazard->Team != 255 && mario->GetTeam(f) != hazard->Team) { //Can only pickup if it's on our team... or no team
@@ -827,6 +860,18 @@ namespace Quantum {
             }
             return false;
         }
+        public static bool OnThrowingObjectThrowingObjectInteraction(Frame f, EntityRef otherEntity, EntityRef thisEntity, PhysicsContact contact) {
+            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+            //var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
+            var otherDis = f.Unsafe.GetPointer<ThrowingObject>(otherEntity);
+            if (otherDis->Type == ThrowingObjectType.KingBooStone) {
+                HazardSystem.DestroyHazard(f, otherEntity);
+            }
+            //if (Dis->Type == ThrowingObjectType.KingBooStone) {
+            //    HazardSystem.DestroyHazard(f, thisEntity);
+            //}
+            return false;
+        }
 
         public static void OnThrowingObjectAnythingInteraction(Frame f, EntityRef anyEntity, EntityRef thisEntity) {
             //var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
@@ -856,6 +901,14 @@ namespace Quantum {
         #endregion
 
         #region Signals
+        public void OnPreContactCallback(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContact) {
+            if (contact.Entity != EntityRef.None
+                && f.Unsafe.TryGetPointer(contact.Entity, out ThrowingObject* throwable) && throwable->Type == ThrowingObjectType.ChainPost
+                && (entity == throwable->ConnectedObject)) {
+
+                keepContact = false;
+            }
+        }
         public void OnThrowHoldable(Frame f, EntityRef entity, EntityRef marioEntity, QBoolean crouching, QBoolean dropped) {
             if (!f.Unsafe.TryGetPointer(entity, out ThrowingObject* Dis)
                 || !f.Unsafe.TryGetPointer(entity, out Holdable* holdable)
@@ -1005,7 +1058,7 @@ namespace Quantum {
                 } else {
                     //Default Chain Chomp
                     Dis->ConnectedObject = f.Create(f.SimulationConfig.Chainchomp);
-                    f.Signals.InitializeHazard(Dis->ConnectedObject, EntityRef.None, spawnpoint, spawnReason == SpawnReason.Forced ? SpawnReason.WasCreatedFromNested : (spawnReason == SpawnReason.Fridge ? SpawnReason.Forced : SpawnReason.Fridge), 0);
+                    f.Signals.InitializeHazard(Dis->ConnectedObject, thisEntity, spawnpoint, SpawnReason.Forced, 0);
                 }
                 break;
             }

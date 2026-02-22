@@ -107,28 +107,10 @@ namespace Quantum {
         }
 
         public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
-            if (!f.Unsafe.TryGetPointer(thisEntity, out ThrowingObject* Dis)
+            if (!f.Unsafe.TryGetPointer(thisEntity, out LemmyBall* lemmyball)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
                 return;
             }
-
-            //uhh i would put specific hazard spawn data here
-
-            /*switch (Dis->Type) {
-            case ThrowingObjectType.Basic:
-            case ThrowingObjectType.Stone:
-            case ThrowingObjectType.Spring:
-            case ThrowingObjectType.RedPow:
-            case ThrowingObjectType.BluePow: //Bluepow And Red Pow Are Considerd Varients Of Eachother
-            case ThrowingObjectType.Barrel:
-            case ThrowingObjectType.Freezie:
-            case ThrowingObjectType.CoinBox:
-            case ThrowingObjectType.PropellerBox:
-            case ThrowingObjectType.BillBlock:
-            case ThrowingObjectType.CannonBox:
-            case ThrowingObjectType.Fridge:
-                break;
-            }*/
         }
         #endregion
     }

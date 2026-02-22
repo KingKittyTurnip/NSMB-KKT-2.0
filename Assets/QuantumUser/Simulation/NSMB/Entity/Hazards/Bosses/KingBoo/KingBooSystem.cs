@@ -2,6 +2,9 @@ using Photon.Deterministic;
 using Quantum.Collections;
 using System;
 using System.Drawing.Drawing2D;
+using System.Numerics;
+using UnityEngine;
+using UnityEngine.Windows;
 using static IInteractableTile;
 using static UnityEngine.EventSystems.EventTrigger;
 
@@ -70,80 +73,69 @@ namespace Quantum {
                 DirectionalInput = DirectionalInput.Normalized;
                 mario->FacingRight = boss->FacingRight;
             } else {
-                //Find Closest Player
-                /*
-                EntityRef TargetEntity = EntityRef.None;
-                FP distance = 999;
-                var players = f.Filter<MarioPlayer>();
+                Boss.GetClosestPlayer(f, transform->Position, EntityRef.None, out var TargetEntity, out var distance);
 
-                while (players.NextUnsafe(out EntityRef OtherEntity, out MarioPlayer* mar)) {
-                    if (mar->IsDead)
-                        continue;
-                    //Find Closest Player
-                    QuantumUtils.UnwrapWorldLocations(f, transform->Position, f.Unsafe.GetPointer<Transform2D>(OtherEntity)->Position, out FPVector2 ourPos, out FPVector2 theirPos);
-                    FP e = FPVector2.Distance(ourPos, theirPos);
-                    if (e < distance) {
-                        TargetEntity = OtherEntity;
-                        distance = e;
-                    }
-                }
-
-                Sprint = bowser->waitTime > 90;
-                if (Sprint)
-                    Fireball = true;
-                if ((bowser->waitTime > 90 && bowser->State == BowserState.Attacking) || bowser->waitTime <= 90)
-                    QuantumUtils.Decrement(ref bowser->waitTime);
-
-                if (bowser->JumpFromAttackCounter > 2) {
-                    Jump = true;
-                    bowser->JumpFromAttackCounter = 0;
+                if (kingboo->waitTime > 0) {
+                    kingboo->waitTime--;
                 }
 
                 //Boss Ai
                 if (distance > 10) {
-                    //wander
-                    FPVector2 checkPosition = transform->Position + (FPVector2.Right * FP._0_20 * (boss->FacingRight ? 1 : -1));
-                    if (!PhysicsObjectSystem.Raycast(f, stage, checkPosition, FPVector2.Down, 5, out var hit)) {
-                        Jump = true;
-                    }
-                    leftrightinput = boss->FacingRight ? 1 : -1;
+                    //Wander
+                    DirectionalInput.X = boss->FacingRight ? 1 : -1;
+                    DirectionalInput.Y = physicsObject->Velocity.Y;
+                    kingboo->NeedsNewTarget = true;
                 } else {
                     HasTarget = true;
                     var mario = f.Unsafe.GetPointer<MarioPlayer>(TargetEntity);
                     var marioTransform = f.Unsafe.GetPointer<Transform2D>(TargetEntity);
                     var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(TargetEntity);
 
-                    QuantumUtils.UnwrapWorldLocations(f, transform->Position + FPVector2.Up * FP._0_10, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+                    QuantumUtils.UnwrapWorldLocations(f, transform->Position, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
                     FPVector2 damageDirection = (theirPos - ourPos).Normalized;
                     FP absDif = FPMath.Abs(ourPos.X - theirPos.X);
 
-                    if (absDif < 2) {
-                        bowser->waitTime = 30;
-                        leftrightinput = damageDirection.X > 0 ? -1 : 1;
-                        Jump |= absDif < 1;
-                    } else if ((absDif > 6 || boss->FacingRight != damageDirection.X > 0) && physicsObject->IsTouchingGround) {
-                        leftrightinput = damageDirection.X > 0 ? 1 : -1;
-                    } else if (absDif > 8) {
-                        Jump = true;
-                        leftrightinput = damageDirection.X > 0 ? 1 : -1;
+                    //Get New Location Somewhere Around Our Target
+                    if (kingboo->NeedsNewTarget) {
+                        kingboo->NeedsNewTarget = false;
+                        kingboo->waitTime = 30;
+                        kingboo->TargetPosition = marioTransform->Position + new FPVector2((damageDirection.X > 0 ? 1 : -1) * f.RNG->Next(FP._0_50, FP._3), f.RNG->Next(-FP._1, FP._3));
+                        kingboo->TargetPosition.Y = FPMath.Clamp(kingboo->TargetPosition.Y, stage.CameraMinPosition.Y + FP._0_50, stage.CameraMaxPosition.Y - 2);
                     }
-                    if (absDif <= 9 && absDif >= 2) {
-                        updowninput = FPMath.RoundToInt(((ourPos.Y - theirPos.Y) + FP._0_50) * -FP._0_33);
-                        if (bowser->waitTime <= 0) {
-                            Fireball = true;
-                            if (bowser->BigAttackCounter > 0) {
-                                bowser->BigAttackCounter--;
-                                bowser->waitTime = (byte) (60 + FPMath.RoundToInt(f.RNG->Next() * 30));
-                            } else {
-                                bowser->BigAttackCounter = (byte) (2 + FPMath.RoundToInt(f.RNG->Next() * 2));
-                                bowser->waitTime = 150;
+
+                    //Move To Target Position
+                    QuantumUtils.UnwrapWorldLocations(f, transform->Position, kingboo->TargetPosition, out FPVector2 a, out FPVector2 b);
+                    if (FPVector2.Distance(a, b) > 0) {
+                        var input2 = (b - a).Normalized;
+                        if (input2.X != 0) {
+                            DirectionalInput.X = (input2.X > 0 ? 1 : -1);
+                        }
+                        if (input2.Y != 0) {
+                            DirectionalInput.Y = (input2.Y > 0 ? 1 : -1);
+                        }
+                    }
+
+                    //Other Behaviors
+                    if (kingboo->waitTime == 0) {
+                        if (absDif < Constants._0_66 || absDif > 7) {
+                            //Too Close
+                            kingboo->NeedsNewTarget = true;
+                        } else {
+                            if (kingboo->ProjectileShots == 0) {
+                                //Refresh Attack Duration
+                                kingboo->RngFireball = (byte) f.RNG->Next(2, 4);
+                            }
+                            if (kingboo->RngFireball >= kingboo->ProjectileShots) {
+                                //Attack
+                                DirectionalInput.X = damageDirection.X < 0 ? -1 : 1;
+                                FireballHeld = true;
+                                if (kingboo->RngFireball < kingboo->ProjectileShots+1) {
+                                    kingboo->NeedsNewTarget |= f.RNG->Next(0, 2) == 1;
+                                }
                             }
                         }
                     }
                 }
-                if (leftrightinput != 0 && (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall)) {
-                    Jump = true;
-		}*/
             }
 
             if (transform->Position.Y < stage.CameraMinPosition.Y + FP._0_50) {
@@ -182,7 +174,7 @@ namespace Quantum {
                 physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -TruMax.X, TruMax.X);
                 physicsObject->Velocity.Y = FPMath.Clamp(physicsObject->Velocity.Y, -TruMax.Y, TruMax.Y);
             }
-            void CreateProjectile(FPVector2 Direction, byte lifetime) {
+            void CreateProjectile(FPVector2 Direction) {
                 FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, FP._0_33);
                 EntityRef newEntity = f.Create(kingboo->BlueFire);
                 var throwhazard = f.Unsafe.GetPointer<Hazard>(newEntity);
@@ -190,9 +182,9 @@ namespace Quantum {
                 Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
 
                 f.Unsafe.GetPointer<Transform2D>(newEntity)->Position = spawnPos;
-                f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity = (Direction * (4 + FP._0_10) + FPVector2.Up);
+                f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity = ((Direction * (4 + FP._0_10)) + FPVector2.Up);
                 throwhazard->IsHazard = throwhazard->IsActive = true;
-                throwhazard->LifeTime = (byte)(190 - lifetime);
+                throwhazard->LifeTime = 250;
                 f.Unsafe.GetPointer<ThrowingObject>(newEntity)->Thrown = true;
                 f.Unsafe.GetPointer<Holdable>(newEntity)->PreviousHolder = boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity;
                 kingboo->ProjectileShots++;
@@ -204,7 +196,6 @@ namespace Quantum {
                 kingboo->ReusableTimer++;
                 if (kingboo->ReusableTimer > 100 || boss->iframes != 0) {
                     kingboo->ReusableTimer = 0;
-                    kingboo->BigAttackCounter = 3;
                     kingboo->waitTime = 30;
                     kingboo->State = KingBooState.Floating;
                 }
@@ -235,21 +226,19 @@ namespace Quantum {
                     }
                 } else {
                     if (CycleTimer == 6) {
-                        CreateProjectile(new FPVector2(boss->FacingRight ? 1 : -1, DirectionalInput.Y), kingboo->ReusableTimer);
+                        CreateProjectile(new FPVector2(boss->FacingRight ? 1 : -1, 0));
                     }
                 }
 
-                if (!FireballHeld && CycleTimer > 20) {
-                    kingboo->ReusableTimer = (byte)(10 * (4 - kingboo->ProjectileShots));
+                if (!FireballHeld && kingboo->ReusableTimer > 20 && (CycleTimer > 20 || CycleTimer < 6)) {
+                    kingboo->ReusableTimer = 10;// (byte)(10 * (4 - kingboo->ProjectileShots));
                     kingboo->State = KingBooState.Sucking;
                     //Prepare Suck
                     var projectiles = f.Filter<ThrowingObject, Holdable, PhysicsObject>();
-                    byte Count = 0;
                     var disRef = boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity;
                     while (projectiles.NextUnsafe(out EntityRef projectileEntity, out ThrowingObject* throwable, out Holdable* throwholdable, out PhysicsObject* throwphys)) {
                         if (throwholdable->PreviousHolder == disRef) {
-                            throwable->Thrown = true;
-                            throwphys->Gravity = FPVector2.Zero;
+                            throwable->ReusableTimer = 3;
                         }
                     }
                 }
@@ -262,23 +251,31 @@ namespace Quantum {
                     //Pull In All Projectiles We Own
                     var projectiles = f.Filter<ThrowingObject, Holdable, PhysicsObject, Hazard>();
                     byte Count = 0;
-                    while (projectiles.NextUnsafe(out EntityRef projectileEntity, out ThrowingObject* throwable, out Holdable* throwholdable, out PhysicsObject* throwphys, out Hazard* throwhazard)) {
+                    while (projectiles.NextUnsafe(out EntityRef throwableEntity, out ThrowingObject* throwable, out Holdable* throwholdable, out PhysicsObject* throwphys, out Hazard* throwhazard)) {
                         if (throwholdable->PreviousHolder == disRef2) {
                             Count++;
-                            throwable->Thrown = true;
-                            QuantumUtils.UnwrapWorldLocations(f, transform->Position + FPVector2.Up * FP._0_33, f.Unsafe.GetPointer<Transform2D>(projectileEntity)->Position, out FPVector2 ourPos, out FPVector2 theirPos);
-                            var Direction = ((ourPos + (physicsObject->Velocity*FP._0_20)) - theirPos).Normalized;
+                            QuantumUtils.UnwrapWorldLocations(f, transform->Position + (FPVector2.Up * FP._0_33), f.Unsafe.GetPointer<Transform2D>(throwableEntity)->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+                            var Direction = (ourPos - theirPos).Normalized;
                             FP TargetDirection = FPMath.Atan2(Direction.Y, Direction.X);
 
                             //Move Torwards King Boo
-                            throwphys->Velocity += new FPVector2(FPMath.Cos(TargetDirection), FPMath.Sin(TargetDirection)) * f.DeltaTime * 
-                                ((throwphys->Velocity + new FPVector2(FPMath.Cos(TargetDirection), FPMath.Sin(TargetDirection))).Magnitude > throwphys->Velocity.Magnitude ? 50 : 100);
-
-                            FP CurrentDirection = FPMath.Atan2(throwphys->Velocity.Y, throwphys->Velocity.X);
-                            var TruMax = new FPVector2(FPMath.Max(FPMath.Abs(throwphys->Velocity.X) - FP._0_50, 8 * FPMath.Abs(FPMath.Cos(CurrentDirection))),
-                                FPMath.Max(FPMath.Abs(throwphys->Velocity.Y) - FP._0_50, 8 * FPMath.Abs(FPMath.Sin(CurrentDirection))));
-                            throwphys->Velocity.X = FPMath.Clamp(throwphys->Velocity.X, -TruMax.X, TruMax.X);
-                            throwphys->Velocity.Y = FPMath.Clamp(throwphys->Velocity.Y, -TruMax.Y, TruMax.Y);
+                            throwable->ReusableTimer -= f.DeltaTime * 8;
+                            if (throwable->ReusableTimer <= 1) {
+                                if (throwable->Varient < 3) {
+                                    throwable->Varient = 4;
+                                    throwphys->Velocity = FPVector2.Zero;
+                                    throwphys->Gravity.Y = 0;
+                                    throwable->HitSomething = false;
+                                    if (!throwable->Thrown) {
+                                        throwable->Thrown = true;
+                                        f.Events.PlayComboSound(throwableEntity, 1);
+                                    }
+                                }
+                                throwphys->Velocity = (new FPVector2(FPMath.Cos(TargetDirection), FPMath.Sin(TargetDirection))) * -FPMath.Max(throwable->ReusableTimer, -4 - ((throwable->ReusableTimer * throwable->ReusableTimer)/10));
+                            } else {
+                                throwphys->Velocity *= Constants._0_90;
+                                throwphys->Gravity.Y *= Constants.BallSlowDownMultiplier;
+                            }
 
                             if ((ourPos - theirPos).Magnitude < FP._0_50) {
                                 throwhazard->LifeTime = 1;
@@ -412,6 +409,7 @@ namespace Quantum {
             }
 
             if (bossHarmed) {
+                kingboo->NeedsNewTarget = true;
                 if (groundpounded) {
                     f.Events.BowserKnockbacked(thisEntity);
                     kingboo->State = KingBooState.Knockback;
@@ -436,6 +434,7 @@ namespace Quantum {
             case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
             case ProjectileEffectType.Fire: {
                 boss->BossHarmed(f, thisEntity, projectile->FacingRight, KnockbackStrength.FireballBump, false);
+                kingBoo->NeedsNewTarget = true;
                 break;
             }
             case ProjectileEffectType.Freeze: {

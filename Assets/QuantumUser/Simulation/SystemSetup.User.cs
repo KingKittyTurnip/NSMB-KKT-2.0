@@ -37,6 +37,7 @@ namespace Quantum {
                     new PowerupSystem(),
                     new BlockBumpSystem(),
 
+                    new ChainChompSystem(),
                     new ThrowingObjectSystem(),
 
                     new MarioPlayerSystem(),

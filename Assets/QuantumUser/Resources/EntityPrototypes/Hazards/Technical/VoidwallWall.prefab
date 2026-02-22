@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 6338714294745076904}
   m_Layer: 20
   m_Name: VoidwallWall
-  m_TagString: Powerup
+  m_TagString: Squishy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -188,7 +188,7 @@ MonoBehaviour:
     LayerSource: 1
     Layer: 0
     CallbackFlags:
-      Value: 448
+      Value: 4095
   PhysicsBody:
     IsEnabled: 0
     Config2D: 116
@@ -353,7 +353,7 @@ MonoBehaviour:
       Y:
         RawValue: 0
     IgnoreMovement:
-      Value: 1
+      Value: 0
     CanCrushEntities:
       Value: 0
 --- !u!114 &2210952625023297629

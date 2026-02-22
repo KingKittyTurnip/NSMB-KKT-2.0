@@ -140,18 +140,19 @@ namespace Quantum {
             }
 
             // Normal, powerup coin.
-            var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            if (f.Unsafe.TryGetPointer<MarioPlayer>(marioEntity, out var mario)) {
 
-            byte newCoins = (byte) (mario->Coins + 1);
-            bool item = newCoins == f.Global->Rules.CoinsForPowerup;
-            if (item) {
-                mario->Coins = 0;
-                MarioPlayerSystem.SpawnItem(f, marioEntity, mario, default, fromBlock);
-            } else {
-                mario->Coins = newCoins;
+                byte newCoins = (byte) (mario->Coins + 1);
+                bool item = newCoins == f.Global->Rules.CoinsForPowerup;
+                if (item) {
+                    mario->Coins = 0;
+                    MarioPlayerSystem.SpawnItem(f, marioEntity, mario, default, fromBlock);
+                } else {
+                    mario->Coins = newCoins;
+                }
+
+                f.Events.MarioPlayerCollectedCoin(marioEntity, newCoins, item, worldLocation, fromBlock, downwards);
             }
-
-            f.Events.MarioPlayerCollectedCoin(marioEntity, newCoins, item, worldLocation, fromBlock, downwards);
         }
 
         public void OnEntityBumped(Frame f, EntityRef coinEntity, FPVector2 position, EntityRef bumpOwner, QBoolean fromBelow) {

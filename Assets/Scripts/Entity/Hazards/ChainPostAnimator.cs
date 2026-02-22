@@ -42,7 +42,7 @@ public unsafe class ChainPostAnimator : QuantumEntityViewComponent {
 
 
         if (f.Exists(chainPost->ConnectedObject)) {
-            CalculateChains(f, chainPost->ConnectedObject, chainPost->Varient == 1 ? 8 : 4, 5, transform.position);
+            CalculateChains(f, chainPost->ConnectedObject, chainPost->Varient == 1 ? 8 : 4, chainPost->Varient == 1 ? 7.5f : 3.5f, transform.position);
         }
     }
 

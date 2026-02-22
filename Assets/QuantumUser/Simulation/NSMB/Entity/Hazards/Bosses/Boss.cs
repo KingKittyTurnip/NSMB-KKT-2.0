@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using UnityEngine;
 
 namespace Quantum {
     public unsafe partial struct Boss {
@@ -64,6 +65,24 @@ namespace Quantum {
 
         public void MakeBossControllable(Frame f, EntityRef MarioEntity) {
             ControllerPlayer = MarioEntity;
+        }
+
+        public static void GetClosestPlayer(Frame f, FPVector2 OurPosition, EntityRef IgnoreThisPlayer, out EntityRef TargetEntity, out FP distance) {
+            TargetEntity = EntityRef.None;
+            distance = 999;
+            var players = f.Filter<MarioPlayer>();
+
+            while (players.NextUnsafe(out EntityRef playerEntity, out MarioPlayer* mar)) {
+                if (mar->IsDead || playerEntity == IgnoreThisPlayer)
+                    continue;
+                //Find Closest Player
+                QuantumUtils.UnwrapWorldLocations(f, OurPosition, f.Unsafe.GetPointer<Transform2D>(playerEntity)->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+                FP e = FPVector2.Distance(ourPos, theirPos);
+                if (e < distance) {
+                    TargetEntity = playerEntity;
+                    distance = e;
+                }
+            }
         }
     }
 }

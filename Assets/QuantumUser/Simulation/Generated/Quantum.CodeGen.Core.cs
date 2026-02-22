@@ -64,6 +64,13 @@ namespace Quantum {
     Attacking,
     Groundpound,
   }
+  public enum ChainChompState : byte {
+    Idle,
+    Prepare,
+    Lunge,
+    Chomp,
+    Return,
+  }
   [System.Flags()]
   public enum CoinType : byte {
     BakedInStage = 1,
@@ -2017,6 +2024,45 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct ChainChomp : Quantum.IComponent {
+    public const Int32 SIZE = 40;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public ChainChompState State;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public QBoolean FacingRight;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public EntityRef Post;
+    [FieldOffset(16)]
+    [ExcludeFromPrototype()]
+    public FP ReusableTimer;
+    [FieldOffset(24)]
+    [ExcludeFromPrototype()]
+    public FPVector2 TargetPosition;
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 17077;
+        hash = hash * 31 + (Byte)State;
+        hash = hash * 31 + FacingRight.GetHashCode();
+        hash = hash * 31 + Post.GetHashCode();
+        hash = hash * 31 + ReusableTimer.GetHashCode();
+        hash = hash * 31 + TargetPosition.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (ChainChomp*)ptr;
+        serializer.Stream.Serialize((Byte*)&p->State);
+        QBoolean.Serialize(&p->FacingRight, serializer);
+        EntityRef.Serialize(&p->Post, serializer);
+        FP.Serialize(&p->ReusableTimer, serializer);
+        FPVector2.Serialize(&p->TargetPosition, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Clock : Quantum.IComponent {
     public const Int32 SIZE = 12;
     public const Int32 ALIGNMENT = 4;
@@ -2684,27 +2730,30 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct KingBoo : Quantum.IComponent {
-    public const Int32 SIZE = 16;
+    public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(5)]
-    public KingBooState State;
-    [FieldOffset(8)]
-    public AssetRef<EntityPrototype> BlueFire;
-    [FieldOffset(3)]
-    [ExcludeFromPrototype()]
-    public Byte ReusableTimer;
-    [FieldOffset(2)]
-    [ExcludeFromPrototype()]
-    public Byte ProjectileShots;
     [FieldOffset(4)]
-    [ExcludeFromPrototype()]
-    public Byte waitTime;
-    [FieldOffset(0)]
-    [ExcludeFromPrototype()]
-    public Byte BigAttackCounter;
+    public KingBooState State;
+    [FieldOffset(16)]
+    public AssetRef<EntityPrototype> BlueFire;
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
-    public Byte JumpFromAttackCounter;
+    public Byte ReusableTimer;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte ProjectileShots;
+    [FieldOffset(3)]
+    [ExcludeFromPrototype()]
+    public Byte waitTime;
+    [FieldOffset(2)]
+    [ExcludeFromPrototype()]
+    public Byte RngFireball;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public QBoolean NeedsNewTarget;
+    [FieldOffset(24)]
+    [ExcludeFromPrototype()]
+    public FPVector2 TargetPosition;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 20693;
@@ -2713,20 +2762,22 @@ namespace Quantum {
         hash = hash * 31 + ReusableTimer.GetHashCode();
         hash = hash * 31 + ProjectileShots.GetHashCode();
         hash = hash * 31 + waitTime.GetHashCode();
-        hash = hash * 31 + BigAttackCounter.GetHashCode();
-        hash = hash * 31 + JumpFromAttackCounter.GetHashCode();
+        hash = hash * 31 + RngFireball.GetHashCode();
+        hash = hash * 31 + NeedsNewTarget.GetHashCode();
+        hash = hash * 31 + TargetPosition.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (KingBoo*)ptr;
-        serializer.Stream.Serialize(&p->BigAttackCounter);
-        serializer.Stream.Serialize(&p->JumpFromAttackCounter);
         serializer.Stream.Serialize(&p->ProjectileShots);
         serializer.Stream.Serialize(&p->ReusableTimer);
+        serializer.Stream.Serialize(&p->RngFireball);
         serializer.Stream.Serialize(&p->waitTime);
         serializer.Stream.Serialize((Byte*)&p->State);
+        QBoolean.Serialize(&p->NeedsNewTarget, serializer);
         AssetRef.Serialize(&p->BlueFire, serializer);
+        FPVector2.Serialize(&p->TargetPosition, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -4787,6 +4838,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.CameraController>();
       BuildSignalsArrayOnComponentAdded<Quantum.Cauldron>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Cauldron>();
+      BuildSignalsArrayOnComponentAdded<Quantum.ChainChomp>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.ChainChomp>();
       BuildSignalsArrayOnComponentAdded<CharacterController2D>();
       BuildSignalsArrayOnComponentRemoved<CharacterController2D>();
       BuildSignalsArrayOnComponentAdded<CharacterController3D>();
@@ -5332,6 +5385,8 @@ namespace Quantum {
       typeRegistry.Register(typeof(CallbackFlags), 4);
       typeRegistry.Register(typeof(Quantum.CameraController), Quantum.CameraController.SIZE);
       typeRegistry.Register(typeof(Quantum.Cauldron), Quantum.Cauldron.SIZE);
+      typeRegistry.Register(typeof(Quantum.ChainChomp), Quantum.ChainChomp.SIZE);
+      typeRegistry.Register(typeof(Quantum.ChainChompState), 1);
       typeRegistry.Register(typeof(CharacterController2D), CharacterController2D.SIZE);
       typeRegistry.Register(typeof(CharacterController3D), CharacterController3D.SIZE);
       typeRegistry.Register(typeof(Quantum.Clock), Quantum.Clock.SIZE);
@@ -5477,7 +5532,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 56)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 57)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -5492,6 +5547,7 @@ namespace Quantum {
         .Add<Quantum.BulletBillLauncher>(Quantum.BulletBillLauncher.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.CameraController>(Quantum.CameraController.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Cauldron>(Quantum.Cauldron.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.ChainChomp>(Quantum.ChainChomp.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Clock>(Quantum.Clock.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.CloudBillPlatform>(Quantum.CloudBillPlatform.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Coin>(Quantum.Coin.Serialize, null, null, ComponentFlags.None)
@@ -5543,6 +5599,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.BowserAttackType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.BowserState>();
       FramePrinter.EnsurePrimitiveNotStripped<CallbackFlags>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.ChainChompState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.CoinType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.ExplosionType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.GameState>();

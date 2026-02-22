@@ -68,7 +68,7 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
         Animator.SetFloat("VelocityMagnitude", Mathf.Abs(physicsObject->Velocity.Magnitude.AsFloat));
         Animator.SetBool("FireBall", kingboo->State == KingBooState.Barfing && kingboo->ReusableTimer < 123);
         Animator.SetBool("Knockback", (kingboo->State == KingBooState.Barfing && kingboo->ReusableTimer >= 123) || kingboo->State == KingBooState.Knockback);
-        Animator.SetBool("Sucking", kingboo->State == KingBooState.Sucking);
+        Animator.SetBool("Sucking", kingboo->State == KingBooState.Sucking && kingboo->ReusableTimer == 0);
     }
 
     private void InterpolateFacingDirection() {

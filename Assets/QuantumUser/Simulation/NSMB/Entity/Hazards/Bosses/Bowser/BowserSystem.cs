@@ -85,22 +85,7 @@ namespace Quantum {
                 }
                 mario->FacingRight = boss->FacingRight;
             } else {
-                //Find Closest Player
-                EntityRef TargetEntity = EntityRef.None;
-                FP distance = 999;
-                var players = f.Filter<MarioPlayer>();
-
-                while (players.NextUnsafe(out EntityRef OtherEntity, out MarioPlayer* mar)) {
-                    if (mar->IsDead)
-                        continue;
-                    //Find Closest Player
-                    QuantumUtils.UnwrapWorldLocations(f, transform->Position, f.Unsafe.GetPointer<Transform2D>(OtherEntity)->Position, out FPVector2 ourPos, out FPVector2 theirPos);
-                    FP e = FPVector2.Distance(ourPos, theirPos);
-                    if (e < distance) {
-                        TargetEntity = OtherEntity;
-                        distance = e;
-                    }
-                }
+                Boss.GetClosestPlayer(f, transform->Position, EntityRef.None, out var TargetEntity, out var distance);
 
                 Sprint = bowser->waitTime > 90;
                 if (Sprint)

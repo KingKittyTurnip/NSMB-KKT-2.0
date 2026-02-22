@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Quantum {
     
-    public unsafe class VoidwallSystem : SystemMainThreadFilterStage<VoidwallSystem.Filter>, ISignalInitializeHazard {
+    public unsafe class VoidwallSystem : SystemMainThreadEntityFilter<Voidwall, VoidwallSystem.Filter>, ISignalInitializeHazard {
         public struct Filter {
             public EntityRef Entity;
             public Voidwall* voidwall;

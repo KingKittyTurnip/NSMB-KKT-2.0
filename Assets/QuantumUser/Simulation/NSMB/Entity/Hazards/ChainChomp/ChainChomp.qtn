@@ -1,0 +1,22 @@
+component ChainChomp {
+	[ExcludeFromPrototype] ChainChompState State;
+	[ExcludeFromPrototype] bool FacingRight;
+	[ExcludeFromPrototype] EntityRef Post;
+	
+	[ExcludeFromPrototype] FP ReusableTimer;
+	[ExcludeFromPrototype] FPVector2 TargetPosition;
+	//[ExcludeFromPrototype] FP AttackDelayCounter;
+}
+
+enum ChainChompState : Byte {
+    Idle,
+	Prepare,
+	Lunge,
+	Chomp,
+	Return,
+}
+
+event ChainChompSound {
+	EntityRef Entity;
+	bool Lunged;
+}

@@ -8,8 +8,9 @@ component KingBoo {
 
 	//ai vars
 	[ExcludeFromPrototype] byte waitTime;
-	[ExcludeFromPrototype] byte BigAttackCounter;
-	[ExcludeFromPrototype] byte JumpFromAttackCounter;
+	[ExcludeFromPrototype] byte RngFireball;
+	[ExcludeFromPrototype] bool NeedsNewTarget;
+	[ExcludeFromPrototype] FPVector2 TargetPosition;
 }
 
 enum KingBooState : Byte {
