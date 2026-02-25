@@ -25,7 +25,8 @@ namespace Quantum {
         [Header("Global Music")]
         public AssetRef<LoopingMusicData>[] BossMusic;
 
-        [Space]
+        [Header("Gamemode Shenanigans")]
+        public AssetRef<RulesBaser> BaseRules;
         public AssetRef<CurrentHazards> CurrentHazards;
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6121ea750b796594d9df359145387373
+guid: d737391c1a419bb4bb4da048bb1d8305
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -37,9 +37,9 @@ TextureImporter:
     filterMode: 0
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -123,16 +123,16 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BordureBox
+      name: ModeIcon_Gamemode_Star
       rect:
         serializedVersion: 2
-        x: 0
-        y: 43
-        width: 20
-        height: 20
+        x: 16
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 7, y: 8, z: 7, w: 6}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
@@ -145,13 +145,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ToolTip
+      name: ModeIcon_Gamemode_CoinRunners
       rect:
         serializedVersion: 2
-        x: 23
-        y: 52
-        width: 9
-        height: 12
+        x: 32
+        y: 16
+        width: 15
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,13 +167,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Warning
+      name: ModeIcon_Gamemode_BalloonBattle
       rect:
         serializedVersion: 2
-        x: 33
-        y: 52
-        width: 15
-        height: 12
+        x: 48
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -189,13 +189,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BulbCursor
+      name: ModeIcon_Gamemode_BombChasers
       rect:
         serializedVersion: 2
-        x: 0
-        y: 21
-        width: 18
-        height: 18
+        x: 64
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -211,13 +211,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Customize
+      name: ModeIcon_Rulemode_CoinsForPowerup
       rect:
         serializedVersion: 2
-        x: 38
-        y: 21
-        width: 17
-        height: 17
+        x: 16
+        y: 0
+        width: 15
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -233,54 +233,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GameModeRemove
+      name: ModeIcon_Rulemode_Lives
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7d0c1af743765a74580f11bbef101c6a
-      internalID: -599519968
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GameModeAdd
-      rect:
-        serializedVersion: 2
-        x: 17
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cc975bf18d94aa04098f41e114e09626
-      internalID: 424148373
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GameModeAdded
-      rect:
-        serializedVersion: 2
-        x: 34
+        x: 32
         y: 0
         width: 16
         height: 16
@@ -292,8 +248,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7d3357873abaa404f88a5710c6c616dc
-      internalID: -1303071849
+      spriteID: 49b3f4148a9fb8243a00c2c91c7834b2
+      internalID: 138840146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ModeIcon_Rulemode_Hazards
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f110cf2ff3279b94bba2921b66c22ce0
+      internalID: 1820849725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ModeIcon_Rulemode_Timer
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78cfa88d0b041ad4285e391ad9c2a505
+      internalID: -1034419436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ModeIcon_Rulemode_Teams
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 0
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ca15d5335ce70b4586d8995ff563c6b
+      internalID: -1566318382
       vertices: []
       indices: 
       edges: []
@@ -312,14 +334,15 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BordureBox: 488905332
-      BulbCursor: -1273696568
-      Customize: -518832288
-      GameModeAdd: 424148373
-      GameModeAdded: -1303071849
-      GameModeRemove: -599519968
-      ToolTip: 225822345
-      Warning: 636651934
+      ModeIcon_Gamemode_BalloonBattle: 636651934
+      ModeIcon_Gamemode_BombChasers: -1273696568
+      ModeIcon_Gamemode_CoinRunners: 225822345
+      ModeIcon_Gamemode_Star: 488905332
+      ModeIcon_Rulemode_CoinsForPowerup: -518832288
+      ModeIcon_Rulemode_Hazards: 1820849725
+      ModeIcon_Rulemode_Lives: 138840146
+      ModeIcon_Rulemode_Teams: -1566318382
+      ModeIcon_Rulemode_Timer: -1034419436
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

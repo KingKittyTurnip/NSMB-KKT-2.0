@@ -75,6 +75,14 @@ TODOChecklist
   Requirements:
   Extra Hazards:
     Null
+[Minimap]
+  Wincondition:
+  Rules:
+    mode {all, teamates only, teamates only with hazards}
+  Effects:
+    a minimap is displayed on the top
+  Requirements:
+  Extra Hazards:
 
 //future betas
 
@@ -95,15 +103,9 @@ TODOChecklist
 [Balloon Battle]
 [Shinerunners]
 [Bombchasers]
-  Wincondition:
-    Explode All Players
-  Rules:
-  Effects:
-    nullified the lives game ending rules if a bomb exists
-  Requirements:
-    Lives Mode or King Bobomb+Hazards
-  Extra Hazards:
-    King Bobomb
+  read bellow
+  Extra hazards:
+    King Bobomb (lil bomb is a variant)
   
 
 
@@ -177,6 +179,28 @@ Sonic
 KKTurnip
 CaptainToad
 Bombecture (& Bobomb)
+
+
+BOMB Chasers:
+
+New Bobomb Moveset:
+-a good deal slower than mario
+-low jump height
+-bobombs can triple jump anywhere, giving significant jump boosts
+-Ignight, upon ignighting you pause for a few frames and get flinged in the direction you want, you can barely move during this (you cannot explode during the pause)
+  -touching a bobomb that is lit will cause you both to explode
+  -touching an unlit bobomb will make you bounce off them
+  -touching a player will kill them directly
+-hitting a bobomb lowers time by one * bobomb count
+
+KingBobomb Moveset:
+-very slow, speed increases slowly overtime
+-sluggish but high and low grav jump
+-ignight and charge up for a large explosion
+  -destroyed every object in the game
+  -upon respawning it's just a little bomb
+-hitting king bobomb with a projectile lowers time by 3 * bobomb count
+
 
 ---Map Types---
 KKT Mod Maps - blue tab - Default Maps
