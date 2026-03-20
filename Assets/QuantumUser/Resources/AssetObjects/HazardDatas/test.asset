@@ -16,7 +16,6 @@ MonoBehaviour:
     Path: QuantumUser/Resources/AssetObjects/HazardDatas/test
     Guid:
       Value: 357552766163820663
-  basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
   HazardGameData:
     MaxHazards: 2
     frequency: 0
@@ -42,13 +41,6 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 255
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
@@ -102,13 +94,6 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 255
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
@@ -168,13 +153,6 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 255
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
@@ -216,4 +194,4 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 0
-  HazardID: 16
+  HazardID: 13

@@ -25,6 +25,9 @@ component ThrowingObject {
 	[ExcludeFromPrototype] EntityRef ConnectedObject;
 }
 
+component SpringBoard {
+}
+
 enum ThrowingObjectType : Byte {
     Basic,
 	Stone, // For Particle When Landing

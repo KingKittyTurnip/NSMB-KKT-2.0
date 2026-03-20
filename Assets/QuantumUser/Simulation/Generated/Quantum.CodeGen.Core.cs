@@ -3974,6 +3974,22 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct SpringBoard : Quantum.IComponent {
+    public const Int32 SIZE = 4;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    private fixed Byte _alignment_padding_[4];
+    public override Int32 GetHashCode() {
+      unchecked { 
+        var hash = 14447;
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (SpringBoard*)ptr;
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct StarCoin : Quantum.IComponent {
     public const Int32 SIZE = 16;
     public const Int32 ALIGNMENT = 8;
@@ -4940,6 +4956,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Spinner>();
       BuildSignalsArrayOnComponentAdded<Quantum.Spinpipe>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Spinpipe>();
+      BuildSignalsArrayOnComponentAdded<Quantum.SpringBoard>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.SpringBoard>();
       BuildSignalsArrayOnComponentAdded<Quantum.StarCoin>();
       BuildSignalsArrayOnComponentRemoved<Quantum.StarCoin>();
       BuildSignalsArrayOnComponentAdded<Quantum.Starball>();
@@ -5508,6 +5526,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.SpawnReason), 1);
       typeRegistry.Register(typeof(Quantum.Spinner), Quantum.Spinner.SIZE);
       typeRegistry.Register(typeof(Quantum.Spinpipe), Quantum.Spinpipe.SIZE);
+      typeRegistry.Register(typeof(Quantum.SpringBoard), Quantum.SpringBoard.SIZE);
       typeRegistry.Register(typeof(SpringJoint), SpringJoint.SIZE);
       typeRegistry.Register(typeof(SpringJoint3D), SpringJoint3D.SIZE);
       typeRegistry.Register(typeof(Quantum.StageTileFlags), 1);
@@ -5532,7 +5551,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 57)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 58)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -5583,6 +5602,7 @@ namespace Quantum {
         .Add<Quantum.Projectile>(Quantum.Projectile.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Spinner>(Quantum.Spinner.Serialize, Quantum.Spinner.OnAdded, Quantum.Spinner.OnRemoved, ComponentFlags.None)
         .Add<Quantum.Spinpipe>(Quantum.Spinpipe.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.SpringBoard>(Quantum.SpringBoard.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.StarCoin>(Quantum.StarCoin.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Starball>(Quantum.Starball.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Starballgoal>(Quantum.Starballgoal.Serialize, null, null, ComponentFlags.None)

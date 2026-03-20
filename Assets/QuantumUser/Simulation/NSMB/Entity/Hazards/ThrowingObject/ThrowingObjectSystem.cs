@@ -60,7 +60,7 @@ namespace Quantum {
             f.Context.Interactions.Register<Projectile, ThrowingObject>(f, OnThrowingObjectProjectileInteraction);
             f.Context.Interactions.Register<ThrowingObject, ThrowingObject>(f, OnThrowingObjectThrowingObjectInteraction);
 
-            f.Context.Interactions.Register<PhysicsObject, ThrowingObject>(f, OnThrowingObjectAnythingInteraction); //this is exclusively used for the springboard :sob:
+            f.Context.Interactions.Register<PhysicsObject, SpringBoard>(f, OnThrowingObjectAnythingInteraction); //this is exclusively used for the springboard :sob:
             f.Context.RegisterPreContactCallback(f, OnPreContactCallback); //this is exclusivly used for the chainpost even sobber :sob:
         }
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -638,7 +638,7 @@ namespace Quantum {
                         Dis->HitSomething = true;
                         f.Unsafe.GetPointer<IceBlock>(IceBlockSystem.Freeze(f, marioEntity))->AutoBreakFrames = 360;
                     } else {
-                        if (mario->DoKnockback(f, marioEntity, hitRight, Dis->StarsToDrop, /*TeamateItem*/ KnockbackStrength.FireballBump, thisEntity)) {
+                        if (mario->DoKnockback(f, marioEntity, hitRight, Dis->StarsToDrop, /*TeamateItem*/ Dis->StarsToDrop > 2 ? KnockbackStrength.Groundpound : KnockbackStrength.FireballBump, thisEntity)) {
                             f.Events.PlayKnockbackEffect(marioEntity, thisEntity, KnockbackStrength.FireballBump,
                                 (f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position) / 2);
                         }
@@ -876,26 +876,24 @@ namespace Quantum {
         public static void OnThrowingObjectAnythingInteraction(Frame f, EntityRef anyEntity, EntityRef thisEntity) {
             //var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
-            if (Dis->Type == ThrowingObjectType.Spring) {
-                var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
-                var phys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-                var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(anyEntity);
-                //Can't Interact
-                if (Dis->ReusableTimer > 0 || otherPhys->Velocity.Y >= 0 || f.Has<Projectile>(anyEntity) || f.Exists(holdable->Holder)) {
-                    return;
-                }
+            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+            var phys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(anyEntity);
+            //Can't Interact
+            if (Dis->ReusableTimer > 0 || otherPhys->Velocity.Y >= 0 || f.Has<Projectile>(anyEntity) || f.Exists(holdable->Holder)) {
+                return;
+            }
 
-                var otherTransform = f.Unsafe.GetPointer<Transform2D>(anyEntity)->Position; var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
-                var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
-                QuantumUtils.UnwrapWorldLocations(f, DisTransform->Position + ((DisCollider->Shape.Centroid.Y - DisCollider->Shape.Box.Extents.Y) * FPVector2.Up), otherTransform, out FPVector2 ourPos, out FPVector2 theirPos);
-                FPVector2 damageDirection = (theirPos - ourPos).Normalized;
+            var otherTransform = f.Unsafe.GetPointer<Transform2D>(anyEntity)->Position; var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+            var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
+            QuantumUtils.UnwrapWorldLocations(f, DisTransform->Position + ((DisCollider->Shape.Centroid.Y - DisCollider->Shape.Box.Extents.Y) * FPVector2.Up), otherTransform, out FPVector2 ourPos, out FPVector2 theirPos);
+            FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
-                if (damageDirection.Y > Constants._0_66) {
-                    Dis->ConnectedObject = anyEntity;
-                    phys->IsFrozen = true;
-                    otherPhys->Velocity.Y = -1;
-                    f.Events.ThrowObjSimple(thisEntity, ourPos);
-                }
+            if (damageDirection.Y > Constants._0_66) {
+                Dis->ConnectedObject = anyEntity;
+                phys->IsFrozen = true;
+                otherPhys->Velocity.Y = -1;
+                f.Events.ThrowObjSimple(thisEntity, ourPos);
             }
         }
         #endregion

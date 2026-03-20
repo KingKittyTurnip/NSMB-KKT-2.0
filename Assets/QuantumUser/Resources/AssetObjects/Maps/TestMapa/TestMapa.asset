@@ -423,7 +423,6 @@ MonoBehaviour:
     - rid: 6291231259393785864
     - rid: 6291231259393785865
     - rid: 6291231259393785866
-    - rid: 6291231259393785867
   - Components:
     - rid: 2923799560130134016
     - rid: 2923799560130134017
@@ -434,6 +433,7 @@ MonoBehaviour:
     - rid: 2923799560130134022
     - rid: 2923799560130134023
     - rid: 2923799560130134024
+    - rid: 2923799560130134025
   SerializedTriangleDataUncompressedSize: 8
   references:
     version: 2
@@ -1636,7 +1636,61 @@ MonoBehaviour:
             RawValue: 0
           UserTag: 0
           IsPersistent: 1
-          CompoundShapes: []
+          CompoundShapes:
+          - ShapeType: 4
+            PolygonCollider:
+              Id:
+                Value: 0
+            CircleRadius:
+              RawValue: 0
+            CapsuleSize:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            EdgeExtent:
+              RawValue: 0
+            BoxExtents:
+              X:
+                RawValue: 13107
+              Y:
+                RawValue: 655
+            PositionOffset:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            RotationOffset:
+              RawValue: 0
+            UserTag: 0
+            IsSetFromSourceCollider: 0
+          - ShapeType: 4
+            PolygonCollider:
+              Id:
+                Value: 0
+            CircleRadius:
+              RawValue: 0
+            CapsuleSize:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            EdgeExtent:
+              RawValue: 0
+            BoxExtents:
+              X:
+                RawValue: 13107
+              Y:
+                RawValue: 655
+            PositionOffset:
+              X:
+                RawValue: 0
+              Y:
+                RawValue: 0
+            RotationOffset:
+              RawValue: 0
+            UserTag: 0
+            IsSetFromSourceCollider: 0
         Layer: 0
         IsTrigger: 0
         PhysicsMaterial:
@@ -1646,7 +1700,7 @@ MonoBehaviour:
       type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
         CallbackFlags:
-          Value: 448
+          Value: 4095
     - rid: 2923799560130134019
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1658,19 +1712,19 @@ MonoBehaviour:
         IgnorePlayerWhenRespawning:
           Value: 0
         DoNotDespawnInPit:
-          Value: 0
+          Value: 1
         RestrictSpawnPosition:
           Value: 0
         IsHefty:
-          Value: 0
-        IPWSUntilGround:
           Value: 1
-        IPWSTime: 15
+        IPWSUntilGround:
+          Value: 0
+        IPWSTime: 30
         SpawningVelocityRange:
           X:
-            RawValue: 131072
+            RawValue: 0
           Y:
-            RawValue: 65536
+            RawValue: 0
     - rid: 2923799560130134020
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1681,6 +1735,18 @@ MonoBehaviour:
       data:
         _empty_prototype_dummy_field_: 0
     - rid: 2923799560130134022
+      type: {class: MovingPlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Velocity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        IgnoreMovement:
+          Value: 0
+        CanCrushEntities:
+          Value: 0
+    - rid: 2923799560130134023
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Gravity:
@@ -1702,14 +1768,16 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 0
-    - rid: 2923799560130134023
+    - rid: 2923799560130134024
       type: {class: VoidwallPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         IsHorizontal:
           Value: 0
         increment:
           RawValue: 0
-    - rid: 2923799560130134024
+        DamageCooldown:
+          RawValue: 0
+    - rid: 2923799560130134025
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -3805,18 +3873,6 @@ MonoBehaviour:
       data:
         _empty_prototype_dummy_field_: 0
     - rid: 6291231259393785864
-      type: {class: MovingPlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        Velocity:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        IgnoreMovement:
-          Value: 1
-        CanCrushEntities:
-          Value: 0
-    - rid: 6291231259393785865
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Gravity:
@@ -3838,7 +3894,7 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 0
-    - rid: 6291231259393785866
+    - rid: 6291231259393785865
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Type:
@@ -3859,7 +3915,7 @@ MonoBehaviour:
         IgnoreTeamates:
           Value: 1
         Varient: 0
-    - rid: 6291231259393785867
+    - rid: 6291231259393785866
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
