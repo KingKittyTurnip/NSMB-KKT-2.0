@@ -8,7 +8,7 @@ namespace Quantum {
             physicsObject->Gravity = FPVector2.Zero;
         }
 
-        public readonly void Kill(Frame f, EntityRef booEntity, EntityRef killerEntity, KillReason reason) {
+        public readonly void Kill(Frame f, EntityRef booEntity, EntityRef killerEntity, EnemyKillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(booEntity);
             if (enemy->IsDead) {
                 return;
@@ -38,6 +38,7 @@ namespace Quantum {
             f.Events.PlayComboSound(booEntity, combo);
 
             enemy->IsDead = true;
+            enemy->SetDelayedRespawn(sparklesTime: 120);
 
             var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(booEntity);
             FPVector2 center = booTransform->Position + collider->Shape.Centroid;

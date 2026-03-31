@@ -15,11 +15,12 @@ namespace Quantum {
             systems.Add(new MvLCullingSystem());
             systems.Add(new GameLogicSystem());
             systems.Add(
-                new StartDisabledSystemGroup("gameplay",
+                new StartDisabledSystemGroup(
                     new PrePhysicsObjectSystem(),
                     new InteractionPhysicsQuerySystem(),
                     new GenericMoverSystem(),
                     new SpinnerSystem(),
+                    new DonutBlockSystem(),
                     new MovingPlatformPhysicsQuerySystem(),
                     new PhysicsSystem2D(),
                     new MovingPlatformSystem(),
@@ -30,6 +31,7 @@ namespace Quantum {
                     new KoopaSystem(),
                     new BobombSystem(),
                     new PiranhaPlantSystem(),
+                    new BulletBillLauncherSystem(),
                     new BulletBillSystem(),
                     new BooSystem(),
                     new ProjectileSystem(),
@@ -37,9 +39,10 @@ namespace Quantum {
                     new PowerupSystem(),
                     new BlockBumpSystem(),
 
-                    new ChainChompSystem(),
-                    new ThrowingObjectSystem(),
+                      new ChainChompSystem(),
+                      new ThrowingObjectSystem(),
 
+                    new BreakableObjectSystem(),
                     new MarioPlayerSystem(),
                     new CoinSystem(),
                     //new GoldBlockSystem(), //Removed Vanilla Gold Block
@@ -50,39 +53,42 @@ namespace Quantum {
                     new IceBlockSystem(),
                     new CameraSystem(),
                     new LiquidSystem(),
-                    new BreakableObjectSystem(),
                     new MarioBrosPlatformSystem(),
                     new EnterablePipeSystem(),
 
                     new InvisibleBlockSystem(),
                     // new BetterPhysicsObjectSystem()
 
-                    new TanoombaSystem(),
-                    new StarballSystem(),
-                    new StarballgoalSystem(),
-                    new LemmyBallSystem(),
-                    new ClockSystem(),
-                    new FanSystem(),
-                    new SpinpipeSystem(),
+                      new TanoombaSystem(),
+                      new StarballSystem(),
+                      new StarballgoalSystem(),
+                      new LemmyBallSystem(),
+                      new ClockSystem(),
+                      new FanSystem(),
+                      new SpinpipeSystem(),
 
-                    new CauldronSystem(),
-                    new PeteySystem(),
-                    new BowserSystem(),
-                    new WhompKingSystem(),
-                    new KingBooSystem(),
+                      new CauldronSystem(),
+                      new PeteySystem(),
+                      new BowserSystem(),
+                      new WhompKingSystem(),
+                      new KingBooSystem(),
 
-                    new VoidwallSystem(),
+                      new VoidwallSystem(),
 
-                    new HazardManagerSystem(),
-                    new HazardSystem()
+                      new HazardManagerSystem(),
+                      new HazardSystem()
                 )
             );
             systems.Add(new StageSystem());
 
-#if MVL_DEBUG
-            // This HAS to be the last system otherwise it breaks replays.
-            systems.Add(new MvLDebugSystem());
-#endif
+            if (!gameConfig.IsRealGame) {
+                var debugSystem = DebugCommand.CreateSystem();
+                if (debugSystem != null) {
+                    systems.Add(debugSystem);
+                }
+
+                systems.Add(new MvLDebugSystem());
+            }
         }
     }
 }

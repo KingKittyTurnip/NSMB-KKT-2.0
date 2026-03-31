@@ -1,3 +1,5 @@
+using NSMB.Sound;
+using NSMB.Utilities;
 using NSMB.Utilities.Extensions;
 using Quantum;
 using UnityEngine;
@@ -12,7 +14,7 @@ namespace NSMB.Entities.Enemies {
         private static readonly int ParamFlashAmount = Shader.PropertyToID("FlashAmount");
 
         //---Serialized Variables
-        [SerializeField] private AudioSource sfx;
+        [SerializeField] private SoundEffectPlayer sfx;
         [SerializeField] private SpriteRenderer sRenderer;
         [SerializeField] private Animator animator;
         [SerializeField] private GameObject explosionPrefab;
@@ -21,15 +23,14 @@ namespace NSMB.Entities.Enemies {
         private MaterialPropertyBlock mpb;
 
         public void OnValidate() {
-            this.SetIfNull(ref sfx);
             this.SetIfNull(ref sRenderer, UnityExtensions.GetComponentType.Children);
             this.SetIfNull(ref animator, UnityExtensions.GetComponentType.Children);
+            this.SetIfNull(ref sfx);
         }
 
         public void Start() {
             QuantumEvent.Subscribe<EventBobombExploded>(this, OnBobombExploded, FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventBobombLit>(this, OnBobombLit, FilterOutReplayFastForward);
-            QuantumEvent.Subscribe<EventEntityBlockBumped>(this, OnEntityBlockBumped, FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventGameEnded>(this, OnGameEnded);
         }
@@ -74,7 +75,9 @@ namespace NSMB.Entities.Enemies {
             }
 
             // Bodge...
-            if (!(!enemy->IsDead && hazard->IsActive)) {
+            // Fuck whoever wrote this, they REALLY wanted to mess UP my respawn code >:(
+            // Darn person above messed with my hazard code >:)
+            if (!(!enemy->IsAlive && hazard->IsActive) && enemy->RespawnTimer > enemy->RespawnSparklesTimer + 1) {
                 sfx.Stop();
             }
 
@@ -104,15 +107,7 @@ namespace NSMB.Entities.Enemies {
                 return;
             }
 
-            sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
-        }
-
-        private void OnEntityBlockBumped(EventEntityBlockBumped e) {
-            if (e.Entity != EntityRef) {
-                return;
-            }
-
-            sfx.PlayOneShot(SoundEffect.Enemy_Shell_Kick);
+            sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
         }
 
         private void OnBobombExploded(EventBobombExploded e) {
@@ -129,14 +124,7 @@ namespace NSMB.Entities.Enemies {
                 return;
             }
 
-            sfx.clip = SoundEffect.Enemy_Bobomb_Fuse.GetClip();
-            sfx.Play();
-
-            /*
-            if (e.Stomped) {
-                sfx.PlayOneShot(SoundEffect.Enemy_Generic_Stomp);
-            }
-            */
+            sfx.Play(SoundEffect.Enemy_Bobomb_Fuse);
         }
     }
 }

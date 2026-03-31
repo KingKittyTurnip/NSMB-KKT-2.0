@@ -98,7 +98,6 @@ MonoBehaviour:
     - rid: 7591444679539818506
     - rid: 7591444679539818507
     - rid: 7591444679539818508
-    - rid: 7591444679539818509
   - Components:
     - rid: 8968679368100413440
     - rid: 8968679368100413441
@@ -111,7 +110,6 @@ MonoBehaviour:
     - rid: 8968679368100413448
     - rid: 8968679368100413449
     - rid: 8968679368100413450
-    - rid: 8968679368100413451
   - Components:
     - rid: 6791012105135849472
     - rid: 6791012105135849473
@@ -877,7 +875,17 @@ MonoBehaviour:
     - rid: 7591444679539818501
       type: {class: EnemyPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
-        _empty_prototype_dummy_field_: 0
+        Spawnpoint:
+          X:
+            RawValue: -376832
+          Y:
+            RawValue: 98304
+        IgnorePlayerWhenRespawning:
+          Value: 0
+        DisableRespawning:
+          Value: 0
+        StayAtHomeWhenOffscreen:
+          Value: 1
     - rid: 7591444679539818502
       type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -900,46 +908,20 @@ MonoBehaviour:
         IsFlying:
           Value: 0
     - rid: 7591444679539818503
-      type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        Spawnpoint:
-          X:
-            RawValue: -376832
-          Y:
-            RawValue: 98304
-        IgnorePlayerWhenRespawning:
-          Value: 0
-        DoNotDespawnInPit:
-          Value: 0
-        RestrictSpawnPosition:
-          Value: 0
-        IsHefty:
-          Value: 0
-        IPWSUntilGround:
-          Value: 1
-        IPWSTime: 0
-        SpawningVelocityRange:
-          X:
-            RawValue: 131072
-          Y:
-            RawValue: 65536
-    - rid: 7591444679539818504
       type: {class: HoldablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         HoldAboveHead:
           Value: 0
-        IsSolidCarryable:
-          Value: 0
-    - rid: 7591444679539818505
+    - rid: 7591444679539818504
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 7591444679539818506
+    - rid: 7591444679539818505
       type: {class: InteractionInitiatorPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
-    - rid: 7591444679539818507
+    - rid: 7591444679539818506
       type: {class: KoopaPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         SpawnPowerupWhenStomped:
@@ -963,7 +945,7 @@ MonoBehaviour:
             RawValue: 39322
           Y:
             RawValue: 65536
-    - rid: 7591444679539818508
+    - rid: 7591444679539818507
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Gravity:
@@ -983,9 +965,7 @@ MonoBehaviour:
           Value: 0
         BreakMegaObjects:
           Value: 0
-        WindImmune:
-          Value: 0
-    - rid: 7591444679539818509
+    - rid: 7591444679539818508
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -1202,7 +1182,17 @@ MonoBehaviour:
     - rid: 8968679368100413444
       type: {class: EnemyPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
-        _empty_prototype_dummy_field_: 0
+        Spawnpoint:
+          X:
+            RawValue: 114688
+          Y:
+            RawValue: -131072
+        IgnorePlayerWhenRespawning:
+          Value: 0
+        DisableRespawning:
+          Value: 0
+        StayAtHomeWhenOffscreen:
+          Value: 1
     - rid: 8968679368100413445
       type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1230,39 +1220,15 @@ MonoBehaviour:
         Speed:
           RawValue: 57344
     - rid: 8968679368100413447
-      type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        Spawnpoint:
-          X:
-            RawValue: 114688
-          Y:
-            RawValue: -131072
-        IgnorePlayerWhenRespawning:
-          Value: 0
-        DoNotDespawnInPit:
-          Value: 0
-        RestrictSpawnPosition:
-          Value: 0
-        IsHefty:
-          Value: 0
-        IPWSUntilGround:
-          Value: 1
-        IPWSTime: 0
-        SpawningVelocityRange:
-          X:
-            RawValue: 131072
-          Y:
-            RawValue: 65536
-    - rid: 8968679368100413448
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 8968679368100413449
+    - rid: 8968679368100413448
       type: {class: InteractionInitiatorPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
-    - rid: 8968679368100413450
+    - rid: 8968679368100413449
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Gravity:
@@ -1282,9 +1248,7 @@ MonoBehaviour:
           Value: 0
         BreakMegaObjects:
           Value: 0
-        WindImmune:
-          Value: 0
-    - rid: 8968679368100413451
+    - rid: 8968679368100413450
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0

@@ -35,6 +35,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7821411591339125535
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -53,6 +54,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -74,9 +77,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -2665958366948368982, guid: b455056ca00f84e48a8040f94ae8170d,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -87,7 +92,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &2072787540995169967
 MonoBehaviour:
@@ -130,6 +134,7 @@ GameObject:
   - component: {fileID: 3309076848950111436}
   - component: {fileID: 3919163699763193810}
   - component: {fileID: 54921989780784666}
+  - component: {fileID: 1750986387464139938}
   - component: {fileID: 5674404523704379184}
   - component: {fileID: 7415037304459295726}
   - component: {fileID: 6594219812404515847}
@@ -140,7 +145,7 @@ GameObject:
   - component: {fileID: -2967928457836996957}
   - component: {fileID: 2934046834125206836}
   - component: {fileID: 3527695474151798566}
-  - component: {fileID: 2844971730105225151}
+  - component: {fileID: 6178880729858591457}
   m_Layer: 19
   m_Name: Goomba
   m_TagString: Untagged
@@ -190,6 +195,10 @@ MonoBehaviour:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
+    SourceShapeSettings:
+      IsScaledBySource: 0
+      CapsuleDirection2D: 0
+      CapsuleDirection3D: 0
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -260,12 +269,22 @@ MonoBehaviour:
     Config2D: 3
     Config3D: 58
     RotationFreeze: 255
+    InertiaMode: 0
     Mass:
       RawValue: 65536
     Drag:
       RawValue: 32768
     AngularDrag:
       RawValue: 32768
+    ExplicitInertia2D:
+      RawValue: 65536
+    ExplicitInertia3D:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+      Z:
+        RawValue: 65536
     CenterOfMass2D:
       X:
         RawValue: 0
@@ -278,6 +297,71 @@ MonoBehaviour:
         RawValue: 0
       Z:
         RawValue: 0
+    ParametricInertiaShape2D:
+      ShapeType: 0
+      PolygonCollider:
+        Id:
+          Value: 0
+      CircleRadius:
+        RawValue: 32768
+      CapsuleSize:
+        X:
+          RawValue: 65536
+        Y:
+          RawValue: 131072
+      EdgeExtent:
+        RawValue: 32768
+      BoxExtents:
+        X:
+          RawValue: 32768
+        Y:
+          RawValue: 32768
+      PositionOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+      RotationOffset:
+        RawValue: 0
+      UserTag: 0
+      IsPersistent: 1
+      CompoundShapes: []
+    ParametricInertiaShape3D:
+      ShapeType: 0
+      SphereRadius:
+        RawValue: 32768
+      CapsuleRadius:
+        RawValue: 32768
+      CapsuleHeight:
+        RawValue: 131072
+      PositionOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+        Z:
+          RawValue: 0
+      BoxExtents:
+        X:
+          RawValue: 32768
+        Y:
+          RawValue: 32768
+        Z:
+          RawValue: 32768
+      RotationOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+        Z:
+          RawValue: 0
+      UserTag: 0
+      IsPersistent: 1
+      CompoundShapes: []
+    InertiaScale:
+      _hasValue: 0
+      _value:
+        RawValue: 65536
     GravityScale:
       _hasValue: 0
       _value:
@@ -332,7 +416,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BindBehaviour: 0
   ManualDisposal: 0
-  ViewFlags: 0
+  ViewFlags: 4
   InterpolationMode: 0
   ErrorCorrectionRateMin: 10
   ErrorCorrectionRateMax: 30
@@ -366,8 +450,26 @@ MonoBehaviour:
     type: 3}
   specialKillParticle: {fileID: 761201321277025702, guid: d0dec86b8ad08184d9da50d1f76fc7bd,
     type: 3}
+  respawnParticle: {fileID: 5191653714546004373, guid: 82fd7a7a1d84c6e4aa4334f5ac629ebf,
+    type: 3}
   legacyAnimation: {fileID: 2072787540995169967}
+  sfx: {fileID: 6178880729858591457}
+--- !u!114 &1750986387464139938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7523289063499453450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b22d938fa9712a4d8a0658557dd8fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.Enemies.EnemyRespawnAnimator
   sfx: {fileID: 5674404523704379184}
+  respawnParticle: {fileID: 5191653714546004373, guid: 82fd7a7a1d84c6e4aa4334f5ac629ebf,
+    type: 3}
+  respawnColor: {r: 0.72156864, g: 0.34509805, b: 0.15686275, a: 1}
 --- !u!82 &5674404523704379184
 AudioSource:
   m_ObjectHideFlags: 0
@@ -522,10 +624,6 @@ MonoBehaviour:
       Value: 0
     BreakMegaObjects:
       Value: 0
-    WindImmune:
-      Value: 0
-    GravityInversed:
-      Value: 0
 --- !u!114 &6536869809639107625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -568,7 +666,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
-    _empty_prototype_dummy_field_: 0
+    Spawnpoint:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    IgnorePlayerWhenRespawning:
+      Value: 0
+    DisableRespawning:
+      Value: 0
+    StayAtHomeWhenOffscreen:
+      Value: 1
 --- !u!114 &4848679844973023050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,7 +757,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     _empty_prototype_dummy_field_: 0
---- !u!114 &2844971730105225151
+--- !u!114 &6178880729858591457
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -658,26 +766,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7523289063499453450}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c912ba00eb8780d468a9d5e4288668e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d72bc5c43dbd9a47bc609a55d77f714, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prototype:
-    Spawnpoint:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    IgnorePlayerWhenRespawning:
-      Value: 0
-    RestrictSpawnPosition:
-      Value: 0
-    IsHefty:
-      Value: 0
-    IPWSUntilGround:
-      Value: 1
-    IPWSTime: 0
-    SpawningVelocityRange:
-      X:
-        RawValue: 131072
-      Y:
-        RawValue: 65536
+  sfxOverrides: []
+  source: {fileID: 5674404523704379184}

@@ -34,7 +34,7 @@ namespace Quantum {
             f.Events.PlayComboSound(entity, 0);
         }
 
-        public readonly void Kill(Frame f, EntityRef bobombEntity, EntityRef killerEntity, KillReason reason) {
+        public readonly void Kill(Frame f, EntityRef bobombEntity, EntityRef killerEntity, EnemyKillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(bobombEntity);
             if (enemy->IsDead) {
                 return;
@@ -74,6 +74,7 @@ namespace Quantum {
             f.Events.PlayComboSound(bobombEntity, combo);
 
             enemy->IsDead = true;
+            enemy->SetDelayedRespawn();
 
             // Holdable
             var holdable = f.Unsafe.GetPointer<Holdable>(bobombEntity);

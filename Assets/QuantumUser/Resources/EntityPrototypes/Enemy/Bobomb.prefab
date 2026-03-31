@@ -35,6 +35,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4854378239597354105
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -53,6 +54,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -74,9 +77,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 950155298242298425, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -86,7 +91,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &8735478572021304808
 Animator:
@@ -122,6 +126,7 @@ GameObject:
   - component: {fileID: 1757924397875938188}
   - component: {fileID: 7291188359072774658}
   - component: {fileID: -8449840397365496091}
+  - component: {fileID: 4186951742976991820}
   - component: {fileID: 6162738416106121865}
   - component: {fileID: -3689537593968581114}
   - component: {fileID: 2981082558783032617}
@@ -133,7 +138,7 @@ GameObject:
   - component: {fileID: -740791522673204871}
   - component: {fileID: 3614990866440943241}
   - component: {fileID: 2005105650808730512}
-  - component: {fileID: -5146309969357418486}
+  - component: {fileID: 4740169710968188994}
   m_Layer: 19
   m_Name: Bobomb
   m_TagString: Untagged
@@ -183,6 +188,10 @@ MonoBehaviour:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
+    SourceShapeSettings:
+      IsScaledBySource: 0
+      CapsuleDirection2D: 0
+      CapsuleDirection3D: 0
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -253,12 +262,22 @@ MonoBehaviour:
     Config2D: 116
     Config3D: 58
     RotationFreeze: 0
+    InertiaMode: 0
     Mass:
       RawValue: 65536
     Drag:
       RawValue: 32768
     AngularDrag:
       RawValue: 32768
+    ExplicitInertia2D:
+      RawValue: 65536
+    ExplicitInertia3D:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+      Z:
+        RawValue: 65536
     CenterOfMass2D:
       X:
         RawValue: 0
@@ -271,6 +290,71 @@ MonoBehaviour:
         RawValue: 0
       Z:
         RawValue: 0
+    ParametricInertiaShape2D:
+      ShapeType: 0
+      PolygonCollider:
+        Id:
+          Value: 0
+      CircleRadius:
+        RawValue: 32768
+      CapsuleSize:
+        X:
+          RawValue: 65536
+        Y:
+          RawValue: 131072
+      EdgeExtent:
+        RawValue: 32768
+      BoxExtents:
+        X:
+          RawValue: 32768
+        Y:
+          RawValue: 32768
+      PositionOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+      RotationOffset:
+        RawValue: 0
+      UserTag: 0
+      IsPersistent: 1
+      CompoundShapes: []
+    ParametricInertiaShape3D:
+      ShapeType: 0
+      SphereRadius:
+        RawValue: 32768
+      CapsuleRadius:
+        RawValue: 32768
+      CapsuleHeight:
+        RawValue: 131072
+      PositionOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+        Z:
+          RawValue: 0
+      BoxExtents:
+        X:
+          RawValue: 32768
+        Y:
+          RawValue: 32768
+        Z:
+          RawValue: 32768
+      RotationOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+        Z:
+          RawValue: 0
+      UserTag: 0
+      IsPersistent: 1
+      CompoundShapes: []
+    InertiaScale:
+      _hasValue: 0
+      _value:
+        RawValue: 65536
     GravityScale:
       _hasValue: 0
       _value:
@@ -325,7 +409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BindBehaviour: 0
   ManualDisposal: 0
-  ViewFlags: 0
+  ViewFlags: 4
   InterpolationMode: 0
   ErrorCorrectionRateMin: 10
   ErrorCorrectionRateMax: 30
@@ -354,11 +438,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3da7571674e815448a99f92b1e227e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sfx: {fileID: -3689537593968581114}
+  sfx: {fileID: 4740169710968188994}
   sRenderer: {fileID: 4854378239597354105}
   animator: {fileID: 8735478572021304808}
   explosionPrefab: {fileID: 1674080856964950978, guid: 7ac2c558b7c96304eb065980d84e1c67,
     type: 3}
+--- !u!114 &4186951742976991820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3286581577125373952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b22d938fa9712a4d8a0658557dd8fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.Enemies.EnemyRespawnAnimator
+  sfx: {fileID: -3689537593968581114}
+  respawnParticle: {fileID: 5191653714546004373, guid: 82fd7a7a1d84c6e4aa4334f5ac629ebf,
+    type: 3}
+  respawnColor: {r: 0.15, g: 0.15, b: 0.15, a: 1}
 --- !u!114 &6162738416106121865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -513,10 +613,6 @@ MonoBehaviour:
       Value: 0
     BreakMegaObjects:
       Value: 0
-    WindImmune:
-      Value: 0
-    GravityInversed:
-      Value: 0
 --- !u!114 &5295556553734674634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,8 +646,6 @@ MonoBehaviour:
   Prototype:
     HoldAboveHead:
       Value: 0
-    IsSolidCarryable:
-      Value: 0
 --- !u!114 &6973860988952587205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,7 +659,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
-    _empty_prototype_dummy_field_: 0
+    Spawnpoint:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    IgnorePlayerWhenRespawning:
+      Value: 0
+    DisableRespawning:
+      Value: 0
+    StayAtHomeWhenOffscreen:
+      Value: 1
 --- !u!114 &724652125925019376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -660,7 +764,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     _empty_prototype_dummy_field_: 0
---- !u!114 &-5146309969357418486
+--- !u!114 &4740169710968188994
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -669,26 +773,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 3286581577125373952}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c912ba00eb8780d468a9d5e4288668e8, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d72bc5c43dbd9a47bc609a55d77f714, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prototype:
-    Spawnpoint:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    IgnorePlayerWhenRespawning:
-      Value: 0
-    RestrictSpawnPosition:
-      Value: 0
-    IsHefty:
-      Value: 0
-    IPWSUntilGround:
-      Value: 1
-    IPWSTime: 0
-    SpawningVelocityRange:
-      X:
-        RawValue: 131072
-      Y:
-        RawValue: 65536
+  sfxOverrides: []
+  source: {fileID: -3689537593968581114}

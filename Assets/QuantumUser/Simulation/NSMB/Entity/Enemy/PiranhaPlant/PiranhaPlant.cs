@@ -6,9 +6,13 @@ namespace Quantum {
             ChompFrames = 0;
             WaitingFrames = 216;
             PopupAnimationTime = 0;
+
+            var enemy = f.Unsafe.GetPointer<Enemy>(entity);
+            enemy->IsDead = false;
+            enemy->IsActive = true;
         }
 
-        public void Kill(Frame f, EntityRef piranhaPlantEntity, EntityRef killerEntity, KillReason reason) {
+        public void Kill(Frame f, EntityRef piranhaPlantEntity, EntityRef killerEntity, EnemyKillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(piranhaPlantEntity);
             if (enemy->IsDead) {
                 return;
@@ -37,7 +41,11 @@ namespace Quantum {
             ChompFrames = 0;
             PopupAnimationTime = 0;
             enemy->IsDead = true;
+//ee
             hazard->IsActive = false;
+
+            enemy->IsActive = false;
+            enemy->SetDelayedRespawn();
 
             f.Unsafe.GetPointer<Interactable>(piranhaPlantEntity)->ColliderDisabled = true;
 

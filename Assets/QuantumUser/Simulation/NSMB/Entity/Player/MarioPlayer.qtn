@@ -11,6 +11,8 @@
 #define _8_25 8.25
 #define _3_75 3.75
 
+#define DamageInvincibilityFrames 120
+
 input {
 	button Up;
 	button Down;
@@ -21,6 +23,9 @@ input {
 	button PowerupAction;
 	button FireballPowerupAction;
 	button PropellerPowerupAction;
+
+	// Buttons can be packed. And we want this to be packed.
+	button AllowGroundpoundWithLeftRight;
 }
 
 enum JumpState : Byte {
@@ -42,6 +47,7 @@ component MarioPlayer {
 	[ExcludeFromPrototype] AssetRef<PowerupAsset> ReserveItem;
 	[ExcludeFromPrototype] RNGSession RNG;
 
+	//GamemodeData
 	[ExcludeFromPrototype] GamemodeSpecificData GamemodeData;
 	[ExcludeFromPrototype] byte Coins;
 	[ExcludeFromPrototype] byte Lives;
@@ -54,11 +60,10 @@ component MarioPlayer {
 	[ExcludeFromPrototype] byte PreRespawnFrames;
 	[ExcludeFromPrototype] byte RespawnFrames;
 	[ExcludeFromPrototype] byte NoLivesStarDirection;
+	
+	[ExcludeFromPrototype] bitset[21] Flags;
 
 	// Walk/Running
-    [ExcludeFromPrototype] bool FacingRight;
-    [ExcludeFromPrototype] bool IsSkidding;
-    [ExcludeFromPrototype] bool IsTurnaround;
     [ExcludeFromPrototype] byte FastTurnaroundFrames;
     [ExcludeFromPrototype] byte SlowTurnaroundFrames;
 	[ExcludeFromPrototype] int LastPushingFrame;
@@ -71,41 +76,25 @@ component MarioPlayer {
 	[ExcludeFromPrototype] byte JumpBufferFrames;
 	[ExcludeFromPrototype] byte CoyoteTimeFrames;
 	[ExcludeFromPrototype] int LandedFrame;
-	[ExcludeFromPrototype] bool DoEntityBounce;
 	[ExcludeFromPrototype] byte ForceJumpTimer;
 	[ExcludeFromPrototype] byte CantJumpTimer;
 
 	// Wallslide
-	[ExcludeFromPrototype] bool WallslideLeft;
-	[ExcludeFromPrototype] bool WallslideRight;
 	[ExcludeFromPrototype] byte WallslideEndFrames;
     [ExcludeFromPrototype] byte WalljumpFrames;
 
 	// Groundpound
-    [ExcludeFromPrototype] bool IsGroundpounding;
-	[ExcludeFromPrototype] bool IsGroundpoundActive;
 	[ExcludeFromPrototype] byte GroundpoundStartFrames;
 	[ExcludeFromPrototype] byte GroundpoundCooldownFrames;
 	[ExcludeFromPrototype] byte GroundpoundStandFrames;
 
 	// Knockback
     [ExcludeFromPrototype] KnockbackStrength CurrentKnockback;
-	[ExcludeFromPrototype] bool IsInWeakKnockback;
-	[ExcludeFromPrototype] bool KnockForwards;
-	[ExcludeFromPrototype] bool KnockbackWasOriginallyFacingRight;
 	[ExcludeFromPrototype] int KnockbackTick;
 	[ExcludeFromPrototype] byte DamageInvincibilityFrames;
 	[ExcludeFromPrototype] byte KnockbackGetupFrames;
 	[ExcludeFromPrototype] byte CrushDamageInvincibilityFrames;
-
-	// Crouching
-    [ExcludeFromPrototype] bool IsCrouching;
-    [ExcludeFromPrototype] bool IsSliding;
-
-	// Block Interactions
-    [ExcludeFromPrototype] bool IsSpinnerFlying;
-	[ExcludeFromPrototype] bool IsDrilling;
-	[ExcludeFromPrototype] bool IsStuckInBlock;
+	[ExcludeFromPrototype] EntityRef LastAttacker;
 
 	// Powerups
     [ExcludeFromPrototype] ushort InvincibilityFrames;
@@ -113,30 +102,35 @@ component MarioPlayer {
 	[ExcludeFromPrototype] byte MegaMushroomStartFrames;
 	[ExcludeFromPrototype] ushort MegaMushroomFrames;
 	[ExcludeFromPrototype] byte MegaMushroomEndFrames;
-	[ExcludeFromPrototype] bool MegaMushroomStationaryEnd;
 	[ExcludeFromPrototype] byte MegaMushroomFootstepFrames;
-	
-	[ExcludeFromPrototype] byte MetalMushroomFrames;
 
 	[ExcludeFromPrototype] byte ProjectileDelayFrames;
 	[ExcludeFromPrototype] byte ProjectileVolleyFrames;
 	[ExcludeFromPrototype] byte CurrentProjectiles;
 	[ExcludeFromPrototype] byte CurrentVolley;
 
-    [ExcludeFromPrototype] bool IsInShell;
+	[ExcludeFromPrototype] byte ShellSpeedStage;
     [ExcludeFromPrototype] byte ShellSlowdownFrames;
 
-    [ExcludeFromPrototype] bool IsPropellerFlying;
 	[ExcludeFromPrototype] byte PropellerLaunchFrames;
 	[ExcludeFromPrototype] byte PropellerSpinFrames;
-	[ExcludeFromPrototype] bool UsedPropellerThisJump;
 	[ExcludeFromPrototype] byte PropellerDrillCooldown;
 	[ExcludeFromPrototype] byte PropellerDrillHoldFrames;
 
-	//Carryables
     [ExcludeFromPrototype] EntityRef HeldEntity;
 	[ExcludeFromPrototype] int HoldStartFrame;
+
+    [ExcludeFromPrototype] EntityRef CurrentPipe;
+	[ExcludeFromPrototype] FPVector2 PipeDirection;
+	[ExcludeFromPrototype] byte PipeFrames;
+	[ExcludeFromPrototype] byte PipeCooldownFrames;
+
+	[ExcludeFromPrototype] EntityRef CurrentSpinner;
 	
+	// KKT Mod
+	[ExcludeFromPrototype] byte MetalMushroomFrames;
+	
+	// Carryables
 	[ExcludeFromPrototype] bool StoneBux;
 	[ExcludeFromPrototype] bool PropellerBux;
 	[ExcludeFromPrototype] bool BillBux;
@@ -144,14 +138,6 @@ component MarioPlayer {
 	// Boss Control
 	[ExcludeFromPrototype] EntityRef IsBoss;
 	[ExcludeFromPrototype] bool RidingStarball;
-
-    [ExcludeFromPrototype] EntityRef CurrentPipe;
-	[ExcludeFromPrototype] FPVector2 PipeDirection;
-	[ExcludeFromPrototype] bool PipeEntering;
-	[ExcludeFromPrototype] byte PipeFrames;
-	[ExcludeFromPrototype] byte PipeCooldownFrames;
-
-	[ExcludeFromPrototype] EntityRef CurrentSpinner;
 }
 
 struct StarChasersData {
@@ -161,7 +147,15 @@ struct StarChasersData {
 struct CoinRunnersData {
 	int ObjectiveCoins;
 }
+//KKT Mod
+struct BalloonBattleData {
+	int BalloonsLeft;
+}
+struct BombchasersData {
+	bool IsBomb;
+}
 
+//in kkt we should CHANGE this (previously a union)
 union GamemodeSpecificData {
 	StarChasersData StarChasers;
 	CoinRunnersData CoinRunners;
@@ -189,7 +183,6 @@ event MarioPlayerJumped {
 	nothashed JumpState JumpState;
 	nothashed bool WasBounce;
 	nothashed bool IsUnderwater;
-	nothashed bool IsStarball;
 }
 
 event MarioPlayerGroundpoundStarted {
@@ -240,6 +233,8 @@ event MarioPlayerPropellerSpin {
 synced event MarioPlayerDied {
 	EntityRef Entity;
 	bool IsLava;
+	int OldObjectiveCount;
+	EntityRef Attacker;
 }
 
 event MarioPlayerDeathUp {
@@ -249,6 +244,8 @@ event MarioPlayerDeathUp {
 
 synced event MarioPlayerTookDamage {
 	EntityRef Entity;
+	int OldObjectiveCount;
+	EntityRef Attacker;
 }
 
 event MarioPlayerPreRespawned {
@@ -284,6 +281,9 @@ event MarioPlayerMegaEnd {
 event MarioPlayerEnteredPipe {
 	EntityRef Entity;
 	EntityRef Pipe;
+	bool Exiting;
+	sbyte HorizontalWarpDirection;
+	FPVector2 Offset;
 }
 
 event MarioPlayerStoppedSliding {
@@ -312,5 +312,21 @@ event PlayKnockbackEffect {
 	EntityRef Entity;
 	EntityRef Attacker;
 	KnockbackStrength Strength;
-	nothashed FPVector2 AttackerPosition;
+	nothashed FPVector2? AttackerPosition;
+}
+
+// these events are for external replay tools
+
+event MarioPlayerTookKnockback {
+	EntityRef Entity;
+	EntityRef Attacker;
+	int StarsToDrop;
+	int OldObjectiveCount;
+	KnockbackStrength Strength;
+	ProjectileEffectType ProjectileEffect;
+	bool WasBlueShell;
+}
+
+event MarioPlayerKnockbackOver {
+	EntityRef Entity;
 }
