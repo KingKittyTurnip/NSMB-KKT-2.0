@@ -2,6 +2,8 @@ using Photon.Deterministic;
 using Quantum;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
 
@@ -28,8 +30,34 @@ public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
 
     public sbyte StatePriority = -1, ItemPriority = -1;
     public bool EnterReserveIfOverridden = true;
+    public AssetRef<PowerupAsset> OnDamagedAsset; //this being null means mario dies, otherwise his powerupstate becomes this when damaged
 
     public SoundEffectOverride[] SfxOverrides;
+
+    [Header("PowerupState Info")]
+    public AssetRef<EntityPrototype> ProjectilePrototype;
+    public PlayerSize SizeType = PlayerSize.Tall;
+
+    //we'd prefer verious attributes tied to the powerup
+
+    //public bool BreaksBricks = true;
+    //public bool CanHoldItems = true;
+    //public bool IsLightweight;
+    //public bool DestroyesEverything;
+    //public bool InvincibleState;
+
+    //public bool HasShell;
+    //public bool HasPropeller;
+    //public bool HasHammerCrouch;
+
+    //might as well use an enum since size is more player dependant
+    public enum PlayerSize : byte {
+        Small = 0,
+        Tiny = 1,
+        Tall = 2,
+        
+    }
+
 
     [NonSerialized] private Dictionary<SoundEffect, SoundEffectOverride> overridesDict;
     public override void Loaded(IResourceManager resourceManager, Native.Allocator allocator) {
@@ -47,7 +75,7 @@ public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
         int playersWithPower = 0;
         foreach ((_, var otherPlayer) in f.Unsafe.GetComponentBlockIterator<MarioPlayer>()) {
             // check if another player matches the powerUP state
-            if (otherPlayer->CurrentPowerupState == State) {
+            if (otherPlayer->CurrentPowerupAsset == this) {
                 playersWithPower++;
             }
         }
@@ -94,12 +122,12 @@ public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
         var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
 
         // Reserve if it's the same item
-        if (mario->CurrentPowerupState == State) {
+        if (mario->CurrentPowerupAsset == this) {
             mario->SetReserveItem(f, this);
             return PowerupReserveResult.KeepOldReserveNew;
         }
 
-        var previousPowerup = QuantumUtils.FindPowerupAsset(f, mario->CurrentPowerupState);
+        var previousPowerup = f.FindAsset(mario->CurrentPowerupAsset);
         sbyte currentPowerupStatePriority = previousPowerup != null ? previousPowerup.StatePriority : (sbyte) -1;
 
         // Reserve if we have a higher priority item
@@ -110,8 +138,13 @@ public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
 
         OnCollected(f, marioEntity);
 
+        //kill
         mario->PreviousPowerupState = mario->CurrentPowerupState;
         mario->CurrentPowerupState = State;
+
+        mario->PreviousPowerupAsset = mario->CurrentPowerupAsset;
+        mario->CurrentPowerupAsset = this;
+
         mario->IsPropellerFlying = false;
         mario->UsedPropellerThisJump = false;
         mario->IsDrilling &= mario->IsSpinnerFlying;

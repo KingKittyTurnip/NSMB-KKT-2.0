@@ -44,6 +44,8 @@ component MarioPlayer {
 
 	[ExcludeFromPrototype] PowerupState CurrentPowerupState;
 	[ExcludeFromPrototype] PowerupState PreviousPowerupState;
+	[ExcludeFromPrototype] AssetRef<PowerupAsset> CurrentPowerupAsset;
+	[ExcludeFromPrototype] AssetRef<PowerupAsset> PreviousPowerupAsset;
 	[ExcludeFromPrototype] AssetRef<PowerupAsset> ReserveItem;
 	[ExcludeFromPrototype] RNGSession RNG;
 

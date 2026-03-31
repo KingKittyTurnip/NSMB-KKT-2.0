@@ -17,6 +17,7 @@ MonoBehaviour:
     Guid:
       Value: 503653222628643586
   Effect: 0
+  Arch: 0
   Bounce: 1
   Speed:
     RawValue: 425984
@@ -27,6 +28,12 @@ MonoBehaviour:
       RawValue: 0
     Y:
       RawValue: -2828796
+  SpawnOffset:
+    X:
+      RawValue: 16384
+    Y:
+      RawValue: 22938
+  DestroyOnWall: 1
   DestroyOnSecondBounce: 0
   DestroyOnHit: 1
   LockTo45Degrees: 1

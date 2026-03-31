@@ -92,7 +92,7 @@ namespace Quantum {
 
         public readonly bool IsStarmanInvincible => InvincibilityFrames > 0;
         public readonly bool IsWallsliding => WallslideLeft || WallslideRight;
-        public readonly bool IsCrouchedInShell => CurrentPowerupState == PowerupState.BlueShell && (IsCrouching || IsGroundpounding && GroundpoundStartFrames <= 11) && !IsInShell;
+        public readonly bool IsCrouchedInShell => /*CurrentPowerupState == PowerupState.BlueShell*/false && (IsCrouching || IsGroundpounding && GroundpoundStartFrames <= 11) && !IsInShell;
         public readonly bool IsDamageable => !IsStarmanInvincible && DamageInvincibilityFrames == 0;
         public readonly bool IsInKnockback => CurrentKnockback != KnockbackStrength.None;
         public readonly bool CanCollectOwnTeamsObjectiveCoins => !IsInKnockback && DamageInvincibilityFrames == 0;
@@ -129,17 +129,20 @@ namespace Quantum {
                 );
             } else {
                 var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
+                var currentPowerup = f.FindAsset(CurrentPowerupAsset);
+                var physicsAsset = f.FindAsset(PhysicsAsset);
+                FPVector2 newPosition;
+
                 if (marioPhysicsObject->IsUnderwater) {
-                    return new FPVector2(
-                        (FacingRight ? 1 : -1) * (CurrentPowerupState >= PowerupState.Mushroom ? Constants._0_40 : FP._0_33),
-                        (CurrentPowerupState >= PowerupState.Mushroom ? Constants._0_09 : FP._0_04) + holdableYOffset
-                    );
+                    newPosition = physicsAsset.SwimingCarryPositions[(int) currentPowerup.SizeType];
                 } else {
-                    return new FPVector2(
-                        (FacingRight ? 1 : -1) * FP._0_25,
-                        (CurrentPowerupState >= PowerupState.Mushroom ? Constants._0_40 : Constants._0_09) + holdableYOffset
-                    );
+                    newPosition = physicsAsset.CarryPositions[(int) currentPowerup.SizeType];
                 }
+
+                return new FPVector2(
+                    (FacingRight ? 1 : -1) * newPosition.X,
+                    newPosition.Y + holdableYOffset
+                );
             }
         }
 
@@ -307,28 +310,14 @@ namespace Quantum {
             var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             int oldObjectiveCount = gamemode.GetObjectiveCount(f, f.Unsafe.GetPointer<MarioPlayer>(entity));
 
-            PreviousPowerupState = CurrentPowerupState;
+            PreviousPowerupAsset = CurrentPowerupAsset;
 
-            switch (CurrentPowerupState) {
-            case PowerupState.MiniMushroom:
-            case PowerupState.NoPowerup: {
+            var currentPowerup = f.FindAsset(CurrentPowerupAsset);
+            if (currentPowerup.OnDamagedAsset != null) {
+                CurrentPowerupAsset = currentPowerup.OnDamagedAsset;
+                f.Signals.OnMarioPlayerDropObjective(entity, 1, attacker);
+            } else {
                 Death(f, entity, false, true, attacker);
-                break;
-            }
-            case PowerupState.Mushroom: {
-                CurrentPowerupState = PowerupState.NoPowerup;
-                f.Signals.OnMarioPlayerDropObjective(entity, 1, attacker);
-                break;
-            }
-            case PowerupState.HammerSuit:
-            case PowerupState.FireFlower:
-            case PowerupState.IceFlower:
-            case PowerupState.PropellerMushroom:
-            case PowerupState.BlueShell: {
-                CurrentPowerupState = PowerupState.Mushroom;
-                f.Signals.OnMarioPlayerDropObjective(entity, 1, attacker);
-                break;
-            }
             }
 
             IsDrilling &= !IsPropellerFlying;

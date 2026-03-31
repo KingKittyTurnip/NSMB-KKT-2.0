@@ -57,14 +57,18 @@ namespace Quantum {
 
             // Despawn
             if (!physicsObject->DisableCollision) {
-                if (physicsObject->IsTouchingLeftWall
-                    || physicsObject->IsTouchingRightWall
-                    || physicsObject->IsTouchingCeiling
+                if (physicsObject->IsTouchingCeiling
                     || (physicsObject->IsTouchingGround && (!asset.Bounce || (projectile->HasBounced && asset.DestroyOnSecondBounce)))
                     || PhysicsObjectSystem.BoxInGround(f, filter.Transform->Position, filter.PhysicsCollider->Shape)) {
 
                     Destroy(f, filter.Entity, asset.DestroyParticleEffect);
                     return;
+                } else if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) {
+                    if (asset.DestroyOnWall) {
+                        Destroy(f, filter.Entity, asset.DestroyParticleEffect);
+                    } else {
+                        projectile->FacingRight = physicsObject->IsTouchingLeftWall;
+                    }
                 }
             }
 

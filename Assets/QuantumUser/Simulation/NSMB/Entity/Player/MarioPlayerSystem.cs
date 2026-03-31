@@ -47,6 +47,7 @@ namespace Quantum {
             }
 
             var physics = f.FindAsset(filter.MarioPlayer->PhysicsAsset);
+            var currentPowerup = f.FindAsset(filter.MarioPlayer->CurrentPowerupAsset);
             if (HandleDeathAndRespawning(f, ref filter, stage)) {
                 HandleTerminalVelocity(f, ref filter, physics);
                 return;
@@ -63,8 +64,8 @@ namespace Quantum {
             }
 #endif
 
-            if (HandleMegaMushroom(f, ref filter, physics, stage)) {
-                HandleHitbox(f, ref filter, physics);
+            if (HandleMegaMushroom(f, ref filter, physics, currentPowerup, stage)) {
+                HandleHitbox(f, ref filter, physics, currentPowerup);
                 return;
             }
             if (filter.Freezable->IsFrozen(f)) {
@@ -74,7 +75,7 @@ namespace Quantum {
             if (HandleStuckInBlock(f, ref filter, stage)) {
                 HandleCrouching(f, ref filter, physics);
                 HandleFacingDirection(f, ref filter, physics);
-                HandleHitbox(f, ref filter, physics);
+                HandleHitbox(f, ref filter, physics, currentPowerup);
                 return;
             }
             HandleKnockback(f, ref filter);
@@ -85,7 +86,7 @@ namespace Quantum {
             }
 
             bool wasGroundpoundActive = mario->IsGroundpounding;
-            HandlePowerups(f, ref filter, physics, stage);
+            HandlePowerups(f, ref filter, physics, currentPowerup, stage);
             HandleBreakingBlocks(f, ref filter, physics, stage);
             HandleCrouching(f, ref filter, physics);
             HandleGroundpound(f, ref filter, physics, stage);
@@ -101,7 +102,7 @@ namespace Quantum {
             HandleFacingDirection(f, ref filter, physics);
             HandlePipes(f, ref filter, physics, stage);
 
-            if (HandleHitbox(f, ref filter, physics)) {
+            if (HandleHitbox(f, ref filter, physics, currentPowerup)) {
                 // Attempt to eject if our hitbox changes
                 HandleStuckInBlock(f, ref filter, stage);
             }
@@ -1194,7 +1195,7 @@ namespace Quantum {
             physicsObject->Velocity.X = baseVelocity * physics.WalkBlueShellMultiplier[mario->ShellSpeedStage] * (mario->FacingRight ? 1 : -1) * (1 - (mario->ShellSlowdownFrames * f.DeltaTime));
         }
 
-        private bool HandleMegaMushroom(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, VersusStageData stage) {
+        private bool HandleMegaMushroom(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, PowerupAsset currentPowerup, VersusStageData stage) {
             using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleMegaMushroom");
             var mario = filter.MarioPlayer;
             var physicsObject = filter.PhysicsObject;
@@ -1336,6 +1337,7 @@ namespace Quantum {
                     // Ended
                     mario->PreviousPowerupState = mario->CurrentPowerupState;
                     mario->CurrentPowerupState = PowerupState.Mushroom;
+                    mario->CurrentPowerupAsset = currentPowerup.OnDamagedAsset;
 
                     mario->MegaMushroomEndFrames = 45;
                     mario->MegaMushroomStationaryEnd = false;
@@ -1360,7 +1362,7 @@ namespace Quantum {
             return false;
         }
 
-        private void HandlePowerups(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, VersusStageData stage) {
+        private void HandlePowerups(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, PowerupAsset currentPowerup, VersusStageData stage) {
             using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandlePowerups");
             ref var inputs = ref filter.Inputs;
             var mario = filter.MarioPlayer;
@@ -1436,11 +1438,7 @@ namespace Quantum {
                 return;
             }
 
-            switch (mario->CurrentPowerupState) {
-            case PowerupState.IceFlower:
-            case PowerupState.FireFlower:
-            case PowerupState.HammerSuit: {
-
+            if (currentPowerup.ProjectilePrototype != null) {
                 if (mario->ProjectileDelayFrames > 0 || mario->IsWallsliding || (mario->JumpState == JumpState.TripleJump && !physicsObject->IsTouchingGround)
                     || mario->IsSpinnerFlying || mario->IsDrilling || mario->IsSkidding || mario->IsTurnaround) {
                     return;
@@ -1467,18 +1465,13 @@ namespace Quantum {
                 mario->ProjectileVolleyFrames = physics.ProjectileVolleyFrames;
 
                 Projectile* projectile;
-                if (mario->CurrentPowerupState == PowerupState.HammerSuit) {
-                    projectile = ShootHammerProjectile(f, ref filter, physics);
-                } else {
-                    projectile = ShootNormalProjectile(f, ref filter, physics);
-                }
+                projectile = ShootProjectile(f, ref filter, physics, currentPowerup);
                 f.Events.MarioPlayerShotProjectile(filter.Entity, *projectile);
 
                 // Weird interaction in the main game...
                 mario->WalljumpFrames = 0;
-                break;
-            }
-            case PowerupState.PropellerMushroom: {
+
+            } else if (mario->CurrentPowerupState == PowerupState.PropellerMushroom) {
                 if (mario->UsedPropellerThisJump || physicsObject->IsUnderwater || (mario->IsSpinnerFlying && mario->IsDrilling) || mario->IsPropellerFlying || mario->WalljumpFrames > 0) {
                     return;
                 }
@@ -1509,35 +1502,19 @@ namespace Quantum {
                 PhysicsObjectSystem.MoveVertically(f, FPVector2.Up * FP._0_05 * f.UpdateRate, ref physicsSystemFilter, stage, default, out _);
 
                 f.Events.MarioPlayerUsedPropeller(filter.Entity);
-                break;
-            }
+
             }
         }
 
-        private Projectile* ShootHammerProjectile(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics) {
+        private Projectile* ShootProjectile(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, PowerupAsset currentPowerup) {
             var mario = filter.MarioPlayer;
             var physicsObject = filter.PhysicsObject;
 
-            FPVector2 spawnPos = filter.Transform->Position + new FPVector2(mario->FacingRight ? FP._0_25 : -FP._0_25, Constants._0_40);
-            EntityRef newEntity = f.Create(f.SimulationConfig.HammerPrototype);
-
+            EntityRef newEntity = f.Create(currentPowerup.ProjectilePrototype);
             var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
-            projectile->InitializeHammer(f, newEntity, filter.Entity, spawnPos, mario->FacingRight, false /* filter.Inputs.Up.IsDown */);
-            return projectile;
-        }
+            var projectileAsset = f.FindAsset(projectile->Asset);
+            FPVector2 spawnPos = filter.Transform->Position + new FPVector2((mario->FacingRight ? 1 : -1) * projectileAsset.SpawnOffset.X, projectileAsset.SpawnOffset.Y);
 
-
-        private Projectile* ShootNormalProjectile(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics) {
-            var mario = filter.MarioPlayer;
-            var physicsObject = filter.PhysicsObject;
-
-            FPVector2 spawnPos = filter.Transform->Position + new FPVector2(mario->FacingRight ? FP._0_25 : -FP._0_25, Constants._0_35);
-
-            EntityRef newEntity = f.Create(mario->CurrentPowerupState == PowerupState.IceFlower
-                ? f.SimulationConfig.IceballPrototype
-                : f.SimulationConfig.FireballPrototype);
-
-            var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
             projectile->Initialize(f, newEntity, filter.Entity, spawnPos, mario->FacingRight);
             return projectile;
         }
@@ -1761,16 +1738,16 @@ namespace Quantum {
             }
         }
 
-        private bool HandleHitbox(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics) {
+        private bool HandleHitbox(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, PowerupAsset currentPowerup) {
             using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleHitbox");
             var mario = filter.MarioPlayer;
             var physicsObject = filter.PhysicsObject;
             var collider = filter.PhysicsCollider;
 
             FP newHeight;
-            bool crouchHitbox = mario->CurrentPowerupState >= PowerupState.Mushroom && mario->CurrentPowerupState != PowerupState.MegaMushroom && !f.Exists(mario->CurrentPipe) && ((mario->IsCrouching && !mario->IsGroundpounding) || mario->IsInShell || mario->IsSliding);
+            bool crouchHitbox = currentPowerup.SizeType == PowerupAsset.PlayerSize.Tall && mario->CurrentPowerupState != PowerupState.MegaMushroom && !f.Exists(mario->CurrentPipe) && ((mario->IsCrouching && !mario->IsGroundpounding) || mario->IsInShell || mario->IsSliding);
             bool smallHitbox = mario->CurrentPowerupState != PowerupState.MegaMushroom && ((mario->IsStarmanInvincible && !physicsObject->IsTouchingGround && !crouchHitbox && !mario->IsSliding && !mario->IsSpinnerFlying && !mario->IsPropellerFlying) || mario->IsGroundpounding);
-            if (mario->CurrentPowerupState <= PowerupState.MiniMushroom || smallHitbox) {
+            if (currentPowerup.SizeType <= PowerupAsset.PlayerSize.Tiny || smallHitbox) {
                 newHeight = physics.SmallHitboxHeight;
             } else {
                 newHeight = physics.LargeHitboxHeight;
@@ -1781,7 +1758,7 @@ namespace Quantum {
             }
 
             FPVector2 newExtents = new(Constants._0_1875, newHeight / 2);
-            if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
+            if (currentPowerup.SizeType == PowerupAsset.PlayerSize.Tiny) {
                 newExtents /= 2;
             }
 
@@ -1807,8 +1784,8 @@ namespace Quantum {
             collider->Shape.Centroid = FPVector2.Up * newExtents.Y;
             // collider->IsTrigger = mario->IsDead;
 
-            filter.Freezable->IceBlockSize = mario->CurrentPowerupState >= PowerupState.Mushroom ? physics.IceBlockBigSize : physics.IceBlockSmallSize;
-            filter.Freezable->Offset = mario->CurrentPowerupState >= PowerupState.Mushroom ? physics.IceBlockBigOffset : physics.IceBlockSmallOffset;
+            filter.Freezable->IceBlockSize = currentPowerup.SizeType == PowerupAsset.PlayerSize.Tall ? physics.IceBlockBigSize : physics.IceBlockSmallSize;
+            filter.Freezable->Offset = currentPowerup.SizeType == PowerupAsset.PlayerSize.Tall ? physics.IceBlockBigOffset : physics.IceBlockSmallOffset;
             return true;
         }
 

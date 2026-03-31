@@ -5,10 +5,14 @@ using System.Collections.Generic;
 
 public class ProjectileAsset : AssetObject, ISoundOverrideProvider {
     public ProjectileEffectType Effect;
+    public bool Arch;
     public bool Bounce = true;
     public FP Speed;
     public FP BounceStrength;
     public FPVector2 Gravity;
+    public FPVector2 SpawnOffset;
+
+    public bool DestroyOnWall = true;
     public bool DestroyOnSecondBounce;
     public bool DestroyOnHit = true;
     public bool LockTo45Degrees = true;

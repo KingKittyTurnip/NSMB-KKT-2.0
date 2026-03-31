@@ -39,6 +39,10 @@ public class MarioPlayerPhysicsInfo : AssetObject {
     public FP SmallHitboxHeight = FF(0.42f);
     public FP LargeHitboxHeight = FF(0.82f);
 
+    // --- CarryitemPositions
+    public FPVector2[] CarryPositions = new[] { new FPVector2(FP._0_25, Constants._0_09), new FPVector2(FP._0_10, Constants._0_09), new FPVector2(FP._0_25, Constants._0_40), };
+    public FPVector2[] SwimingCarryPositions = new[] { new FPVector2(FP._0_33, FP._0_04), new FPVector2(FP._0_20, FP._0_02), new FPVector2(Constants._0_40, Constants._0_09), };
+
     // --- Jumping
     public byte JumpBufferFrames = 12;
     public byte CoyoteTimeFrames = 3;
