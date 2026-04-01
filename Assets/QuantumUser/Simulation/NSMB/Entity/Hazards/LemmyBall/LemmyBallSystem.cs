@@ -19,6 +19,8 @@ namespace Quantum {
 
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<LemmyBall, PhysicsObject>(f, OnLemmyBallObjectInteraction);
+            f.Context.Interactions.Register<LemmyBall, PhysicsObject>(f, OnLemmyBallObjectSolidInteraction);
+            f.Context.RegisterPreContactCallback(f, OnLemmyBallObjectSolidPreContact);
         }
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var lemmyBall = filter.LemmyBall;
@@ -52,17 +54,29 @@ namespace Quantum {
         #region Interactions
 
         public static void OnLemmyBallObjectInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
+            TryLemmyBallPush(f, thisEntity, otherEntity, false);
+        }
+        public static bool OnLemmyBallObjectSolidInteraction(Frame f, EntityRef anyEntity, EntityRef thisEntity, PhysicsContact contact) {
+            return TryLemmyBallPush(f, anyEntity, thisEntity, true);
+        }
+        private void OnLemmyBallObjectSolidPreContact(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts) {
+            if (f.Has<LemmyBall>(entity) && f.Has<PhysicsObject>(contact.Entity)) {
+                keepContacts = TryLemmyBallPush(f, entity, contact.Entity, true);
+            }
+        }
+
+        public static bool TryLemmyBallPush(Frame f, EntityRef thisEntity, EntityRef otherEntity, bool IsSolid) {
             f.Unsafe.TryGetPointer<MarioPlayer>(otherEntity, out var mario);
             var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(otherEntity);
             if ((mario == null && otherPhys->WindImmune) || otherPhys->IsFrozen) {
                 //This Object Is Immune To Push, Do Nothing
-                return;
+                return false;
             }
             #region SetValues
             var lemmyBall = f.Unsafe.GetPointer<LemmyBall>(thisEntity);
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            var marioTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity); 
+            var marioTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity);
             var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
 
@@ -71,6 +85,11 @@ namespace Quantum {
             bool attackedFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_25;
             bool Resistant = mario != null && mario->InstakillsEnemies(otherPhys, false); //Make lemmy Ball Faster
             #endregion
+
+            if (IsSolid && damageDirection.Y < -Constants._0_66) {
+                //don't push it when if are bouncing on top
+                return true;
+            }
 
             if (attackedFromAbove) {
                 if (Resistant) {
@@ -85,6 +104,8 @@ namespace Quantum {
                     otherPhys->Velocity.X = newVel;
                 }
             }
+            f.Events.LemmyBallHitEntity(thisEntity);
+            return true;
         }
         #endregion
 

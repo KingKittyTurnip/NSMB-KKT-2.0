@@ -10,12 +10,14 @@ public unsafe class LemmyBallAnimator : QuantumEntityViewComponent {
     //[SerializeField] private GameObject BoostParticles;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform Model;
+    [SerializeField] private AudioSource sfx;
 
     private Quaternion modelRotationTarget;
     private bool wasTurnaround;
 
     public void Start() {
         QuantumEvent.Subscribe<EventLemmyBallLand>(this, OnBounce, FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventLemmyBallHitEntity>(this, OnHitEntity, FilterOutReplayFastForward);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -43,4 +45,11 @@ public unsafe class LemmyBallAnimator : QuantumEntityViewComponent {
         animator.SetTrigger("Bounce");
     }
 
+    private void OnHitEntity(EventLemmyBallHitEntity e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+        if (!sfx.isPlaying)
+            sfx.Play();
+    }
 }

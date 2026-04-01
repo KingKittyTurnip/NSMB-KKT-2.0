@@ -217,15 +217,5 @@ namespace NSMB.UI.Loading {
                 audioSource.Stop();
             }
         }
-
-
-        private unsafe void ApplyUIColor(Frame f) {
-            var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-            Color color = stage.UIColor.AsColor;
-
-            foreach (Image e in thoseDarnUiElementsExclamationMark) {
-                e.color = color;
-            }
-        }
     }
 }

@@ -375,7 +375,7 @@ namespace Quantum {
                     break;
                 }
                 }
-                f.Signals.OnProjectileHitEntity(f, projectileEntity, thisEntity);
+                f.Signals.OnProjectileHitEntity(projectileEntity, thisEntity);
             }
 
         }
@@ -399,18 +399,18 @@ namespace Quantum {
             }
 
             if (f.Unsafe.TryGetPointer(enemyEntity, out Goomba* goomba)) {
-                goomba->Kill(f, enemyEntity, thisEntity, KillReason.Special);
+                goomba->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out Koopa* koopa)) {
                 if (koopa->IsKicked && !Invulnrable) {
                     boss->BossHarmed(f, thisEntity, f.Unsafe.GetPointer<Enemy>(enemyEntity)->FacingRight, KnockbackStrength.FireballBump, false);
                 }
-                koopa->Kill(f, enemyEntity, enemyEntity, KillReason.Special);
+                koopa->Kill(f, enemyEntity, enemyEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out BulletBill* bill)) {
-                bill->Kill(f, enemyEntity, thisEntity, KillReason.Special);
+                bill->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out Bobomb* bomb)) {
-                bomb->Kill(f, enemyEntity, thisEntity, KillReason.Special);
+                bomb->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out PiranhaPlant* plant)) {
-                plant->Kill(f, enemyEntity, thisEntity, KillReason.Special);
+                plant->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
             }
         }
         #endregion
@@ -442,7 +442,7 @@ namespace Quantum {
             }
         }
 
-        public void OnIceBlockBroken(Frame f, EntityRef brokenIceBlock, IceBlockBreakReason breakReason) {
+        public void OnIceBlockBroken(Frame f, EntityRef brokenIceBlock, IceBlockBreakReason breakReason, EntityRef attacker) {
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(brokenIceBlock);
             if (f.Unsafe.TryGetPointer(iceBlock->Entity, out Interactable* inter)) {
                 inter->ColliderDisabled = false;

@@ -32,7 +32,7 @@ public class WeatherParticleAnimator : MonoBehaviour {
         emission.enabled = Enabled;
 
         // Set Size And Amount Relitive To The Stage
-        stage = (VersusStageData) QuantumUnityDB.GetGlobalAsset(FindFirstObjectByType<QuantumMapData>().Asset.UserAsset);
+        stage = (VersusStageData) QuantumUnityDB.GetGlobalAsset(FindFirstObjectByType<QuantumMapData>().GetAsset(false).UserAsset);
         Vector2 Dimensions = new Vector2(stage.TileDimensions.X / 2, (float) (stage.CameraMaxPosition.Y - stage.CameraMinPosition.Y));
 
         emission.rateOverTimeMultiplier *= ((Dimensions.x * Dimensions.y) / 6);

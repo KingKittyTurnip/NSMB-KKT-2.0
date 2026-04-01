@@ -5,6 +5,7 @@ using NSMB.Utilities.Extensions;
 using static NSMB.Utilities.QuantumViewUtils;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
+using NSMB.Utilities;
 
 public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
 
@@ -74,12 +75,7 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
         //Set Color
         int i = 0;
         if (f.Exists(holdable->Holder) || (propellerbox->Thrown && f.Exists(holdable->PreviousHolder))) {
-            for (i = 0; i < f.SimulationConfig.CharacterDatas.Length; i++) {
-                if (f.SimulationConfig.CharacterDatas[i] == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset) {
-                    i++;
-                    break;
-                }
-            }
+            i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset).Order+1;
         }
         materialBlock.SetInt(ParamBoxType, i);
         foreach (Renderer r in renderers) {
@@ -159,6 +155,6 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
     }
 }

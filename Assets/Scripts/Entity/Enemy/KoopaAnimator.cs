@@ -51,7 +51,6 @@ namespace NSMB.Entities.Enemies {
             }
 
             var enemy = f.Unsafe.GetPointer<Enemy>(EntityRef);
-            var hazard = f.Unsafe.GetPointer<Hazard>(EntityRef);
             var koopa = f.Unsafe.GetPointer<Koopa>(EntityRef);
             var holdable = f.Unsafe.GetPointer<Holdable>(EntityRef);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
@@ -95,7 +94,7 @@ namespace NSMB.Entities.Enemies {
                 sRenderer.transform.rotation = Quaternion.identity;
             }
 
-            sRenderer.enabled = !(enemy->IsDead && !hazard->IsActive);
+            sRenderer.enabled = enemy->IsActive;
             sRenderer.flipX = enemy->FacingRight ^ mirrorSprite;
 
             Vector3 modifiedZ = transform.position;

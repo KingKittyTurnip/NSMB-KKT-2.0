@@ -25,6 +25,7 @@ namespace NSMB.Entities.Player {
             this.SetIfNull(ref sRenderer, UnityExtensions.GetComponentType.Children);
         }
 
+        private float CameraAreaCoverage = 6.75f;
         public override unsafe void OnActivate(Frame f) {
             //RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
         }
@@ -46,7 +47,7 @@ namespace NSMB.Entities.Player {
             UnwrapWorldLocations(f.FindAsset<VersusStageData>(f.Map.UserAsset), transform.position, Camera.main.transform.position, out var OurPos, out var CameraPos);
 
             //"Unable to see on the other side of it" calcs
-            float distancefromcameraedge = (Mathf.Clamp(6 - Mathf.Abs(CameraPos.x - OurPos.x), 0, 6) * 2) + 0.5f;
+            float distancefromcameraedge = (Mathf.Clamp(CameraAreaCoverage - Mathf.Abs(CameraPos.x - OurPos.x), 0, CameraAreaCoverage) * 2) + 0.5f;
             if (ExpandTimer > 0 && voidwall->DamageCooldown > 0 && !Playsound) {
                 sfx.Play();
                 Playsound = true;
@@ -56,8 +57,8 @@ namespace NSMB.Entities.Player {
             ExpandTimer = Mathf.Clamp01(ExpandTimer + ((voidwall->DamageCooldown > 0 ? -1 : 1) * Time.deltaTime * 10));
 
             //Set The Side We Are On
-            sRenderer.flipX = OurPos.x < CameraPos.x || ExpandTimer == 0;
-            sRenderer.transform.localPosition = new Vector3(OurPos.x < CameraPos.x ? 0.22f : -0.22f, 0, -6.1f);
+            sRenderer.flipX = !(OurPos.x < CameraPos.x || ExpandTimer == 0);
+            sRenderer.transform.localPosition = new Vector3(OurPos.x < CameraPos.x ? 0.22f : -0.22f, 0, -9f);
 
             //Set size
             float Y = Collider->Shape.Box.Extents.Y.AsFloat;

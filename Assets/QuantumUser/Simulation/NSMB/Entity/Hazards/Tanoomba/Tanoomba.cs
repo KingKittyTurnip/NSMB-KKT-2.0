@@ -7,28 +7,10 @@ namespace Quantum {
         public void Respawn(Frame f, EntityRef entity) {
             f.Unsafe.GetPointer<Interactable>(entity)->ColliderDisabled = false;
             var tanoomba = f.Unsafe.GetPointer<Tanoomba>(entity);
-            tanoomba->GetupFrames = 0;
+            tanoomba->ReusableTimer = 0;
             tanoomba->State = TanoombaState.Idling;
             tanoomba->Form = TanoombaFormState.Max;
-            tanoomba->Laughing = tanoomba->PlayerPassedBy = false;
-        }
-
-        public void HurtTanoomba(Frame f, EntityRef thisEntity, EntityRef killerEntity, bool FromRight) {
-            var tanoomba = f.Unsafe.GetPointer<Tanoomba>(thisEntity);
-            if (tanoomba->State == TanoombaState.KnockedBack)
-                return;
-
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-
-            tanoomba->State = TanoombaState.KnockedBack;
-            Form = TanoombaFormState.Max;
-            physicsObject->Velocity.X = (FromRight ? -1 : 1);
-            physicsObject->Velocity.Y = 2;
-            physicsObject->IsTouchingGround = false;
-            tanoomba->GetupFrames = 35;
-            tanoomba->TargetedPlayer = EntityRef.None;
-            tanoomba->Laughing = false;
-            physicsObject->IsFrozen = false;
+            tanoomba->PlayerPassedBy = false;
         }
 
         public void TanoombaStartTransform(Frame f, EntityRef thisEntity, EntityRef TurnedIntoObjectOverlay, bool Floating) {
@@ -44,7 +26,6 @@ namespace Quantum {
             if (TransformedObject != EntityRef.None) {
                 transform->Teleport(f, f.Unsafe.GetPointer<Transform2D>(TransformedObject)->Position);
             }
-            HazardSystem.ChangeHazardIcon(f, thisEntity, false);
         }
         public void TanoombaStartTransform(Frame f, EntityRef thisEntity, EntityRef TurnedIntoObjectOverlay, bool Floating, FPVector2 Position) {
             var enemy = f.Unsafe.GetPointer<Enemy>(thisEntity);
@@ -57,26 +38,88 @@ namespace Quantum {
 
             TransformedObject = TurnedIntoObjectOverlay;
             transform->Teleport(f, Position);
-            HazardSystem.ChangeHazardIcon(f, thisEntity, false);
         }
-
         public void TanoombaResetTransform(Frame f, EntityRef thisEntity, bool AttackMode) {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+
+            SwitchState(f, thisEntity, AttackMode ? TanoombaState.Attacking : TanoombaState.Idling);
 
             physicsObject->Velocity.X = 0;
             physicsObject->Velocity.Y = 0;
             physicsObject->IsFrozen = false;
-
-            TransformedObject = EntityRef.None;
-            State = AttackMode ? TanoombaState.Attacking : TanoombaState.Idling;
-            Form = TanoombaFormState.Max;
-
-            if (AttackMode)
-                HazardSystem.ChangeHazardIcon(f, thisEntity, true);
         }
 
+        public void SwitchState(Frame f, EntityRef thisEntity, TanoombaState newState, bool FromRight = false) {
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            FP fleeTimer = Constants._0_66;
+            FP attackTimer = Constants._2_50;
+            FP getupTimer = FP._0_50;
+            Invulnrable = false;
 
-        public void Kill(Frame f, EntityRef tanoombaEntity, EntityRef killerEntity, KillReason reason) {
+            switch (newState) {
+            case TanoombaState.Idling:
+                resetVel();
+                TargetedPlayer = EntityRef.None;
+                ReusableTimer = 0;
+                break;
+            case TanoombaState.Searching:
+                resetVel();
+                Invulnrable = true;
+                HazardSystem.ChangeHazardIcon(f, thisEntity, false);
+                break;
+            case TanoombaState.Transformed:
+                break;
+            case TanoombaState.Attacking:
+                resetVel();
+                Invulnrable = true;
+                TargetedPlayer = EntityRef.None;
+                ReusableTimer = attackTimer;
+                break;
+            case TanoombaState.KnockedBack:
+                if (State == TanoombaState.KnockedBack)
+                    return;
+                Invulnrable = true;
+                ReusableTimer = getupTimer;
+                TargetedPlayer = EntityRef.None;
+
+                physicsObject->Velocity.X = (FromRight ? -1 : 1);
+                physicsObject->Velocity.Y = 2;
+                physicsObject->IsTouchingGround = false;
+                break;
+            case TanoombaState.Happy:
+                ReusableTimer = 1;
+                f.Events.TanoombaAttack(thisEntity);
+                break;
+            case TanoombaState.Laughing:
+                TargetedPlayer = EntityRef.None;
+                ReusableTimer = 4;
+                f.Events.TanoombaLMAO(thisEntity);
+                break;
+            case TanoombaState.Shocked:
+                TargetedPlayer = EntityRef.None;
+                ReusableTimer = fleeTimer;
+                physicsObject->Velocity.X = 0;
+                physicsObject->Velocity.Y = 3;
+                physicsObject->IsTouchingGround = false;
+                f.Events.TanoombaFlee(thisEntity);
+                break;
+            }
+
+            State = newState;
+            if (Form != TanoombaFormState.Max) {
+                f.Events.PlayPuffParticle(f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position);
+                Form = TanoombaFormState.Max;
+                HazardSystem.ChangeHazardIcon(f, thisEntity, true);
+            }
+
+            void resetVel() {
+                physicsObject->Velocity.X = 0;
+                physicsObject->Velocity.Y = 0;
+                physicsObject->IsFrozen = false;
+            }
+        }
+
+        public void Kill(Frame f, EntityRef tanoombaEntity, EntityRef killerEntity, EnemyKillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(tanoombaEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(tanoombaEntity);
 

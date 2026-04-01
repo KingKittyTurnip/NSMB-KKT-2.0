@@ -6,13 +6,14 @@ component Tanoomba {
 	[ExcludeFromPrototype] byte FormVariant;
 	FP JumpVelocity;
 	
-	[ExcludeFromPrototype] byte GetupFrames;
+	[ExcludeFromPrototype] FP ReusableTimer;
 
 	[ExcludeFromPrototype] EntityRef TransformedObject;
 	[ExcludeFromPrototype] EntityRef TargetedPlayer;
 	
-	[ExcludeFromPrototype] bool Laughing;
+	//[ExcludeFromPrototype] bool Laughing;
 	[ExcludeFromPrototype] bool PlayerPassedBy;
+	[ExcludeFromPrototype] bool Invulnrable;
 }
 
 enum TanoombaState : Byte {
@@ -21,6 +22,9 @@ enum TanoombaState : Byte {
 	Attacking,
 	KnockedBack,
 	Transformed,
+	Happy,
+	Laughing,
+	Shocked,
 }
 
 enum TanoombaFormState : Byte {
@@ -49,5 +53,8 @@ event TanoombaAttack {
 	EntityRef Entity;
 }
 event TanoombaLMAO {
+	EntityRef Entity;
+}
+event TanoombaPoof {
 	EntityRef Entity;
 }

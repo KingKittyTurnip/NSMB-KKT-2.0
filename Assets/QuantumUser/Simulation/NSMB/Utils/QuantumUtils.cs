@@ -455,4 +455,18 @@ public static unsafe class QuantumUtils {
     public static bool Decrement(ref int timer) {
         return timer <= 0 || --timer == 0;
     }
+
+    //kkt mod addition
+    public static bool Decrement(Frame f, ref FP timer) {
+        if (timer > 0) {
+            timer -= f.DeltaTime;
+            if (timer < 0) {
+                timer = 0;
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -1,22 +1,6 @@
-using NSMB.Cameras;
-using NSMB.Particles;
-using NSMB.Quantum;
-using NSMB.Sound;
-using NSMB.UI.Game;
-using NSMB.Utilities;
-using NSMB.Utilities.Extensions;
-using Photon.Deterministic;
 using Quantum;
-using Quantum.Profiling;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Scripting;
-using UnityEngine.UIElements;
-using static NSMB.Utilities.QuantumViewUtils;
-using Input = Quantum.Input;
 
 namespace NSMB.Entities.Player {
     public class CannonBoxBulletAnimator : QuantumEntityViewComponent {
@@ -37,12 +21,7 @@ namespace NSMB.Entities.Player {
 
             int i = 0;
             if (f.Exists(proj->Owner)) {
-                for (i = 0; i < f.SimulationConfig.CharacterDatas.Length; i++) {
-                    if (f.SimulationConfig.CharacterDatas[i] == f.Unsafe.GetPointer<MarioPlayer>(proj->Owner)->CharacterAsset) {
-                        i++;
-                        break;
-                    }
-                }
+                i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(proj->Owner)->CharacterAsset).Order+1;
             }
             materialBlock.SetInt(ParamBoxType, i);
             foreach (Renderer r in renderers) {

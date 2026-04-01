@@ -24,8 +24,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 231956928964560804}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0046008676, y: 0.0014606193, z: -0.000001434206}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -53,6 +53,7 @@ GameObject:
   - component: {fileID: 2934046834125206836}
   - component: {fileID: 3527695474151798566}
   - component: {fileID: 2844971730105225151}
+  - component: {fileID: 8024543461919347038}
   m_Layer: 19
   m_Name: ChainChomp
   m_TagString: Untagged
@@ -102,6 +103,10 @@ MonoBehaviour:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
+    SourceShapeSettings:
+      IsScaledBySource: 0
+      CapsuleDirection2D: 0
+      CapsuleDirection3D: 0
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -172,12 +177,22 @@ MonoBehaviour:
     Config2D: 3
     Config3D: 58
     RotationFreeze: 255
+    InertiaMode: 0
     Mass:
       RawValue: 65536
     Drag:
       RawValue: 32768
     AngularDrag:
       RawValue: 32768
+    ExplicitInertia2D:
+      RawValue: 65536
+    ExplicitInertia3D:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+      Z:
+        RawValue: 65536
     CenterOfMass2D:
       X:
         RawValue: 0
@@ -190,6 +205,71 @@ MonoBehaviour:
         RawValue: 0
       Z:
         RawValue: 0
+    ParametricInertiaShape2D:
+      ShapeType: 0
+      PolygonCollider:
+        Id:
+          Value: 0
+      CircleRadius:
+        RawValue: 32768
+      CapsuleSize:
+        X:
+          RawValue: 65536
+        Y:
+          RawValue: 131072
+      EdgeExtent:
+        RawValue: 32768
+      BoxExtents:
+        X:
+          RawValue: 32768
+        Y:
+          RawValue: 32768
+      PositionOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+      RotationOffset:
+        RawValue: 0
+      UserTag: 0
+      IsPersistent: 1
+      CompoundShapes: []
+    ParametricInertiaShape3D:
+      ShapeType: 0
+      SphereRadius:
+        RawValue: 32768
+      CapsuleRadius:
+        RawValue: 32768
+      CapsuleHeight:
+        RawValue: 131072
+      PositionOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+        Z:
+          RawValue: 0
+      BoxExtents:
+        X:
+          RawValue: 32768
+        Y:
+          RawValue: 32768
+        Z:
+          RawValue: 32768
+      RotationOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+        Z:
+          RawValue: 0
+      UserTag: 0
+      IsPersistent: 1
+      CompoundShapes: []
+    InertiaScale:
+      _hasValue: 0
+      _value:
+        RawValue: 65536
     GravityScale:
       _hasValue: 0
       _value:
@@ -416,7 +496,7 @@ MonoBehaviour:
       X:
         RawValue: 0
       Y:
-        RawValue: -1409024
+        RawValue: -917504
     TerminalVelocity:
       RawValue: -524288
     IsFrozen:
@@ -538,13 +618,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
-    Spawnpoint:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    IgnorePlayerWhenRespawning:
-      Value: 0
     DoNotDespawnInPit:
       Value: 1
     RestrictSpawnPosition:
@@ -559,6 +632,26 @@ MonoBehaviour:
         RawValue: 131072
       Y:
         RawValue: 65536
+--- !u!114 &8024543461919347038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7523289063499453450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1132975948947842885af9f388bac17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainChompAnimator
+  animator: {fileID: 1831403294678892104}
+  Model: {fileID: 6293087156269112722}
+  sfx: {fileID: 5674404523704379184}
+  Launch: {fileID: 8300000, guid: c220e2afc90014d41b3ef3bb5986757b, type: 3}
+  Chain: {fileID: 8300000, guid: 50d3c00cec5cf0b4ca461c2394cf0277, type: 3}
+  Bark: {fileID: 8300000, guid: 927e0c4d155e2c745ae4171697f387e7, type: 3}
+  LaunchParticle: {fileID: 8258044260612326560, guid: ee148df9aadf7e24db61ed3e5ac86b29,
+    type: 3}
 --- !u!1001 &5188399925096874969
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -652,6 +745,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6056fa87970c654783a2c808732ef68, type: 3}
+--- !u!95 &1831403294678892104 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: f6056fa87970c654783a2c808732ef68,
+    type: 3}
+  m_PrefabInstance: {fileID: 5188399925096874969}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5731498218872464434 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f6056fa87970c654783a2c808732ef68,

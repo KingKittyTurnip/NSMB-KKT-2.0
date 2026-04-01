@@ -50,6 +50,32 @@ namespace Quantum.Prototypes.Unity {
   #endif //;
   
   [System.SerializableAttribute()]
+  public unsafe partial class BossPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.BossPrototype> {
+    public Byte Health;
+    public Quantum.QuantumEntityPrototype ControllerPlayer;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.BossPrototype prototype);
+    public override Quantum.Prototypes.BossPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.BossPrototype();
+      converter.Convert(this.Health, out result.Health);
+      converter.Convert(this.ControllerPlayer, out result.ControllerPlayer);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
+  public unsafe partial class CauldronPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.CauldronPrototype> {
+    public Quantum.QuantumEntityPrototype ConvertInto;
+    public FP Hitboxheight;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.CauldronPrototype prototype);
+    public override Quantum.Prototypes.CauldronPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.CauldronPrototype();
+      converter.Convert(this.ConvertInto, out result.ConvertInto);
+      converter.Convert(this.Hitboxheight, out result.Hitboxheight);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
   public unsafe partial class EnterablePipePrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.EnterablePipePrototype> {
     public Quantum.QuantumEntityPrototype OtherPipe;
     public QBoolean IsEnterable;
@@ -98,6 +124,7 @@ namespace Quantum.Prototypes.Unity {
     public QBoolean SlowInLiquids;
     public QBoolean IsWaterSolid;
     public QBoolean BreakMegaObjects;
+    public QBoolean WindImmune;
     partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.PhysicsObjectPrototype prototype);
     public override Quantum.Prototypes.PhysicsObjectPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
       var result = new Quantum.Prototypes.PhysicsObjectPrototype();
@@ -108,6 +135,7 @@ namespace Quantum.Prototypes.Unity {
       converter.Convert(this.SlowInLiquids, out result.SlowInLiquids);
       converter.Convert(this.IsWaterSolid, out result.IsWaterSolid);
       converter.Convert(this.BreakMegaObjects, out result.BreakMegaObjects);
+      converter.Convert(this.WindImmune, out result.WindImmune);
       ConvertUser(converter, ref result);
       return result;
     }

@@ -2,7 +2,7 @@ using Photon.Deterministic;
 
 namespace Quantum {
     public unsafe partial struct Enemy {
-        //public readonly bool IsAlive => !IsDead && IsActive;
+        public readonly bool IsAlive => !IsDead && IsActive;
 
         public readonly EntityRef FindClosestPlayerToSpawnpoint(Frame f, EntityRef entity, VersusStageData stage = null) {
             var allPlayers = f.Filter<MarioPlayer, Transform2D>();
@@ -43,8 +43,8 @@ namespace Quantum {
         public void Respawn(Frame f, EntityRef entity) {
             var transform = f.Unsafe.GetPointer<Transform2D>(entity);
 
+            IsActive = true;
             IsDead = false;
-
             IgnoreOffscreen = false;
             SetDelayedRespawn(0, 0);
             transform->Teleport(f, Spawnpoint);

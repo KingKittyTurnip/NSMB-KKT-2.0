@@ -21,35 +21,10 @@ enum KingBooState : Byte {
 	Sucking,
 	Knockback,
 }
-/*
-enum BowserAttackType : Byte {
-    FireBall,
-	JumpFireBall,
-	MegaAttack,
-	BoneThrow,
-}
 
-event BowserJump {
-	Frame f;
+event KingBooBarf {
 	EntityRef Entity;
 }
-event BowserLanded {
-	Frame f;
-	EntityRef Entity;
-	bool Roar;
-}
-event BowserKnockbacked {
+event KingBooKnockbacked {
 	EntityRef Entity;
 }
-event BowserAttack {
-	EntityRef Entity;
-	BowserAttackType AttackType;
-}
-event BowserShoot {
-	EntityRef Entity;
-	bool IsBone;
-}
-
-event BowserFall {
-	EntityRef Entity;
-}*/

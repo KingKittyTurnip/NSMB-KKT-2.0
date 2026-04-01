@@ -3,6 +3,7 @@ using System;
 using System.Drawing.Drawing2D;
 using UnityEngine;
 using static IInteractableTile;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
@@ -30,6 +31,14 @@ namespace Quantum {
 
         ---------------------------------------
         */
+
+        //Magic numbers
+
+        FP CannonBoxCooldown = 2;
+        FP CannonBoxShootDelay = FP._0_20;
+        FP CannonBoxChargeLimit = FP._0_50;
+        FP CannonBoxPlayerCooldown = FP._1_50;
+
         public struct Filter {
             public EntityRef Entity;
             public Transform2D* Transform;
@@ -60,8 +69,12 @@ namespace Quantum {
             f.Context.Interactions.Register<Projectile, ThrowingObject>(f, OnThrowingObjectProjectileInteraction);
             f.Context.Interactions.Register<ThrowingObject, ThrowingObject>(f, OnThrowingObjectThrowingObjectInteraction);
 
-            f.Context.Interactions.Register<PhysicsObject, SpringBoard>(f, OnThrowingObjectAnythingInteraction); //this is exclusively used for the springboard :sob:
-            f.Context.RegisterPreContactCallback(f, OnPreContactCallback); //this is exclusivly used for the chainpost even sobber :sob:
+            //springboard interactions
+            f.Context.Interactions.Register<PhysicsObject, SpringBoard>(f, OnSpringboardAnythingInteraction);
+            f.Context.Interactions.Register<PhysicsObject, SpringBoard>(f, OnSpringboardSolidInteraction);
+
+            //exclusivly used for the chainpost's connection to ignore the chainpost collision
+            f.Context.RegisterPreContactCallback(f, OnPreContactCallback);
         }
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var Dis = filter.DisObject;
@@ -70,6 +83,7 @@ namespace Quantum {
             var collider = filter.PhysicsCollider;
             var holdable = filter.holdable;
             var hazard = filter.hazard;
+            var entity = filter.Entity;
 
             if (Dis->IsFlying) {
                 // Slowly float downwards
@@ -90,7 +104,10 @@ namespace Quantum {
             } else {
                 // Slide Logic
                 if (Dis->SlideAlong) {
-                    //nothing special just let it move
+                    //sliding projectiles don't bounce at all
+                    if (!Dis->Thrown && physicsObject->IsTouchingGround && physicsObject->WasTouchingGround) {
+                        physicsObject->Velocity.X = 0;
+                    }
                 } else
                 // Bounce Logic
                 if ((Dis->Thrown || Dis->BounceTimes > 0) && physicsObject->IsTouchingGround) {
@@ -145,6 +162,8 @@ namespace Quantum {
                 hazard->LifeTime--;
             }
 
+            bool holderExists = f.Exists(holdable->Holder);
+
             // Special Updates
             switch (Dis->Type) {
             case ThrowingObjectType.Basic:
@@ -180,16 +199,18 @@ namespace Quantum {
 
                         TargetTransform->Position.Y = FPMath.Max(TargetTransform->Position.Y + Offset, transform->Position.Y + FP._0_05) - Offset;
                     }
-                    TryDrop();
+                    if (holderExists && holdable->Holder == Dis->ConnectedObject) {
+                        holdable->DropWithoutThrowing(f, holdable->Holder);
+                    }
                     return;
-                } else if (Dis->ReusableTimer > 0) {
+                } else if (Dis->ReusableTimer != 0) {
                     //end
-                    Dis->ReusableTimer = FPMath.Max(Dis->ReusableTimer - f.DeltaTime, 0);
                     if (Dis->ConnectedObject != EntityRef.None) {
                         Dis->ConnectedObject = EntityRef.None;
                         physicsObject->Velocity = FPVector2.Zero;
                         physicsObject->IsFrozen = false;
                     }
+                    Dis->ReusableTimer = 0;
                 }
                 break;
             case ThrowingObjectType.Pow:
@@ -227,7 +248,7 @@ namespace Quantum {
                                     StageTileInstance tileInstance = stage.GetTileRelative(f, tilePos);
                                     StageTile tile = f.FindAsset(tileInstance.Tile);
                                     if (tile is IInteractableTile it) {
-                                        it.Interact(f, filter.Entity, IInteractableTile.InteractionDirection.Up, tilePos, tileInstance, out _);
+                                        it.Interact(f, filter.Entity, InteractionDirection.Up, tilePos, tileInstance, out _);
                                     }
                                 }
                             }
@@ -260,8 +281,8 @@ namespace Quantum {
                 }
                 break;
             case ThrowingObjectType.CoinBox: {
-                if (!Dis->Thrown && !f.Exists(holdable->Holder)) {
-                    if (Dis->ReusableTimer != 5 && f.Exists(holdable->PreviousHolder))
+                if (!Dis->Thrown && !holderExists) {
+                    if (Dis->ReusableTimer != 5 && holderExists)
                         f.Events.PlayComboSound(filter.Entity, 0);
                     Dis->ReusableTimer = 5;
                     break;
@@ -270,14 +291,14 @@ namespace Quantum {
                     FP Distance = Dis->Thrown ? FP._0_50 : f.Unsafe.TryGetPointer(holdable->Holder, out PhysicsObject* marioPhysicsObject) ? (FPMath.Abs(marioPhysicsObject->Velocity.X) / 10) : 0;
                     Dis->ReusableTimer -= Distance;
                 } else {
-                    var entity = filter.Entity;
-
                     var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder);
+                    EntityRef spawnedItem = EntityRef.None;
+
                     byte newCoins = (byte) (mario->Coins + 1);
                     bool item = newCoins == f.Global->Rules.CoinsForPowerup;
                     if (item) {
                         mario->Coins = 0;
-                        MarioPlayerSystem.SpawnItem(f, holdable->PreviousHolder, mario, default, false);
+                        spawnedItem = MarioPlayerSystem.SpawnItem(f, holdable->PreviousHolder, mario, default, false);
                         Dis->ReusableTimer = 50;
                     } else {
                         mario->Coins = newCoins;
@@ -285,12 +306,11 @@ namespace Quantum {
                     }
 
                     f.Events.ThrowObjSimple(entity, transform->Position + (FPVector2.Up / 2));
-                    f.Events.MarioPlayerCollectedCoin(holdable->PreviousHolder, newCoins, item, f.Unsafe.GetPointer<Transform2D>(entity)->Position + FPVector2.Up, false, false);
+                    f.Events.MarioPlayerCollectedCoin(holdable->PreviousHolder, newCoins, spawnedItem, f.Unsafe.GetPointer<Transform2D>(entity)->Position + FPVector2.Up, false, false);
                 }
                 break;
             }
             case ThrowingObjectType.BillBlock: {
-                bool holderexists = f.Exists(holdable->Holder);
                 if (Dis->Thrown && Dis->ReusableTimer > 0) {
                     Dis->ReusableTimer -= 1;
                     //Throw Hovers for a bit
@@ -299,7 +319,7 @@ namespace Quantum {
                         f.Events.ThrowObjSimple(filter.Entity, transform->Position);
                         physicsObject->Velocity.X = Dis->Facing ? 1 : -1;
                     }
-                } else if (!holderexists) {
+                } else if (!holderExists) {
                     //Not hovering, fall
                     if (Dis->IsFlying) {
                         //if has wings, fly
@@ -309,11 +329,10 @@ namespace Quantum {
                     }
                 }
 
-                if (!Dis->Thrown && !holderexists) {
+                if (!Dis->Thrown && !holderExists) {
                     Dis->ReusableTimer = 240;
                     break;
                 }
-                var entity = filter.Entity;
                 if (!f.Exists(holdable->PreviousHolder)) {
                     break;
                 }
@@ -332,40 +351,58 @@ namespace Quantum {
                 break;
             }
             case ThrowingObjectType.CannonBox:
-                bool holder = f.Exists(holdable->Holder);
-                if (!holder) {
-                    Dis->ReusableTimer += 1;
-                    if (Dis->ReusableTimer > 180) {
-                        Dis->ReusableTimer = 0;
-                        goto Bullet;
+
+                switch (Dis->Varient) {
+                case 0: //Normal
+                    if (!holderExists) {
+                        if (QuantumUtils.Decrement(f, ref Dis->ReusableTimer)) {
+                            CannonBoxStartShoot(1);
+                        }
+                    } else {
+                        //Carried Cannonbox
+                        var mario2 = f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder);
+                        Dis->Facing = mario2->FacingRight;
+                        Input* input = f.GetPlayerInput(mario2->PlayerRef);
+
+                        if (input->PowerupAction.IsDown) {
+                            //charge
+                            QuantumUtils.Decrement(f, ref Dis->ReusableTimer);
+                        } else if (Dis->ReusableTimer < CannonBoxChargeLimit) {
+                            //shoot
+                            CannonBoxStartShoot((byte) (Dis->ReusableTimer == 0 ? 2 : 1));
+                        }
                     }
-                    return;
-                }
-                if (Dis->ReusableTimer > 30) {
-                    Dis->ReusableTimer += 1;
-                    if (Dis->ReusableTimer > 70)
-                        Dis->ReusableTimer = 0;
+                    break;
+                case 1:
+                case 2: //Preparing to shoot
+                    if (Dis->ReusableTimer > 0 && (Dis->ReusableTimer -= 1) <= 0) {
+                        CannonBoxLaunchBullet();
+                    }
+                    break;
+                case 3: //cooldown
+                    if (QuantumUtils.Decrement(f, ref Dis->ReusableTimer)) {
+                        Dis->Varient = 0;
+                        Dis->ReusableTimer = CannonBoxChargeLimit;
+                    }
                     break;
                 }
-                var mario2 = f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder);
-                Dis->Facing = mario2->FacingRight;
-                Input* input = f.GetPlayerInput(mario2->PlayerRef);
-                if (input->PowerupAction.IsDown) {
-                    if (Dis->ReusableTimer < 30)
-                        Dis->ReusableTimer += 1;
-                    break;
-                } else if (Dis->ReusableTimer == 0) {
-                    break;
+
+                void CannonBoxStartShoot(byte variant) {
+                    Dis->Varient = variant;
+                    Dis->ReusableTimer = CannonBoxShootDelay;
+                    f.Events.ThrowObjSimple(entity, transform->Position);
                 }
-                Bullet:
-                FPVector2 spawnPos = filter.Transform->Position + new FPVector2(Dis->Facing ? FP._0_25 : -FP._0_25, 0);
-                EntityRef newEntity = f.Create(f.SimulationConfig.CannonBoxBulletPrototype);
-                var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
-                projectile->Initialize(f, newEntity, holdable->PreviousHolder, spawnPos, Dis->Facing, false);
-                if (Dis->ReusableTimer >= 30)
-                    projectile->Speed *= 2;
-                Dis->ReusableTimer = 31;
-                f.Events.ThrowObjSimple(filter.Entity, transform->Position);
+
+                void CannonBoxLaunchBullet() {
+                    FPVector2 spawnPos = transform->Position + new FPVector2(Dis->Facing ? FP._0_25 : -FP._0_25, FP._0_05);
+                    EntityRef newEntity = f.Create(f.SimulationConfig.CannonBoxBulletPrototype);
+                    var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
+                    projectile->Initialize(f, newEntity, holdable->PreviousHolder, spawnPos, Dis->Facing, false);
+                    if (Dis->Varient == 2)
+                        projectile->Speed *= 2;
+                    Dis->ReusableTimer = CannonBoxPlayerCooldown;
+                    Dis->Varient = 3;
+                }
                 break;
             case ThrowingObjectType.Fridge:
                 //TODO: (?)
@@ -461,12 +498,14 @@ namespace Quantum {
                 if (f.Exists(holdable->PreviousHolder) && !f.Has<Boss>(holdable->PreviousHolder) && !(f.Unsafe.TryGetPointer<MarioPlayer>(holdable->PreviousHolder, out var mar) && mar->IsBoss != EntityRef.None)) {
                     //We've Been Pickedup By A Player, ignore all other code
                     Dis->Varient = 3;
+                    physicsObject->Gravity.Y = -10;
+                    physicsObject->TerminalVelocity = -3;
                     if (f.Exists(holdable->Holder)) {
-                        hazard->LifeTime = 300;
+                        hazard->LifeTime = 120;
                     } else if (Dis->HitSomething) {
                         hazard->LifeTime = 1;
                     }
-                } else if (Dis->Varient == 2) {
+                } else if (Dis->Varient >= 2) {
                     //We've Hit Ground, Allow Us To Fall Into The Pit
 
                 } else {
@@ -484,24 +523,26 @@ namespace Quantum {
                         if (Dis->Varient == 1) {
                             //We Hit Ground, Allow Carryable
                             physicsObject->Gravity.Y = -10;
-                            physicsObject->Velocity.X = physicsObject->Velocity.X > 0 ? 2 : -2;
+                            physicsObject->Velocity.X = physicsObject->Velocity.X > 0 ? 1 : -1;
                             physicsObject->Velocity.Y = 3;
+                            physicsObject->TerminalVelocity = -1;
                             Dis->Thrown = false;
                             Dis->Varient = 2;
-                            Dis->ReusableTimer = 11;
+                            Dis->ReusableTimer = 1;
                             hazard->LifeTime = 200;
                             f.Events.PlayComboSound(filter.Entity, 0);
                         }
                     } else {
                         //We Are outside of ground
                         Dis->Varient = 1;
+                        Dis->ReusableTimer = 3;
                     }
                 }
                 break;
             }
 
             void TryDrop() {
-                if (f.Exists(holdable->Holder)) {
+                if (holderExists) {
                     holdable->DropWithoutThrowing(f, holdable->Holder);
                 }
             }
@@ -527,13 +568,17 @@ namespace Quantum {
                 //Make Precontact if we are not being held
                 keepContacts = OnMarInteraction(f, entity, contact.Entity);
             }
+            if (f.Unsafe.TryGetPointer<ThrowingObject>(entity, out var spring) && spring->Type == ThrowingObjectType.Spring && f.Has<PhysicsObject>(contact.Entity)) {
+                Debug.Log("Springboard precontact");
+                keepContacts = HandleSpringboardInteraction(f, contact.Entity, entity, true);
+            }
         }
 
         public static bool OnMarInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
-            if (f.Exists(holdable->Holder)) {
+            if (f.Exists(holdable->Holder) && Dis->Type != ThrowingObjectType.Spring) {
                 //Force The player To Drop This Item if it's GroundPounded While They Are Carrying It
                 if (mario->IsGroundpoundActive) {
                     holdable->DropWithoutThrowing(f, thisEntity);
@@ -561,7 +606,7 @@ namespace Quantum {
             FP upDot = FPVector2.Dot(damageDirection, FPVector2.Up);
             bool hitRight = Dis->Thrown ? !Dis->Facing : damageDirection.X > 0;
 
-            bool MarioGroundpounding = mario->IsGroundpoundActive && damageDirection.Y < -Constants._0_66;
+            bool MarioGroundpounding = mario->IsGroundpoundActive && damageDirection.Y > Constants._0_66;
             #endregion
 
             //Special Interactions
@@ -590,7 +635,7 @@ namespace Quantum {
             } else if (Dis->Type == ThrowingObjectType.Spring && damageDirection.Y > Constants._0_66) {
                 mario->GroundpoundCooldownFrames = 20;
                 mario->IsGroundpounding = mario->IsGroundpoundActive = false;
-                OnThrowingObjectAnythingInteraction(f, marioEntity, thisEntity);
+                HandleSpringboardInteraction(f, marioEntity, thisEntity, false);
             } else if (MarioGroundpounding) {
                 //we groundpounded this object
                 holdable->PreviousHolder = marioEntity;
@@ -703,6 +748,7 @@ namespace Quantum {
             CoinSystem.TryCollectCoin(f, coinEntity, holdable->PreviousHolder);
         }
 
+        #region Typical Enemy/projectile/self interactions
         public static void OnThrowingObjectGoombaInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var goomba = f.Unsafe.GetPointer<Goomba>(otherEntity);
@@ -714,11 +760,10 @@ namespace Quantum {
                     Dis->HitSomething = true;
                     IceBlockSystem.Freeze(f, otherEntity);
                 } else {
-                    goomba->Kill(f, otherEntity, thisEntity, KillReason.Special);
+                    goomba->Kill(f, otherEntity, thisEntity, EnemyKillReason.Special);
                 }
             }
         }
-
         public static void OnThrowingObjectKoopaInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var koopa = f.Unsafe.GetPointer<Koopa>(otherEntity);
@@ -731,11 +776,10 @@ namespace Quantum {
                     Dis->HitSomething = true;
                     IceBlockSystem.Freeze(f, otherEntity);
                 } else {
-                    koopa->Kill(f, otherEntity, thisEntity, KillReason.Special);
+                    koopa->Kill(f, otherEntity, thisEntity, EnemyKillReason.Special);
                 }
             }
         }
-
         public static void OnThrowingObjectBobombInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var bobomb = f.Unsafe.GetPointer<Bobomb>(otherEntity);
@@ -747,7 +791,7 @@ namespace Quantum {
                     Dis->HitSomething = true;
                     IceBlockSystem.Freeze(f, otherEntity);
                 } else {
-                    bobomb->Kill(f, otherEntity, thisEntity, KillReason.Special);
+                    bobomb->Kill(f, otherEntity, thisEntity, EnemyKillReason.Special);
                 }
             }
         }
@@ -762,7 +806,7 @@ namespace Quantum {
                     Dis->HitSomething = true;
                     IceBlockSystem.Freeze(f, otherEntity);
                 } else {
-                    bill->Kill(f, otherEntity, thisEntity, KillReason.Special);
+                    bill->Kill(f, otherEntity, thisEntity, EnemyKillReason.Special);
                 }
             }
         }
@@ -777,7 +821,7 @@ namespace Quantum {
                     Dis->HitSomething = true;
                     IceBlockSystem.Freeze(f, otherEntity);
                 } else {
-                    plant->Kill(f, otherEntity, thisEntity, KillReason.Special);
+                    plant->Kill(f, otherEntity, thisEntity, EnemyKillReason.Special);
                 }
             }
         }
@@ -788,27 +832,29 @@ namespace Quantum {
 
             if (Dis->Thrown || beingHeld) {
                 // Destroy them
-                boo->Kill(f, otherEntity, thisEntity, KillReason.Special);
+                boo->Kill(f, otherEntity, thisEntity, EnemyKillReason.Special);
             }
         }
         public static void OnThrowingObjectIceBlockInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var ice = f.Unsafe.GetPointer<IceBlock>(otherEntity);
-            bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
+            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+            bool beingHeld = f.Exists(holdable->Holder);
 
             if ((Dis->Thrown || beingHeld) && Dis->Type != ThrowingObjectType.Freezie) {
                 // Destroy them
-                IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other);
+                IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other, holdable->PreviousHolder);
             }
         }
         public static void OnThrowingObjectIceBlockInteractionStationary(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var ice = f.Unsafe.GetPointer<IceBlock>(otherEntity);
-            bool beingHeld = f.Exists(f.Unsafe.GetPointer<Holdable>(thisEntity)->Holder);
+            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+            bool beingHeld = f.Exists(holdable->Holder);
 
             if ((Dis->Thrown || beingHeld) && Dis->Type != ThrowingObjectType.Freezie) {
                 // Destroy them
-                IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other);
+                IceBlockSystem.Destroy(f, otherEntity, IceBlockBreakReason.Other, holdable->PreviousHolder);
             }
         }
         public static void OnThrowingObjectBossInteraction(Frame f, EntityRef thisEntity, EntityRef bossEntity) {
@@ -838,8 +884,17 @@ namespace Quantum {
                     f.Events.PlayKnockbackEffect(bossEntity, thisEntity, KnockbackStrength.FireballBump,
                         (f.Unsafe.GetPointer<Transform2D>(bossEntity)->Position + f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position) / 2);
 
+                    var strength = Dis->StarsToDrop == 3 ? KnockbackStrength.Groundpound : 
+                        Dis->StarsToDrop == 1 ? KnockbackStrength.FireballBump : 
+                        KnockbackStrength.Normal;
+
+                    //kingbooblocks gets special treatment C: , he takes extra damage if a player thrown his block
+                    if (f.Has<KingBoo>(bossEntity) && !f.Has<Boss>(holdable->PreviousHolder)) {
+                        strength = KnockbackStrength.Normal;
+                        f.Events.KingBooKnockbacked(bossEntity);
+                    }
                     //Damage Boss
-                    boss->BossHarmed(f, bossEntity, Dis->Facing, Dis->StarsToDrop == 1 ? KnockbackStrength.FireballBump : Dis->StarsToDrop == 3 ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, Dis->StarsToDrop > 1);
+                    boss->BossHarmed(f, bossEntity, Dis->Facing, strength, Dis->StarsToDrop > 1);
                     f.Events.PlayBossHitSound(bossEntity);
                 }
             }
@@ -855,7 +910,7 @@ namespace Quantum {
                 f.Signals.OnProjectileHitEntity(f, projectileEntity, thisEntity);
             }*/
             if (Dis->Type == ThrowingObjectType.Stone || Dis->Type == ThrowingObjectType.Barrel) {
-                f.Signals.OnProjectileHitEntity(f, projectileEntity, thisEntity);
+                f.Signals.OnProjectileHitEntity(projectileEntity, thisEntity);
                 return true;
             }
             return false;
@@ -872,16 +927,28 @@ namespace Quantum {
             //}
             return false;
         }
+        #endregion
 
-        public static void OnThrowingObjectAnythingInteraction(Frame f, EntityRef anyEntity, EntityRef thisEntity) {
-            //var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+        #region Springboard interactions
+        public static bool OnSpringboardSolidInteraction(Frame f, EntityRef anyEntity, EntityRef thisEntity, PhysicsContact contact) {
+            return HandleSpringboardInteraction(f, anyEntity, thisEntity, true);
+        }
+        public static void OnSpringboardAnythingInteraction(Frame f, EntityRef anyEntity, EntityRef thisEntity) {
+            HandleSpringboardInteraction(f, anyEntity, thisEntity, false);
+        }
+        public static bool HandleSpringboardInteraction(Frame f, EntityRef anyEntity, EntityRef thisEntity, bool FromSolid) {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
-            var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+            //var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var phys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(anyEntity);
+
+            //fix for lemmyball interaction bug
+            if (f.Has<LemmyBall>(anyEntity))
+                LemmyBallSystem.TryLemmyBallPush(f, anyEntity, thisEntity, true);
+
             //Can't Interact
-            if (Dis->ReusableTimer > 0 || otherPhys->Velocity.Y >= 0 || f.Has<Projectile>(anyEntity) || f.Exists(holdable->Holder)) {
-                return;
+            if (Dis->ReusableTimer > 0 || otherPhys->Velocity.Y >= 0 || f.Has<Projectile>(anyEntity)) {
+                return false;
             }
 
             var otherTransform = f.Unsafe.GetPointer<Transform2D>(anyEntity)->Position; var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
@@ -895,7 +962,9 @@ namespace Quantum {
                 otherPhys->Velocity.Y = -1;
                 f.Events.ThrowObjSimple(thisEntity, ourPos);
             }
+            return true;
         }
+        #endregion
         #endregion
 
         #region Signals
@@ -957,6 +1026,10 @@ namespace Quantum {
                 break;
             case ThrowingObjectType.KingBooStone:
                 physicsObject->DisableCollision = true;
+                break;
+            case ThrowingObjectType.CannonBox:
+                Dis->Varient = 0;
+                Dis->ReusableTimer = CannonBoxChargeLimit;
                 break;
             }
 

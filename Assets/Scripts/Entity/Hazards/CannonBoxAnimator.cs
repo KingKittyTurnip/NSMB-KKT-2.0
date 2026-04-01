@@ -5,20 +5,19 @@ using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
 using NSMB.Utilities.Extensions;
 using System.Collections.Generic;
+using NSMB.Utilities;
 
 public unsafe class CannonBoxAnimator : QuantumEntityViewComponent {
 
     //---Serialized Variables
-    //[SerializeField] private GameObject BoostParticles;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform Model;
     [SerializeField] private AudioSource sfx;
+    [SerializeField] private GameObject ChargeParticle;
+    [SerializeField] private GameObject LaunchParticle;
 
     [Space]
-    [SerializeField] private AudioClip Launch;
     [SerializeField] private AudioClip Charge;
-    [Space]
-    [SerializeField] private GameObject LaunchParticle;
 
     private Quaternion modelRotationTarget;
     private bool wasTurnaround;
@@ -33,6 +32,8 @@ public unsafe class CannonBoxAnimator : QuantumEntityViewComponent {
 
         renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
         renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
+    }
+    public override unsafe void OnActivate(Frame f) {
         materialBlock = new();
     }
     public override unsafe void OnUpdateView() {
@@ -52,7 +53,7 @@ public unsafe class CannonBoxAnimator : QuantumEntityViewComponent {
         }
         transform.position = modifiedZ;
 
-        //BoostParticles.SetActive(billblock->CanHit);
+        ChargeParticle.SetActive((cannonbox->Varient == 0 && cannonbox->ReusableTimer <= 0) || (cannonbox->Varient > 0 && cannonbox->Varient < 3));
         float delta = Time.deltaTime;
         if (f.Exists(holdable->Holder)) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->Holder);
@@ -61,24 +62,17 @@ public unsafe class CannonBoxAnimator : QuantumEntityViewComponent {
             SetFacingDirection(f, mario, marioPhysicsObject);
             InterpolateFacingDirection(mario);
 
-            //Model.rotation = Quaternion.Euler(0, holder.AnimationController.Rotation, 0);
         } else if (!cannonbox->Thrown) {
             Model.rotation = Quaternion.RotateTowards(Model.rotation, Quaternion.Euler(0, cannonbox->Facing ? 110 : 250, 0), 200f * Time.deltaTime);
         } else {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
-            //Model.rotation = Quaternion.Euler(0, billblock->Facing ? 90 : -90, 0);
             Model.rotation = Quaternion.RotateTowards(Model.rotation, Quaternion.Euler(0, Model.rotation.eulerAngles.y + ((float) physicsObject->Velocity.X * 100 * Time.deltaTime), 0), 2000f * Time.deltaTime);
         }
 
         //Set Color
         int i = 0;
         if (f.Exists(holdable->PreviousHolder)) {
-            for (i = 0; i < f.SimulationConfig.CharacterDatas.Length; i++) {
-                if (f.SimulationConfig.CharacterDatas[i] == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset) {
-                    i++;
-                    break;
-                }
-            }
+            i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset).Order+1;
         }
         materialBlock.SetInt(ParamBoxType, i);
         foreach (Renderer r in renderers) {
@@ -115,10 +109,10 @@ public unsafe class CannonBoxAnimator : QuantumEntityViewComponent {
         if (e.Entity != EntityRef) {
             return;
         }
-        sfx.PlayOneShot(Launch);
         animator.SetTrigger("Boom");
-
-        Instantiate(LaunchParticle, e.pos.ToUnityVector3(), Quaternion.identity);
+    }
+    public void CreateLaunchParticle() {
+        LaunchParticle.SetActive(true);
     }
 
     private void OnPlayComboSound(EventPlayComboSound e) {
@@ -126,6 +120,6 @@ public unsafe class CannonBoxAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
     }
 }

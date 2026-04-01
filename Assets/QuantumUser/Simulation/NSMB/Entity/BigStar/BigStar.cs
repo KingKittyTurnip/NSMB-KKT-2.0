@@ -19,7 +19,7 @@ namespace Quantum {
                 Speed * (FacingRight ? 1 : -1),
                 Constants._8_50
             );
-            f.Unsafe.GetPointer<Hazard>(entity)->IsHazard = true;
+            //f.Unsafe.GetPointer<Hazard>(entity)->IsHazard = true;
             if (transform->Position.Y <= stage.CameraMinPosition.Y) {
                 // Death boost
                 physicsObject->Velocity.Y += 3;

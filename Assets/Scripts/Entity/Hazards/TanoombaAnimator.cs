@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using NSMB.Utilities.Extensions;
 using static NSMB.Utilities.QuantumViewUtils;
+using NSMB.Utilities;
 
 public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
 
@@ -12,13 +13,10 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
     [SerializeField] private Animator Main;
     [SerializeField] private AudioSource sfx;
     [SerializeField] private AudioClip laugh;
+    [SerializeField] private GameObject PoofParticle;
     [Header("Have Them In The Same Order As The States In Tanoomba.qtn")]
     [SerializeField] private GameObject[] TransformModels;
     [SerializeField] private Animator[] TransformModelsAnimator;
-    //---Serialized Variables
-    //[Space]
-    //[SerializeField] private GameObject PoofParticle;
-    //[SerializeField] private GameObject FleeParticle;
 
     private MaterialPropertyBlock materialBlock;
     public SkinnedMeshRenderer renderer;
@@ -34,6 +32,7 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
         QuantumEvent.Subscribe<EventTanoombaAttack>(this, OnAttack);
         QuantumEvent.Subscribe<EventTanoombaFlee>(this, OnFlee);
         QuantumEvent.Subscribe<EventTanoombaLMAO>(this, OnLMAO);
+        QuantumEvent.Subscribe<EventTanoombaPoof>(this, OnTanoombaPoof);
 
         QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward, onlyIfActiveAndEnabled: true);
         QuantumEvent.Subscribe<EventPlayBumpSound>(this, OnPlayBumpSound, FilterOutReplayFastForward, onlyIfActiveAndEnabled: true);
@@ -52,7 +51,7 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
         var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
 
         //Model Showings
-        Models.SetActive(!(enemy->IsDead && !hazard->IsActive));
+        Models.SetActive(enemy->IsActive);
         Main.gameObject.SetActive(tanoomba->State != TanoombaState.Searching && tanoomba->State != TanoombaState.Transformed);
         for (int i = 0; i < TransformModels.Length; i++) {
             bool activeform = tanoomba->Form == (TanoombaFormState) i;
@@ -132,6 +131,12 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
         Main.SetTrigger("LMAO");
         sfx.PlayOneShot(laugh);
     }
+    private unsafe void OnTanoombaPoof(EventTanoombaPoof e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+        Instantiate(PoofParticle, transform.position, Quaternion.identity);
+    }
 
     private void OnPlayBumpSound(EventPlayBumpSound e) {
         if (e.Entity != EntityRef) {
@@ -146,6 +151,6 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
     }
 }

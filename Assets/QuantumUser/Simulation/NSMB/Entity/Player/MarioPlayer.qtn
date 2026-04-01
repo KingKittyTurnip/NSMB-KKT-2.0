@@ -183,6 +183,7 @@ event MarioPlayerJumped {
 	nothashed JumpState JumpState;
 	nothashed bool WasBounce;
 	nothashed bool IsUnderwater;
+	nothashed bool IsStarball;
 }
 
 event MarioPlayerGroundpoundStarted {

@@ -5,15 +5,14 @@ namespace Quantum {
         ISignalOnIceBlockBroken, ISignalOnEnemyKilledByStageReset, ISignalOnEntityCrushed, ISignalOnEnemyRespawned {
 
         public struct Filter {
-			public EntityRef Entity;
-			public Transform2D* Transform;
+            public EntityRef Entity;
+            public Transform2D* Transform;
             public Enemy* Enemy;
-            public Hazard* Hazard;
             public Goomba* Goomba;
-			public PhysicsObject* PhysicsObject;
+            public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* Collider;
             public Freezable* Freezable;
-		}
+        }
 
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<Goomba, Goomba>(f, OnGoombaGoombaInteraction);
@@ -26,7 +25,6 @@ namespace Quantum {
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var enemy = filter.Enemy;
             var goomba = filter.Goomba;
-            var hazard = filter.Hazard;
             var transform = filter.Transform;
             var physicsObject = filter.PhysicsObject;
 
@@ -34,14 +32,14 @@ namespace Quantum {
             if (enemy->IsDead) {
                 // Check if they're fully dead now.
                 if (goomba->DeathAnimationFrames > 0 && QuantumUtils.Decrement(ref goomba->DeathAnimationFrames)) {
-                    hazard->IsActive = false;
+                    enemy->IsActive = false;
                     physicsObject->IsFrozen = true;
                 }
                 return;
             }
 
             // Inactive check 
-            if (!(!enemy->IsDead && hazard->IsActive)
+            if (!enemy->IsAlive
                 || filter.Freezable->IsFrozen(f)) {
                 return;
             }
@@ -139,8 +137,7 @@ namespace Quantum {
         public void OnEntityBumped(Frame f, EntityRef entity, FPVector2 position, EntityRef bumpOwner, QBoolean fromBelow) {
             if (!f.Unsafe.TryGetPointer(entity, out Goomba* goomba)
                 || !f.Unsafe.TryGetPointer(entity, out Enemy* enemy)
-                || !f.Unsafe.TryGetPointer(entity, out Hazard* hazard)
-                || !(!enemy->IsDead && hazard->IsActive)) {
+                || !enemy->IsAlive) {
                 return;
             }
 

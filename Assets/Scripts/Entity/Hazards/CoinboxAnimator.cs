@@ -51,8 +51,9 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
         //Set Look-Alike
         bool hasHolder = f.Exists(holdable->Holder);
         bool ShowOwner = hasHolder || (coinbox->Thrown && f.Exists(holdable->PreviousHolder));
-        for (int i = 0; i < f.SimulationConfig.CharacterDatas.Length; i++) {
-            Faces[i].SetActive(ShowOwner && f.SimulationConfig.CharacterDatas[i] == f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset);
+
+        for (int i = 0; i < Faces.Count; i++) {
+            Faces[i].SetActive(ShowOwner && i == f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset).Order);
         }
 
         float delta = Time.deltaTime;

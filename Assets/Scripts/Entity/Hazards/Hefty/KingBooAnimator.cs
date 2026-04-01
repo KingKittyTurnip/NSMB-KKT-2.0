@@ -1,40 +1,34 @@
-using NSMB.UI.Game;
-using NSMB;
 using NSMB.Utilities.Extensions;
 using Quantum;
 using Quantum.Profiling;
-using System.Drawing.Drawing2D;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Scripting;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using UnityEngine.TextCore.Text;
 
 public unsafe class KingBooAnimator : QuantumEntityViewComponent {
 
     [SerializeField] private GameObject Ratater, Model;
     [SerializeField] private Animator Animator;
-    [SerializeField] private AudioSource sfx;
+    [SerializeField] private AudioSource sfx, Sucking;
     [Space]
     [SerializeField] private GameObject BossKillParticle;
-    [SerializeField] private ParticleSystem SuckDust;
+    [SerializeField] private GameObject SuckDust;
     [Space]
     //Laugh Sound Is Played Automatically
     [SerializeField] private AudioClip Hide;
-    [SerializeField] private AudioClip FireBall, Cyote;
-    [SerializeField] private AudioClip Sucking;
+    [SerializeField] private AudioClip FireBallA, FireballB, Hurt, Cyote;
 
     //---Serialized Variables
     private bool modelRotateInstantly;
     private quaternion modelRotationTarget;
+    bool ShootA;
 
     public void Start() {
         /*QuantumEvent.Subscribe<EventBowserJump>(this, OnJump);
         QuantumEvent.Subscribe<EventBowserLanded>(this, OnLanded);
         QuantumEvent.Subscribe<EventBowserAttack>(this, OnAttack);
-        QuantumEvent.Subscribe<EventBowserShoot>(this, OnShoot);
-        QuantumEvent.Subscribe<EventBowserKnockbacked>(this, OnKnockbacked);
-        QuantumEvent.Subscribe<EventBowserFall>(this, OnFall);*/
+        QuantumEvent.Subscribe<EventBowserShoot>(this, OnShoot);*/
+        QuantumEvent.Subscribe<EventKingBooKnockbacked>(this, OnKnockbacked);
+        QuantumEvent.Subscribe<EventKingBooBarf>(this, OnBarf);
 
         QuantumEvent.Subscribe<EventBossDeathAnimation>(this, OnDeath);
         QuantumEvent.Subscribe<EventPlayBossHitSound>(this, OnPlayBossHitSound);
@@ -68,7 +62,11 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
         Animator.SetFloat("VelocityMagnitude", Mathf.Abs(physicsObject->Velocity.Magnitude.AsFloat));
         Animator.SetBool("FireBall", kingboo->State == KingBooState.Barfing && kingboo->ReusableTimer < 123);
         Animator.SetBool("Knockback", (kingboo->State == KingBooState.Barfing && kingboo->ReusableTimer >= 123) || kingboo->State == KingBooState.Knockback);
-        Animator.SetBool("Sucking", kingboo->State == KingBooState.Sucking && kingboo->ReusableTimer == 0);
+        bool IsSucking = kingboo->State == KingBooState.Sucking && kingboo->ReusableTimer == 0;
+        Animator.SetBool("Sucking", IsSucking);
+
+        SuckDust.SetActive(IsSucking);
+        Sucking.volume = IsSucking ? 1 - (kingboo->ReusableTimer/30) : 0;
     }
 
     private void InterpolateFacingDirection() {
@@ -80,72 +78,22 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
             Ratater.transform.rotation = Quaternion.RotateTowards(Ratater.transform.rotation, modelRotationTarget, maxRotation);
         }
     }
-    /*
-    private unsafe void OnJump(EventBowserJump e) {
-        if (e.Entity != EntityRef) {
-            return;
-        }
-        if (e.f.Unsafe.GetPointer<Bowser>(EntityRef)->State == BowserState.Attacking) {
-            return;
-        }
-        //sfx.PlayOneShot(Flap);
-        Instantiate(jumpDust, transform.position, Quaternion.identity);
-        Animator.SetTrigger("Jump");
-    }
-    private unsafe void OnLanded(EventBowserLanded e) {
-        if (e.Entity != EntityRef) {
-            return;
-        }
-        var bowser = e.f.Unsafe.GetPointer<Bowser>(EntityRef);
-        if (bowser->State == BowserState.Attacking && !e.Roar) {
-            return;
-        }
-
-        sfx.PlayOneShot(Land);
-        Instantiate(groundpoundDust, transform.position, Quaternion.identity);
-        Animator.SetTrigger(e.Roar ? "Roar" : "Landed");
-    }
-    private unsafe void OnAttack(EventBowserAttack e) {
+    private unsafe void OnKnockbacked(EventKingBooKnockbacked e) {
         if (e.Entity != EntityRef) {
             return;
         }
 
-        Animator.SetTrigger(e.AttackType switch {
-            BowserAttackType.FireBall => "Fireball",
-            BowserAttackType.JumpFireBall => "JumpFire",
-            BowserAttackType.MegaAttack => "MegaFire",
-            BowserAttackType.BoneThrow => "Bone",
-            _ => "Fireball",
-        });
-        if (e.AttackType == BowserAttackType.MegaAttack) {
-            //sfx.Play();
-        }
+        sfx.PlayOneShot(Hurt);
     }
-    private unsafe void OnShoot(EventBowserShoot e) {
+    private unsafe void OnBarf(EventKingBooBarf e) {
         if (e.Entity != EntityRef) {
             return;
         }
 
-        sfx.PlayOneShot(e.IsBone ? Throw : Fireball);
+        sfx.PlayOneShot(ShootA ? FireBallA : FireballB);
+        ShootA = !ShootA;
     }
-    private unsafe void OnKnockbacked(EventBowserKnockbacked e) {
-        if (e.Entity != EntityRef) {
-            return;
-        }
-        Animator.SetTrigger("HitHard");
-        //Instantiate(ParticleEffect., transform.position, Quaternion.identity);
-    }
-    private unsafe void OnFall(EventBowserFall e) {
-        if (e.Entity != EntityRef) {
-            return;
-        }
-
-        sfx.Stop();
-        sfx.PlayOneShot(Cyote);
-        Animator.Play("Fallen");
-        //Instantiate(ParticleEffect., transform.position, Quaternion.identity);
-    }
-    */
+    
     private unsafe void OnDeath(EventBossDeathAnimation e) {
         if (e.Entity != EntityRef) {
             return;

@@ -21,7 +21,7 @@ namespace NSMB.Entities.World {
         [SerializeField] private GameObject starCollectPrefab;
 
         //---Components
-        [SerializeField] private SpriteRenderer sRenderer;
+        //[SerializeField] private SpriteRenderer sRenderer;
         [SerializeField] private Animation legacyAnimation;
         [SerializeField] private SoundEffectPlayer sfx;
         [SerializeField] private Color uncollectableColor = new Color(1, 1, 1, 0.5f);
@@ -30,7 +30,7 @@ namespace NSMB.Entities.World {
         private float pulseEffectCounter;
 
         public void OnValidate() {
-            this.SetIfNull(ref sRenderer, UnityExtensions.GetComponentType.Children);
+            //this.SetIfNull(ref sRenderer, UnityExtensions.GetComponentType.Children);
             this.SetIfNull(ref legacyAnimation);
             this.SetIfNull(ref sfx);
         }
@@ -39,7 +39,7 @@ namespace NSMB.Entities.World {
             var star = f.Unsafe.GetPointer<BigStar>(EntityRef);
 
             graphicTransform.rotation = Quaternion.identity;
-            sRenderer.enabled = true;
+            //sRenderer.enabled = true;
             if (f.Global->GameState == GameState.Playing && !IsReplayFastForwarding) {
                 sfx.PlayOneShot(SoundEffect.World_Star_Spawn);
             }
@@ -61,7 +61,7 @@ namespace NSMB.Entities.World {
             }
 
             if (!f.Exists(EntityRef)) {
-                sRenderer.enabled = false;
+                //sRenderer.enabled = false;
                 return;
             }
 
@@ -71,8 +71,8 @@ namespace NSMB.Entities.World {
                 pulseEffectCounter += Time.deltaTime;
                 float sin = Mathf.Sin(pulseEffectCounter * pulseSpeed) * pulseAmount;
                 graphicTransform.localScale = Vector3.one + new Vector3(sin, sin, 0);
-                sRenderer.color = Color.white;
-                sRenderer.enabled = true;
+                //sRenderer.color = Color.white;
+                //sRenderer.enabled = true;
             } else {
                 graphicTransform.localScale = Vector3.one;
                 graphicTransform.Rotate(new(0, 0, rotationSpeed * 30 * (star->FacingRight ? -1 : 1) * Time.deltaTime), Space.Self);

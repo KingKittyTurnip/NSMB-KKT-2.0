@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2256365223535246910
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6866422483815346812}
+  - component: {fileID: -2704024242932919096}
+  m_Layer: 0
+  m_Name: Changelog
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6866422483815346812
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2256365223535246910}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-2704024242932919096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2256365223535246910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3bd7e19cd35d3748afe2962d0eae4a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChangelogScript
+  VersionChanges:
+  - Version: 2.0.0 beta 1.0
+    VanillaVersionBase: 2.1.0.1
+    MajorChanges:
+    - the game now uses mvlo 2.0 as a base, this fixes MANY janky interactions and
+      bugs, and comes with a couple new features such as the hammer suit
+    - several maps/features were "removed" due to requireing more development time,
+      these most likely will return in future betas
+    - reworked the gamerules customisation
+    - you can now set powerups, enemies, and more as hazards
+    - added new characters (shy guy, toadette)
+    - added boss hazards (bowser, petey piranha, king boo, whomp king)
+    - added conversion cauldron, chainpost, baseball, billblock, cannonbox, tanoomba,
+      fan, & starball hazards
+    - added conversion cauldron, chainpost, baseball, billblock, cannonbox, tanoomba,
+      fan, & starball hazards
+    - non-hefty hazards also appear on the minimap
+    - added drill joke powerup
+    Changes:
+    - bubbleflower bubbles now lightly explode when popped
+    - bubbleflower bubbles that kill enemies properly store the coin in them now
+    - bubbleflower bubbles can no longer capture a player
+    - bubbleflower bubbles will now capture throwables and projectiles
+    - bombro dropping a bomb will no longer make it walk, this allows you to place
+      it down as a trap
+    - bombro's groundpound explodes more blocks
+    - bioflower can now pickup carryables
+    - if you bioflower grapple anything that isn't a wall the grapple slows down
+      a little bit
+    - bioflower grappling a star no longer makes it go torwards you, instead you
+      go torwards it
+    - pocketdoor teleport is entierly reworked (again)
+    - jumpsuit now lets you triplejump anywhere, not just doublejump
+    - supercrown no longer spawns naturally
+    - doneflower doneballs will swap your powerup with whatever player you hit
+    - metalmushroom uses a new model, it also works much differently
+    - goldblock is no longer a wearable, and is now a throwable. it keeps ALL of
+      it's previous features otherwise
+    - pows now linger for 10 extra frames, making them easier to hit (looking at
+      you bluepow)
+    - the propellerblock now changes color depending on the player, a trait shared
+      by some new carryables
+    - freezie now freezes your foes for longer making it more worth using
+    - the voidwall is now a carryable, after thrown it creates the wall
+    - springboard & lemmyball hazards now interact with everything that moves
+    - lemmyball no longer hops on liquids
+  - Version: 1.2.1 (640.2.1) & bellow
+    VanillaVersionBase: 1.7.1-1.7.1
+    MajorChanges:
+    - pre-1.7.1 changelogs are no longer supported & are really old
+    - you can view them in the archived versions if you insist on seeing them (insert
+      link to archive)
+    Changes:
+    - e

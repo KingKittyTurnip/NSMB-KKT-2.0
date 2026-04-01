@@ -2,6 +2,7 @@ using Quantum;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
 using NSMB.Utilities.Extensions;
+using NSMB.Utilities;
 
 public unsafe class SpringboardAnimator : QuantumEntityViewComponent {
 
@@ -48,6 +49,6 @@ public unsafe class SpringboardAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
     }
 }

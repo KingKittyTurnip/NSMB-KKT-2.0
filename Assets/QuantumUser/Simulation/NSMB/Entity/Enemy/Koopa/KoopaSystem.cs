@@ -5,11 +5,10 @@ namespace Quantum {
     public unsafe class KoopaSystem : SystemMainThreadEntityFilter<Koopa, KoopaSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEnemyRespawned, ISignalOnEntityBumped,
         ISignalOnBobombExplodeEntity, ISignalOnIceBlockBroken, ISignalOnEnemyKilledByStageReset, ISignalOnEnemyTurnaround, ISignalOnEntityCrushed,
         ISignalOnMarioPlayerBecameInvincible, ISignalOnEnemyReturnedHome {
-       
+
         public struct Filter {
             public EntityRef Entity;
             public Enemy* Enemy;
-            public Hazard* Hazard;
             public Koopa* Koopa;
             public Transform2D* Transform;
             public PhysicsObject* PhysicsObject;
@@ -57,14 +56,13 @@ namespace Quantum {
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var entity = filter.Entity;
             var enemy = filter.Enemy;
-            var hazard = filter.Hazard;
             var koopa = filter.Koopa;
             var transform = filter.Transform;
             var physicsObject = filter.PhysicsObject;
             var freezable = filter.Freezable;
 
             // Inactive check
-            if (!(!enemy->IsDead && hazard->IsActive)
+            if (!enemy->IsAlive
                 || freezable->IsFrozen(f)) {
                 return;
             }
@@ -207,7 +205,7 @@ namespace Quantum {
                 koopaA->Kill(f, koopaEntityA, koopaEntityB, EnemyKillReason.Special);
                 anyDamaged = true;
             }
-            
+
             if (!anyDamaged) {
                 EnemySystem.EnemyBumpTurnaround(f, koopaEntityA, koopaEntityB);
             }
@@ -299,7 +297,7 @@ namespace Quantum {
                 }
                 return;
             }
-            
+
             if (groundpounded) {
                 if (koopa->SpawnPowerupWhenStomped.IsValid
                     && f.TryFindAsset(koopa->SpawnPowerupWhenStomped, out PowerupAsset powerup)) {
@@ -322,7 +320,7 @@ namespace Quantum {
                 }
                 return;
             }
-            
+
             if (koopa->IsKicked || !koopa->IsInShell) {
                 // Moving (either in shell, or walking)
                 if (attackedFromAbove) {
@@ -370,7 +368,7 @@ namespace Quantum {
                 }
                 return;
             }
-            
+
             // Stationary in shell, always kick (if we cant pick it up)
             if (mario->CanPickupItem(f, marioEntity, koopaEntity)) {
                 koopaHoldable->Pickup(f, koopaEntity, marioEntity);
@@ -380,9 +378,9 @@ namespace Quantum {
                 koopaEnemy->IgnoreOffscreen = true;
             }
         }
-        
+
         public static bool OnKoopaIceBlockInteraction(Frame f, EntityRef koopaEntity, EntityRef iceBlockEntity, PhysicsContact contact) {
-            var koopa = f.Unsafe.GetPointer<Koopa>(koopaEntity);                         
+            var koopa = f.Unsafe.GetPointer<Koopa>(koopaEntity);
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(iceBlockEntity);
 
             FP upDot = FPVector2.Dot(contact.Normal, FPVector2.Up);
@@ -454,12 +452,12 @@ namespace Quantum {
                 piranhaPlant->Kill(f, piranhaPlantEntity, koopaEntity, EnemyKillReason.Special);
                 anyDamaged = true;
             }
-            if (beingHeld) { 
+            if (beingHeld) {
                 // Kill self, too.
                 koopa->Kill(f, koopaEntity, piranhaPlantEntity, EnemyKillReason.Special);
                 anyDamaged = true;
             }
-            
+
             if (!anyDamaged) {
                 // Turn
                 EnemySystem.EnemyBumpTurnaround(f, koopaEntity, piranhaPlantEntity, false);
@@ -528,8 +526,7 @@ namespace Quantum {
                 || !f.Unsafe.TryGetPointer(entity, out Koopa* koopa)
                 || !f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
                 || !f.Unsafe.TryGetPointer(entity, out Enemy* enemy)
-                || !f.Unsafe.TryGetPointer(entity, out Hazard* hazard)
-                || !(!enemy->IsDead && hazard->IsActive)
+                || !enemy->IsAlive
                 || !f.Unsafe.TryGetPointer(entity, out Holdable* holdable)
                 || f.Exists(holdable->Holder)
                 || holdable->IgnoreOwnerFrames > 0) {
@@ -549,7 +546,7 @@ namespace Quantum {
             physicsObject->IsTouchingGround = false;
         }
 
-        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity) {
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
             if (f.Unsafe.TryGetPointer(entity, out Koopa* koopa)) {
                 koopa->Kill(f, entity, bobomb, EnemyKillReason.Special);
             }

@@ -4,6 +4,7 @@ using UnityEngine;
 using NSMB.Utilities.Extensions;
 using static NSMB.Utilities.QuantumViewUtils;
 using System.Drawing.Drawing2D;
+using NSMB.Utilities;
 
 public unsafe class BaseballAnimator : QuantumEntityViewComponent {
 
@@ -49,6 +50,6 @@ public unsafe class BaseballAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
     }
 }

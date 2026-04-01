@@ -1,14 +1,13 @@
 using Photon.Deterministic;
 
 namespace Quantum {
-    public unsafe class BobombSystem : SystemMainThreadEntityFilter<Bobomb, BobombSystem.Filter>, ISignalOnEntityBumped, ISignalOnEnemyRespawned, ISignalOnThrowHoldable, 
+    public unsafe class BobombSystem : SystemMainThreadEntityFilter<Bobomb, BobombSystem.Filter>, ISignalOnEntityBumped, ISignalOnEnemyRespawned, ISignalOnThrowHoldable,
         ISignalOnBobombExplodeEntity, ISignalOnIceBlockBroken, ISignalOnEnemyKilledByStageReset, ISignalOnEntityCrushed, ISignalOnMarioPlayerBecameInvincible {
-        
+
         public struct Filter {
             public EntityRef Entity;
             public Bobomb* Bobomb;
             public Enemy* Enemy;
-            public Hazard* Hazard;
             public Transform2D* Transform;
             public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* Collider;
@@ -28,9 +27,8 @@ namespace Quantum {
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var bobomb = filter.Bobomb;
             var enemy = filter.Enemy;
-            var hazard = filter.Hazard;
 
-            if (!(!enemy->IsDead && hazard->IsActive)
+            if (!enemy->IsAlive
                 || filter.Freezable->IsFrozen(f)) {
                 return;
             }
@@ -79,7 +77,6 @@ namespace Quantum {
 
         private static void Explode(Frame f, ref Filter filter) {
             var enemy = filter.Enemy;
-            var hazard = filter.Hazard;
             var bobomb = filter.Bobomb;
             var transform = filter.Transform;
             var holdable = filter.Holdable;
@@ -124,11 +121,8 @@ namespace Quantum {
             }
 
             enemy->IsDead = true;
-            hazard->IsActive = false;
-            //ee
             enemy->IsActive = false;
             enemy->SetDelayedRespawn(180); // three seconds instead of the usual 6
-
             physicsObject->Velocity = FPVector2.Zero;
             physicsObject->IsFrozen = true;
             f.Events.BobombExploded(filter.Entity);
@@ -167,11 +161,11 @@ namespace Quantum {
             var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
 
             // Temporary invincibility, we dont want to spam the kick sound
-            if (f.Exists(bobombHoldable->Holder) 
+            if (f.Exists(bobombHoldable->Holder)
                 || (bobombHoldable->PreviousHolder == marioEntity && bobombHoldable->IgnoreOwnerFrames > 0)) {
                 return;
             }
-            
+
             var bobomb = f.Unsafe.GetPointer<Bobomb>(bobombEntity);
             var bobombEnemy = f.Unsafe.GetPointer<Enemy>(bobombEntity);
             var bobombTransform = f.Unsafe.GetPointer<Transform2D>(bobombEntity);
@@ -180,7 +174,7 @@ namespace Quantum {
 
             // Special insta-kill cases
             if (mario->InstakillsEnemies(marioPhysicsObject, true)) {
-                bobomb->Kill(f, bobombEntity, marioEntity, EnemyKillReason.Special);    
+                bobomb->Kill(f, bobombEntity, marioEntity, EnemyKillReason.Special);
                 return;
             }
 
@@ -226,7 +220,7 @@ namespace Quantum {
                     mario->Powerdown(f, marioEntity, false, bobombEntity);
                     bobombEnemy->ChangeFacingRight(f, bobombEntity, damageDirection.X > 0);
                 }
-            } 
+            }
         }
 
         public static void OnBobombProjectileInteraction(Frame f, EntityRef bobombEntity, EntityRef projectileEntity) {
@@ -275,8 +269,7 @@ namespace Quantum {
                 || !f.Unsafe.TryGetPointer(entity, out Bobomb* bobomb)
                 || !f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
                 || !f.Unsafe.TryGetPointer(entity, out Enemy* enemy)
-                || !f.Unsafe.TryGetPointer(entity, out Hazard* hazard)
-                || !(!enemy->IsDead && hazard->IsActive)
+                || !enemy->IsAlive
                 || !f.Unsafe.TryGetPointer(entity, out Holdable* holdable)
                 || f.Exists(holdable->Holder)) {
 

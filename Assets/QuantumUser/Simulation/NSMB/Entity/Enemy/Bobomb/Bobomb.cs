@@ -18,7 +18,7 @@ namespace Quantum {
             var enemy = f.Unsafe.GetPointer<Enemy>(entity);
             var initiatorTransform = f.Unsafe.GetPointer<Transform2D>(initiator);
             var bobombTransform = f.Unsafe.GetPointer<Transform2D>(entity);
-            
+
             enemy->FacingRight = QuantumUtils.WrappedDirectionSign(f, bobombTransform->Position, initiatorTransform->Position) > 0;
 
             var holdable = f.Unsafe.GetPointer<Holdable>(entity);
@@ -36,9 +36,6 @@ namespace Quantum {
 
         public readonly void Kill(Frame f, EntityRef bobombEntity, EntityRef killerEntity, EnemyKillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(bobombEntity);
-            if (enemy->IsDead) {
-                return;
-            }
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(bobombEntity);
             var bobombTransform = f.Unsafe.GetPointer<Transform2D>(bobombEntity);
 

@@ -10,3 +10,7 @@ component LemmyBall {
 event LemmyBallLand {
 	EntityRef Entity;
 }
+
+event LemmyBallHitEntity {
+	EntityRef Entity;
+}

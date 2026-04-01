@@ -5,7 +5,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
 
-    public unsafe class HazardSystem : SystemMainThreadFilterStage<HazardSystem.Filter>, ISignalOnEnemyDespawned, ISignalInitializeHazard, ISignalOnEnemyRespawned, ISignalOnStageReset {
+    public unsafe class HazardSystem : SystemMainThreadFilterStage<HazardSystem.Filter>, ISignalOnEnemyDespawned, ISignalInitializeHazard, /*ISignalOnEnemyRespawned,*/ ISignalOnStageReset {
         /*
          ---------------------------------------
          
@@ -45,19 +45,19 @@ namespace Quantum {
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var hazard = filter.Hazard;
-            if (!hazard->IsActive)
-                return;
+            //if (!hazard->IsActive)
+            //    return;
 
             var transform = filter.Transform;
             var collider = filter.Collider;
 
-            // Despawn off bottom of stage
-            if (!hazard->DoNotDespawnInPit && transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
-                HazardSystem.DestroyHazard(f, filter.Entity);
+            if (!hazard->IsHazard) {
                 return;
             }
 
-            if (!hazard->IsHazard) {
+            // Despawn off bottom of stage
+            if (!hazard->DoNotDespawnInPit && transform->Position.Y + collider->Shape.Box.Extents.Y + collider->Shape.Centroid.Y < stage.StageWorldMin.Y) {
+                HazardSystem.DestroyHazard(f, filter.Entity);
                 return;
             }
 
@@ -100,7 +100,7 @@ namespace Quantum {
             var hazardsettings = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData;
             //var hazardata = hazardsettings.HazardDatas[index];
 
-            hazard->IsHazard = hazard->JustSpawned = hazard->IsActive = true;
+            hazard->IsHazard = hazard->JustSpawned = true;
             // IdeaBulb Carry On Creation :TOTEST:
             if (spawnReason == SpawnReason.Bulb && f.Exists(owner)) {
                 f.Unsafe.TryGetPointer(thisEntity, out Holdable* holdable);
@@ -142,7 +142,6 @@ namespace Quantum {
                     ChangeHazardIcon(f, entity, false);
                     f.Destroy(entity);
                 } else {
-                    hazard->IsActive = false;
                     if (f.Unsafe.TryGetPointer(entity, out Transform2D* transform))
                         transform->Position.Y = -255;
                     if (f.Unsafe.TryGetPointer(entity, out PhysicsCollider2D* collider))
@@ -165,9 +164,12 @@ namespace Quantum {
             var filter = f.Filter<Hazard, Transform2D>();
 
             while (filter.NextUnsafe(out EntityRef entity, out Hazard* hazard, out Transform2D* transform)) {
-                if (hazard->IsActive) {
-                    // Check for respawning blocks killing us
-                    if (!f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
+                //if (hazard->IsActive) {
+                if (!hazard->IsHazard) { //this is a hazard, we can't respawn
+                    continue;
+                }
+                // Check for respawning blocks killing us
+                if (!f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
                         || physicsObject->DisableCollision) {
                         continue;
                     }
@@ -178,14 +180,16 @@ namespace Quantum {
                     if (PhysicsObjectSystem.BoxInGround(f, transform->Position, collider->Shape, entity: entity)) {
                         f.Signals.OnEnemyKilledByStageReset(entity);
                     }
-                } else {
+                /*} else {
                     // Check for respawns
                     if (hazard->IsHazard) { //this is a hazard, we can't respawn
                         continue;
                     }
 
-		    if (full)
+                    if (full)
                         hazard->Team = 255;
+
+                    //TODO: port notoss's enemy respawn system, or just not add the support for hazard in stage spawning
 
                     if (!hazard->IgnorePlayerWhenRespawning) {
                         Physics2D.HitCollection playerHits = f.Physics2D.OverlapShape(hazard->Spawnpoint, 0, f.Context.CircleRadiusTwo, f.Context.PlayerOnlyMask);
@@ -198,11 +202,11 @@ namespace Quantum {
                         enemy->Respawn(f, entity);
                     }
                     f.Signals.OnEnemyRespawned(entity);
-                }
+                }*/
             }
         }
 
-        public void OnEnemyRespawned(Frame f, EntityRef entity) {
+        /*public void OnEnemyRespawned(Frame f, EntityRef entity) {
             if (f.Unsafe.TryGetPointer(entity, out Hazard* hazard)) {
                 if (!hazard->IsHazard) {
                     hazard->IsActive = true;
@@ -222,7 +226,7 @@ namespace Quantum {
                     }
                 }
             }
-        }
+        }*/
 
         public static void ChangeHazardIcon(Frame f, EntityRef entity, bool Created) {
             HazardIconChanged?.Invoke(f, entity, Created);

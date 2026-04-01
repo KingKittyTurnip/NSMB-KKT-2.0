@@ -40,15 +40,14 @@ namespace NSMB.Entities.Enemies {
             bobber.localPosition = new(0, Mathf.Sin(2 * Mathf.PI * time * sinSpeed) * sinAmplitude);
 
             if (!f.Unsafe.TryGetPointer(EntityRef, out Boo* boo)
-                || !f.Unsafe.TryGetPointer(EntityRef, out Enemy* enemy)
-                || !f.Unsafe.TryGetPointer(EntityRef, out Hazard* hazard)) {
+                || !f.Unsafe.TryGetPointer(EntityRef, out Enemy* enemy)) {
 
                 return;
             }
 
             animator.SetBool(ParamFacingRight, enemy->FacingRight);
             animator.SetBool(ParamScared, boo->UnscaredFrames > 0);
-            sRenderer.enabled = !(enemy->IsDead && !hazard->IsActive);
+            sRenderer.enabled = enemy->IsActive;
 
             if (enemy->IsDead) {
                 transform.rotation *= Quaternion.Euler(0, 0, 400f * (enemy->FacingRight ? -1 : 1) * Time.deltaTime);

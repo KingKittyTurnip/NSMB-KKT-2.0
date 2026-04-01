@@ -123,7 +123,7 @@ namespace Quantum {
                         } else {
                             if (kingboo->ProjectileShots == 0) {
                                 //Refresh Attack Duration
-                                kingboo->RngFireball = (byte) f.RNG->Next(2, 4);
+                                kingboo->RngFireball = (byte) f.RNG->Next(3, 4);
                             }
                             if (kingboo->RngFireball >= kingboo->ProjectileShots) {
                                 //Attack
@@ -183,11 +183,13 @@ namespace Quantum {
 
                 f.Unsafe.GetPointer<Transform2D>(newEntity)->Position = spawnPos;
                 f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity = ((Direction * (4 + FP._0_10)) + FPVector2.Up);
-                throwhazard->IsHazard = throwhazard->IsActive = true;
+                throwhazard->IsHazard = true;
                 throwhazard->LifeTime = 250;
                 f.Unsafe.GetPointer<ThrowingObject>(newEntity)->Thrown = true;
                 f.Unsafe.GetPointer<Holdable>(newEntity)->PreviousHolder = boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity;
                 kingboo->ProjectileShots++;
+
+                f.Events.KingBooBarf(entity);
             }
             //State Calcs
             switch (kingboo->State) {
@@ -236,11 +238,6 @@ namespace Quantum {
                     //Prepare Suck
                     var projectiles = f.Filter<ThrowingObject, Holdable, PhysicsObject>();
                     var disRef = boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity;
-                    while (projectiles.NextUnsafe(out EntityRef projectileEntity, out ThrowingObject* throwable, out Holdable* throwholdable, out PhysicsObject* throwphys)) {
-                        if (throwholdable->PreviousHolder == disRef) {
-                            throwable->ReusableTimer = 3;
-                        }
-                    }
                 }
                 break;
             case KingBooState.Sucking:
@@ -259,22 +256,21 @@ namespace Quantum {
                             FP TargetDirection = FPMath.Atan2(Direction.Y, Direction.X);
 
                             //Move Torwards King Boo
-                            throwable->ReusableTimer -= f.DeltaTime * 8;
-                            if (throwable->ReusableTimer <= 1) {
-                                if (throwable->Varient < 3) {
+                            throwable->ReusableTimer -= f.DeltaTime;
+                            if (throwable->Varient < 3) {
+                                if (throwable->ReusableTimer < 0) {
                                     throwable->Varient = 4;
                                     throwphys->Velocity = FPVector2.Zero;
                                     throwphys->Gravity.Y = 0;
+                                    throwphys->TerminalVelocity = -12;
                                     throwable->HitSomething = false;
-                                    if (!throwable->Thrown) {
-                                        throwable->Thrown = true;
-                                        f.Events.PlayComboSound(throwableEntity, 1);
-                                    }
+                                    f.Events.PlayComboSound(throwableEntity, 1);
                                 }
-                                throwphys->Velocity = (new FPVector2(FPMath.Cos(TargetDirection), FPMath.Sin(TargetDirection))) * -FPMath.Max(throwable->ReusableTimer, -4 - ((throwable->ReusableTimer * throwable->ReusableTimer)/10));
-                            } else {
-                                throwphys->Velocity *= Constants._0_90;
-                                throwphys->Gravity.Y *= Constants.BallSlowDownMultiplier;
+                            } else if (throwable->Varient == 4) {
+                                throwphys->Velocity = (new FPVector2(FPMath.Cos(TargetDirection), FPMath.Sin(TargetDirection))) * -(FPMath.Max(throwable->ReusableTimer, -4 - ((throwable->ReusableTimer * throwable->ReusableTimer)/10)) * 16);
+                                if (throwable->ReusableTimer < -FP._0_25 && !throwable->Thrown) {
+                                    throwable->Thrown = true;
+                                }
                             }
 
                             if ((ourPos - theirPos).Magnitude < FP._0_50) {
@@ -445,7 +441,7 @@ namespace Quantum {
             }
             }
 
-            f.Signals.OnProjectileHitEntity(f, projectileEntity, thisEntity);
+            f.Signals.OnProjectileHitEntity(projectileEntity, thisEntity);
         }
         public void OnBossKingBooInteraction(Frame f, EntityRef bossEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
@@ -461,18 +457,18 @@ namespace Quantum {
                 return;
 
             if (f.Unsafe.TryGetPointer(enemyEntity, out Goomba* goomba)) {
-                goomba->Kill(f, enemyEntity, thisEntity, KillReason.Special);
+                goomba->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out Koopa* koopa)) {
                 if (koopa->IsKicked) {
                     boss->BossHarmed(f, thisEntity, f.Unsafe.GetPointer<Enemy>(enemyEntity)->FacingRight, KnockbackStrength.FireballBump, false);
                 }
-                koopa->Kill(f, enemyEntity, enemyEntity, KillReason.Special);
+                koopa->Kill(f, enemyEntity, enemyEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out BulletBill* bill)) {
-                bill->Kill(f, enemyEntity, thisEntity, KillReason.Special);
+                bill->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out Bobomb* bomb)) {
-                bomb->Kill(f, enemyEntity, thisEntity, KillReason.Special);
+                bomb->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out PiranhaPlant* plant)) {
-                plant->Kill(f, enemyEntity, thisEntity, KillReason.Special);
+                plant->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
             }
         }
         #endregion
@@ -503,7 +499,7 @@ namespace Quantum {
             }
         }
 
-        public void OnIceBlockBroken(Frame f, EntityRef brokenIceBlock, IceBlockBreakReason breakReason) {
+        public void OnIceBlockBroken(Frame f, EntityRef brokenIceBlock, IceBlockBreakReason breakReason, EntityRef attacker) {
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(brokenIceBlock);
             if (f.Unsafe.TryGetPointer(iceBlock->Entity, out Interactable* inter)) {
                 inter->ColliderDisabled = false;

@@ -3,6 +3,7 @@ using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
 using NSMB.Utilities.Extensions;
 using UnityEngine.UIElements;
+using NSMB.Utilities;
 
 public unsafe class KingBooStoneAnimator : QuantumEntityViewComponent {
 
@@ -51,7 +52,7 @@ public unsafe class KingBooStoneAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
         Instantiate(Enums.PrefabParticle.Enemy_Puff.GetGameObject(), transform.position, Quaternion.identity);
     }
 }

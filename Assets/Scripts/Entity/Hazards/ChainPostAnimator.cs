@@ -6,6 +6,7 @@ using static NSMB.Utilities.QuantumViewUtils;
 using System.Drawing.Drawing2D;
 using System.Collections.Generic;
 using static UnityEditor.PlayerSettings;
+using NSMB.Utilities;
 
 public unsafe class ChainPostAnimator : QuantumEntityViewComponent {
 
@@ -42,7 +43,7 @@ public unsafe class ChainPostAnimator : QuantumEntityViewComponent {
 
 
         if (f.Exists(chainPost->ConnectedObject)) {
-            CalculateChains(f, chainPost->ConnectedObject, chainPost->Varient == 1 ? 8 : 4, chainPost->Varient == 1 ? 7.5f : 3.5f, transform.position);
+            CalculateChains(f, chainPost->ConnectedObject, chainPost->Varient == 1 ? 8 : 4, chainPost->Varient == 1 ? 7f : 3f, transform.position);
         }
     }
 
@@ -94,7 +95,7 @@ public unsafe class ChainPostAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
     }
 
     private void OnPostChainBreak(EventThrowObjSimple e) {
@@ -104,7 +105,7 @@ public unsafe class ChainPostAnimator : QuantumEntityViewComponent {
 
         if (e.pos.Y == -999) { //a lil dumb but it works well
             //Yank
-            sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(1));
+            sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(1));
 
         } else {
             //Break Chains

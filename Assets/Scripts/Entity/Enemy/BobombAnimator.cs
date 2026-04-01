@@ -57,7 +57,6 @@ namespace NSMB.Entities.Enemies {
 
             var bobomb = f.Unsafe.GetPointer<Bobomb>(EntityRef);
             var enemy = f.Unsafe.GetPointer<Enemy>(EntityRef);
-            var hazard = f.Unsafe.GetPointer<Hazard>(EntityRef);
             var holdable = f.Unsafe.GetPointer<Holdable>(EntityRef);
 
             bool lit = bobomb->CurrentDetonationFrames > 0;
@@ -76,13 +75,12 @@ namespace NSMB.Entities.Enemies {
 
             // Bodge...
             // Fuck whoever wrote this, they REALLY wanted to mess UP my respawn code >:(
-            // Darn person above messed with my hazard code >:)
-            if (!(!enemy->IsAlive && hazard->IsActive) && enemy->RespawnTimer > enemy->RespawnSparklesTimer + 1) {
+            if (!enemy->IsAlive && enemy->RespawnTimer > enemy->RespawnSparklesTimer + 1) {
                 sfx.Stop();
             }
 
             sRenderer.SetPropertyBlock(mpb);
-            sRenderer.enabled = !(enemy->IsDead && !hazard->IsActive);
+            sRenderer.enabled = enemy->IsActive;
             sRenderer.flipX = !enemy->FacingRight;
 
             Vector3 modifiedZ = transform.position;

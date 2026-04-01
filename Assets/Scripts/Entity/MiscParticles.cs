@@ -65,17 +65,18 @@ namespace NSMB.Particles {
             Play(ParticleEffect.Puff, e.Position.ToUnityVector3());
         }
 
-    private unsafe void OnPlayPuffParticle(EventPlayPuffParticle e) {
-        Instantiate(
-            Enums.PrefabParticle.Enemy_Puff.GetGameObject(),
-            new Vector3(e.Position.X.AsFloat, e.Position.Y.AsFloat, -5),
-            Quaternion.identity);
-    }
+        private unsafe void OnPlayPuffParticle(EventPlayPuffParticle e) {
+            Instantiate(
+                Enums.PrefabParticle.Enemy_Puff.GetGameObject(),
+                new Vector3(e.Position.X.AsFloat, e.Position.Y.AsFloat, -5),
+                Quaternion.identity);
+        }
 
-    [Serializable]
-    public class ParticlePair {
-        public ParticleEffect particle;
-        public GameObject prefab;
-        public Vector3 offset;
+        [Serializable]
+        public class ParticlePair {
+            public ParticleEffect particle;
+            public GameObject prefab;
+            public Vector3 offset;
+        }
     }
 }

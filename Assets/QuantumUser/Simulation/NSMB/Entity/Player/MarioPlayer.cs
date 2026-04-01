@@ -622,7 +622,7 @@ namespace Quantum {
             otherPhysicsObject->IsFrozen = otherPhysicsObject->DisableCollision = false;
             f.Unsafe.GetPointer<Interactable>(mario)->ColliderDisabled = false;
             IsGroundpounding = false;
-            ResetKnockback();
+            ResetKnockback(f, mario);
             DoEntityBounce = true;
         }
         public Input GetPlayerInput(Frame f, EntityRef marioEntity) {

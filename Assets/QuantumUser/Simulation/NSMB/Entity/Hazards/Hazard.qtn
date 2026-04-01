@@ -1,9 +1,8 @@
 component Hazard {
   //General
 	[ExcludeFromPrototype] bool IsHazard;
-	FPVector2 Spawnpoint;
-	[ExcludeFromPrototype] bool IsActive;
-	bool IgnorePlayerWhenRespawning;
+	//FPVector2 Spawnpoint;
+	//[ExcludeFromPrototype] bool IsActive;
 	bool DoNotDespawnInPit;
 
   //HazardSpawn Vars

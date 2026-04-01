@@ -5,6 +5,8 @@ using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
 using NSMB.Utilities.Extensions;
 using System.Collections.Generic;
+using NSMB.Utilities;
+using UnityEngine.UIElements;
 
 public unsafe class ChainChompAnimator : QuantumEntityViewComponent {
 
@@ -22,11 +24,10 @@ public unsafe class ChainChompAnimator : QuantumEntityViewComponent {
     [SerializeField] private GameObject LaunchParticle;
 
     private Quaternion modelRotationTarget;
-    private bool wasTurnaround;
 
 
     public void Start() {
-        //QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnCannonBoxBoom);
+        QuantumEvent.Subscribe<EventChainChompSound>(this, OnChompSound);
         QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
     }
     public override unsafe void OnUpdateView() {
@@ -36,7 +37,6 @@ public unsafe class ChainChompAnimator : QuantumEntityViewComponent {
             return;
         }
         var chainchomp = f.Unsafe.GetPointer<ChainChomp>(EntityRef);
-        //var cannonbox = f.Unsafe.GetPointer<ThrowingObject>(EntityRef);
 
         Vector3 modifiedZ = transform.position;
         //if (f.Exists(holdable->Holder)) {
@@ -46,23 +46,23 @@ public unsafe class ChainChompAnimator : QuantumEntityViewComponent {
         //}
         transform.position = modifiedZ;
 
-        //BoostParticles.SetActive(billblock->CanHit);
-        /*float delta = Time.deltaTime;
-        if (f.Exists(holdable->Holder)) {
-            var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->Holder);
-            var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(holdable->Holder);
+        animator.SetBool("Prepare", chainchomp->State == ChainChompState.Prepare);
+        animator.speed = chainchomp->State == ChainChompState.Chomp ? 1.5f : 1;
 
-            SetFacingDirection(f, mario, marioPhysicsObject);
-            InterpolateFacingDirection(mario);
+        float delta = Time.deltaTime;
+        if (chainchomp->State == ChainChompState.Chomp) {
+        } else if (chainchomp->State == ChainChompState.Prepare || chainchomp->State == ChainChompState.Lunge) {
+            float angle = Mathf.Atan2(transform.position.y - chainchomp->TargetPosition.Y.AsFloat, transform.position.x - chainchomp->TargetPosition.X.AsFloat) * Mathf.Rad2Deg;
+            if (chainchomp->FacingRight) {
+                modelRotationTarget = Quaternion.Euler(0, 180, 180 - angle);
+            } else {
+                modelRotationTarget = Quaternion.Euler(0, 0, angle);
+            }
 
-            //Model.rotation = Quaternion.Euler(0, holder.AnimationController.Rotation, 0);
-        } else if (!cannonbox->Thrown) {
-            Model.rotation = Quaternion.RotateTowards(Model.rotation, Quaternion.Euler(0, cannonbox->Facing ? 110 : 250, 0), 200f * Time.deltaTime);
         } else {
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
-            //Model.rotation = Quaternion.Euler(0, billblock->Facing ? 90 : -90, 0);
-            Model.rotation = Quaternion.RotateTowards(Model.rotation, Quaternion.Euler(0, Model.rotation.eulerAngles.y + ((float) physicsObject->Velocity.X * 100 * Time.deltaTime), 0), 2000f * Time.deltaTime);
-        }*/
+            modelRotationTarget = Quaternion.Euler(0, chainchomp->FacingRight ? -170 : -10, 0);
+        }
+        InterpolateFacingDirection();
     }
 
     public override void OnDeactivate() {
@@ -71,33 +71,21 @@ public unsafe class ChainChompAnimator : QuantumEntityViewComponent {
         }
     }
 
-    private void SetFacingDirection(Frame f, MarioPlayer* mario, PhysicsObject* physicsObject) {
-        using var profilerScope = HostProfiler.Start("MarioPlayerAnimator.SetFacingDirection");
-
-        float delta = Time.deltaTime;
-
-        modelRotationTarget = Quaternion.Euler(0, mario->FacingRight ? 110 : 250, 0);
-
-        wasTurnaround = mario->IsTurnaround;
+    private void InterpolateFacingDirection() {
+         float maxRotation = 1000f * Time.deltaTime;
+         Model.rotation = Quaternion.RotateTowards(Model.rotation, modelRotationTarget, maxRotation);
     }
 
-    private void InterpolateFacingDirection(MarioPlayer* mario) {
-        using var profilerScope = HostProfiler.Start("MarioPlayerAnimator.InterpolateFacingDirection");
-        if (wasTurnaround) {
-            Model.rotation = modelRotationTarget;
-        } else /* if (!GameManager.Instance.GameEnded) */ {
-            float maxRotation = 2000f * Time.deltaTime;
-            Model.rotation = Quaternion.RotateTowards(Model.rotation, modelRotationTarget, maxRotation);
-        }
-    }
-    private unsafe void OnCannonBoxBoom(EventThrowObjSimple e) {
+    private unsafe void OnChompSound(EventChainChompSound e) {
         if (e.Entity != EntityRef) {
             return;
         }
-        sfx.PlayOneShot(Launch);
-        animator.SetTrigger("Boom");
+        sfx.PlayOneShot(e.Lunged ? Launch : Chain);
 
-        Instantiate(LaunchParticle, e.pos.ToUnityVector3(), Quaternion.identity);
+        if (e.Lunged) {
+            Instantiate(LaunchParticle, gameObject.transform.position, Quaternion.identity);
+            sfx.PlayOneShot(Bark);
+        }
     }
 
     private void OnPlayComboSound(EventPlayComboSound e) {
@@ -105,6 +93,6 @@ public unsafe class ChainChompAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(QuantumUtils.GetComboSoundEffect(e.Combo));
+        sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
     }
 }

@@ -1,3 +1,4 @@
+using Photon.Deterministic;
 using static Quantum.CommandMvLDebugCmd;
 
 namespace Quantum {
@@ -48,7 +49,8 @@ namespace Quantum {
                 }
                 if (f.Unsafe.TryGetPointer(newEntity, out Hazard* hazard)) {
                     hazard->IsHazard = true;
-                    hazard->IsActive = true;
+                    f.Signals.InitializeHazard(newEntity, marioEntity, f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + (mario->FacingRight ? FPVector2.Right : FPVector2.Left), SpawnReason.Forced, -1);
+                    //hazard->IsActive = true;
                 }
                 break;
             case DebugCommand.KillSelf:

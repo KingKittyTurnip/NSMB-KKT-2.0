@@ -7,7 +7,6 @@ namespace Quantum {
             public EntityRef Entity;
             public Transform2D* Transform;
             public Enemy* Enemy;
-            public Hazard* Hazard;
             public PhysicsCollider2D* Collider;
         }
 
@@ -18,14 +17,13 @@ namespace Quantum {
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var enemy = filter.Enemy;
-            var hazard = filter.Hazard;
-                
+
             // handle respawning
             if (enemy->RespawnTimer > 0 && !enemy->DisableRespawning) {
                 HandleDelayedRespawn(f, ref filter, stage);
             }
 
-            if (!hazard->IsActive) {
+            if (!enemy->IsActive) {
                 return;
             }
 
@@ -196,15 +194,14 @@ namespace Quantum {
         }
 
         public void OnTryLiquidSplash(Frame f, EntityRef entity, EntityRef liquid, QBoolean exit, bool* doSplash) {
-            if (f.Unsafe.TryGetPointer(entity, out Hazard* hazard)) {
-                *doSplash &= hazard->IsActive;
+            if (f.Unsafe.TryGetPointer(entity, out Enemy* enemy)) {
+                *doSplash &= enemy->IsActive;
             }
         }
 
         public void OnBeforeInteraction(Frame f, EntityRef entity, bool* allowInteraction) {
-            if (f.Unsafe.TryGetPointer(entity, out Enemy* enemy) &&
-                f.Unsafe.TryGetPointer(entity, out Hazard* hazard)) {
-                *allowInteraction &= (!enemy->IsDead && hazard->IsActive);
+            if (f.Unsafe.TryGetPointer(entity, out Enemy* enemy)) {
+                *allowInteraction &= enemy->IsAlive;
             }
         }
 

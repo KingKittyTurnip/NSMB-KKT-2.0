@@ -129,7 +129,7 @@ namespace NSMB.Quantum {
             foreach (GameObject hazardSpawn in GameObject.FindGameObjectsWithTag("HazardSpawn")) {
                 Gizmos.color = new Color(0, 0, 1, 0.4f);
                 if (game != null) {
-                    f = game.Frames.Predicted;
+                    Frame f = game.Frames.Predicted;
                     int index = Array.IndexOf(stage.HazardSpawnpoints, hazardSpawn.transform.position.ToRoundedFPVector2());
                     if (index != -1) {
                         if (f.Global->UsedHazardSpawns.IsSet(index)) {
