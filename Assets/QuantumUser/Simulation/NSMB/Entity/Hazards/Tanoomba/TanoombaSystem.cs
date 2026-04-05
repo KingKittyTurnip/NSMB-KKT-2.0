@@ -265,9 +265,11 @@ namespace Quantum {
             }
 
             void TryLaugh() {
-                var mario = f.Unsafe.GetPointer<MarioPlayer>(tanoomba->TargetedPlayer);
-                if (mario->IsDead) {
-                    tanoomba->SwitchState(f, entity, TanoombaState.Laughing);
+                if (f.Exists(tanoomba->TargetedPlayer)) {
+                    var mario = f.Unsafe.GetPointer<MarioPlayer>(tanoomba->TargetedPlayer);
+                    if (mario->IsDead) {
+                        tanoomba->SwitchState(f, entity, TanoombaState.Laughing);
+                    }
                 }
             }
         }

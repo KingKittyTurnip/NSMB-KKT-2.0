@@ -12,6 +12,7 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
     [SerializeField] private GameObject coinFromBlockParticle, Breakparticle;
     [SerializeField] private Animator animator;
     [SerializeField] private List<GameObject> Faces = new();
+    [SerializeField] private GameObject Face_Invalid;
 
     [SerializeField] private AudioClip PickedUp, Damaged, Finished;
 
@@ -52,9 +53,11 @@ public unsafe class CoinboxAnimator : QuantumEntityViewComponent {
         bool hasHolder = f.Exists(holdable->Holder);
         bool ShowOwner = hasHolder || (coinbox->Thrown && f.Exists(holdable->PreviousHolder));
 
+        int OwnerOrderNumber = ShowOwner ? f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset).Order : -1;
         for (int i = 0; i < Faces.Count; i++) {
-            Faces[i].SetActive(ShowOwner && i == f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset).Order);
+            Faces[i].SetActive(ShowOwner && i == OwnerOrderNumber);
         }
+        Face_Invalid.SetActive(OwnerOrderNumber >= Faces.Count);
 
         float delta = Time.deltaTime;
         if (coinbox->IsFlying) {

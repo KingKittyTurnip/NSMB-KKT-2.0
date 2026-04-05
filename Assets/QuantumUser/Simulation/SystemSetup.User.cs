@@ -20,6 +20,8 @@ namespace Quantum {
                     new InteractionPhysicsQuerySystem(),
                     new GenericMoverSystem(),
                     new SpinnerSystem(),
+                      //KKT Mod
+                      new TornadoSystem(),
                     new DonutBlockSystem(),
                     new MovingPlatformPhysicsQuerySystem(),
                     new PhysicsSystem2D(),
@@ -39,6 +41,7 @@ namespace Quantum {
                     new PowerupSystem(),
                     new BlockBumpSystem(),
 
+                      //KKT Mod
                       new ChainChompSystem(),
                       new ThrowingObjectSystem(),
 
@@ -59,6 +62,7 @@ namespace Quantum {
                     new InvisibleBlockSystem(),
                     // new BetterPhysicsObjectSystem()
 
+                      //KKT Mod
                       new TanoombaSystem(),
                       new StarballSystem(),
                       new StarballgoalSystem(),

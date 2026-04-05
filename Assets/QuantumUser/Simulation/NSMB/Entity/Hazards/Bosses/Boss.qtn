@@ -21,3 +21,12 @@ event BossDeathAnimation {
 event PlayBossHitSound {
 	EntityRef Entity;
 }
+
+enum bossMarioContactResult {
+	None,
+	Above,
+	Harm,
+	SuperHarm,
+	Bump,
+	Special,
+}

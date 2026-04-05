@@ -391,11 +391,6 @@ namespace Quantum {
             if (physicsObject->IsTouchingGround) {
                 // Coyote Time
                 mario->CoyoteTimeFrames = physics.CoyoteTimeFrames;
-                if (mario->BillBux) {
-                    if (f.Unsafe.TryGetPointer(mario->HeldEntity, out ThrowingObject* ThrowingObj) && ThrowingObj->Type == ThrowingObjectType.BillBlock) {
-                        ThrowingObj->ReusableTimer = 180;
-                    }
-                }
             }
 
             if (!physicsObject->WasTouchingGround && physicsObject->IsTouchingGround) {
@@ -509,6 +504,13 @@ namespace Quantum {
             PowerupState effectiveState = mario->CurrentPowerupState;
             if (effectiveState == PowerupState.MegaMushroom && mario->DoEntityBounce) {
                 effectiveState = PowerupState.NoPowerup;
+            }
+
+            //KKT Mod
+            if (mario->BillBux) {
+                if (f.Unsafe.TryGetPointer(mario->HeldEntity, out ThrowingObject* ThrowingObj) && ThrowingObj->Type == ThrowingObjectType.BillBlock) {
+                    ThrowingObj->ReusableTimer = 180;
+                }
             }
 
             // TODO: fix magic
@@ -1468,7 +1470,7 @@ namespace Quantum {
                     PropellerStart(f, ref filter, physics, stage);
                 return;
             } else if (mario->BillBux) {
-                if (inputs.Jump.IsDown && !physicsObject->IsTouchingGround && f.Unsafe.TryGetPointer(mario->HeldEntity, out ThrowingObject* ThrowingObj) && ThrowingObj->Type == ThrowingObjectType.BillBlock && ThrowingObj->ReusableTimer > 0) {
+                if (inputs.PowerupAction.IsDown && !physicsObject->IsTouchingGround && f.Unsafe.TryGetPointer(mario->HeldEntity, out ThrowingObject* ThrowingObj) && ThrowingObj->Type == ThrowingObjectType.BillBlock && ThrowingObj->ReusableTimer > 0) {
                     if (physicsObject->Velocity.Y <= 0) {
                         physicsObject->Velocity.Y *= FP._0_50;
                         if (FPMath.Abs(physicsObject->Velocity.Y) < FP._0_50)

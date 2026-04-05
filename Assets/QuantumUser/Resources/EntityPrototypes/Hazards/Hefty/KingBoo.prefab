@@ -496,6 +496,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSources:
   - {fileID: 5674404523704379184}
+  - {fileID: 6157551285120873478}
   soundOrigin: {fileID: 7523289063499453456}
   soundRange: 12
   maxPanning: 0.8
@@ -1057,10 +1058,10 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 8b6465b42a1be5d408f42f9c4b3148f8, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

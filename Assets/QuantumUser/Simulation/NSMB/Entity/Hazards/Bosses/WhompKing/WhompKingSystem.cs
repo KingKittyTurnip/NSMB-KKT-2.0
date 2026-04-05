@@ -288,7 +288,7 @@ namespace Quantum {
             var whompking = f.Unsafe.GetPointer<WhompKing>(thisEntity);
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteractWithPlayer(f, marioEntity))
                 return;
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);

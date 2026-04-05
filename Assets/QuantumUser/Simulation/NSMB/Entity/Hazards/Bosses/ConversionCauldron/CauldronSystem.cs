@@ -26,6 +26,8 @@ namespace Quantum {
 
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<PhysicsObject, Cauldron>(f, OnObjectCauldronInteraction);
+            f.Context.Interactions.Register<PhysicsObject, Cauldron>(f, OnObjectCauldronSolidInteraction);
+            f.Context.RegisterPreContactCallback(f, OnLemmyBallObjectSolidPreContact);
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -85,11 +87,22 @@ namespace Quantum {
         }
 
         #region Interactions
-        public void OnObjectCauldronInteraction(Frame f, EntityRef otherEntity, EntityRef thisEntity) {
+        public static void OnObjectCauldronInteraction(Frame f, EntityRef otherEntity, EntityRef thisEntity) {
+            TryEnterCauldron(f, otherEntity, thisEntity);
+        }
+        public static bool OnObjectCauldronSolidInteraction(Frame f, EntityRef anyEntity, EntityRef thisEntity, PhysicsContact contact) {
+            return TryEnterCauldron(f, anyEntity, thisEntity);
+        }
+        private void OnLemmyBallObjectSolidPreContact(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts) {
+            if (f.Has<Cauldron>(entity) && f.Has<PhysicsObject>(contact.Entity)) {
+                keepContacts = TryEnterCauldron(f, contact.Entity, entity);
+            }
+        }
+        public static bool TryEnterCauldron(Frame f, EntityRef otherEntity, EntityRef thisEntity) {
             var cauldron = f.Unsafe.GetPointer<Cauldron>(thisEntity);
             if (cauldron->TransformingEntity != EntityRef.None || (f.Unsafe.TryGetPointer(otherEntity, out Hazard* hazarde) && hazarde->IsHefty) || (hazarde == null && !f.Has<MarioPlayer>(otherEntity)))
                 //Cauldron Cannot Accept This Object
-                return;
+                return false;
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var PhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var otherTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity);
@@ -111,7 +124,9 @@ namespace Quantum {
                 if (hazard->IsHazard) {
                     hazard->LifeTime = 240;
                 }
+                return true;
             }
+            return false;
         }
         #endregion
 

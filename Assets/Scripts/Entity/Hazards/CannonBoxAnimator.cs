@@ -24,7 +24,7 @@ public unsafe class CannonBoxAnimator : QuantumEntityViewComponent {
 
     private MaterialPropertyBlock materialBlock;
     List<Renderer> renderers = new();
-    private static readonly int ParamBoxType = Shader.PropertyToID("BoxType");
+    [SerializeField] private Texture BaseTexture, InvalidTexture;
 
     public void Start() {
         QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnCannonBoxBoom);
@@ -70,11 +70,14 @@ public unsafe class CannonBoxAnimator : QuantumEntityViewComponent {
         }
 
         //Set Color
-        int i = 0;
+        var i = BaseTexture;
         if (f.Exists(holdable->PreviousHolder)) {
-            i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset).Order+1;
+            i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset).CannonboxTexture;
+            if (i == null) {
+                i = InvalidTexture;
+            }
         }
-        materialBlock.SetInt(ParamBoxType, i);
+        materialBlock.SetTexture("Texture", i);
         foreach (Renderer r in renderers) {
             r.SetPropertyBlock(materialBlock);
         }

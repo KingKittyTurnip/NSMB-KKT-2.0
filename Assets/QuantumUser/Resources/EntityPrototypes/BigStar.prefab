@@ -331,7 +331,6 @@ MonoBehaviour:
   particles: {fileID: 5237286551399780066}
   starCollectPrefab: {fileID: 817659606265668166, guid: 0d07cd0662b5f394fa4d95667c1d1814,
     type: 3}
-  sRenderer: {fileID: 0}
   legacyAnimation: {fileID: 130453169333135730}
   sfx: {fileID: 6885801943199852353}
   uncollectableColor: {r: 1, g: 1, b: 1, a: 0.5}
@@ -782,7 +781,7 @@ Transform:
   m_GameObject: {fileID: 6306428316705399139}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -4.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

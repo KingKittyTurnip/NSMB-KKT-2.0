@@ -168,7 +168,7 @@ namespace Quantum {
             }
             void TryFireball(EntityRef Entity) {
                 if (Fireball) {
-                    bowser->State = BowserState.Attacking;
+                    bowser->State = physicsObject->IsTouchingGround ? BowserState.Attacking : BowserState.AttackingInJump;
                     bowser->ReusableTimer = 0;
                     f.Events.BowserAttack(Entity, BowserAttackType.FireBall);
                 }
@@ -217,7 +217,7 @@ namespace Quantum {
                     bowser->ReusableTimer = 0;
                     bowser->State = BowserState.Jumping;
                     physicsObject->IsTouchingGround = false;
-                    physicsObject->Velocity.Y = 16;
+                    physicsObject->Velocity.Y = 12;
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * 3), -7, 7);
                     physicsObject->TerminalVelocity = -20;
                 } else {
@@ -226,7 +226,7 @@ namespace Quantum {
                 break;
             case BowserState.Jumping:
                 if (leftrightinput != 0) {
-                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_20), -6, 6);
+                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_10), -6, 6);
                 }
                 if (!Jumpheld) {
                     physicsObject->Velocity.Y = FPMath.Min(physicsObject->Velocity.Y, 8);
@@ -248,84 +248,87 @@ namespace Quantum {
                         boss->iframes = 30;
                 }
                 break;
+            case BowserState.AttackingInJump:
             case BowserState.Attacking:
-                FP clamper2 = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_10, FP._1_25);
-                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_50), -clamper2, clamper2);
+                    FP clamper2 = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_10, bowser->State == BowserState.AttackingInJump ? 2 + FP._0_75 : FP._1_25);
+                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_50), -clamper2, clamper2);
+
+                bowser->State = physicsObject->IsTouchingGround ? BowserState.Attacking : BowserState.AttackingInJump;
 
                 bowser->ReusableTimer++;
-                if (bowser->ReusableTimer > 20) {
-                    if (!bowser->IsDry) {
-                        if (bowser->ReusableTimer == 21)
-                            f.Events.BowserAttack(filter.Entity, BowserAttackType.MegaAttack);
-                        bowser->ReusableTimer++;
-                    }
-                    //create multiple, if dry, create bones instead
-                    int Mod = bowser->IsDry ? 26 : 16;
-                    if (bowser->ReusableTimer % Mod == 0) {
-                        if (bowser->IsDry) {
-                            f.Events.BowserAttack(filter.Entity, BowserAttackType.BoneThrow);
+                    if (bowser->ReusableTimer > 20) {
+                        if (!bowser->IsDry) {
+                            if (bowser->ReusableTimer == 21)
+                                f.Events.BowserAttack(filter.Entity, BowserAttackType.MegaAttack);
+                            bowser->ReusableTimer++;
                         }
-                        f.Events.BowserShoot(filter.Entity, bowser->IsDry);
-                        FP Direc = (((((FP) bowser->ReusableTimer) / Mod) - 4) / 3);
-                        CreateProjectile(bowser->IsDry ? bowser->Bone : bowser->Fireball, new FPVector2(1, Direc), bowser->IsDry ? 12 + (2 * Direc) : 0);
-                    }
-                    if (bowser->ReusableTimer > 100 || !Sprint) {
-                        bowser->ReusableTimer = 0;
-                        bowser->State = BowserState.Walking;
-                        bowser->AttackCooldown = 80;
-                        bowser->VolleyCooldown = 80;
-                    }
-                } else if (!Sprint) {
-                    //create one
-                    f.Events.BowserShoot(filter.Entity, false);
-                    CreateProjectile(bowser->IsDry ? bowser->BlueFire : bowser->Fireball, new FPVector2(1, updowninput / 3), 0);
-
-                    if (bowser->VolleyCooldown > 0) {
-                        bowser->AttackCooldown = 50;
-                        bowser->VolleyCooldown = 50;
-                    } else {
-                        bowser->VolleyCooldown = 50;
-                    }
-                    bowser->ReusableTimer = 0;
-                    bowser->State = BowserState.Walking;
-                } else if (leftrightinput != 0) {
-                    //Allow Turnaround In Startup Phase
-                    boss->FacingRight = leftrightinput > 0;
-                }
-
-                void CreateProjectile(AssetRef<EntityPrototype> prototype, FPVector2 Direction, FP VerticalBonus) {
-                    FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, Constants._0_66);
-                    EntityRef newEntity = f.Create(prototype);
-                    var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
-                    projectile->Initialize(f, newEntity, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity, spawnPos, boss->FacingRight, false);
-                    var projPhys = f.Unsafe.GetPointer<PhysicsObject>(newEntity);
-                    FP radian = FPMath.Atan2(Direction.Y, Direction.X);
-                    Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
-                    projPhys->Velocity = (Direction * projectile->Speed) + (FPVector2.Up * VerticalBonus);
-                    projectile->Speed = projPhys->Velocity.X;
-                }
-                break;
-            case BowserState.Groundpound:
-                if (bowser->ReusableTimer <= 15) {
-                    bowser->ReusableTimer++;
-                    FP Cap = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_20, 0);
-                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_20), -Cap, Cap);
-                    physicsObject->Velocity.Y = 1;
-                } else {
-                    physicsObject->Velocity.X = 0;
-                    physicsObject->Velocity.Y = -30;
-                    if (physicsObject->IsTouchingGround) {
-                        bowser->ReusableTimer++;
-                        if (bowser->ReusableTimer > 45) {
+                        //create multiple, if dry, create bones instead
+                        int Mod = bowser->IsDry ? 26 : 16;
+                        if (bowser->ReusableTimer % Mod == 0) {
+                            if (bowser->IsDry) {
+                                f.Events.BowserAttack(filter.Entity, BowserAttackType.BoneThrow);
+                            }
+                            f.Events.BowserShoot(filter.Entity, bowser->IsDry);
+                            FP Direc = (((((FP) bowser->ReusableTimer) / Mod) - 4) / 3);
+                            CreateProjectile(bowser->IsDry ? bowser->Bone : bowser->Fireball, new FPVector2(1, Direc), bowser->IsDry ? 12 + (2 * Direc) : 0);
+                        }
+                        if (bowser->ReusableTimer > 100 || !Sprint) {
                             bowser->ReusableTimer = 0;
-                            bowser->State = BowserState.Walking;
-                        } else if (bowser->ReusableTimer == 17) {
-                            f.Events.BowserLanded(f, filter.Entity, false);
+                            bowser->State = bowser->State == BowserState.AttackingInJump ? BowserState.Jumping : BowserState.Walking;
+                            bowser->AttackCooldown = 80;
+                            bowser->VolleyCooldown = 80;
+                        }
+                    } else if (!Sprint) {
+                        //create one
+                        f.Events.BowserShoot(filter.Entity, false);
+                        CreateProjectile(bowser->IsDry ? bowser->BlueFire : bowser->Fireball, new FPVector2(1, updowninput / 3), 0);
+
+                        if (bowser->VolleyCooldown > 0) {
+                            bowser->AttackCooldown = 50;
+                            bowser->VolleyCooldown = 50;
+                        } else {
+                            bowser->VolleyCooldown = 50;
+                        }
+                        bowser->ReusableTimer = 0;
+                        bowser->State = bowser->State == BowserState.AttackingInJump ? BowserState.Jumping : BowserState.Walking;
+                    } else if (leftrightinput != 0) {
+                        //Allow Turnaround In Startup Phase
+                        boss->FacingRight = leftrightinput > 0;
+                    }
+
+                    void CreateProjectile(AssetRef<EntityPrototype> prototype, FPVector2 Direction, FP VerticalBonus) {
+                        FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, Constants._0_66);
+                        EntityRef newEntity = f.Create(prototype);
+                        var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
+                        projectile->Initialize(f, newEntity, boss->BossGetOwnerResponsible(entity), spawnPos, boss->FacingRight, false);
+                        var projPhys = f.Unsafe.GetPointer<PhysicsObject>(newEntity);
+                        FP radian = FPMath.Atan2(Direction.Y, Direction.X);
+                        Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
+                        projPhys->Velocity = (Direction * projectile->Speed) + (FPVector2.Up * VerticalBonus);
+                        projectile->Speed = projPhys->Velocity.X;
+                    }
+                    break;
+                case BowserState.Groundpound:
+                    if (bowser->ReusableTimer <= 15) {
+                        bowser->ReusableTimer++;
+                        FP Cap = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_20, 0);
+                        physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_20), -Cap, Cap);
+                        physicsObject->Velocity.Y = 1;
+                    } else {
+                        physicsObject->Velocity.X = 0;
+                        physicsObject->Velocity.Y = -30;
+                        if (physicsObject->IsTouchingGround) {
+                            bowser->ReusableTimer++;
+                            if (bowser->ReusableTimer > 45) {
+                                bowser->ReusableTimer = 0;
+                                bowser->State = BowserState.Walking;
+                            } else if (bowser->ReusableTimer == 17) {
+                                f.Events.BowserLanded(f, filter.Entity, false);
+                            }
                         }
                     }
+                    break;
                 }
-                break;
-            }
             BrickInteraction(f, ref filter);
         }
 
@@ -355,68 +358,38 @@ namespace Quantum {
 
         #region Interactions
         public void OnMarioBowserInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
-            var bowser = f.Unsafe.GetPointer<Bowser>(thisEntity);
-            var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteractWithPlayer(f, marioEntity))
                 return;
+            var bowser = f.Unsafe.GetPointer<Bowser>(thisEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
-            var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
 
             QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
-            bool attackedFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_50;
 
-            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
-
-            bool bossHarmed = false;
-            if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
-                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.Groundpound, true);
-                bossHarmed = true;
-
-            } else if (attackedFromAbove) {
-                if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
-                    if (mario->IsGroundpounding) {
-                        mario->IsGroundpounding = false;
-                        boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump, false);
-                        bossHarmed = true;
-                    }
-                    mario->DoEntityBounce = true;
-                } else {
-                    boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump, false);
-                    bossHarmed = true;
-                    mario->DoEntityBounce = !mario->IsGroundpounding;
-                }
-
-                mario->IsDrilling = false;
-                marioPhysicsObject->Velocity.X = FPMath.Clamp(marioPhysicsObject->Velocity.X + (((theirPos - ourPos) * 10).Normalized.X * 3), -5, 5);
-
-            } else if (bowser->State == BowserState.Groundpound && bowser->ReusableTimer == 16) {
-                mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 3, KnockbackStrength.Groundpound, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity);
-
-            } else if (!mario->IsInKnockback) {
-                // Bumpif (mario->IsDamageable) {
-                if (damageDirection.Y < -FP._0_10) {
-                    mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 1, KnockbackStrength.Normal, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity);
-                    bowser->State = BowserState.Jumping;
-                    f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.Y = 6;
-                } else if (marioPhysicsObject->IsTouchingGround) {
-                    mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 1, KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity);
-                    boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
-                } else {
-                    marioPhysicsObject->Velocity.X = (marioPhysicsObject->Velocity.X/2) + boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
-                }
-            }
-
-            if (bossHarmed) {
-                if (groundpounded) {
-                    f.Events.BowserKnockbacked(thisEntity);
-                    bowser->State = BowserState.Knockbacked;
-                    bowser->ReusableTimer = 0;
-                    boss->FacingRight = damageDirection.X > 0;
-                    f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.X = damageDirection.X > 0 ? -7 : 7;
-                }
+            switch (boss->BossMarioContact(f, thisEntity, marioEntity, damageDirection, bowser->State == BowserState.Groundpound && bowser->ReusableTimer == 16)) {
+            case bossMarioContactResult.Above:
+                bowser->State = BowserState.Jumping;
+                break;
+            case bossMarioContactResult.Harm:
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump, false);
+                break;
+            case bossMarioContactResult.SuperHarm:
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.Normal, false);
+                bowser->State = BowserState.Knockbacked;
+                bowser->ReusableTimer = 0;
+                boss->FacingRight = damageDirection.X > 0;
+                f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.X = damageDirection.X > 0 ? -7 : 7;
+                f.Events.BowserKnockbacked(thisEntity);
+                break;
+            case bossMarioContactResult.Bump:
+                boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
+                break;
+            case bossMarioContactResult.Special:
+                mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 3, KnockbackStrength.Groundpound, boss->BossGetOwnerResponsible(thisEntity));
+                break;
             }
         }
         public void OnProjectileBowserInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {

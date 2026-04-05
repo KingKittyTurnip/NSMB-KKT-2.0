@@ -62,6 +62,7 @@ namespace Quantum {
     Jumping,
     Knockbacked,
     Attacking,
+    AttackingInJump,
     Groundpound,
   }
   public enum ChainChompState : byte {
@@ -221,6 +222,14 @@ namespace Quantum {
     SlamAttacking,
     SlamHit,
     Knockbacked,
+  }
+  public enum bossMarioContactResult : int {
+    None,
+    Above,
+    Harm,
+    SuperHarm,
+    Bump,
+    Special,
   }
   [System.FlagsAttribute()]
   public enum InputButtons : int {
@@ -4490,6 +4499,50 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Tornado : Quantum.IComponent {
+    public const Int32 SIZE = 8;
+    public const Int32 ALIGNMENT = 4;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    [AllocateOnComponentAdded()]
+    [FreeOnComponentRemoved()]
+    public QHashSetPtr<EntityRef> EntitiesInside;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    [AllocateOnComponentAdded()]
+    [FreeOnComponentRemoved()]
+    public QHashSetPtr<FP> Bounce;
+    public override readonly Int32 GetHashCode() {
+      unchecked { 
+        var hash = 9551;
+        hash = hash * 31 + EntitiesInside.GetHashCode();
+        hash = hash * 31 + Bounce.GetHashCode();
+        return hash;
+      }
+    }
+    public void ClearPointers(FrameBase f, EntityRef entity) {
+      if (EntitiesInside != default) f.FreeHashSet(ref EntitiesInside);
+      if (Bounce != default) f.FreeHashSet(ref Bounce);
+    }
+    public static void OnRemoved(FrameBase frame, EntityRef entity, void* ptr) {
+      var p = (Quantum.Tornado*)ptr;
+      p->ClearPointers((Frame)frame, entity);
+    }
+    public void AllocatePointers(FrameBase f, EntityRef entity) {
+      f.TryAllocateHashSet(ref EntitiesInside);
+      f.TryAllocateHashSet(ref Bounce);
+    }
+    public static void OnAdded(FrameBase frame, EntityRef entity, void* ptr) {
+      var p = (Quantum.Tornado*)ptr;
+      p->AllocatePointers((Frame)frame, entity);
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Tornado*)ptr;
+        QHashSet.Serialize(&p->EntitiesInside, serializer, Statics.SerializeEntityRef);
+        QHashSet.Serialize(&p->Bounce, serializer, Statics.SerializeFP);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Voidwall : Quantum.IComponent {
     public const Int32 SIZE = 24;
     public const Int32 ALIGNMENT = 8;
@@ -5260,6 +5313,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Tanoomba>();
       BuildSignalsArrayOnComponentAdded<Quantum.ThrowingObject>();
       BuildSignalsArrayOnComponentRemoved<Quantum.ThrowingObject>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Tornado>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Tornado>();
       BuildSignalsArrayOnComponentAdded<Transform2D>();
       BuildSignalsArrayOnComponentRemoved<Transform2D>();
       BuildSignalsArrayOnComponentAdded<Transform2DVertical>();
@@ -5668,6 +5723,7 @@ namespace Quantum {
     public static FrameSerializer.Delegate SerializeEntityRef;
     public static FrameSerializer.Delegate SerializePhysicsQueryRef;
     public static FrameSerializer.Delegate SerializePhysicsContact;
+    public static FrameSerializer.Delegate SerializeFP;
     public static FrameSerializer.Delegate SerializeBannedPlayerInfo;
     public static FrameSerializer.Delegate SerializePlayerRef;
     public static FrameSerializer.Delegate SerializePlayerInformation;
@@ -5677,6 +5733,7 @@ namespace Quantum {
       SerializeEntityRef = EntityRef.Serialize;
       SerializePhysicsQueryRef = PhysicsQueryRef.Serialize;
       SerializePhysicsContact = Quantum.PhysicsContact.Serialize;
+      SerializeFP = FP.Serialize;
       SerializeBannedPlayerInfo = Quantum.BannedPlayerInfo.Serialize;
       SerializePlayerRef = PlayerRef.Serialize;
       SerializePlayerInformation = Quantum.PlayerInformation.Serialize;
@@ -5858,6 +5915,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.TanoombaState), 1);
       typeRegistry.Register(typeof(Quantum.ThrowingObject), Quantum.ThrowingObject.SIZE);
       typeRegistry.Register(typeof(Quantum.ThrowingObjectType), 1);
+      typeRegistry.Register(typeof(Quantum.Tornado), Quantum.Tornado.SIZE);
       typeRegistry.Register(typeof(Transform2D), Transform2D.SIZE);
       typeRegistry.Register(typeof(Transform2DVertical), Transform2DVertical.SIZE);
       typeRegistry.Register(typeof(Transform3D), Transform3D.SIZE);
@@ -5867,9 +5925,10 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.WhompKingState), 1);
       typeRegistry.Register(typeof(Quantum.WrappingObject), Quantum.WrappingObject.SIZE);
       typeRegistry.Register(typeof(Quantum._globals_), Quantum._globals_.SIZE);
+      typeRegistry.Register(typeof(Quantum.bossMarioContactResult), 4);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 60)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 61)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -5928,6 +5987,7 @@ namespace Quantum {
         .Add<Quantum.Starballgoal>(Quantum.Starballgoal.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Tanoomba>(Quantum.Tanoomba.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.ThrowingObject>(Quantum.ThrowingObject.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.Tornado>(Quantum.Tornado.Serialize, Quantum.Tornado.OnAdded, Quantum.Tornado.OnRemoved, ComponentFlags.None)
         .Add<Quantum.Voidwall>(Quantum.Voidwall.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.WhompKing>(Quantum.WhompKing.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.WrappingObject>(Quantum.WrappingObject.Serialize, null, null, ComponentFlags.None)
@@ -5967,6 +6027,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.TanoombaState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.ThrowingObjectType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.WhompKingState>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.bossMarioContactResult>();
     }
   }
 }

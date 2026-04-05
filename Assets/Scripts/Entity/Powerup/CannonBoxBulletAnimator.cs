@@ -7,7 +7,7 @@ namespace NSMB.Entities.Player {
 
         private MaterialPropertyBlock materialBlock;
         List<Renderer> renderers = new();
-        private static readonly int ParamBoxType = Shader.PropertyToID("BoxType");
+        [SerializeField] private Texture BaseTexture, InvalidTexture;
 
         public override unsafe void OnActivate(Frame f) {
             renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
@@ -19,11 +19,15 @@ namespace NSMB.Entities.Player {
             }
             var proj = f.Unsafe.GetPointer<Projectile>(EntityRef);
 
-            int i = 0;
+            //Set Color
+            var i = BaseTexture;
             if (f.Exists(proj->Owner)) {
-                i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(proj->Owner)->CharacterAsset).Order+1;
+                i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(proj->Owner)->CharacterAsset).CannonboxTexture;
+                if (i == null) {
+                    i = InvalidTexture;
+                }
             }
-            materialBlock.SetInt(ParamBoxType, i);
+            materialBlock.SetTexture("Texture", i);
             foreach (Renderer r in renderers) {
                 r.SetPropertyBlock(materialBlock);
             }

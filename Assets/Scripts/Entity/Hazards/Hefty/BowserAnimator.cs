@@ -1,14 +1,10 @@
-using NSMB.UI.Game;
-using NSMB;
 using NSMB.Utilities.Extensions;
 using Quantum;
 using Quantum.Profiling;
-using System.Drawing.Drawing2D;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using UnityEngine.TextCore.Text;
+using System.Collections.Generic;
 
 public unsafe class BowserAnimator : QuantumEntityViewComponent {
 
@@ -31,6 +27,9 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
     private bool modelRotateInstantly;
     private quaternion modelRotationTarget;
 
+    private MaterialPropertyBlock materialBlock;
+    List<Renderer> renderers = new();
+
     public void Start() {
         QuantumEvent.Subscribe<EventBowserJump>(this, OnJump);
         QuantumEvent.Subscribe<EventBowserLanded>(this, OnLanded);
@@ -41,6 +40,16 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
 
         QuantumEvent.Subscribe<EventBossDeathAnimation>(this, OnDeath);
         QuantumEvent.Subscribe<EventPlayBossHitSound>(this, OnPlayBossHitSound);
+        if (materialBlock != null) {
+            return;
+        }
+
+        materialBlock = new();
+
+        renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
+        renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
+
+        renderers[0].SetPropertyBlock(materialBlock);
     }
     public override void OnActivate(Frame f) {
         if (f.Unsafe.GetPointer<Bowser>(EntityRef)->IsDry) {
@@ -65,7 +74,12 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
         var transform = f.Unsafe.GetPointer<Transform2D>(EntityRef);
         var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
 
-        Model.SetActive(f.Global->GameState >= GameState.Playing && (!(Boss->iframes > 0 && (f.Number * f.DeltaTime.AsFloat) * (Boss->iframes <= 0.75f ? 5 : 2) % 0.2f < 0.1f) || Animator.GetCurrentAnimatorStateInfo(0).IsName("Knockbacked")));
+        Model.SetActive(Boss->BossAnimator_ShowModel(f) || Animator.GetCurrentAnimatorStateInfo(0).IsName("Knockbacked"));
+        
+        materialBlock.SetFloat("Redness", Boss->BossAnimator_GetRedness());
+        foreach (Renderer r in renderers) {
+            r.SetPropertyBlock(materialBlock);
+        }
 
         //rotation
         if (bowser->State != BowserState.Roaring) {

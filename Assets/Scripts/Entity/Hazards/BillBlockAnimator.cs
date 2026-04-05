@@ -23,10 +23,9 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
     private Quaternion modelRotationTarget;
     private bool wasTurnaround;
 
-    //TODO: This Code
     private MaterialPropertyBlock materialBlock;
     List<Renderer> renderers = new();
-    private static readonly int ParamBoxType = Shader.PropertyToID("BoxType");
+    [SerializeField] private Texture BaseTexture, InvalidTexture;
 
     public void Start() {
         QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnBillBlockFail);
@@ -63,7 +62,7 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
             InterpolateFacingDirection(mario);
 
             //Model.rotation = Quaternion.Euler(0, holder.AnimationController.Rotation, 0);
-            bool Powered = billblock->ReusableTimer != 0 && f.GetPlayerInput(mario->PlayerRef)->Jump.IsDown;
+            bool Powered = billblock->ReusableTimer != 0 && f.GetPlayerInput(mario->PlayerRef)->PowerupAction.IsDown;
             animator.SetBool("Powered", Powered && billblock->ReusableTimer < 240);
             animator.SetBool("Failing", Powered && billblock->ReusableTimer <= 60);
         } else if (billblock->Thrown) {
@@ -79,11 +78,14 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
         }
 
         //Set Color
-        int i = 0;
-        if (f.Exists(holdable->Holder) || (billblock->Thrown && f.Exists(holdable->PreviousHolder))) {
-            i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset).Order+1;
+        var i = BaseTexture;
+        if (f.Exists(holdable->PreviousHolder)) {
+            i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder)->CharacterAsset).BillblockTexture;
+            if (i == null) {
+                i = InvalidTexture;
+            }
         }
-        materialBlock.SetInt(ParamBoxType, i);
+        materialBlock.SetTexture("Texture", i);
         foreach (Renderer r in renderers) {
             r.SetPropertyBlock(materialBlock);
         }

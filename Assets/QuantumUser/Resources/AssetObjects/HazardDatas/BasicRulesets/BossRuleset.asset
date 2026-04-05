@@ -16,9 +16,8 @@ MonoBehaviour:
     Path: QuantumUser/Resources/AssetObjects/HazardDatas/BasicRulesets/BossRuleset
     Guid:
       Value: 478428477322717155
-  basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
   HazardGameData:
-    MaxHazards: 4
+    MaxHazards: 1
     frequency: 0
     HeftyPercentage:
       RawValue: 65536
@@ -42,13 +41,6 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 255
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
@@ -108,17 +100,10 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 1
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
@@ -168,17 +153,10 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
@@ -228,17 +206,10 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
@@ -288,17 +259,10 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 255
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
@@ -342,17 +306,10 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 255
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 1

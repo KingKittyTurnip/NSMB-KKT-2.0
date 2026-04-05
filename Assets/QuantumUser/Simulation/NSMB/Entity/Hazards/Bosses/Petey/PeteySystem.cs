@@ -261,7 +261,7 @@ namespace Quantum {
             var petey = f.Unsafe.GetPointer<Petey>(thisEntity);
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteractWithPlayer(f, marioEntity))
                 return;
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
@@ -270,45 +270,28 @@ namespace Quantum {
             QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
-            bool peteyDiving = petey->State == PeteyState.Diving && petey->ReusableTimer >= 8;
-            bool attackedFromAbove = !peteyDiving && FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_50 && !mario->IsInKnockback;
-            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
+            bool peteyDivingCanHitMario = petey->State == PeteyState.Diving && petey->ReusableTimer >= 8 && !(FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_50);
             bool vulnrable = petey->State == PeteyState.Fallen;
             bool peteyHarmed = false;
 
-            if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
-                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, true);
+            switch (boss->BossMarioContact(f, thisEntity, marioEntity, damageDirection, peteyDivingCanHitMario && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 2, KnockbackStrength.Groundpound, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity), vulnrable)) {
+            case bossMarioContactResult.Above:
+                break;
+            case bossMarioContactResult.Harm:
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, false);
                 peteyHarmed = true;
-                vulnrable |= groundpounded;
-
-            } else if (attackedFromAbove) {
-                if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
-                    if (mario->IsGroundpounding) {
-                        mario->IsGroundpounding = false;
-                        boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
-                        peteyHarmed = true;
-                    }
-                    mario->DoEntityBounce = true;
-                } else {
-                    boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
-                    peteyHarmed = true;
-                    mario->DoEntityBounce = !mario->IsGroundpounding;
-                }
-
-                mario->IsDrilling = false;
-                marioPhysicsObject->Velocity.X = FPMath.Clamp(marioPhysicsObject->Velocity.X + (((theirPos - ourPos) * 10).Normalized.X * 3), -5, 5);
-
-            } else if (peteyDiving && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 2, KnockbackStrength.Groundpound, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity)) {
+                break;
+            case bossMarioContactResult.SuperHarm:
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, false);
+                peteyHarmed = true;
+                vulnrable = true;
+                break;
+            case bossMarioContactResult.Bump:
+                boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
+                break;
+            case bossMarioContactResult.Special:
                 petey->HitATarget = true;
-
-            } else if (!mario->IsInKnockback) {
-                // Bump
-                if (marioPhysicsObject->IsTouchingGround && !vulnrable) {
-                    petey->HitATarget |= mario->DoKnockback(f, marioEntity, damageDirection.X < 0, peteyDiving ? 2 : 1, peteyDiving ? KnockbackStrength.Groundpound : KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity);
-                    boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
-                } else {
-                    marioPhysicsObject->Velocity.X = (marioPhysicsObject->Velocity.X/2) + boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
-                }
+                break;
             }
 
             if (peteyHarmed) {

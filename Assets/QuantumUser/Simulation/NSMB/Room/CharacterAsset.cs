@@ -33,6 +33,11 @@ public class CharacterAsset : AssetObject, ISoundOverrideProvider, IOrderedAsset
 
     [NonSerialized] private Dictionary<SoundEffect, SoundEffectOverride> overridesDict;
 
+    [Header("KKT Mod")]
+    public Texture PropellerblockTexture;
+    public Texture BillblockTexture;
+    public Texture CannonboxTexture;
+
     public override void Loaded(IResourceManager resourceManager, Native.Allocator allocator) {
         overridesDict = new();
         if (SfxOverrides != null) {

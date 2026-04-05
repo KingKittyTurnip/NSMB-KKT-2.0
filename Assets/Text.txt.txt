@@ -145,7 +145,7 @@ Coinshell
 - Bullrush
   $$$ Starball - Give Mario unique Anims, add anything containable functionality
   $$$ Petey - Perperly play the dizzy sound
-  $$$ Bowser - Make Fire, and fix the cyote sound not stopping at times,
+  $$$ Bowser - fix the cyote sound not stopping at times,
 - KingBoo - Spits flaming blocks as an attack, once they land they burn out and can be carried by players, once king boo stops coughing them out he will suck them back in his mouth, they will light on fire again(if a player is is carrying/carried it it will be ignored), they have a lifetime of 10 seconds    CanFly, makes ghosts be on the minimap (hiding other players), if it was already enabled it hides everything from the minimap
 - King Whomp - Slam attack, hitting a target will propell him forward, he has a small jump that causes a shockwave upon landing
 - Cauldron - Animate
@@ -219,29 +219,35 @@ Challenges:
 -sheer force - reach maximum speed with metal mushroom
 
 
----Characters--- More Expressions --- Coinbox,billblock,cannonbox,propellerbox all have unique colors per character ---
+--banana beta---
+-re-adds the barrel hazard
+-adds diddy kong as a character
+-adds donkey kong as a boss hazard
+-coins in certain stages are bananas instead
+-banana + big banana hazards
+-adds smb2 potion hazard
+
+---Characters--- Coinbox,billblock,cannonbox,propellerbox all have unique colors per character --- import sounds --- setup powerup textures ---
 Mario
 Luigi
-Toad
-Toadette
-Wario
-Waluigi
-Peach
-?Daisy
-?Roasalina
-Yoshi
-?Birdo
-
+Toad - convert to doubledash model
+ Toadette
+ Wario - make run anim better
+ Yoshi - add double jump and triplejump anims referencing flutter
 B Junes
 shy guy
+Sonic
+
 Peepa
 Conkdor
-
-64Mario
-Paper Mario
-Sonic
-?Donkey Kong
-?diddy kong
+Capnap
+?Waluigi
+?Peach
+?Daisy
+?Roasalina
+?Birdo
+?64Mario
+?Paper Mario
 
 KKTurnip
 CaptainToad - reward for completing achievments

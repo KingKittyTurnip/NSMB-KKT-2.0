@@ -208,7 +208,7 @@ namespace Quantum {
                 return;
             }
             var chainchomp = f.Unsafe.GetPointer<ChainChomp>(thisEntity);
-            if (chainchomp->State == ChainChompState.Return ||f.Unsafe.GetPointer<Holdable>(chainchomp->Post)->Holder == otherEntity) {
+            if (chainchomp->State == ChainChompState.Return ||f.Unsafe.GetPointer<Holdable>(chainchomp->Post)->Holder == otherEntity) { //an exception error is thrown here
                 return;
             }
 

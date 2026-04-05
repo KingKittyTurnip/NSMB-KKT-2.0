@@ -152,6 +152,9 @@ namespace Quantum {
                     physicsObject->DisableCollision = false;
                 }
             }
+            if (FPMath.Abs(physicsObject->Velocity.X) < bigStar->Speed) {
+                physicsObject->Velocity.X = bigStar->Speed * (bigStar->FacingRight ? 1 : -1);
+            }
         }
 
         public void OnBigStarMarioInteraction(Frame f, EntityRef starEntity, EntityRef marioEntity) {

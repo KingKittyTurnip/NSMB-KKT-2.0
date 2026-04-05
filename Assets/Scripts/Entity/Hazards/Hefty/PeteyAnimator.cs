@@ -1,6 +1,7 @@
 using NSMB.Utilities.Extensions;
 using Quantum;
 using Quantum.Profiling;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -20,6 +21,9 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
     private bool modelRotateInstantly;
     private quaternion modelRotationTarget;
 
+    private MaterialPropertyBlock materialBlock;
+    List<Renderer> renderers = new();
+
     public void Start() {
         QuantumEvent.Subscribe<EventPeteyWakeup>(this, OnWakup);
         QuantumEvent.Subscribe<EventPeteyGetUp>(this, OnGetup);
@@ -31,6 +35,19 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
 
         QuantumEvent.Subscribe<EventBossDeathAnimation>(this, OnDeath);
         QuantumEvent.Subscribe<EventPlayBossHitSound>(this, OnPlayBossHitSound);
+        if (materialBlock != null) {
+            return;
+        }
+
+        materialBlock = new();
+
+        renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
+        renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
+
+        renderers[0].SetPropertyBlock(materialBlock);
+    }
+    public override void OnActivate(Frame f) {
+        OnUpdateView();
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -46,7 +63,12 @@ public unsafe class PeteyAnimator : QuantumEntityViewComponent {
         var transform = f.Unsafe.GetPointer<Transform2D>(EntityRef);
         var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
 
-        Model.SetActive(f.Global->GameState >= GameState.Playing && (!(Boss->iframes > 0 && (f.Number * f.DeltaTime.AsFloat) * (Boss->iframes <= 0.75f ? 5 : 2) % 0.2f < 0.1f)));
+        Model.SetActive(Boss->BossAnimator_ShowModel(f));
+
+        materialBlock.SetFloat("Redness", Boss->BossAnimator_GetRedness());
+        foreach (Renderer r in renderers) {
+            r.SetPropertyBlock(materialBlock);
+        }
 
         //rotation
         if (petey->State != PeteyState.Idling) {

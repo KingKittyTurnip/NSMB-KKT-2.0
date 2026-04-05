@@ -37,7 +37,7 @@ namespace Quantum {
         FP CannonBoxCooldown = 2;
         FP CannonBoxShootDelay = FP._0_20;
         FP CannonBoxChargeLimit = FP._0_50;
-        FP CannonBoxPlayerCooldown = FP._1_50;
+        FP CannonBoxPlayerCooldown = 1;
 
         public struct Filter {
             public EntityRef Entity;
@@ -343,7 +343,7 @@ namespace Quantum {
                 /*if (marioPhys->IsTouchingGround || marioPhys->WasTouchingGround) { //Check if the "wastouchingground" being set to false when mario jumps is needed
                     Dis->ReusableTimer = 180;
                 } else */
-                if (Dis->ReusableTimer > 0 && f.GetPlayerInput(mario->PlayerRef)->Jump.IsDown && (marioPhys->Velocity.Y <= 0 || Dis->ReusableTimer == 1)) { //get inputs
+                if (Dis->ReusableTimer > 0 && f.GetPlayerInput(mario->PlayerRef)->PowerupAction.IsDown && (marioPhys->Velocity.Y <= 0 || Dis->ReusableTimer == 1)) { //get inputs
                     Dis->ReusableTimer -= 1;
                     if (Dis->ReusableTimer <= 0)
                         f.Events.ThrowObjSimple(filter.Entity, transform->Position);
@@ -564,13 +564,30 @@ namespace Quantum {
             }
         }
         private void OnThrowingObjectMarioSolidPreContact(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts) {
-            if (f.Has<MarioPlayer>(entity) && f.Has<ThrowingObject>(contact.Entity) && f.Unsafe.TryGetPointer<Holdable>(contact.Entity, out var holdable) && !f.Exists(holdable->Holder)) {
-                //Make Precontact if we are not being held
-                keepContacts = OnMarInteraction(f, entity, contact.Entity);
-            }
-            if (f.Unsafe.TryGetPointer<ThrowingObject>(entity, out var spring) && spring->Type == ThrowingObjectType.Spring && f.Has<PhysicsObject>(contact.Entity)) {
-                Debug.Log("Springboard precontact");
-                keepContacts = HandleSpringboardInteraction(f, contact.Entity, entity, true);
+            //test if this works better
+            if (f.Unsafe.TryGetPointer<ThrowingObject>(contact.Entity, out var throwable)) {
+                //spring
+                if (throwable->Type == ThrowingObjectType.Spring && f.Has<PhysicsObject>(contact.Entity)) {
+                    keepContacts = HandleSpringboardInteraction(f, contact.Entity, entity, true);
+
+                } else if (f.Unsafe.TryGetPointer<Holdable>(contact.Entity, out var holdable) && holdable->IsSolidCarryable) {
+                    //if it's solid
+                    if (f.Has<MarioPlayer>(entity) && !f.Exists(holdable->Holder)) {
+                        //no holder, try to pickup so we don't lose velocity
+                        keepContacts = OnMarInteraction(f, entity, contact.Entity);
+
+                    } else if (f.Has<BigStar>(entity)) {
+                        keepContacts = false;
+
+                    } else if (f.Exists(holdable->Holder) && !holdable->HoldAboveHead) { //same as bellow
+                        if (f.Has<Projectile>(entity)) { //the stone will make contact, but not eerything else
+                            if (throwable->Type != ThrowingObjectType.Stone)
+                                keepContacts = false;
+                        } else if (f.Has<PhysicsObject>(entity) && !holdable->HoldAboveHead && f.Exists(holdable->Holder)) { //things will only make contact if it's a head held object
+                            keepContacts = false;
+                        }
+                    }
+                }
             }
         }
 
@@ -728,6 +745,11 @@ namespace Quantum {
                     case ThrowingObjectType.BillBlock:
                         mario->BillBux = true;
                         Dis->ReusableTimer = 240;
+                        break;
+                    case ThrowingObjectType.CannonBox:
+
+                        Dis->ReusableTimer = FP._0_50;
+                        Dis->Varient = 3;
                         break;
                     }
                     return false;

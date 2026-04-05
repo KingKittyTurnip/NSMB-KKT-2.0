@@ -1,7 +1,11 @@
+using NSMB.UI.Game;
 using NSMB.Utilities.Extensions;
+using Photon.Deterministic;
 using Quantum;
 using Quantum.Profiling;
+using System.Collections.Generic;
 using Unity.Mathematics;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public unsafe class KingBooAnimator : QuantumEntityViewComponent {
@@ -22,6 +26,12 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
     private quaternion modelRotationTarget;
     bool ShootA;
 
+    private MaterialPropertyBlock materialBlock;
+    List<Renderer> renderers = new();
+    private static readonly int ParamRedness = Shader.PropertyToID("Redness");
+
+    float SuckTimer = 0;
+
     public void Start() {
         /*QuantumEvent.Subscribe<EventBowserJump>(this, OnJump);
         QuantumEvent.Subscribe<EventBowserLanded>(this, OnLanded);
@@ -32,6 +42,16 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
 
         QuantumEvent.Subscribe<EventBossDeathAnimation>(this, OnDeath);
         QuantumEvent.Subscribe<EventPlayBossHitSound>(this, OnPlayBossHitSound);
+        if (materialBlock != null) {
+            return;
+        }
+
+        materialBlock = new();
+
+        renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
+        renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
+
+        renderers[0].SetPropertyBlock(materialBlock);
     }
     public override void OnActivate(Frame f) {
         OnUpdateView();
@@ -49,8 +69,26 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
         var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
         var transform = f.Unsafe.GetPointer<Transform2D>(EntityRef);
         var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
+        bool IsSucking = kingboo->State == KingBooState.Sucking && kingboo->ReusableTimer == 0;
+        SuckTimer = Mathf.Clamp01(SuckTimer + ((IsSucking ? 2 : -2) * Time.deltaTime));
 
-        Model.SetActive(f.Global->GameState >= GameState.Playing && (!(Boss->iframes > 0 && (f.Number * f.DeltaTime.AsFloat) * (Boss->iframes <= 0.75f ? 5 : 2) % 0.2f < 0.1f) || Animator.GetCurrentAnimatorStateInfo(0).IsName("Knockbacked")));
+        Model.SetActive(Boss->BossAnimator_ShowModel(f) || Animator.GetCurrentAnimatorStateInfo(0).IsName("Knockbacked"));
+
+        SuckDust.SetActive(SuckTimer != 0);
+        Sucking.pitch = SuckTimer;
+        if (SuckTimer != 0) {
+            if (!Sucking.isPlaying) {
+                Sucking.Play();
+            }
+        } else {
+            Sucking.Stop();
+        }
+
+        materialBlock.SetFloat(ParamRedness, Boss->BossAnimator_GetRedness());
+        materialBlock.SetFloat("_Transparency", 1f-SuckTimer);
+        foreach (Renderer r in renderers) {
+            r.SetPropertyBlock(materialBlock);
+        }
 
         //rotation
         if (kingboo->State != KingBooState.Laughing) {
@@ -62,11 +100,7 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
         Animator.SetFloat("VelocityMagnitude", Mathf.Abs(physicsObject->Velocity.Magnitude.AsFloat));
         Animator.SetBool("FireBall", kingboo->State == KingBooState.Barfing && kingboo->ReusableTimer < 123);
         Animator.SetBool("Knockback", (kingboo->State == KingBooState.Barfing && kingboo->ReusableTimer >= 123) || kingboo->State == KingBooState.Knockback);
-        bool IsSucking = kingboo->State == KingBooState.Sucking && kingboo->ReusableTimer == 0;
         Animator.SetBool("Sucking", IsSucking);
-
-        SuckDust.SetActive(IsSucking);
-        Sucking.volume = IsSucking ? 1 - (kingboo->ReusableTimer/30) : 0;
     }
 
     private void InterpolateFacingDirection() {
@@ -83,6 +117,7 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
             return;
         }
 
+        float SuckTimer = 0;
         sfx.PlayOneShot(Hurt);
     }
     private unsafe void OnBarf(EventKingBooBarf e) {
@@ -92,6 +127,7 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
 
         sfx.PlayOneShot(ShootA ? FireBallA : FireballB);
         ShootA = !ShootA;
+        float SuckTimer = 0;
     }
     
     private unsafe void OnDeath(EventBossDeathAnimation e) {
@@ -99,6 +135,7 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
             return;
         }
 
+        float SuckTimer = 0;
         sfx.Stop();
         sfx.PlayOneShot(Cyote);
         Animator.SetTrigger("Death");

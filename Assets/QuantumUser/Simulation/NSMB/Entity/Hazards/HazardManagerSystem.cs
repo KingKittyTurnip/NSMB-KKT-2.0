@@ -141,7 +141,7 @@ namespace Quantum {
                 }
 
                 //SpawnHazard
-                EntityRef newEntity = f.Create(hefty ? heftydata[pick].Item1.hazardAsset : hazarddata[pick].Item1.hazardAsset);
+                EntityRef newEntity = f.Create(hefty ? heftydata[pick].Item1.hazardAsset : hazarddata[pick].Item1.hazardAsset); //error out of range?
                 var newhazardspawnerTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
                 var newhazardspawner = f.Unsafe.GetPointer<Hazard>(newEntity);
 

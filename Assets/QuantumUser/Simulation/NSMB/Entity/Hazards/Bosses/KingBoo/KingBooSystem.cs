@@ -146,51 +146,6 @@ namespace Quantum {
                 physicsObject->Velocity.Y = FPMath.Max(physicsObject->Velocity.Y + (FP._0_20 * ((stage.CameraMaxPosition.Y - 2) - transform->Position.Y)), -4);
             }
 
-            void HandleMovement(FPVector2 Direction, bool AllowTurnaround, FP max) {
-                //get our speed stage
-                bool overSpeed = physicsObject->Velocity.Magnitude > Constants._2_50 && kingboo->State != KingBooState.Teleporting;
-                FP acc = FP._0_10;
-
-                if (Direction == FPVector2.Zero) {
-                    if (FPMath.Abs(physicsObject->Velocity.X) <= FP._0_05 && FPMath.Abs(physicsObject->Velocity.Y) <= FP._0_05) {
-                        physicsObject->Velocity = FPVector2.Zero;
-                        return;
-                    } else {
-                        Direction = physicsObject->Velocity.Normalized * -1;
-                    }
-                } else if (AllowTurnaround && Direction.X != 0) {
-                    boss->FacingRight = Direction.X > 0;
-                }
-                //Convert Our Vector Direction Into Radian
-                FP TargetDirection = FPMath.Atan2(Direction.Y, Direction.X);
-
-                // accelerate
-                physicsObject->Velocity += (new FPVector2(FPMath.Cos(TargetDirection), FPMath.Sin(TargetDirection))) * acc;
-
-                //clamp our velocity angled
-                FP CurrentDirection = FPMath.Atan2(physicsObject->Velocity.Y, physicsObject->Velocity.X);
-                var TruMax = new FPVector2(FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_50, max * FPMath.Abs(FPMath.Cos(CurrentDirection))),
-                    FPMath.Max(FPMath.Abs(physicsObject->Velocity.Y) - FP._0_50, max * FPMath.Abs(FPMath.Sin(CurrentDirection))));
-                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -TruMax.X, TruMax.X);
-                physicsObject->Velocity.Y = FPMath.Clamp(physicsObject->Velocity.Y, -TruMax.Y, TruMax.Y);
-            }
-            void CreateProjectile(FPVector2 Direction) {
-                FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, FP._0_33);
-                EntityRef newEntity = f.Create(kingboo->BlueFire);
-                var throwhazard = f.Unsafe.GetPointer<Hazard>(newEntity);
-                FP radian = FPMath.Atan2(Direction.Y, Direction.X);
-                Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
-
-                f.Unsafe.GetPointer<Transform2D>(newEntity)->Position = spawnPos;
-                f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity = ((Direction * (4 + FP._0_10)) + FPVector2.Up);
-                throwhazard->IsHazard = true;
-                throwhazard->LifeTime = 250;
-                f.Unsafe.GetPointer<ThrowingObject>(newEntity)->Thrown = true;
-                f.Unsafe.GetPointer<Holdable>(newEntity)->PreviousHolder = boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity;
-                kingboo->ProjectileShots++;
-
-                f.Events.KingBooBarf(entity);
-            }
             //State Calcs
             switch (kingboo->State) {
             case KingBooState.Laughing:
@@ -228,22 +183,19 @@ namespace Quantum {
                     }
                 } else {
                     if (CycleTimer == 6) {
-                        CreateProjectile(new FPVector2(boss->FacingRight ? 1 : -1, 0));
+                        CreateProjectile(new FPVector2(boss->FacingRight ? 1 : -1, 0), kingboo->ReusableTimer/41);
                     }
                 }
 
                 if (!FireballHeld && kingboo->ReusableTimer > 20 && (CycleTimer > 20 || CycleTimer < 6)) {
                     kingboo->ReusableTimer = 10;// (byte)(10 * (4 - kingboo->ProjectileShots));
                     kingboo->State = KingBooState.Sucking;
-                    //Prepare Suck
-                    var projectiles = f.Filter<ThrowingObject, Holdable, PhysicsObject>();
-                    var disRef = boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity;
                 }
                 break;
             case KingBooState.Sucking:
                 HandleMovement(DirectionalInput, false, 4);
                 physicsObject->Velocity.Y *= Constants.BallSlowDownMultiplier;
-                var disRef2 = boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity;
+                var disRef2 = boss->BossGetOwnerResponsible(entity);
                 if (QuantumUtils.Decrement(ref kingboo->ReusableTimer)) {
                     //Pull In All Projectiles We Own
                     var projectiles = f.Filter<ThrowingObject, Holdable, PhysicsObject, Hazard>();
@@ -297,122 +249,88 @@ namespace Quantum {
                     kingboo->State = KingBooState.Floating;
                 }
                 break;
-                /*
-            case BowserState.Attacking:
-                FP clamper2 = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_10, FP._1_25);
-                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_50), -clamper2, clamper2);
+            }
 
-                bowser->ReusableTimer++;
-                if (bowser->ReusableTimer > 20) {
-                    if (!bowser->IsDry) {
-                        if (bowser->ReusableTimer == 21)
-                            f.Events.BowserAttack(filter.Entity, BowserAttackType.MegaAttack);
-                        bowser->ReusableTimer++;
-                    }
-                    //create multiple, if dry, create bones instead
-                    int Mod = bowser->IsDry ? 26 : 16;
-                    if (bowser->ReusableTimer % Mod == 0) {
-                        if (bowser->IsDry) {
-                            f.Events.BowserAttack(filter.Entity, BowserAttackType.BoneThrow);
-                        }
-                        f.Events.BowserShoot(filter.Entity, bowser->IsDry);
-                        FP Direc = (((((FP) bowser->ReusableTimer) / Mod) - 4) / 3);
-                        CreateProjectile(bowser->IsDry ? bowser->Bone : bowser->Fireball, new FPVector2(1, Direc), bowser->IsDry ? 12 + (2 * Direc) : 0);
-                    }
-                    if (bowser->ReusableTimer > 100 || !Sprint) {
-                        bowser->ReusableTimer = 0;
-                        bowser->State = BowserState.Walking;
-                        bowser->AttackCooldown = 80;
-                        bowser->VolleyCooldown = 80;
-                    }
-                } else if (!Sprint) {
-                    //create one
-                    f.Events.BowserShoot(filter.Entity, false);
-                    CreateProjectile(bowser->IsDry ? bowser->BlueFire : bowser->Fireball, new FPVector2(1, updowninput / 3), 0);
+            void HandleMovement(FPVector2 Direction, bool AllowTurnaround, FP max) {
+                //get our speed stage
+                bool overSpeed = physicsObject->Velocity.Magnitude > Constants._2_50 && kingboo->State != KingBooState.Teleporting;
+                FP acc = FP._0_10;
 
-                    if (bowser->VolleyCooldown > 0) {
-                        bowser->AttackCooldown = 50;
-                        bowser->VolleyCooldown = 50;
+                if (Direction == FPVector2.Zero) {
+                    if (FPMath.Abs(physicsObject->Velocity.X) <= FP._0_05 && FPMath.Abs(physicsObject->Velocity.Y) <= FP._0_05) {
+                        physicsObject->Velocity = FPVector2.Zero;
+                        return;
                     } else {
-                        bowser->VolleyCooldown = 50;
+                        Direction = physicsObject->Velocity.Normalized * -1;
                     }
-                    bowser->ReusableTimer = 0;
-                    bowser->State = BowserState.Walking;
+                } else if (AllowTurnaround && Direction.X != 0) {
+                    boss->FacingRight = Direction.X > 0;
                 }
+                //Convert Our Vector Direction Into Radian
+                FP TargetDirection = FPMath.Atan2(Direction.Y, Direction.X);
 
-                void CreateProjectile(AssetRef<EntityPrototype> prototype, FPVector2 Direction, FP VerticalBonus) {
-                    FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, Constants._0_66);
-                    EntityRef newEntity = f.Create(prototype);
-                    var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
-                    projectile->Initialize(f, newEntity, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity, spawnPos, boss->FacingRight, false);
-                    var projPhys = f.Unsafe.GetPointer<PhysicsObject>(newEntity);
-                    FP radian = FPMath.Atan2(Direction.Y, Direction.X);
-                    Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
-                    projPhys->Velocity = (Direction * projectile->Speed) + (FPVector2.Up * VerticalBonus);
-                    projectile->Speed = projPhys->Velocity.X;
-                }*/
-                break;
+                // accelerate
+                physicsObject->Velocity += (new FPVector2(FPMath.Cos(TargetDirection), FPMath.Sin(TargetDirection))) * acc;
+
+                //clamp our velocity angled
+                FP CurrentDirection = FPMath.Atan2(physicsObject->Velocity.Y, physicsObject->Velocity.X);
+                var TruMax = new FPVector2(FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_50, max * FPMath.Abs(FPMath.Cos(CurrentDirection))),
+                    FPMath.Max(FPMath.Abs(physicsObject->Velocity.Y) - FP._0_50, max * FPMath.Abs(FPMath.Sin(CurrentDirection))));
+                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -TruMax.X, TruMax.X);
+                physicsObject->Velocity.Y = FPMath.Clamp(physicsObject->Velocity.Y, -TruMax.Y, TruMax.Y);
+            }
+            void CreateProjectile(FPVector2 Direction, FP Bonus) {
+                FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, FP._0_33 * Bonus);
+                EntityRef newEntity = f.Create(kingboo->BlueFire);
+                var throwhazard = f.Unsafe.GetPointer<Hazard>(newEntity);
+                FP radian = FPMath.Atan2(Direction.Y, Direction.X);
+                Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
+
+                f.Unsafe.GetPointer<Transform2D>(newEntity)->Position = spawnPos;
+                f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity = ((Direction * (4 + FP._0_10)) + FPVector2.Up);
+                throwhazard->IsHazard = true;
+                throwhazard->LifeTime = 250;
+                f.Unsafe.GetPointer<ThrowingObject>(newEntity)->Thrown = true;
+                f.Unsafe.GetPointer<Holdable>(newEntity)->PreviousHolder = boss->BossGetOwnerResponsible(entity);
+                kingboo->ProjectileShots++;
+
+                f.Events.KingBooBarf(entity);
             }
         }
 
         #region Interactions
         public void OnMarioKingBooInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
-            var kingboo = f.Unsafe.GetPointer<KingBoo>(thisEntity);
-            var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteractWithPlayer(f, marioEntity))
                 return;
+            var kingboo = f.Unsafe.GetPointer<KingBoo>(thisEntity);
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
-            var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
+            var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
 
             QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
-            bool attackedFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_50;
 
-            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
-
-            bool bossHarmed = false;
-            if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
-                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.Groundpound, true);
-                bossHarmed = true;
-
-            } else if (attackedFromAbove) {
-                if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
-                    if (mario->IsGroundpounding) {
-                        mario->IsGroundpounding = false;
-                        boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump, false);
-                        bossHarmed = true;
-                    }
-                    mario->DoEntityBounce = true;
-                } else {
-                    boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump, false);
-                    bossHarmed = true;
-                    mario->DoEntityBounce = !mario->IsGroundpounding;
-                }
-
-                mario->IsDrilling = false;
-                marioPhysicsObject->Velocity.X = FPMath.Clamp(marioPhysicsObject->Velocity.X + (((theirPos - ourPos) * 10).Normalized.X * 3), -5, 5);
-
-            } else if (!mario->IsInKnockback) {
-                // Bump
-                if (marioPhysicsObject->IsTouchingGround) {
-                    mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 1, KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity);
-                    boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
-                } else {
-                    marioPhysicsObject->Velocity.X = (marioPhysicsObject->Velocity.X/2) + boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
-                }
-            }
-
-            if (bossHarmed) {
+            switch (boss->BossMarioContact(f, thisEntity, marioEntity, damageDirection, false)) {
+            case bossMarioContactResult.Harm:
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump, false);
+                physicsObject->Velocity.Y -= 1;
                 kingboo->NeedsNewTarget = true;
-                if (groundpounded) {
-                    f.Events.BowserKnockbacked(thisEntity);
-                    kingboo->State = KingBooState.Knockback;
-                    kingboo->ReusableTimer = 0;
-                    boss->FacingRight = damageDirection.X > 0;
-                    f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.X = damageDirection.X > 0 ? -7 : 7;
-                }
+                break;
+            case bossMarioContactResult.SuperHarm:
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.Groundpound, false);
+                f.Events.KingBooKnockbacked(thisEntity);
+                physicsObject->Velocity.Y -= 1;
+                kingboo->State = KingBooState.Knockback;
+                kingboo->ReusableTimer = 0;
+                boss->FacingRight = damageDirection.X > 0;
+                f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->Velocity.X = damageDirection.X > 0 ? -7 : 7;
+                break;
+            case bossMarioContactResult.Bump:
+                boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
+                physicsObject->Velocity.Y -= 1;
+                break;
             }
         }
         public void OnProjectileKingBooInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {

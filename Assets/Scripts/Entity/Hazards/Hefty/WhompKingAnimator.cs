@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using UnityEngine.TextCore.Text;
+using System.Collections.Generic;
 
 public unsafe class WhompKingAnimator : QuantumEntityViewComponent {
 
@@ -27,6 +28,9 @@ public unsafe class WhompKingAnimator : QuantumEntityViewComponent {
     private bool modelRotateInstantly;
     private quaternion modelRotationTarget;
 
+    private MaterialPropertyBlock materialBlock;
+    List<Renderer> renderers = new();
+
     public void Start() {
         QuantumEvent.Subscribe<EventWhompKingJump>(this, OnJump);
         QuantumEvent.Subscribe<EventWhompKingLand>(this, OnLanded);
@@ -35,6 +39,16 @@ public unsafe class WhompKingAnimator : QuantumEntityViewComponent {
 
         QuantumEvent.Subscribe<EventBossDeathAnimation>(this, OnDeath);
         QuantumEvent.Subscribe<EventPlayBossHitSound>(this, OnPlayBossHitSound);
+        if (materialBlock != null) {
+            return;
+        }
+
+        materialBlock = new();
+
+        renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
+        renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
+
+        renderers[0].SetPropertyBlock(materialBlock);
     }
     public override void OnActivate(Frame f) {
         OnUpdateView();
@@ -54,7 +68,12 @@ public unsafe class WhompKingAnimator : QuantumEntityViewComponent {
         var transform = f.Unsafe.GetPointer<Transform2D>(EntityRef);
         var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
 
-        Model.SetActive(f.Global->GameState >= GameState.Playing && (!(Boss->iframes > 0 && (f.Number * f.DeltaTime.AsFloat) * (Boss->iframes <= 0.75f ? 5 : 2) % 0.2f < 0.1f) || Animator.GetCurrentAnimatorStateInfo(0).IsName("Knockbacked")));
+        Model.SetActive(Boss->BossAnimator_ShowModel(f) || Animator.GetCurrentAnimatorStateInfo(0).IsName("Knockbacked"));
+
+        materialBlock.SetFloat("Redness", Boss->BossAnimator_GetRedness());
+        foreach (Renderer r in renderers) {
+            r.SetPropertyBlock(materialBlock);
+        }
 
         //rotation=
         if (whompking->State == WhompKingState.SlamAttacking && whompking->ReusableTimer <= 120) {

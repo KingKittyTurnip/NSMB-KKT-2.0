@@ -155,6 +155,10 @@ namespace NSMB.Entities.Player {
         private bool forceUpdate;
         private GameObject activeRespawnParticle;
 
+        [Header("KKT Mod")]
+        [SerializeField] private Vector3 SmallModelScale = Vector3.one;
+        [SerializeField] private Vector3 LargeModelScale = Vector3.one;
+
         public void OnValidate() {
             this.SetIfNull(ref animator);
         }
@@ -608,8 +612,13 @@ namespace NSMB.Entities.Player {
 
             // Model changing
             bool large = mario->CurrentPowerupState >= PowerupState.Mushroom;
-            largeModel.SetActive(large);
-            smallModel.SetActive(!large);
+            if (smallModel == null) { //kkt mod addition
+                largeModel.transform.localScale = large ? LargeModelScale : SmallModelScale;
+                large = true;
+            } else {
+                largeModel.SetActive(large);
+                smallModel.SetActive(!large);
+            }
             blueShell.SetActive(mario->CurrentPowerupState == PowerupState.BlueShell);
             propellerHelmet.SetActive(!DisableHeadwear && mario->CurrentPowerupState == PowerupState.PropellerMushroom);
             HammerHelm.SetActive(!DisableHeadwear && mario->CurrentPowerupState == PowerupState.HammerSuit && (!mario->IsCrouching || f.Exists(mario->CurrentPipe)));

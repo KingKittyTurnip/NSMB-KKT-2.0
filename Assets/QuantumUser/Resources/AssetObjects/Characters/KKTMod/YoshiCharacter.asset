@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a29518fadcd4a704abe29d73e5159d3f, type: 3}
+  m_Name: YoshiCharacter
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: QuantumUser/Resources/AssetObjects/Characters/KKTMod/YoshiCharacter
+    Guid:
+      Value: 432761565459872622
+  Prototype:
+    Id:
+      Value: 1305993759148241386
+  UiString: <sprite name=hud_mario>
+  TranslationString: Yoshi
+  LoadingSmallSprite: {fileID: 1040450253486601905, guid: a7245cae141f3ee449147539ebd2a2c9,
+    type: 3}
+  LoadingLargeSprite: {fileID: -1751142936083476856, guid: a7245cae141f3ee449147539ebd2a2c9,
+    type: 3}
+  ReadySprite: {fileID: 7263181891274304025, guid: 70672da71d9d71a4daaf5f3fc58531e6,
+    type: 3}
+  SilhouetteSprite: {fileID: 21300000, guid: e52d82a4d5d0ae845bb4726a3600bc62, type: 3}
+  SelectionSprite: {fileID: 21300000, guid: 28c9088564a42864ca526a06dc8d76cf, type: 3}
+  SelectionColor: {r: 0, g: 0.8553459, b: 0.057023823, a: 1}
+  SelectionOrder: -995
+  SmallOverrides: {fileID: 22100000, guid: 2c287afd602e3d540aeb874af72cb2f1, type: 2}
+  LargeOverrides: {fileID: 22100000, guid: 2c287afd602e3d540aeb874af72cb2f1, type: 2}
+  Order: 6
+  SfxOverrides:
+  - SoundEffect: 33
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 7f161fa4455fb15499f99e92cf24da3c, type: 3}
+    - {fileID: 8300000, guid: 489a9b4418219e345af50109ca291467, type: 3}
+  - SoundEffect: 34
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: a42072fe161048c4c8c34311c9212d28, type: 3}
+  - SoundEffect: 35
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 29ff3940d7fa2a348a0cfcf8b6b7ef19, type: 3}
+  - SoundEffect: 36
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: a2eca94266db7ab458c77ab68ee385f8, type: 3}
+  - SoundEffect: 37
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: c029c3502bcce1d478e47b1dcfa0bc19, type: 3}
+  - SoundEffect: 38
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 9916603a47fe0014baaa50047b70978a, type: 3}
+  - SoundEffect: 39
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 60494b26c8c37b644a389115265737ef, type: 3}
+    - {fileID: 8300000, guid: 9d4fff2acd208f842a6f48dd6d788469, type: 3}
+  - SoundEffect: 115
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 7f161fa4455fb15499f99e92cf24da3c, type: 3}
+  - SoundEffect: 116
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 7f161fa4455fb15499f99e92cf24da3c, type: 3}
+  - SoundEffect: 117
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 60494b26c8c37b644a389115265737ef, type: 3}
+  - SoundEffect: 118
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 60494b26c8c37b644a389115265737ef, type: 3}
+  PropellerblockTexture: {fileID: 0}
+  BillblockTexture: {fileID: 0}
+  CannonboxTexture: {fileID: 0}

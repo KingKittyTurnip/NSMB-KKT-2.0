@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a29518fadcd4a704abe29d73e5159d3f, type: 3}
+  m_Name: ToadCharacter
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: QuantumUser/Resources/AssetObjects/Characters/KKTMod/ToadCharacter
+    Guid:
+      Value: 434006672507423880
+  Prototype:
+    Id:
+      Value: 1321228786849069544
+  UiString: <sprite name=hud_mario>
+  TranslationString: Toad
+  LoadingSmallSprite: {fileID: 1040450253486601905, guid: a7245cae141f3ee449147539ebd2a2c9,
+    type: 3}
+  LoadingLargeSprite: {fileID: -1751142936083476856, guid: a7245cae141f3ee449147539ebd2a2c9,
+    type: 3}
+  ReadySprite: {fileID: 7263181891274304025, guid: 70672da71d9d71a4daaf5f3fc58531e6,
+    type: 3}
+  SilhouetteSprite: {fileID: 21300000, guid: e52d82a4d5d0ae845bb4726a3600bc62, type: 3}
+  SelectionSprite: {fileID: 21300000, guid: 28c9088564a42864ca526a06dc8d76cf, type: 3}
+  SelectionColor: {r: 0, g: 0.5543151, b: 1, a: 1}
+  SelectionOrder: -999
+  SmallOverrides: {fileID: 22100000, guid: 996c66ad20b17dc4a91d97f7e78e0014, type: 2}
+  LargeOverrides: {fileID: 22100000, guid: 996c66ad20b17dc4a91d97f7e78e0014, type: 2}
+  Order: 2
+  SfxOverrides:
+  - SoundEffect: 33
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 62d6e5c4652aa7446854f7e982dafe4a, type: 3}
+    - {fileID: 8300000, guid: 26a12e7c805b4a040856f24221dffc90, type: 3}
+  - SoundEffect: 34
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 69147aa241b63f8409fb6f81435a9c11, type: 3}
+  - SoundEffect: 35
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 7bffc1b52e32d1e498bc1953dbfb8903, type: 3}
+  - SoundEffect: 36
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 490b230b7187e7b47a78757f6ef0ae75, type: 3}
+  - SoundEffect: 37
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: e50f952f616084a4ca69f85dfb9a2410, type: 3}
+  - SoundEffect: 38
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: cd0f6c7ec261ef44bbce034eb3dc75d4, type: 3}
+  - SoundEffect: 39
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 8a2d783054326d648851233d40aefdc0, type: 3}
+    - {fileID: 8300000, guid: 7838a95ee4031e74aa976b72d71ab7eb, type: 3}
+  - SoundEffect: 115
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 62d6e5c4652aa7446854f7e982dafe4a, type: 3}
+  - SoundEffect: 116
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 62d6e5c4652aa7446854f7e982dafe4a, type: 3}
+  - SoundEffect: 117
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 7838a95ee4031e74aa976b72d71ab7eb, type: 3}
+  - SoundEffect: 118
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 7838a95ee4031e74aa976b72d71ab7eb, type: 3}
+  PropellerblockTexture: {fileID: 0}
+  BillblockTexture: {fileID: 0}
+  CannonboxTexture: {fileID: 0}
