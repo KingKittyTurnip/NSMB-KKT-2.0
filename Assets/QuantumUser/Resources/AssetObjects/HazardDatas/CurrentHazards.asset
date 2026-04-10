@@ -16,9 +16,10 @@ MonoBehaviour:
     Path: QuantumUser/Resources/AssetObjects/HazardDatas/CurrentHazards
     Guid:
       Value: 477132098760153511
+  PowerupData: []
   HazardGameData:
     MaxHazards: 10
-    frequency: 8
+    frequency: 10
     HeftyPercentage:
       RawValue: 9830
     DespawnTime: 80
@@ -920,8 +921,8 @@ MonoBehaviour:
           Y: 1
       SpecialValues:
       - ButtonName: Turns Into
-        ButtonType: 2
-        BaseValue: 0
+        ButtonType: 1
+        BaseValue: 255
         ValueRange:
           X: 0
           Y: 0

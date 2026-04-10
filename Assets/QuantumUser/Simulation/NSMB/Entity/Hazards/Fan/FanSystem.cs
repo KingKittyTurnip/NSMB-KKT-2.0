@@ -95,15 +95,27 @@ Gp Interactions are weird
                         if (Captain->FanTime != 0 && (CapnHazard->LifeTime > 120 || CapnHazard->LifeTime == 0)) {
                             Captain->FanTime -= 1;
                             if (Captain->TurnEffectorDowntime != 0) {
-                                QuantumUtils.Decrement(ref Captain->TurnEffectorDowntime);
-                                Captain->CurrentStrength = (Captain->FacingRight ? Captain->Strength : -Captain->Strength) * ((Captain->TurnEffectorDowntime / (FP) 45) - 1);
+                                if (Captain->TurnEffectorDowntime > 45 || (QuantumUtils.Decrement(f, ref Captain->Cooldown))) {
+                                    if (Captain->TurnEffectorDowntime == 45 && Captain->Cooldown == 0) {
+                                        f.Events.OnFanSwitch(OtherEntity, true);
+                                    }
+                                    QuantumUtils.Decrement(ref Captain->TurnEffectorDowntime);
+                                    Captain->CurrentStrength = (Captain->FacingRight ? Captain->Strength : -Captain->Strength) * ((Captain->TurnEffectorDowntime / (FP) 45) - 1);
+                                } else {
+                                    Captain->CurrentStrength = 0;
+                                }
                             }
                         } else if (!Captain->Broken && !Captain->FellOver) {
                             Captain->FanTime = 10 * 60;
                             Captain->TurnEffectorDowntime = 90;
+                            Captain->Cooldown = 2;
                             Captain->FacingRight = !Captain->FacingRight;
+                            if (CapnHazard->LifeTime >= 120 || CapnHazard->LifeTime == 0) {
+                                f.Events.OnFanSwitch(OtherEntity, false);
+                            }
                         }
                     } else if (!Afan->Broken) { // Sync Other Fans
+                        Afan->Cooldown = Captain->Cooldown;
                         Afan->FanTime = Captain->FanTime;
                         Afan->TurnEffectorDowntime = Captain->TurnEffectorDowntime;
                         Afan->FacingRight = Captain->FacingRight;
@@ -130,22 +142,28 @@ Gp Interactions are weird
                 if (f.Has<MarioPlayer>(OtherEntity)) {
                     //We Are Mario, Grant More Specialized Wind Physics To Make The Hazard Feel better To Play With
                     var mar = f.Unsafe.GetPointer<MarioPlayer>(OtherEntity);
-                    if (mar->IsInShell || mar->IsCrouchedInShell || mar->IsGroundpounding
-                        || mar->IsWallsliding || mar->WalljumpFrames > 0 
-                        || mar->StoneBux || mar->MegaMushroomFrames > 0 || mar->MetalMushroomFrames > 0) {
+                    mar->WalljumpFrames = 0;
+                    var marTransform = f.Unsafe.GetPointer<Transform2D>(OtherEntity);
+                    if (mar->IsGroundpounding //crouching and pounds
+                        || mar->IsWallsliding /*|| mar->WalljumpFrames > 0*/ //wallsliding ignores wind cuz it would be jank otherwise
+                        || mar->StoneBux //this thing is too heavy man why would wind be able to push mario
+                        || mar->IsInShell || mar->IsCrouchedInShell || mar->MegaMushroomFrames > 0 || mar->MetalMushroomFrames > 0 || mar->MetalMushroomFrames > 0 //certain powerups are immune
+                        || physobj->IsTouchingLeftWall || physobj->IsTouchingRightWall || PhysicsObjectSystem.Raycast(f, stage, marTransform->Position, FPVector2.Left, FP._0_33, out _) || 
+                        PhysicsObjectSystem.Raycast(f, stage, marTransform->Position, FPVector2.Right, FP._0_33, out _)) { //walls are slightly protective, this prevents a collisionbug
                         continue; //Skip
                     }
-                    if (physobj->IsTouchingLeftWall || physobj->IsTouchingRightWall) {
-                        physobj->Velocity.X = physobj->IsTouchingLeftWall ? -1 : 1;
-                        continue; //skip
+
+                    if (mar->IsCrouching && physobj->IsTouchingGround) {
+                        physobj->Velocity.X = 0;
+                        continue;
                     }
+                    
                     if ((newStrength > 0) == (physobj->Velocity.X <= 0) && physobj->Velocity.X != 0) {
                         //Mario Pushing Against The Wind
                         if (((newStrength > 0) == !mar->FacingRight) && FPMath.Abs(physobj->Velocity.X) > 1)
                             mar->LastPushingFrame = f.Number;
-                        newStrength -= FPMath.Abs(physobj->Velocity.X / 10) * TempStrength;
+                        //newStrength -= FPMath.Abs(physobj->Velocity.X / 10) * TempStrength;
                     }
-                    //newStrength -= FPMath.Abs(physobj->Velocity.X / 10) * TempStrength;
                 }
                 f.Unsafe.TryGetPointer(OtherEntity, out Transform2D* trans);
                 f.Unsafe.TryGetPointer(OtherEntity, out PhysicsCollider2D* col);
@@ -156,6 +174,9 @@ Gp Interactions are weird
                     Collider = col,
                 };
                 if (IsVertical) {
+                    //we don't want players flying off forever TODO: idk if this works lol
+                    FP limit = physicsObject->TerminalVelocity;
+                    newStrength = FPMath.Clamp(newStrength, limit, -limit/* - Constants._0_0001*/);
                     if (!physobj->IsTouchingGround)
                         PhysicsObjectSystem.MoveVertically(f, new FPVector2(0, newStrength), ref physicsSystemFilter, stage, null, out _);
                 } else {
@@ -278,6 +299,8 @@ Gp Interactions are weird
             //Set FanTime
             fan->FanTime = hazardata.SpecialValues[3].BaseValue * 59; // set to Basically 10 seconds
             fan->TurnEffectorDowntime = 45;
+
+            fan->Cooldown = 2;
         }
         #endregion
     }

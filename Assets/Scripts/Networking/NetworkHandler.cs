@@ -241,9 +241,17 @@ namespace NSMB.Networking {
             };
             BooleanProperties boolProperties = new() {
                 GameStarted = f.Global->GameState != GameState.PreGameRoom,
+                /*
                 CustomPowerups = rules.CustomPowerupsEnabled,
+                */
                 Teams = rules.TeamsEnabled,
+                /*
                 DrawOnTimeUp = rules.DrawOnTimeUp,
+                */
+                //KKT Mod
+                
+
+                //back to vanilla
                 AddonsEnabled = GlobalController.Instance.addonManager.LoadedAddons.Count > 0
             };
 

@@ -138,6 +138,7 @@ component MarioPlayer {
 	// Boss Control
 	[ExcludeFromPrototype] EntityRef IsBoss;
 	[ExcludeFromPrototype] bool RidingStarball;
+	bool IsBot;
 }
 
 struct StarChasersData {
@@ -151,14 +152,21 @@ struct CoinRunnersData {
 struct BalloonBattleData {
 	int BalloonsLeft;
 }
-struct BombchasersData {
+struct BombChasersData {
 	bool IsBomb;
 }
 
-//in kkt we should CHANGE this (previously a union)
+/*
 union GamemodeSpecificData {
 	StarChasersData StarChasers;
 	CoinRunnersData CoinRunners;
+}
+*/
+struct GamemodeSpecificData {
+	StarChasersData StarChasers;
+	CoinRunnersData CoinRunners;
+	BalloonBattleData BalloonBattle;
+	BombChasersData BombChasers;
 }
 
 enum KnockbackStrength : Byte {

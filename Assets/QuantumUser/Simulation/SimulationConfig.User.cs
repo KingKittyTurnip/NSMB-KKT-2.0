@@ -17,7 +17,7 @@ namespace Quantum {
         [Header("Technical")]
         public AssetRef<EntityPrototype> MainSpawn;
         public AssetRef<EntityPrototype> HazardSpawn;
-        [Header("Enenties To Create Via Some Random Script")]
+        [Header("Enties To Create Via Some Random Script, probably move these to those scripts")]
         public AssetRef<EntityPrototype> VoidWallWall;
         public AssetRef<EntityPrototype> StarballGoal;
         public AssetRef<EntityPrototype> Chainchomp;
@@ -26,6 +26,8 @@ namespace Quantum {
         public AssetRef<LoopingMusicData>[] BossMusic;
 
         [Header("Gamemode Shenanigans")]
+        public AssetRef<GamemodeAsset> StarChasers;
+        public AssetRef<GamemodeAsset> CoinRunners, BalloonBattle, BombChasers;
         public AssetRef<RulesBaser> BaseRules;
         public AssetRef<CurrentHazards> CurrentHazards;
     }

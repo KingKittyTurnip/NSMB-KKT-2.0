@@ -30,11 +30,22 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
             };
 
             switch (ruleType) {
+            /*
             case CommandChangeRules.Rules.CustomPowerupsEnabled:
                 cmd.CustomPowerupsEnabled = (bool) value;
                 break;
+                */
             case CommandChangeRules.Rules.TeamsEnabled:
                 cmd.TeamsEnabled = (bool) value;
+                break;
+            case CommandChangeRules.Rules.StarChasers:
+                cmd.StarChasersEnabled = (bool) value;
+                break;
+            case CommandChangeRules.Rules.CoinRunners:
+                cmd.CoinRunnersEnabled = (bool) value;
+                break;
+            case CommandChangeRules.Rules.Hazards:
+                cmd.Hazards = (bool) value;
                 break;
             }
 

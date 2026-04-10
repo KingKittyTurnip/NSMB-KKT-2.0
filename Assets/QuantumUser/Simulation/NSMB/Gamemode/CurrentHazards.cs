@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Quantum.CurrentHazards.HazardDataList;
 
 namespace Quantum {
 
@@ -9,9 +10,9 @@ namespace Quantum {
 //make hazards despawn faster if avoided (in tanoomba's case, slower)
 //this would make hazards folks aren't caring about in the moment last less long
 
-
     public class CurrentHazards : AssetObject {
-        //public RulesBaser basehazards = null;
+        public List<PowerupData> PowerupData;
+
         public HazardDataList HazardGameData;
 
         [Serializable]

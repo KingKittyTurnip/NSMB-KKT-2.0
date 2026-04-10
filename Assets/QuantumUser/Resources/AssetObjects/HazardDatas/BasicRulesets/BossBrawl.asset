@@ -16,9 +16,9 @@ MonoBehaviour:
     Path: QuantumUser/Resources/AssetObjects/HazardDatas/BasicRulesets/BossBrawl
     Guid:
       Value: 511120485240054137
-  basehazards: {fileID: 11400000, guid: 6eedad89fad11d04a990e201e1ec98e3, type: 2}
+  PowerupData: []
   HazardGameData:
-    MaxHazards: 2
+    MaxHazards: 0
     frequency: 0
     HeftyPercentage:
       RawValue: 0
@@ -42,17 +42,10 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 255
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
@@ -108,13 +101,6 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 1
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
@@ -168,13 +154,6 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
@@ -228,13 +207,6 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 0
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0
@@ -267,6 +239,59 @@ MonoBehaviour:
       - ButtonName: Is Dry
         ButtonType: 0
         BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 0
+    - Name: King Boo
+      hazardAsset:
+        Id:
+          Value: 1417407889661057047
+      Hefty:
+        ButtonName: Enabled As Hefty
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      Team:
+        ButtonName: Team
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 6
+      SpawnRandom:
+        ButtonName: Spawn Randomly
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnFridge:
+        ButtonName: Appear From Fridge
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 1
+      SpawnBulb:
+        ButtonName: Creatable From Bulb
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      Scale:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+      SpecialValues:
+      - ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 0
@@ -288,13 +313,6 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 6
-      SpawnAsGoal:
-        ButtonName: Spawn As Goal
-        ButtonType: 0
-        BaseValue: 255
-        ValueRange:
-          X: 0
-          Y: 1
       SpawnRandom:
         ButtonName: Spawn Randomly
         ButtonType: 0

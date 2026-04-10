@@ -14577,7 +14577,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 84.4
+  m_fontSize: 84.35
   m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -15058,7 +15058,34 @@ MonoBehaviour:
   zoomSfx: {fileID: 8859060311520427125}
   Smoother:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: -1
+      value: 0.99999815
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -1.4971701
+      outSlope: 1.5163516
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.2009037
+      outWeight: 0.20031884
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.000612997
+      outSlope: -0.000612997
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

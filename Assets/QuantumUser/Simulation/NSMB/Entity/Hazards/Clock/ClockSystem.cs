@@ -29,7 +29,6 @@ Use The Correct Sound For Collection(?)
         #region Interactions
         public static void OnClockMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
             var clock = f.Unsafe.GetPointer<Clock>(thisEntity);
-            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
 
             // Change GlobalTime
             if (f.Global->Timer == 0) {

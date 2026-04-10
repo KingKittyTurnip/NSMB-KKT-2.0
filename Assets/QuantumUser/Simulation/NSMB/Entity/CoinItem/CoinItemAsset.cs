@@ -96,9 +96,11 @@ public unsafe class CoinItemAsset : AssetObject {
         if (fromRouletteBlock && !Flags.HasFlag(TypeFlags.SpawnableFromRouletteBlock)) {
             return false;
         }
+        /* depricated in kkt mod
         if (Flags.HasFlag(TypeFlags.NonVanillaItem) && !f.Global->Rules.CustomPowerupsEnabled) {
             return false;
         }
+        */
         if (Flags.HasFlag(TypeFlags.LivesEnabledOnly) && !f.Global->Rules.IsLivesEnabled) {
             return false;
         }

@@ -231,5 +231,16 @@ namespace Quantum {
         public static void ChangeHazardIcon(Frame f, EntityRef entity, bool Created) {
             HazardIconChanged?.Invoke(f, entity, Created);
         }
+
+        public static bool IsCanInteractWithTeamHazard(Frame f, EntityRef marioEntity, EntityRef hazardEntity, bool IgnoresTeamates = false) {
+            var hazard = f.Unsafe.GetPointer<Hazard>(hazardEntity);
+            if (hazard->Team == 255 || IgnoresTeamates) {
+                //invalid team or ignores teamates
+                return true;
+            }
+
+            var mario = f.Unsafe.GetPointer<MarioPlayer>(hazardEntity);
+            return mario->GetTeam(f) == hazard->Team;
+        }
     }
 }

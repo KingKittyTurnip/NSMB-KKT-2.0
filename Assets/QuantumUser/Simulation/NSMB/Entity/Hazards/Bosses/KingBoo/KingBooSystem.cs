@@ -280,14 +280,14 @@ namespace Quantum {
                 physicsObject->Velocity.Y = FPMath.Clamp(physicsObject->Velocity.Y, -TruMax.Y, TruMax.Y);
             }
             void CreateProjectile(FPVector2 Direction, FP Bonus) {
-                FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, FP._0_33 * Bonus);
+                FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, FP._0_33);
                 EntityRef newEntity = f.Create(kingboo->BlueFire);
                 var throwhazard = f.Unsafe.GetPointer<Hazard>(newEntity);
                 FP radian = FPMath.Atan2(Direction.Y, Direction.X);
                 Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
 
                 f.Unsafe.GetPointer<Transform2D>(newEntity)->Position = spawnPos;
-                f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity = ((Direction * (4 + FP._0_10)) + FPVector2.Up);
+                f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity = ((Direction * (4 + FP._0_10)) + (FPVector2.Up*Bonus*2));
                 throwhazard->IsHazard = true;
                 throwhazard->LifeTime = 250;
                 f.Unsafe.GetPointer<ThrowingObject>(newEntity)->Thrown = true;
@@ -400,21 +400,6 @@ namespace Quantum {
             }
 
             kingboo->State = KingBooState.Laughing;
-            hazard->LifeTime = 130;
-
-            if (boss->ControllerPlayer != EntityRef.None) {
-                //Controlled By Player
-                var mario = f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer);
-                mario->RelieveFromBoss(f, boss->ControllerPlayer);
-            } else {
-                //spawn star(s?)
-                var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-                var gamemode = f.FindAsset(f.Global->Rules.Gamemode) as StarChasersGamemode;
-                EntityRef newStarEntity = f.Create(gamemode.BigStarPrototype);
-                var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
-                f.Unsafe.GetPointer<Transform2D>(newStarEntity)->Position = f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position;
-                newStar->InitializeMovingStar(f, stage, newStarEntity, boss->FacingRight ? 1 : 2);
-            }
         }
 
         public void OnIceBlockBroken(Frame f, EntityRef brokenIceBlock, IceBlockBreakReason breakReason, EntityRef attacker) {

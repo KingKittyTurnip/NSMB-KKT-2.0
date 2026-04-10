@@ -56,6 +56,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   graphicsRoot: {fileID: 2479772350441087688}
+  moveBehindBlocksRoot: {fileID: 0}
   renderer: {fileID: 1145319354374527610}
   childAnimator: {fileID: 0}
   childAnimation: {fileID: 0}
@@ -456,6 +457,8 @@ MonoBehaviour:
       Value: 0
     BreakMegaObjects:
       Value: 0
+    WindImmune:
+      Value: 0
 --- !u!114 &1256801405142820976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -636,13 +639,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 9
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 3410918491446568398, guid: 794bc215dd02bf34ab2cfae7702bfdfd,
-    type: 3}
+  m_Sprite: {fileID: 1718831643, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.5, y: 0.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

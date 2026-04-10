@@ -1,5 +1,6 @@
 component Fan {
 	FP Strength;
+	FP Cooldown;
 	bool Broken;
 	bool FellOver;
 	bool Sturdy;
@@ -14,4 +15,9 @@ component Fan {
 event OnFanHit {
 	EntityRef Entity;
 	bool Broken;
+}
+
+event OnFanSwitch {
+	EntityRef Entity;
+	bool SwitchOn;
 }

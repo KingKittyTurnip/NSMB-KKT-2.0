@@ -130,7 +130,7 @@ namespace Quantum {
 
             if (reason.ShouldSpawnCoin()) {
                 // Spawn coin
-                var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
+                var gamemode = f.FindAsset(f.SimulationConfig.StarChasers);
                 gamemode.SpawnLooseCoin(f, center);
             }
 

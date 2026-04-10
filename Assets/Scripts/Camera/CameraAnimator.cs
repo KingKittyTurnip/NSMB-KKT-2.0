@@ -298,8 +298,8 @@ namespace NSMB.Cameras {
             }
 
             //Handle Rotation
-            float spinpipeslope = (float) f.Global->SpinpipeSlope,
-                spinpipeMAX = ((float) f.Global->SpinpipeMAX) * 0.65f,
+            float spinpipeslope = f.Global->SpinpipeSlope.AsFloat,
+                spinpipeMAX = (f.Global->SpinpipeMAX.AsFloat) * 0.65f,
                 Rot = 0;
 
             if (spinpipeMAX != PrevMax) {

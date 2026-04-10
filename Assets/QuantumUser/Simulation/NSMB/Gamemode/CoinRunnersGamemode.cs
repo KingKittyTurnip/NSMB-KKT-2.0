@@ -8,7 +8,7 @@ namespace Quantum {
 
         public override void EnableGamemode(Frame f) {
             f.SystemEnable<ObjectiveCoinSystem>();
-            //f.SystemEnable<GoldBlockSystem>(); //removed vanilla gold block, prob should remove gamemode code too.
+            //f.SystemEnable<GoldBlockSystem>(); //removed vanilla gold block
         }
 
         public override void DisableGamemode(Frame f) {
@@ -45,11 +45,13 @@ namespace Quantum {
 
             // End Condition: timer expires
             if (f.Global->Rules.IsTimerEnabled && f.Global->Timer <= 0) {
+                /* TODO: add end timer functionalities
                 if (f.Global->Rules.DrawOnTimeUp) {
                     // It's a draw
                     GameLogicSystem.EndGame(f, false, null);
                     return;
                 }
+                */
 
                 // Check if one team is winning
                 int? winningTeam = GetWinningTeam(f, out _);
@@ -81,7 +83,7 @@ namespace Quantum {
             // Make a copy to not modify the `type` variable
             // Which can cause desyncs.
             GamemodeSpecificData gamemodeDataCopy = mario->GamemodeData;
-            return gamemodeDataCopy.CoinRunners->ObjectiveCoins;
+            return gamemodeDataCopy.CoinRunners.ObjectiveCoins;//kkt mod changed a -> into a dot for the union to struct conversion
         }
 
         public override FP GetItemSpawnWeight(Frame f, CoinItemAsset item, int ourCoins) {

@@ -13,8 +13,15 @@ namespace Quantum {
         public int Lives;
         public int TimerMinutes;
         public bool TeamsEnabled;
+        /*
         public bool CustomPowerupsEnabled;
         public bool DrawOnTimeUp;
+        */
+        public bool StarChasersEnabled;
+        public int StarFrequency;
+        public bool CoinRunnersEnabled;
+        public int StarcoinFrequency;
+        public bool Hazards;
 
         public override void Serialize(BitStream stream) {
             if (stream.Writing) {
@@ -30,8 +37,14 @@ namespace Quantum {
             stream.Serialize(ref Lives);
             stream.Serialize(ref TimerMinutes);
             stream.Serialize(ref TeamsEnabled);
+            /*
             stream.Serialize(ref CustomPowerupsEnabled);
             stream.Serialize(ref DrawOnTimeUp);
+            */
+            stream.Serialize(ref StarChasersEnabled);
+            stream.Serialize(ref StarFrequency);
+            stream.Serialize(ref CoinRunnersEnabled);
+            stream.Serialize(ref StarcoinFrequency);
         }
 
         public unsafe void Execute(Frame f, PlayerRef sender, PlayerData* playerData) {
@@ -45,6 +58,7 @@ namespace Quantum {
             bool gamemodeChanged = false;
             bool levelChanged = false;
 
+            /*
             if (rulesChanges.HasFlag(Rules.Gamemode)) {
                 gamemodeChanged = rules.Gamemode != Gamemode;
 
@@ -54,6 +68,7 @@ namespace Quantum {
 
                 rules = tempRules;
             }
+            */
             if (rulesChanges.HasFlag(Rules.Stage)) {
                 levelChanged = rules.Stage != Stage;
                 rules.Stage = Stage;
@@ -73,11 +88,29 @@ namespace Quantum {
             if (rulesChanges.HasFlag(Rules.TeamsEnabled)) {
                 rules.TeamsEnabled = TeamsEnabled;
             }
+            /*
             if (rulesChanges.HasFlag(Rules.CustomPowerupsEnabled)) {
                 rules.CustomPowerupsEnabled = CustomPowerupsEnabled;
             }
             if (rulesChanges.HasFlag(Rules.DrawOnTimeUp)) {
                 rules.DrawOnTimeUp = DrawOnTimeUp;
+            }
+            */
+            //KKT Mod
+            if (rulesChanges.HasFlag(Rules.StarChasers)) {
+                rules.GamemodeStarChasersEnabled = StarChasersEnabled;
+            }
+            if (rulesChanges.HasFlag(Rules.StarFreq)) {
+                rules.starfrequency = StarFrequency;
+            }
+            if (rulesChanges.HasFlag(Rules.CoinRunners)) {
+                rules.GamemodeCoinRunnersEnabled = CoinRunnersEnabled;
+            }
+            if (rulesChanges.HasFlag(Rules.StarCoinFreq)) {
+                rules.starcoinfrequency = StarcoinFrequency;
+            }
+            if (rulesChanges.HasFlag(Rules.Hazards)) {
+                rules.HazardsEnabled = Hazards;
             }
 
             f.Global->Rules = rules;
@@ -92,14 +125,20 @@ namespace Quantum {
         public enum Rules : ushort {
             None = 0,
             Stage = 1 << 0,
-            Gamemode = 1 << 1,
+            Gamemode = 1 << 1, //deprecated
             StarsToWin = 1 << 2,
             CoinsForPowerup = 1 << 3,
             Lives = 1 << 4,
             TimerMinutes = 1 << 5,
             TeamsEnabled = 1 << 6,
-            CustomPowerupsEnabled = 1 << 7,
-            DrawOnTimeUp = 1 << 8,
+            CustomPowerupsEnabled = 1 << 7, //deprecated
+            DrawOnTimeUp = 1 << 8, //deprecated
+            //KKT Mod
+            StarChasers = 1 << 9,
+            StarFreq = 1 << 10,
+            CoinRunners = 1 << 11,
+            StarCoinFreq = 1 << 12,
+            Hazards = 1 << 13,
         }
     }
 }

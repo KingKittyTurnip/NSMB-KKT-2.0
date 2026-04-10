@@ -242,9 +242,10 @@ namespace Quantum {
             if (IsDead) {
                 return;
             }
-
+            /*
             var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             int oldObjectiveCount = gamemode.GetObjectiveCount(f, f.Unsafe.GetPointer<MarioPlayer>(entity));
+            */
 
             IsDead = true;
             FireDeath = fire;
@@ -289,7 +290,7 @@ namespace Quantum {
             physicsObject->CurrentData = default;
 
             f.Signals.OnMarioPlayerDied(entity);
-            f.Events.MarioPlayerDied(entity, fire, oldObjectiveCount, attacker);
+            f.Events.MarioPlayerDied(entity, fire, /*oldObjectiveCount*/0, attacker);
         }
 
         public bool Powerdown(Frame f, EntityRef entity, bool ignoreInvincible, EntityRef attacker) {
@@ -302,10 +303,10 @@ namespace Quantum {
             if (!doDamage) {
                 return false;
             }
-
+            /*
             var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             int oldObjectiveCount = gamemode.GetObjectiveCount(f, f.Unsafe.GetPointer<MarioPlayer>(entity));
-
+            */
             PreviousPowerupState = CurrentPowerupState;
 
             switch (CurrentPowerupState) {
@@ -339,7 +340,7 @@ namespace Quantum {
 
             if (!IsDead) {
                 DamageInvincibilityFrames = Constants.DamageInvincibilityFrames;
-                f.Events.MarioPlayerTookDamage(entity, oldObjectiveCount, attacker);
+                f.Events.MarioPlayerTookDamage(entity, /*oldObjectiveCount*/ 0, attacker);
             }
             return true;
         }
@@ -446,10 +447,10 @@ namespace Quantum {
             if (IsInKnockback || IsInWeakKnockback) {
                 starsToDrop = Math.Min(1, starsToDrop);
             }
-
+            /*
             var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             int oldObjectiveCount = gamemode.GetObjectiveCount(f, f.Unsafe.GetPointer<MarioPlayer>(entity));
-
+            */
             /*
             // Don't go into walls
             var transform = f.Unsafe.GetPointer<Transform2D>(entity);
@@ -514,7 +515,7 @@ namespace Quantum {
             LastAttacker = attacker;
 
             f.Signals.OnMarioPlayerDropObjective(entity, starsToDrop, attacker);
-            f.Events.MarioPlayerTookKnockback(entity, attacker, starsToDrop, oldObjectiveCount, strength, projectileEffectType, wasBlueShell);
+            f.Events.MarioPlayerTookKnockback(entity, attacker, starsToDrop, /*oldObjectiveCount*/0, strength, projectileEffectType, wasBlueShell);
             return true;
         }
 

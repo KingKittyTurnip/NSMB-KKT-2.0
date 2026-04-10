@@ -52,24 +52,17 @@ namespace Quantum {
                         }
                     } else if (cauldron->EnteredFrames > 130) {
                         //create boss hazard
-                        List<HazardData> hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas;
-                        List<(HazardData, int)> avaliblebosses = new();
-                        for (int i = 0; i < hazarddata.Count; i++) {
-                            if (hazarddata[i].Name == "Petey" || hazarddata[i].Name == "Bowser" || hazarddata[i].Name == "Whomp King" || hazarddata[i].Name == "King Boo") {
-                                //This is A Boss Entity
-                                avaliblebosses.Add((hazarddata[i], i));
-                                continue;
-                            }
-                        }
-                        int pick = f.RNG->Next(0, avaliblebosses.Count);
 
-                        EntityRef newEntity = f.Create(avaliblebosses[pick].Item1.hazardAsset);
+                        EntityRef newEntity = f.Create(cauldron->ConvertInto);
                         f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity.Y = 8;
                         if (cauldron->TransformingEntity != EntityRef.None) {
                             f.Unsafe.GetPointer<Boss>(newEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
                             f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
                         }
-                        f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, avaliblebosses[pick].Item2);
+                        if (cauldron->ConvertToHazardId != 255) {
+                            //this code should always be ran, outside of putting it in stages if that's what i want to do
+                            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, cauldron->ConvertToHazardId);
+                        }
                         f.Events.PlayPuffParticle(transform->Position);
                         cauldron->TransformingEntity = EntityRef.None;
                         cauldron->Activated = false;
@@ -140,8 +133,25 @@ namespace Quantum {
             var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
 
             //Set The Value To What It Will ALWAYS convert into
-            /*if (hazardata.SpecialValues[0].BaseValue == 0)
-                cauldron->ConvertInto = hazardata.SpecialValues[0];*/
+            if (hazardata.SpecialValues[0].BaseValue == 255) {
+                //set random
+                List<HazardData> hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas;
+                List<(HazardData, int)> avaliblebosses = new();
+                for (int i = 0; i < hazarddata.Count; i++) {
+                    if (hazarddata[i].Name == "Petey" || hazarddata[i].Name == "Bowser" || hazarddata[i].Name == "Whomp King" || hazarddata[i].Name == "King Boo") {
+                        //This is A Boss Entity
+                        avaliblebosses.Add((hazarddata[i], i));
+                        continue;
+                    }
+                }
+                byte pick = (byte)f.RNG->Next(0, avaliblebosses.Count);
+
+                cauldron->ConvertInto = avaliblebosses[pick].Item1.hazardAsset;
+                cauldron->ConvertToHazardId = (byte)avaliblebosses[pick].Item2;
+            } else {
+                //set to ref
+                //cauldron->ConvertInto = hazardata.SpecialValues[0];
+            }
         }
         #endregion
     }

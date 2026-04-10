@@ -1,0 +1,385 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58883629b0d55c74e9ffec0e6f9d827d, type: 3}
+  m_Name: DEFAULT
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: QuantumUser/Resources/AssetObjects/HazardDatas/DEFAULT
+    Guid:
+      Value: 425424764972781941
+  Rules:
+    BaseRulesList:
+      DefaultRules:
+        AdvancedLobby:
+          Value: 0
+        Stage:
+          Id:
+            Value: 438935048561577377
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        GamemodeStarChasersEnabled:
+          Value: 1
+        StarsToWin: 15
+        starfrequency: 10
+        GamemodeCoinRunnersEnabled:
+          Value: 0
+        starcoinfrequency: 10
+        GamemodeBalloonBattleEnabled:
+          Value: 0
+        MaxBalloons: 5
+        GamemodeBombchasersEnabled:
+          Value: 0
+        CoinsForPowerup: 5
+        HazardsEnabled:
+          Value: 1
+        Lives: 0
+        TimerMinutes: 0
+        TeamsEnabled:
+          Value: 0
+      SpawnType: 0
+      StarsSpawnableCount: 1
+      StarcoinsSpawnableCount: 1
+      AutomaticallyModifyTimerDependingOnLivesAndPlayerCount: 1
+      StartingBobombCount: 1
+      FirstBombIsKingBobomb: 1
+      IsRoulette: 0
+      HazardCount: 10
+      HazardFreq: 10
+      HeftyPercentage: 12
+      GlobalTimeTilDespawn: 80
+      TeamLock: 0
+      FreindlyFire: 0
+      bigstarBase:
+        Name: Bigstar
+        entityPrototype:
+          Id:
+            Value: 1295981493910502871
+        Icon: {fileID: 0}
+        type: 8
+        categorey: 2097152
+        Hefty: 1
+        Teamable: 1
+        SpawnRandom: 1
+        SpawnFridge: 1
+        SpawnBulb: 1
+        SpawnChance:
+          RawValue: -32768
+        WinningBonus:
+          RawValue: 0
+        LosingBonus:
+          RawValue: 196608
+        SpecialValues:
+        - ButtonName: IsStationary
+          ButtonType: 0
+          BaseValue: 1
+          ValueRange:
+            X: 0
+            Y: 0
+      purplecoinBase:
+        Name: Purple Coin
+        entityPrototype:
+          Id:
+            Value: 1441489962698596482
+        Icon: {fileID: 0}
+        type: 8
+        categorey: 4194304
+        Hefty: 0
+        Teamable: 1
+        SpawnRandom: 1
+        SpawnFridge: 1
+        SpawnBulb: 1
+        SpawnChance:
+          RawValue: 32768
+        WinningBonus:
+          RawValue: 0
+        LosingBonus:
+          RawValue: 0
+        SpecialValues: []
+      starcoinBase:
+        Name: Starcoin
+        entityPrototype:
+          Id:
+            Value: 1349860830661540207
+        Icon: {fileID: 0}
+        type: 8
+        categorey: 4194304
+        Hefty: 1
+        Teamable: 1
+        SpawnRandom: 1
+        SpawnFridge: 1
+        SpawnBulb: 1
+        SpawnChance:
+          RawValue: -32768
+        WinningBonus:
+          RawValue: 0
+        LosingBonus:
+          RawValue: 196608
+        SpecialValues: []
+      kingbobombBase:
+        Name: King Bobomb
+        entityPrototype:
+          Id:
+            Value: 0
+        Icon: {fileID: 0}
+        type: 8
+        categorey: 16777216
+        Hefty: 0
+        Teamable: 1
+        SpawnRandom: 1
+        SpawnFridge: 1
+        SpawnBulb: 1
+        SpawnChance:
+          RawValue: 65536
+        WinningBonus:
+          RawValue: 0
+        LosingBonus:
+          RawValue: 32768
+        SpecialValues: []
+      loosecoinBase:
+        Name: Loose coin
+        entityPrototype:
+          Id:
+            Value: 1464681621458001613
+        Icon: {fileID: 0}
+        type: 8
+        categorey: 4194304
+        Hefty: 0
+        Teamable: 1
+        SpawnRandom: 1
+        SpawnFridge: 1
+        SpawnBulb: 1
+        SpawnChance:
+          RawValue: 98304
+        WinningBonus:
+          RawValue: 65536
+        LosingBonus:
+          RawValue: -65536
+        SpecialValues: []
+      oneupBase:
+        Name: 1up Mushroom
+        entityPrototype:
+          Id:
+            Value: 1365421339623582075
+        Icon: {fileID: 0}
+        type: 1
+        categorey: 1
+        Hefty: 0
+        Teamable: 1
+        SpawnRandom: 1
+        SpawnFridge: 1
+        SpawnBulb: 1
+        SpawnChance:
+          RawValue: 6554
+        WinningBonus:
+          RawValue: 32768
+        LosingBonus:
+          RawValue: 0
+        SpecialValues: []
+      clockBase:
+        Name: Clock
+        entityPrototype:
+          Id:
+            Value: 1459869503240347747
+        Icon: {fileID: 0}
+        type: 8
+        categorey: 268435456
+        Hefty: 0
+        Teamable: 1
+        SpawnRandom: 1
+        SpawnFridge: 1
+        SpawnBulb: 0
+        SpawnChance:
+          RawValue: 65536
+        WinningBonus:
+          RawValue: 0
+        LosingBonus:
+          RawValue: 32768
+        SpecialValues:
+        - ButtonName: Clock Type
+          ButtonType: 0
+          BaseValue: 0
+          ValueRange:
+            X: 0
+            Y: 2
+    ListOfAvalibleObjects:
+    - Name: Mushroom
+      entityPrototype:
+        Id:
+          Value: 1268531089014898302
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpawnChance:
+        RawValue: 98304
+      WinningBonus:
+        RawValue: 65536
+      LosingBonus:
+        RawValue: -65536
+      SpecialValues: []
+    - Name: Fire Flower
+      entityPrototype:
+        Id:
+          Value: 1349070666859566638
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpawnChance:
+        RawValue: 196608
+      WinningBonus:
+        RawValue: -139264
+      LosingBonus:
+        RawValue: 8192
+      SpecialValues: []
+    - Name: Blueshell
+      entityPrototype:
+        Id:
+          Value: 1466930856010351358
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpawnChance:
+        RawValue: 131072
+      WinningBonus:
+        RawValue: -49152
+      LosingBonus:
+        RawValue: 32768
+      SpecialValues: []
+    - Name: Starman
+      entityPrototype:
+        Id:
+          Value: 1502268950446962426
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpawnChance:
+        RawValue: 16384
+      WinningBonus:
+        RawValue: -8192
+      LosingBonus:
+        RawValue: 163840
+      SpecialValues: []
+    - Name: Mini Mushroom
+      entityPrototype:
+        Id:
+          Value: 1414434856952255942
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpawnChance:
+        RawValue: 32768
+      WinningBonus:
+        RawValue: 65536
+      LosingBonus:
+        RawValue: -147456
+      SpecialValues: []
+    - Name: Mega Mushroom
+      entityPrototype:
+        Id:
+          Value: 1300211052819551813
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpawnChance:
+        RawValue: -131072
+      WinningBonus:
+        RawValue: 0
+      LosingBonus:
+        RawValue: 311296
+      SpecialValues: []
+    - Name: Ice Flower
+      entityPrototype:
+        Id:
+          Value: 1524544283524633813
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpawnChance:
+        RawValue: 65536
+      WinningBonus:
+        RawValue: -65536
+      LosingBonus:
+        RawValue: 65536
+      SpecialValues: []
+    - Name: Propeller Mushroom
+      entityPrototype:
+        Id:
+          Value: 1300211052819551813
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpawnChance:
+        RawValue: 98304
+      WinningBonus:
+        RawValue: 49152
+      LosingBonus:
+        RawValue: -65536
+      SpecialValues: []
+    - Name: Hammer Suit
+      entityPrototype:
+        Id:
+          Value: 1300211052819551813
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Hefty: 0
+      Teamable: 1
+      SpawnRandom: 1
+      SpawnFridge: 1
+      SpawnBulb: 0
+      SpawnChance:
+        RawValue: 57344
+      WinningBonus:
+        RawValue: -131072
+      LosingBonus:
+        RawValue: 65536
+      SpecialValues: []

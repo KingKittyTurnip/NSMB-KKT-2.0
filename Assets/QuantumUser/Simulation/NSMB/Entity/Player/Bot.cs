@@ -97,12 +97,12 @@ namespace Quantum {
                         SetAvoid(f, marioEntity, Spot, 4);
                     } else if (marioFoe->IsPropellerFlying || marioFoe->IsSpinnerFlying) { //Man Darn Propeller Spammers, Avoid Them
                         SetAvoid(f, marioEntity, Spot, 2);
-                    } else if (marioFoe->GamemodeData.StarChasers->Stars == 0) { //This Player Isn't Worth The Hassle
+                    } else if (marioFoe->GamemodeData.StarChasers.Stars == 0) { //This Player Isn't Worth The Hassle
                         SetAvoid(f, marioEntity, Spot, 3);
-                    } else if ((TargetFoeStars < marioFoe->GamemodeData.StarChasers->Stars) && mario->GetTeam(f) != marioFoe->GetTeam(f) && ((vel > 0 && posA.X - posB.X > 0) || (vel < 0 && posA.X - posB.X < 0) || Personality == 2 || distanceModifier <= (posA.Y + 2 > posB.Y ? -2 : 0))) { // && tempDistance < distance + (marioFoe->Stars - mario->Stars)) {
+                    } else if ((TargetFoeStars < marioFoe->GamemodeData.StarChasers.Stars) && mario->GetTeam(f) != marioFoe->GetTeam(f) && ((vel > 0 && posA.X - posB.X > 0) || (vel < 0 && posA.X - posB.X < 0) || Personality == 2 || distanceModifier <= (posA.Y + 2 > posB.Y ? -2 : 0))) { // && tempDistance < distance + (marioFoe->Stars - mario->Stars)) {
                         ATargetBellow = posA.Y - posB.Y > 1 && FPMath.Abs(posA.X - posB.X) < Constants._0_40;
                         if (mario->CurrentPowerupState > PowerupState.Mushroom) {
-                            TargetFoeStars = marioFoe->GamemodeData.StarChasers->Stars;
+                            TargetFoeStars = marioFoe->GamemodeData.StarChasers.Stars;
                             distance = tempDistance;
                             Target = Spot;
                             Attack = marioFoe->InvincibilityFrames <= 15 && !marioFoe->IsInKnockback;

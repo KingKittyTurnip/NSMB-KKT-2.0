@@ -40,7 +40,7 @@ namespace Quantum {
             _ = mario->RNG.Next();
 
             Input* inputPtr;
-            if (player.IsValid && (inputPtr = f.GetPlayerInput(player)) != null) {
+            if (player.IsValid && (inputPtr = f.GetPlayerInput(player)) != null && !mario->IsBot) {
                 filter.Inputs = *inputPtr;
                 if (filter.PhysicsObject->IsGravityInversed) {
                     var up = filter.Inputs.Up;
@@ -49,7 +49,7 @@ namespace Quantum {
                     filter.Inputs.Down = up;
                 }
             } else {
-                if (f.Unsafe.TryGetPointer(filter.Entity, out Bot* bot) && bot->IsBot) {
+                if (f.Unsafe.TryGetPointer(filter.Entity, out Bot* bot)) {
                     filter.Inputs = bot->HandleAi(f, filter.Entity);
                 } else {
                     filter.Inputs = default;
@@ -59,6 +59,10 @@ namespace Quantum {
             var physics = f.FindAsset(filter.MarioPlayer->PhysicsAsset);
             if (HandleDeathAndRespawning(f, ref filter, stage)) {
                 HandleTerminalVelocity(f, ref filter, physics);
+                return;
+            }
+
+            if (mario->IsBoss != EntityRef.None) {
                 return;
             }
 
@@ -2040,6 +2044,7 @@ namespace Quantum {
 
             if (!mario->IsDead) {
                 if (f.Exists(mario->IsBoss)) {
+                    HandleFacingDirection(f, ref filter, f.FindAsset(filter.MarioPlayer->PhysicsAsset));
                     return true;
                 }
                 if (mario->IsBoss != EntityRef.None) {
@@ -2078,7 +2083,7 @@ namespace Quantum {
             // Death up
             if (mario->DeathAnimationFrames > 0 && QuantumUtils.Decrement(ref mario->DeathAnimationFrames)) {
                 bool doRespawn = mario->IsValid(f);
-                if (!doRespawn && f.FindAsset(f.Global->Rules.Gamemode) is StarChasersGamemode && mario->GamemodeData.StarChasers->Stars > 0) {
+                if (!doRespawn && f.FindAsset(f.Global->Rules.Gamemode) is StarChasersGamemode && mario->GamemodeData.StarChasers.Stars > 0) {//kkt mod changed a -> into a dot for the union to struct conversion
                     // Try to drop more stars
                     f.Signals.OnMarioPlayerDropObjective(entity, 1, filter.Entity);
                     mario->DeathAnimationFrames = 36;
@@ -2103,7 +2108,7 @@ namespace Quantum {
         }
 
         public static EntityRef SpawnItem(Frame f, EntityRef marioEntity, MarioPlayer* mario, AssetRef<EntityPrototype> prefab, bool fromBlock) {
-            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
+            var gamemode = f.FindAsset(f.SimulationConfig.StarChasers);
             if (!prefab.IsValid) {
                 prefab = gamemode.GetRandomItem(f, mario, fromBlock).Prefab;
             }

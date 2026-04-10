@@ -30,16 +30,43 @@ struct PlayerInformation {
 }
 
 struct GameRules {
+
+	//KKT Mod
+	bool AdvancedLobby;
+	AssetRef<Map> Stage;
+	AssetRef<GamemodeAsset> Gamemode; //this is supposed to be unused but way too much things rely on it so i don't want to remove it to make merges easily compatable
+	bool GamemodeStarChasersEnabled;
+	  int StarsToWin;
+	  int starfrequency;
+	bool GamemodeCoinRunnersEnabled;
+	  int starcoinfrequency;
+	bool GamemodeBalloonBattleEnabled;
+	  byte MaxBalloons;
+	bool GamemodeBombchasersEnabled;
+
+	int CoinsForPowerup;
+	//ItemMenu; //??
+	
+	bool HazardsEnabled;
+
+	int Lives;
+
+	int TimerMinutes;
+
+	bool TeamsEnabled;
+
+	/*
 	AssetRef<Map> Stage;
 	AssetRef<GamemodeAsset> Gamemode;
 
+	bool StarsEnabled;
 	int StarsToWin;
 	int CoinsForPowerup;
+	AssetRef<CurrentHazards> CurrentRuleData;
 	int Lives;
 	int TimerMinutes;
 	bool TeamsEnabled;
-	bool CustomPowerupsEnabled;
-	bool DrawOnTimeUp;
+	*/
 }
 
 enum GameState : Byte {

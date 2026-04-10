@@ -371,21 +371,6 @@ namespace Quantum {
             }
 
             petey->State = PeteyState.Fallen;
-            hazard->LifeTime = 130;
-
-            if (boss->ControllerPlayer != EntityRef.None) {
-                //Controlled By Player
-                var mario = f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer);
-                mario->RelieveFromBoss(f, boss->ControllerPlayer);
-            } else {
-                //spawn star(s?)
-                var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-                var gamemode = f.FindAsset(f.Global->Rules.Gamemode) as StarChasersGamemode;
-                EntityRef newStarEntity = f.Create(gamemode.BigStarPrototype);
-                var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
-                f.Unsafe.GetPointer<Transform2D>(newStarEntity)->Position = f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position;
-                newStar->InitializeMovingStar(f, stage, newStarEntity, boss->FacingRight ? 1 : 2);
-            }
         }
 
         public void OnIceBlockBroken(Frame f, EntityRef brokenIceBlock, IceBlockBreakReason breakReason, EntityRef attacker) {

@@ -13,8 +13,9 @@ namespace Quantum {
         public AssetRef<CoinItemAsset> FallbackCoinItem;
         public AssetRef<EntityPrototype> LooseCoinPrototype;
         public int Order;
-
+        /*
         public GameRulesPrototype DefaultRules;
+        */
 
         public abstract void EnableGamemode(Frame f);
 

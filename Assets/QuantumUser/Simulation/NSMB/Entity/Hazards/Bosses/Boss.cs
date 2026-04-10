@@ -35,6 +35,22 @@ namespace Quantum {
                         boss->Dead = true;
                         f.Events.BossDeathAnimation(thisEntity);
                         f.Signals.BossDeath(thisEntity);
+
+                        hazard->LifeTime = 130;
+
+                        if (boss->ControllerPlayer != EntityRef.None) {
+                            //Controlled By Player
+                            var mario = f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer);
+                            mario->RelieveFromBoss(f, boss->ControllerPlayer);
+                        } else {
+                            //spawn gamemode objectives
+                            var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+                            var gamemode = f.FindAsset(f.SimulationConfig.StarChasers) as StarChasersGamemode;
+                            EntityRef newStarEntity = f.Create(gamemode.BigStarPrototype);
+                            var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
+                            f.Unsafe.GetPointer<Transform2D>(newStarEntity)->Position = f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position;
+                            newStar->InitializeMovingStar(f, stage, newStarEntity, boss->FacingRight ? 1 : 2);
+                        }
                         return;
                     }
                 }

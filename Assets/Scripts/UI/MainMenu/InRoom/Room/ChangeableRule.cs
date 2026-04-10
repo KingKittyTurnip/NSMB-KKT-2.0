@@ -203,9 +203,17 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
                 CommandChangeRules.Rules.CoinsForPowerup => rules.CoinsForPowerup,
                 CommandChangeRules.Rules.Lives => rules.Lives,
                 CommandChangeRules.Rules.TimerMinutes => rules.TimerMinutes,
+                /*
                 CommandChangeRules.Rules.DrawOnTimeUp => rules.DrawOnTimeUp,
                 CommandChangeRules.Rules.CustomPowerupsEnabled => (bool) rules.CustomPowerupsEnabled,
+                */
                 CommandChangeRules.Rules.TeamsEnabled => (bool) rules.TeamsEnabled,
+                //KKT Mod
+                CommandChangeRules.Rules.StarChasers => (bool) rules.GamemodeStarChasersEnabled,
+                CommandChangeRules.Rules.StarFreq => rules.starfrequency,
+                CommandChangeRules.Rules.CoinRunners => (bool) rules.GamemodeCoinRunnersEnabled,
+                CommandChangeRules.Rules.StarCoinFreq => rules.starcoinfrequency,
+                CommandChangeRules.Rules.Hazards => rules.HazardsEnabled,
                 _ => null
             };
 

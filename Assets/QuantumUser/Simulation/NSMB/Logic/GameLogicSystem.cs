@@ -8,8 +8,8 @@ namespace Quantum {
         ISignalOnLoadingComplete, ISignalOnReturnToRoom, ISignalOnComponentRemoved<MarioPlayer> {
 
         public override void OnInit(Frame f) {
-            var gamemode = f.Context.GetAllAssets<GamemodeAsset>()[0];
-            gamemode.DefaultRules.Materialize(f, ref f.Global->Rules);
+            //var gamemode = f.Context.GetAllAssets<GamemodeAsset>()[0];
+            f.FindAsset(f.SimulationConfig.BaseRules).Rules.BaseRulesList.DefaultRules.Materialize(f, ref f.Global->Rules);
 
             // Support booting in the editor.
             if (!f.RuntimeConfig.IsRealGame) {
@@ -124,9 +124,14 @@ namespace Quantum {
                     foreach (var otherGamemode in f.Context.GetAllAssets<GamemodeAsset>()) {
                         otherGamemode.DisableGamemode(f);
                     }
-
+                    /*
                     var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
                     gamemode.EnableGamemode(f);
+                    */
+                    if (f.Global->Rules.GamemodeStarChasersEnabled)
+                        f.FindAsset(f.SimulationConfig.StarChasers).EnableGamemode(f);
+                    if (f.Global->Rules.GamemodeCoinRunnersEnabled)
+                        f.FindAsset(f.SimulationConfig.CoinRunners).EnableGamemode(f);
 
                     f.Signals.OnGameStarting();
                     f.Events.GameStarted();
@@ -181,9 +186,13 @@ namespace Quantum {
                     f.Global->GameState = GameState.PreGameRoom;
                     f.Events.GameStateChanged(GameState.PreGameRoom);
                     f.SystemDisable<StartDisabledSystemGroup>();
-
+                    /*
                     var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
                     gamemode.DisableGamemode(f);
+                    */
+                    foreach (var otherGamemode in f.Context.GetAllAssets<GamemodeAsset>()) {
+                        otherGamemode.DisableGamemode(f);
+                    }
                 }
                 break;
             }
@@ -222,8 +231,9 @@ namespace Quantum {
             f.Global->GameStartFrames = (ushort) ((endedByHost ? Constants._3_50 : 21) * f.UpdateRate);
             f.SystemDisable<StartDisabledSystemGroup>();
 
-            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
-            gamemode.DisableGamemode(f);
+            foreach (var otherGamemode in f.Context.GetAllAssets<GamemodeAsset>()) {
+                otherGamemode.DisableGamemode(f);
+            }
         }
 
         public void OnMarioPlayerDied(Frame f, EntityRef entity) {

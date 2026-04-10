@@ -63,19 +63,6 @@ namespace Quantum.Prototypes.Unity {
     }
   }
   [System.SerializableAttribute()]
-  public unsafe partial class CauldronPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.CauldronPrototype> {
-    public Quantum.QuantumEntityPrototype ConvertInto;
-    public FP Hitboxheight;
-    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.CauldronPrototype prototype);
-    public override Quantum.Prototypes.CauldronPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
-      var result = new Quantum.Prototypes.CauldronPrototype();
-      converter.Convert(this.ConvertInto, out result.ConvertInto);
-      converter.Convert(this.Hitboxheight, out result.Hitboxheight);
-      ConvertUser(converter, ref result);
-      return result;
-    }
-  }
-  [System.SerializableAttribute()]
   public unsafe partial class EnterablePipePrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.EnterablePipePrototype> {
     public Quantum.QuantumEntityPrototype OtherPipe;
     public QBoolean IsEnterable;

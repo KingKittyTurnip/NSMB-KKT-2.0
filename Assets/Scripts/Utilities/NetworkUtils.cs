@@ -11,7 +11,7 @@ namespace NSMB.Utilities {
             [Enums.NetRoomProperties.HostName] = "noname",
             [Enums.NetRoomProperties.IntProperties] = (int) IntegerProperties.Default,
             [Enums.NetRoomProperties.BoolProperties] = (int) BooleanProperties.Default,
-            [Enums.NetRoomProperties.StageGuid] = AssetRepository<GamemodeAsset>.AllAssets[0].DefaultRules.Stage.Id.ToString(),
+            //[Enums.NetRoomProperties.StageGuid] = AssetRepository<GamemodeAsset>.AllAssets[0].DefaultRules.Stage.Id.ToString(),
             [Enums.NetRoomProperties.GamemodeGuid] = AssetRepository<GamemodeAsset>.AllAssets[0].Identifier.Guid.ToString(),
         };
 

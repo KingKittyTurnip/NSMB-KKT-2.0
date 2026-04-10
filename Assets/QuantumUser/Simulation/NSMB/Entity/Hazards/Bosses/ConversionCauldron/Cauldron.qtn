@@ -1,5 +1,6 @@
 component Cauldron {
-	EntityRef ConvertInto;
+	AssetRef<EntityPrototype> ConvertInto;
+	byte ConvertToHazardId; //set to 255
 	FP Hitboxheight;
 	
 	[ExcludeFromPrototype] EntityRef TransformingEntity;
@@ -10,4 +11,9 @@ component Cauldron {
 event ObjectEntered {
 	EntityRef Entity;
 	bool IsDeath;
+}
+
+event UpdateBossParticles {
+	EntityRef Entity;
+	byte Boss;
 }

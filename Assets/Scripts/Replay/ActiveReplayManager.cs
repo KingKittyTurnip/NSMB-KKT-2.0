@@ -163,8 +163,19 @@ namespace NSMB.Replay {
                         CoinsForPowerup = rules.CoinsForPowerup,
                         Lives = rules.Lives,
                         TimerMinutes = rules.TimerMinutes,
+                        /*
                         CustomPowerupsEnabled = rules.CustomPowerupsEnabled,
+                        */
                         TeamsEnabled = rules.TeamsEnabled,
+                        //KKT Mod
+                        GamemodeStarChasersEnabled = rules.GamemodeStarChasersEnabled,
+                        starfrequency = rules.starfrequency,
+                        GamemodeCoinRunnersEnabled = rules.GamemodeCoinRunnersEnabled,
+                        starcoinfrequency = rules.starcoinfrequency,
+                        GamemodeBalloonBattleEnabled = rules.GamemodeBalloonBattleEnabled,
+                        MaxBalloons = rules.MaxBalloons,
+                        GamemodeBombchasersEnabled = rules.GamemodeBombchasersEnabled,
+                        HazardsEnabled = rules.HazardsEnabled,
                     },
                     PlayerInformation = playerInformation,
                     WinningTeam = winner,

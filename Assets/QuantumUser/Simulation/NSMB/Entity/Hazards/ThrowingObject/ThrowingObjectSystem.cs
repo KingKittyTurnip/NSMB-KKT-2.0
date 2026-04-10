@@ -576,6 +576,9 @@ namespace Quantum {
                         //no holder, try to pickup so we don't lose velocity
                         keepContacts = OnMarInteraction(f, entity, contact.Entity);
 
+                    } else if (f.Has<Boss>(entity)) {
+                        keepContacts = OnBossInteraction(f, contact.Entity, entity);
+
                     } else if (f.Has<BigStar>(entity)) {
                         keepContacts = false;
 
@@ -585,6 +588,8 @@ namespace Quantum {
                                 keepContacts = false;
                         } else if (f.Has<PhysicsObject>(entity) && !holdable->HoldAboveHead && f.Exists(holdable->Holder)) { //things will only make contact if it's a head held object
                             keepContacts = false;
+                        } else {
+                            keepContacts = true;
                         }
                     }
                 }
@@ -713,7 +718,7 @@ namespace Quantum {
             if ((!Dis->Thrown || IsOwned)
               && (damageDirection.Y <= Constants._0_66 || Dis->HitSomething)) {
                 //Only Allow Carry If No Team Or Same Team --- TOTEST
-                if (hazard->Team != 255 && mario->GetTeam(f) != hazard->Team) { //Can only pickup if it's on our team... or no team
+                if (!HazardSystem.IsCanInteractWithTeamHazard(f, marioEntity, thisEntity, Dis->IgnoreTeamates)) { //Can only pickup if it's on our team... or no team
                     return true;
                 }
 
@@ -880,13 +885,16 @@ namespace Quantum {
             }
         }
         public static void OnThrowingObjectBossInteraction(Frame f, EntityRef thisEntity, EntityRef bossEntity) {
+            OnBossInteraction(f, thisEntity, bossEntity);
+        }
+        public static bool OnBossInteraction(Frame f, EntityRef thisEntity, EntityRef bossEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(bossEntity);
             if (boss->iframes > 0 || boss->Dead)
-                return;
+                return false;
 
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             if (holdable->PreviousHolder == bossEntity || holdable->PreviousHolder == boss->ControllerPlayer) {
-                return; //hang on, this is OUR throwable!
+                return false; //hang on, this is OUR throwable!
             }
 
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
@@ -920,6 +928,7 @@ namespace Quantum {
                     f.Events.PlayBossHitSound(bossEntity);
                 }
             }
+            return true;
         }
 
         public static bool OnThrowingObjectProjectileInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity, PhysicsContact contact) {
