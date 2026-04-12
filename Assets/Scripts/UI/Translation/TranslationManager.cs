@@ -15,7 +15,7 @@ namespace NSMB.UI.Translation {
 
         //---Properties
         public string CurrentLocale { get; private set; }
-        public bool RightToLeft => GetTranslation("rtl").Equals("true", StringComparison.InvariantCultureIgnoreCase);
+        public bool RightToLeft => IsLocaleRTL(CurrentLocale);
 
         //---Serialized Variables
         [SerializeField] private string fallbackLocale = "en-us";
@@ -118,9 +118,11 @@ namespace NSMB.UI.Translation {
 
             if (allTranslations.TryGetValue(locale, out var sources)) {
                 for (int i = sources.Count - 1; i >= 0; i--) {
-                    // No foreach, we want backwards iteration- later loaded sources have priority.
-                    var source = sources[i];
-                    if (source.TryGetTranslation(key, out result)) {
+                    // No foreach, we want backwards iteration- list is ascending sorted by priority.
+                    if (sources[i].TryGetTranslation(key, out result)) {
+                        if (IsLocaleRTL(locale)) {
+                            result = ArabicFixerTool.FixLine(result);
+                        }
                         return true;
                     }
                 }
@@ -129,6 +131,16 @@ namespace NSMB.UI.Translation {
             // Default to returning the key
             result = key;
             return false;
+        }
+
+        public bool IsLocaleRTL(string locale) {
+            if (!allTranslations.TryGetValue(locale, out var sources)) {
+                // Default to LTR
+                return false;
+            }
+
+            // Highest priority source is trusted
+            return sources[^1].IsRTL;
         }
 
         public ICollection<string> GetAllLocales() {
@@ -145,7 +157,7 @@ namespace NSMB.UI.Translation {
                     source.Priority = -1;
                     RegisterTranslationSource(locale, source);
                 } catch (Exception e) {
-                    Debug.LogWarning($"[Translation] Failed to load translatoin from TextAsset {textAsset.name}. Is it malformed?");
+                    Debug.LogWarning($"[Translation] Failed to load translation from TextAsset {textAsset.name}. Is it malformed?");
                     Debug.LogWarning(e);
                 }
             }

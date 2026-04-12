@@ -38,6 +38,7 @@ public class MarioPlayerPhysicsInfo : AssetObject {
     // --- Hitboxes
     public FP SmallHitboxHeight = FF(0.42f);
     public FP LargeHitboxHeight = FF(0.82f);
+    public FP BlueShellHitboxHeight = FF(0.42f);
 
     // --- CarryitemPositions
     public FPVector2[] CarryPositions = new[] { new FPVector2(FP._0_25, Constants._0_09), new FPVector2(FP._0_10, Constants._0_09), new FPVector2(FP._0_25, Constants._0_40), };
