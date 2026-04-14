@@ -20,8 +20,6 @@ namespace Quantum {
                     new InteractionPhysicsQuerySystem(),
                     new GenericMoverSystem(),
                     new SpinnerSystem(),
-                      //KKT Mod
-                      new TornadoSystem(),
                     new DonutBlockSystem(),
                     new MovingPlatformPhysicsQuerySystem(),
                     new PhysicsSystem2D(),
@@ -80,7 +78,10 @@ namespace Quantum {
                       new VoidwallSystem(),
 
                       new HazardManagerSystem(),
-                      new HazardSystem()
+                      new HazardSystem(),
+
+                      //tornado's must overwrite everything before it
+                      new TornadoSystem()
                 )
             );
             systems.Add(new StageSystem());

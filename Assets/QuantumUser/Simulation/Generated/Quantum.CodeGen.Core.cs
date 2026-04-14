@@ -4498,8 +4498,10 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Tornado : Quantum.IComponent {
-    public const Int32 SIZE = 8;
-    public const Int32 ALIGNMENT = 4;
+    public const Int32 SIZE = 16;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(8)]
+    public FP Speed;
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     [AllocateOnComponentAdded()]
@@ -4513,6 +4515,7 @@ namespace Quantum {
     public override readonly Int32 GetHashCode() {
       unchecked { 
         var hash = 9551;
+        hash = hash * 31 + Speed.GetHashCode();
         hash = hash * 31 + EntitiesInside.GetHashCode();
         hash = hash * 31 + Bounce.GetHashCode();
         return hash;
@@ -4538,6 +4541,7 @@ namespace Quantum {
         var p = (Tornado*)ptr;
         QHashSet.Serialize(&p->EntitiesInside, serializer, Statics.SerializeEntityRef);
         QHashSet.Serialize(&p->Bounce, serializer, Statics.SerializeFP);
+        FP.Serialize(&p->Speed, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]

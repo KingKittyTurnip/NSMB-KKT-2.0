@@ -116,6 +116,7 @@ public unsafe class CannonBoxAnimator : QuantumEntityViewComponent {
     }
     public void CreateLaunchParticle() {
         LaunchParticle.SetActive(true);
+        sfx.Play();
     }
 
     private void OnPlayComboSound(EventPlayComboSound e) {

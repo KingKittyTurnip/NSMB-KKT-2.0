@@ -1,24 +1,22 @@
 using Photon.Deterministic;
 using Quantum.Collections;
-using System;
-using UnityEngine.Diagnostics;
-using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Quantum {
     public unsafe class TornadoSystem : SystemMainThreadEntityFilter<Tornado, TornadoSystem.Filter>, ISignalInitializeHazard {
 
-        FP tornadoUpliftSpeed = FP._0_05; //1-2
-        FP tornadoLaunchSpeed = 10;
-        FP tornadoObjectAcceleration = 1;// FP._0_20;
-        FP tornadoCone = Constants._0_66;
+        FP tornadoUpliftSpeed = FP._1_25;
+        FP tornadoLaunchSpeed = 8;
+        FP tornadoObjectAcceleration = FP._0_20;
+        FP tornadoCone = 2;
         FP tornadoTop = Constants._2_50;
+        FP ObjectMaxSpeed = 10;
 
         public struct Filter {
             public EntityRef Entity;
             public Transform2D* Transform;
             public Tornado* Tornado;
             public PhysicsCollider2D* Collider;
+            public PhysicsObject* PhysicsObject;
         }
 
         public override void OnInit(Frame f) {
@@ -29,6 +27,11 @@ namespace Quantum {
             var tornado = filter.Tornado;
             var disTransform = filter.Transform;
             var disCollider = filter.Collider;
+            var disPhysicsObject = filter.PhysicsObject;
+
+
+
+            disPhysicsObject->Velocity.X = tornado->Speed;
 
             QHashSet<EntityRef> stuffInside = f.ResolveHashSet(tornado->EntitiesInside);
             foreach (var insideEntity in stuffInside) {
@@ -38,42 +41,39 @@ namespace Quantum {
                     var theirCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(insideEntity);
                     var theirTransform = f.Unsafe.GetPointer<Transform2D>(insideEntity);
 
-                    /*FP YMultiplier = (theirPos.Y - tornadoPos.Y + 1)/tornadoCone;
-                    FP XDif = FPMath.Abs(theirPos.X - tornadoPos.X);
-                    FP cap = 2;
-                    FP velCap = 5;// (FPMath.Abs(theirPos.X - tornadoPos.X) + 1);//YMultiplier;
-                    FPVector2 damageDirection = (theirPos - tornadoPos).Normalized;
+                    FP YMultiplier = (theirPos.Y - tornadoPos.Y)/tornadoCone;
                     bool ExitingNextFrame = theirPos.Y - theirCollider->Shape.Box.Extents.Y + theirCollider->Shape.Centroid.Y + (tornadoUpliftSpeed * f.DeltaTime) > tornadoPos.Y + tornadoTop;
 
-                    theirPhysics->Velocity.Y = ExitingNextFrame ? tornadoLaunchSpeed : tornadoUpliftSpeed;
+                    theirPhysics->IsTouchingGround = false;
 
-                    FP velocityBonus =  ((theirPos.X - tornadoPos.X > cap && theirPhysics->Velocity.X > 0) ? tornadoObjectAcceleration : (theirPos.X - tornadoPos.X < -cap && theirPhysics->Velocity.X < 0) ? tornadoObjectAcceleration : (theirPhysics->Velocity.X > 0 ? tornadoObjectAcceleration : -tornadoObjectAcceleration));
-                    theirPhysics->Velocity.X = FPMath.Clamp(theirPhysics->Velocity.X + velocityBonus, -velCap, velCap);
+                    if (f.Unsafe.TryGetPointer<MarioPlayer>(insideEntity, out var mario)) {
+                        mario->IsSpinnerFlying = !mario->IsInShell;
+                        mario->IsPropellerFlying = mario->IsCrouching = mario->IsDrilling = mario->IsGroundpounding = false;
+                        mario->JumpState = JumpState.SingleJump;
+                        if (mario->IsInKnockback) {
+                            mario->ResetKnockback(f, insideEntity);
+                        }
+                    }
 
-                    Debug.Log("manipulated object from list with the velocity: " + YMultiplier + " " + cap);*/
+                    if (ExitingNextFrame) {
+                        theirPhysics->Velocity.Y = tornadoLaunchSpeed;
+                        //f.Events.
 
-                    //theirTransform->Position = new Vector2((disTransform->Position.X + (1 + (tornadoTimer / 2.3f)) * Mathf.Sin(tornadoTimer / 0.5f)), ((tornado.transform.position.y - 2.5f) + tornadoTimer));
-                    theirPhysics->Velocity.Y = tornadoLaunchSpeed;
-
-                    //default velocity = 12f
-                    //flying = true;
-                    //onGround = false;
-                    //body.position += Vector2.up * 0.075f;
-                    //doGroundSnap = false;
-                    //previousOnGround = false;
-                    //crouching = false;
-                    //inShell = false;
-                    //drill = false;
-                    //groundpound = false;
-                    //DoorPound = false;
-                    //bounce = false;
-                    // knockback = false;
-                    //singlejump = false;
-                    //doublejump = true;
-                    //triplejump = false;
-                    //transform.position = body.position = new Vector2((tornado.transform.position.x + (1 + (tornadoTimer / 2.3f)) * Mathf.Sin(tornadoTimer / 0.5f)), ((tornado.transform.position.y - 2.5f) + tornadoTimer));
-
-                    //have the animator record the last amount and then play a sound whenever it gets lower?
+                        if (mario != null) {
+                            //make this controlled by input
+                            Input inputs = mario->GetPlayerInput(f, insideEntity);
+                            if (inputs.Right.IsDown ^ inputs.Left.IsDown) {
+                                theirPhysics->Velocity.X = inputs.Right.IsDown ? 3 : -3;
+                                continue;
+                            }
+                        }
+                        theirPhysics->Velocity.X = theirPhysics->Velocity.X > 0 ? 3 : -3;
+                    } else {
+                        theirPhysics->Velocity.Y = tornadoUpliftSpeed;
+                        FP absX = FPMath.Abs(theirPos.X - tornadoPos.X);
+                        FP Overshot = YMultiplier > absX ? (theirPhysics->Velocity.X > 0 ? tornadoObjectAcceleration : -tornadoObjectAcceleration) : (FPMath.Clamp(tornadoPos.X - theirPos.X, -tornadoObjectAcceleration, tornadoObjectAcceleration) * 6);
+                        theirPhysics->Velocity.X = FPMath.Clamp(theirPhysics->Velocity.X + Overshot, -ObjectMaxSpeed, ObjectMaxSpeed);
+                    }
                 }
             }
 
@@ -81,7 +81,13 @@ namespace Quantum {
         }
 
         public static void OnSpinnerMarioPlayerInteraction(Frame f, EntityRef otherEntity, EntityRef tornadoEntity) {
-            if (!f.Unsafe.TryGetPointer<PhysicsObject>(otherEntity, out var phys) || phys->WindImmune || phys->IsFrozen) {
+            if (!f.Unsafe.TryGetPointer<PhysicsObject>(otherEntity, out var phys) || phys->WindImmune || phys->IsFrozen || 
+                f.Has<Projectile>(otherEntity)) {
+                return;
+            }
+
+            var hazard = f.Unsafe.GetPointer<Hazard>(tornadoEntity);
+            if (hazard->IsHazard && hazard->LifeTime < 45) {
                 return;
             }
 
@@ -101,9 +107,21 @@ namespace Quantum {
 
             var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
 
-            //Set The Value To What It Will ALWAYS convert into
-            /*if (hazardata.SpecialValues[0].BaseValue == 0)
-                cauldron->ConvertInto = hazardata.SpecialValues[0];*/
+            //decide random speed
+            int rng = f.RNG->Next(-2, 3);
+            if (rng <= 0) {
+                rng--;
+            }
+            tornado->Speed = ((FP) rng) * FP._0_50;
+
+            //place on ground 
+            var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+            VersusStageData stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+            if (PhysicsObjectSystem.Raycast(f, stage, transform->Position, FPVector2.Down, 2, out var hit)) {
+                transform->Position.Y = hit.Position.Y;
+            } else {
+                transform->Position.Y -= 2;
+            }
         }
         #endregion
     }

@@ -1349,8 +1349,7 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Tornado))]
   public unsafe partial class TornadoPrototype : ComponentPrototype<Quantum.Tornado> {
-    [HideInInspector()]
-    public Int32 _empty_prototype_dummy_field_;
+    public FP Speed;
     partial void MaterializeUser(Frame frame, ref Quantum.Tornado result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Tornado component = default;
@@ -1358,6 +1357,7 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Tornado result, in PrototypeMaterializationContext context = default) {
+        result.Speed = this.Speed;
         MaterializeUser(frame, ref result, in context);
     }
   }

@@ -1,4 +1,10 @@
 component Tornado {
+	FP Speed;
+
 	[ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] hash_set<EntityRef> EntitiesInside;
 	[ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] hash_set<FP> Bounce;
+}
+
+event TornadoLaunched {
+	EntityRef Entity;
 }
