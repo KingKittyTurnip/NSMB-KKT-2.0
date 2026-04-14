@@ -42,8 +42,8 @@ component MarioPlayer {
 	[ExcludeFromPrototype] PlayerRef PlayerRef;
 	[ExcludeFromPrototype] byte SpawnpointIndex;
 
-	[ExcludeFromPrototype] PowerupState CurrentPowerupState;
-	[ExcludeFromPrototype] PowerupState PreviousPowerupState;
+	//[ExcludeFromPrototype] PowerupState CurrentPowerupState;
+	//[ExcludeFromPrototype] PowerupState PreviousPowerupState;
 	[ExcludeFromPrototype] AssetRef<PowerupAsset> CurrentPowerupAsset;
 	[ExcludeFromPrototype] AssetRef<PowerupAsset> PreviousPowerupAsset;
 	[ExcludeFromPrototype] AssetRef<PowerupAsset> ReserveItem;

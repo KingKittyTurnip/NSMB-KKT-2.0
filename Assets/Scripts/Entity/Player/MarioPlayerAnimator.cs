@@ -274,8 +274,9 @@ namespace NSMB.Entities.Player {
 
             var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
+            var currentPowerup = mario->CurrentPowerupAsset;
 
-            HandleMiscStates(f, mario, physicsObject, freezable);
+            HandleMiscStates(f, mario, physicsObject, freezable, currentPowerup);
             HandleAnimations(f, mario, physicsObject, freezable);
 
             Input inputs = default;
@@ -533,7 +534,7 @@ namespace NSMB.Entities.Player {
             animator.SetFloat(ParamVelocityMagnitude, physicsObject->Velocity.Magnitude.AsFloat);
         }
 
-        private void HandleMiscStates(Frame f, MarioPlayer* mario, PhysicsObject* physicsObject, Freezable* freezable) {
+        private void HandleMiscStates(Frame f, MarioPlayer* mario, PhysicsObject* physicsObject, Freezable* freezable, PowerupAsset currentPowerup) {
             using var profilerScope = HostProfiler.Start("MarioPlayerAnimator.HandleMiscStates");
             // Scale
             Vector3 scale;
@@ -547,9 +548,9 @@ namespace NSMB.Entities.Player {
             } else {
                 float startTimer = mario->MegaMushroomStartFrames / 60f;
 
-                scale = mario->CurrentPowerupState switch {
-                    PowerupState.MiniMushroom => Vector3.one * 0.5f,
-                    PowerupState.MegaMushroom => Vector3.one + (Vector3.one * (Mathf.Min(1, 1 - (startTimer / 1.5f)) * 2.6f)),
+                scale = currentPowerup.SizeType switch {
+                    PowerupAsset.PlayerSize.Tiny => Vector3.one * 0.5f,
+                    PowerupAsset.PlayerSize.Mega => Vector3.one + (Vector3.one * (Mathf.Min(1, 1 - (startTimer / 1.5f)) * 2.6f)),
                     _ => Vector3.one,
                 };
             }
@@ -599,7 +600,7 @@ namespace NSMB.Entities.Player {
             models.SetActive(f.Global->GameState >= GameState.Playing && (mario->KnockbackGetupFrames > 0 || mario->MegaMushroomStartFrames > 0 || (!mario->IsRespawning && (mario->IsDead || !(remainingDamageInvincibility > 0 && (f.Number * f.DeltaTime.AsFloat) * (remainingDamageInvincibility <= 0.75f ? 5 : 2) % 0.2f < 0.1f)))));
 
             // Model changing
-            bool large = mario->CurrentPowerupState >= PowerupState.Mushroom;
+            bool large = currentPowerup.SizeType >= PowerupAsset.PlayerSize.Tall;
             largeModel.SetActive(large);
             smallModel.SetActive(!large);
             blueShell.SetActive(mario->CurrentPowerupState == PowerupState.BlueShell);

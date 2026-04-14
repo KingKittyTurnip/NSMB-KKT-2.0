@@ -36,26 +36,22 @@ public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
 
     [Header("PowerupState Info")]
     public AssetRef<EntityPrototype> ProjectilePrototype;
-    public PlayerSize SizeType = PlayerSize.Tall;
+    public PlayerForm Form = PlayerForm.Large;
 
-    //we'd prefer verious attributes tied to the powerup
+    public bool HasShell;
+    public bool HasPropeller;
+    public bool HasHammerCrouch;
 
-    //public bool BreaksBricks = true;
-    //public bool CanHoldItems = true;
-    //public bool IsLightweight;
-    //public bool DestroyesEverything;
-    //public bool InvincibleState;
+    public bool CanHoldItems = true;
+    public bool IsLightweight;
+    public bool IsFastSwim;
+    public bool DestroyesEverything;
 
-    //public bool HasShell;
-    //public bool HasPropeller;
-    //public bool HasHammerCrouch;
-
-    //might as well use an enum since size is more player dependant
-    public enum PlayerSize : byte {
+    public enum PlayerForm : byte {
         Small = 0,
-        Tiny = 1,
-        Tall = 2,
-        
+        Mini = 1,
+        Large = 2,
+        Mega = 3,
     }
 
 

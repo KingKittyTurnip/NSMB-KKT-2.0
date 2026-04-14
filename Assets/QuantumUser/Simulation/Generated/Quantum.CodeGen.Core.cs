@@ -2606,12 +2606,6 @@ namespace Quantum {
     [FieldOffset(34)]
     [ExcludeFromPrototype()]
     public Byte SpawnpointIndex;
-    [FieldOffset(41)]
-    [ExcludeFromPrototype()]
-    public PowerupState CurrentPowerupState;
-    [FieldOffset(42)]
-    [ExcludeFromPrototype()]
-    public PowerupState PreviousPowerupState;
     [FieldOffset(104)]
     [ExcludeFromPrototype()]
     public AssetRef<PowerupAsset> CurrentPowerupAsset;
@@ -2729,13 +2723,13 @@ namespace Quantum {
     [FieldOffset(160)]
     [ExcludeFromPrototype()]
     public EntityRef LastAttacker;
-    [FieldOffset(44)]
+    [FieldOffset(42)]
     [ExcludeFromPrototype()]
     public UInt16 InvincibilityFrames;
     [FieldOffset(19)]
     [ExcludeFromPrototype()]
     public Byte MegaMushroomStartFrames;
-    [FieldOffset(46)]
+    [FieldOffset(44)]
     [ExcludeFromPrototype()]
     public UInt16 MegaMushroomFrames;
     [FieldOffset(17)]
@@ -2802,8 +2796,6 @@ namespace Quantum {
         hash = hash * 31 + CharacterAsset.GetHashCode();
         hash = hash * 31 + PlayerRef.GetHashCode();
         hash = hash * 31 + SpawnpointIndex.GetHashCode();
-        hash = hash * 31 + (Byte)CurrentPowerupState;
-        hash = hash * 31 + (Byte)PreviousPowerupState;
         hash = hash * 31 + CurrentPowerupAsset.GetHashCode();
         hash = hash * 31 + PreviousPowerupAsset.GetHashCode();
         hash = hash * 31 + ReserveItem.GetHashCode();
@@ -2911,8 +2903,6 @@ namespace Quantum {
         serializer.Stream.Serialize((Byte*)&p->JumpState);
         serializer.Stream.Serialize((Byte*)&p->PreviousJumpState);
         serializer.Stream.Serialize((Byte*)&p->CurrentKnockback);
-        serializer.Stream.Serialize((Byte*)&p->CurrentPowerupState);
-        serializer.Stream.Serialize((Byte*)&p->PreviousPowerupState);
         serializer.Stream.Serialize(&p->InvincibilityFrames);
         serializer.Stream.Serialize(&p->MegaMushroomFrames);
         serializer.Stream.Serialize(&p->HoldStartFrame);

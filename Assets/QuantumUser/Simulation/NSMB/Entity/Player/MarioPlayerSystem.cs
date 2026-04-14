@@ -91,7 +91,7 @@ namespace Quantum {
             HandleCrouching(f, ref filter, physics);
             HandleGroundpound(f, ref filter, physics, stage);
             HandleSliding(f, ref filter, physics);
-            HandleWalkingRunning(f, ref filter, physics);
+            HandleWalkingRunning(f, ref filter, physics, currentPowerup);
             HandleSpinners(f, ref filter, stage);
             HandleJumping(f, ref filter, physics, wasGroundpoundActive);
             HandleSwimming(f, ref filter, physics);
@@ -108,7 +108,7 @@ namespace Quantum {
             }
         }
 
-        public void HandleWalkingRunning(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics) {
+        public void HandleWalkingRunning(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, PowerupAsset currentPowerup) {
             using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleWalkingRunning");
             var mario = filter.MarioPlayer;
 
@@ -145,11 +145,11 @@ namespace Quantum {
             */
 
             ref var inputs = ref filter.Inputs;
-            bool mega = mario->CurrentPowerupState == PowerupState.MegaMushroom;
+            bool mega = currentPowerup.Form == PowerupAsset.PlayerForm.Mega;
             bool run = (inputs.Sprint.IsDown || mega || mario->IsPropellerFlying) && (mega || !mario->IsSpinnerFlying);
             int maxStage;
             if (swimming) {
-                if (mario->CurrentPowerupState == PowerupState.BlueShell) {
+                if (currentPowerup.IsFastSwim) {
                     maxStage = physics.SwimShellMaxVelocity.Length - 1;
                 } else {
                     maxStage = physics.SwimMaxVelocity.Length - 1;
@@ -165,23 +165,23 @@ namespace Quantum {
             FP[] maxArray = physics.WalkMaxVelocity;
             if (swimming) {
                 if (physicsObject->IsTouchingGround) {
-                    maxArray = mario->CurrentPowerupState == PowerupState.BlueShell ? physics.SwimWalkShellMaxVelocity : physics.SwimWalkMaxVelocity;
+                    maxArray = currentPowerup.IsFastSwim ? physics.SwimWalkShellMaxVelocity : physics.SwimWalkMaxVelocity;
                 } else {
-                    maxArray = mario->CurrentPowerupState == PowerupState.BlueShell ? physics.SwimShellMaxVelocity : physics.SwimMaxVelocity;
+                    maxArray = currentPowerup.IsFastSwim ? physics.SwimShellMaxVelocity : physics.SwimMaxVelocity;
                 }
             }
-            int stage = mario->GetSpeedStage(physicsObject, physics);
+            int stage = mario->GetSpeedStage(physicsObject, physics, currentPowerup);
 
             FP acc;
             if (swimming) {
                 if (physicsObject->IsTouchingGround) {
-                    acc = mario->CurrentPowerupState == PowerupState.BlueShell ? physics.SwimWalkShellAcceleration[stage] : physics.SwimWalkAcceleration[stage];
+                    acc = currentPowerup.IsFastSwim ? physics.SwimWalkShellAcceleration[stage] : physics.SwimWalkAcceleration[stage];
                 } else {
-                    acc = mario->CurrentPowerupState == PowerupState.BlueShell ? physics.SwimShellAcceleration[stage] : physics.SwimAcceleration[stage];
+                    acc = currentPowerup.IsFastSwim ? physics.SwimShellAcceleration[stage] : physics.SwimAcceleration[stage];
                 }
             } else if (physicsObject->IsOnSlipperyGround) {
                 acc = physics.WalkIceAcceleration[stage];
-            } else if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
+            } else if (mega) {
                 acc = physics.WalkMegaAcceleration[stage];
             } else {
                 acc = physics.WalkAcceleration[stage];
@@ -208,7 +208,7 @@ namespace Quantum {
 
                 physicsObject->Velocity.X += (physics.FastTurnaroundAcceleration * (mario->FacingRight ? -1 : 1) * f.DeltaTime);
             } else if ((inputs.Left ^ inputs.Right)
-                       && (!mario->IsCrouching || (mario->IsCrouching && !physicsObject->IsTouchingGround && mario->CurrentPowerupState != PowerupState.BlueShell))
+                       && (!mario->IsCrouching || (mario->IsCrouching && !physicsObject->IsTouchingGround && !currentPowerup.HasShell))
                        && !mario->IsInKnockback
                        && !mario->IsSliding) {
 

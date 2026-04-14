@@ -11,5 +11,6 @@
         //public AssetRef<TeamAsset>[] Teams;
         public AssetRef<EntityPrototype> BlockBumpPrototype, IceBlockPrototype;
 
+        public PowerupAsset SmallMarioAsset;
     }
 }

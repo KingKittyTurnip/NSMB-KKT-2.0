@@ -92,7 +92,7 @@ namespace Quantum {
 
         public readonly bool IsStarmanInvincible => InvincibilityFrames > 0;
         public readonly bool IsWallsliding => WallslideLeft || WallslideRight;
-        public readonly bool IsCrouchedInShell => /*CurrentPowerupState == PowerupState.BlueShell*/false && (IsCrouching || IsGroundpounding && GroundpoundStartFrames <= 11) && !IsInShell;
+        public readonly bool IsCrouchedInShell(PowerupAsset currentPowerup) => currentPowerup.HasShell && (IsCrouching || IsGroundpounding && GroundpoundStartFrames <= 11) && !IsInShell;
         public readonly bool IsDamageable => !IsStarmanInvincible && DamageInvincibilityFrames == 0;
         public readonly bool IsInKnockback => CurrentKnockback != KnockbackStrength.None;
         public readonly bool CanCollectOwnTeamsObjectiveCoins => !IsInKnockback && DamageInvincibilityFrames == 0;
@@ -134,9 +134,9 @@ namespace Quantum {
                 FPVector2 newPosition;
 
                 if (marioPhysicsObject->IsUnderwater) {
-                    newPosition = physicsAsset.SwimingCarryPositions[(int) currentPowerup.SizeType];
+                    newPosition = physicsAsset.SwimingCarryPositions[(int) currentPowerup.Form];
                 } else {
-                    newPosition = physicsAsset.CarryPositions[(int) currentPowerup.SizeType];
+                    newPosition = physicsAsset.CarryPositions[(int) currentPowerup.Form];
                 }
 
                 return new FPVector2(
@@ -152,6 +152,7 @@ namespace Quantum {
                 input = *f.GetPlayerInput(PlayerRef);
             }
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(entity);
+            var currentPowerup = f.FindAsset(CurrentPowerupAsset);
             var freezable = f.Unsafe.GetPointer<Freezable>(entity);
             bool forceHold = false;
             bool aboveHead = false;
@@ -163,7 +164,7 @@ namespace Quantum {
             }
 
             return (input.Sprint.IsDown || forceHold || (f.Exists(HeldEntity) && !f.IsPlayerVerifiedOrLocal(PlayerRef)))
-                && !freezable->IsFrozen(f) && CurrentPowerupState is not PowerupState.MiniMushroom or PowerupState.MegaMushroom && !IsSkidding 
+                && !freezable->IsFrozen(f) && currentPowerup.CanHoldItems && !IsSkidding 
                 && !IsInKnockback && KnockbackGetupFrames == 0 && !IsTurnaround && !IsPropellerFlying && !IsSpinnerFlying && !IsCrouching && !IsDead
                 && !IsInShell && !WallslideLeft && !WallslideRight && (f.Exists(item) || physicsObject->IsTouchingGround || JumpState < JumpState.DoubleJump)
                 && !IsGroundpounding && !(!f.Exists(item) && physicsObject->IsUnderwater && input.Jump.IsDown)
@@ -174,23 +175,23 @@ namespace Quantum {
             return !f.Exists(HeldEntity) && CanHoldItem(f, mario, item) && ForceJumpTimer <= 5;
         }
 
-        public readonly bool InstakillsEnemies(PhysicsObject* physicsObject, bool includeSliding) {
-            return CurrentPowerupState == PowerupState.MegaMushroom
+        public readonly bool InstakillsEnemies(PhysicsObject* physicsObject, PowerupAsset currentPowerup, bool includeSliding) {
+            return currentPowerup.DestroyesEverything
                 || IsStarmanInvincible
                 || IsInShell
                 || includeSliding && IsSliding && FPMath.Abs(physicsObject->Velocity.X) > FP._0_33;
         }
 
-        public readonly int GetSpeedStage(PhysicsObject* physicsObject, MarioPlayerPhysicsInfo physicsInfo) {
+        public readonly int GetSpeedStage(PhysicsObject* physicsObject, MarioPlayerPhysicsInfo physicsInfo, PowerupAsset currentPowerup) {
             FP xVel = FPMath.Abs(physicsObject->Velocity.X) - FP._0_01;
             FP[] arr;
             if (physicsObject->IsUnderwater) {
                 if (physicsObject->IsTouchingGround) {
-                    arr = CurrentPowerupState == PowerupState.BlueShell ? physicsInfo.SwimWalkShellMaxVelocity : physicsInfo.SwimWalkMaxVelocity;
+                    arr = currentPowerup.IsFastSwim ? physicsInfo.SwimWalkShellMaxVelocity : physicsInfo.SwimWalkMaxVelocity;
                 } else {
                     arr = physicsInfo.SwimMaxVelocity;
                 }
-            } else if ((IsSpinnerFlying || IsPropellerFlying) && CurrentPowerupState != PowerupState.MegaMushroom) {
+            } else if ((IsSpinnerFlying || IsPropellerFlying) && currentPowerup.Form == PowerupAsset.PlayerForm.Mega) {
                 arr = physicsInfo.FlyingMaxVelocity;
             } else {
                 arr = physicsInfo.WalkMaxVelocity;
@@ -204,9 +205,9 @@ namespace Quantum {
             return arr.Length - 1;
         }
 
-        public readonly int GetGravityStage(PhysicsObject* physicsObject, MarioPlayerPhysicsInfo physicsInfo) {
+        public readonly int GetGravityStage(PhysicsObject* physicsObject, MarioPlayerPhysicsInfo physicsInfo, PowerupAsset currentPowerup) {
             FP yVel = physicsObject->Velocity.Y;
-            FP[] maxArray = physicsObject->IsUnderwater ? physicsInfo.GravitySwimmingVelocity : (CurrentPowerupState == PowerupState.MegaMushroom ? physicsInfo.GravityMegaVelocity : (CurrentPowerupState == PowerupState.MiniMushroom ? physicsInfo.GravityMiniVelocity : physicsInfo.GravityVelocity));
+            FP[] maxArray = physicsObject->IsUnderwater ? physicsInfo.GravitySwimmingVelocity : (currentPowerup.Form == PowerupAsset.PlayerForm.Mega ? physicsInfo.GravityMegaVelocity : (currentPowerup.IsLightweight ? physicsInfo.GravityMiniVelocity : physicsInfo.GravityVelocity));
             for (int i = 0; i < maxArray.Length; i++) {
                 if (yVel >= maxArray[i]) {
                     return i;
@@ -364,7 +365,7 @@ namespace Quantum {
             PropellerLaunchFrames = 0;
             PropellerSpinFrames = 0;
             JumpState = JumpState.None;
-            PreviousPowerupState = CurrentPowerupState = PowerupState.NoPowerup;
+            PreviousPowerupAsset = CurrentPowerupAsset = f.SimulationConfig.SmallMarioAsset;
             DamageInvincibilityFrames = 0;
             InvincibilityFrames = 0;
             MegaMushroomFrames = 0;
@@ -427,6 +428,7 @@ namespace Quantum {
                 ResetKnockback(f, entity);
             }
 
+            var currentPowerup = f.FindAsset(CurrentPowerupAsset);
             var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             int oldObjectiveCount = gamemode.GetObjectiveCount(f, f.Unsafe.GetPointer<MarioPlayer>(entity));
 
@@ -450,7 +452,7 @@ namespace Quantum {
                 knockbackVelocity = FPVector2.Zero;
             }
             knockbackVelocity.X *= fromRight ? -1 : 1;
-            if (CurrentPowerupState == PowerupState.MiniMushroom) {
+            if (currentPowerup.Form == PowerupAsset.PlayerForm.Mini) {
                 var physics = f.FindAsset(PhysicsAsset);
                 knockbackVelocity.X *= physics.KnockbackMiniMultiplier.X;
                 knockbackVelocity.Y *= physics.KnockbackMiniMultiplier.Y;
@@ -469,7 +471,7 @@ namespace Quantum {
             }
 
             CurrentKnockback = strength;
-            IsInWeakKnockback = forceWeak || (CurrentPowerupState != PowerupState.MegaMushroom && (strength == KnockbackStrength.CollisionBump || (strength == KnockbackStrength.FireballBump && physicsObject->IsTouchingGround)));
+            IsInWeakKnockback = forceWeak || (currentPowerup.Form != PowerupAsset.PlayerForm.Mega && (strength == KnockbackStrength.CollisionBump || (strength == KnockbackStrength.FireballBump && physicsObject->IsTouchingGround)));
 
             physicsObject->Velocity = knockbackVelocity;
             physicsObject->IsTouchingGround = false;
