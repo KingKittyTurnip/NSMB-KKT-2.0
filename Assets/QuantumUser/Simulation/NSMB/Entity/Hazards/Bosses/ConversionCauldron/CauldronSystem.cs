@@ -1,16 +1,6 @@
-using JetBrains.Annotations;
 using Photon.Deterministic;
 using Quantum.Collections;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
-using System.Globalization;
-using UnityEngine;
-using UnityEngine.UIElements;
-using static Quantum.CurrentHazards;
-using static Quantum.CurrentHazards.HazardDataList;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
@@ -59,9 +49,10 @@ namespace Quantum {
                             f.Unsafe.GetPointer<Boss>(newEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
                             f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
                         }
-                        if (cauldron->ConvertToHazardId != 255) {
+                        if (cauldron->ConvertIntoHazardId != 255) {
                             //this code should always be ran, outside of putting it in stages if that's what i want to do
-                            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, cauldron->ConvertToHazardId);
+                            var hazarddata = f.ResolveList(f.Global->Rules.Hazards);
+                            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, hazarddata[cauldron->ConvertIntoHazardId].Extra);
                         }
                         f.Events.PlayPuffParticle(transform->Position);
                         cauldron->TransformingEntity = EntityRef.None;
@@ -124,30 +115,31 @@ namespace Quantum {
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Cauldron* cauldron)) {
                 return;
             }
 
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
-
             //Set The Value To What It Will ALWAYS convert into
-            if (hazardata.SpecialValues[0].BaseValue == 255) {
-                //set random
-                List<HazardData> hazarddata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas;
-                List<(HazardData, int)> avaliblebosses = new();
-                for (int i = 0; i < hazarddata.Count; i++) {
-                    if (hazarddata[i].Name == "Petey" || hazarddata[i].Name == "Bowser" || hazarddata[i].Name == "Whomp King" || hazarddata[i].Name == "King Boo") {
-                        //This is A Boss Entity
-                        avaliblebosses.Add((hazarddata[i], i));
-                        continue;
+            if (true/*hazardata.SpecialValues[0].BaseValue == 255*/) {
+                var hazarddata = f.ResolveList(f.Global->Rules.Hazards);
+                List<(HazardList, byte)> avaliblebosses = new();
+
+                //get boss hazards in list
+                for (byte item = 0; item < hazarddata.Count; item++) {
+                    if (hazarddata[item].SpawnRandom) {
+                        if (hazarddata[item].Name == "Petey" || hazarddata[item].Name == "Bowser" || hazarddata[item].Name == "Whomp King" || hazarddata[item].Name == "King Boo") { //Hefty Or No...
+                            avaliblebosses.Add((hazarddata[item], item));
+                        }
                     }
                 }
-                byte pick = (byte)f.RNG->Next(0, avaliblebosses.Count);
 
-                cauldron->ConvertInto = avaliblebosses[pick].Item1.hazardAsset;
-                cauldron->ConvertToHazardId = (byte)avaliblebosses[pick].Item2;
+                //pick a hazard selected
+                int pick = f.RNG->Next(0, avaliblebosses.Count);
+
+                cauldron->ConvertInto = avaliblebosses[pick].Item1.HazardPrototype;
+                cauldron->ConvertIntoHazardId = avaliblebosses[pick].Item2;
             } else {
                 //set to ref
                 //cauldron->ConvertInto = hazardata.SpecialValues[0];

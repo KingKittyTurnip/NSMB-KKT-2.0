@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &325358271082168617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 484224812918252959}
+  m_Layer: 0
+  m_Name: Graphics
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &484224812918252959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325358271082168617}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3041383572715187674}
+  m_Father: {fileID: 1017215213198693199}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1017215213198693191
 GameObject:
   m_ObjectHideFlags: 0
@@ -23,6 +55,8 @@ GameObject:
   - component: {fileID: -6338529405283914546}
   - component: {fileID: -3897358826683353975}
   - component: {fileID: 3944076714556245425}
+  - component: {fileID: 5106948309365912013}
+  - component: {fileID: 7126943934231187076}
   m_Layer: 19
   m_Name: PropellerBlock
   m_TagString: Powerup
@@ -43,7 +77,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3041383572715187674}
+  - {fileID: 484224812918252959}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6673749068647908742
@@ -646,13 +680,54 @@ MonoBehaviour:
   wasTurnaround: 0
   BaseTexture: {fileID: 2800000, guid: 864308dad6ca11147bbb18c136a8d3ee, type: 3}
   InvalidTexture: {fileID: 2800000, guid: 1016b0749cd089b42bf07590c15586e7, type: 3}
+--- !u!114 &5106948309365912013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 330575751736567297
+--- !u!114 &7126943934231187076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 484224812918252959}
+  moveBehindBlocksRoot: {fileID: 484224812918252959}
+  renderers:
+  - {fileID: 5773173785228129685}
+  - {fileID: 2861854377683396678}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: 4
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 1
+  sfx: {fileID: 4207910641862185911}
+  koopaSpawnParticles: {fileID: 0}
 --- !u!1001 &3296515371113695793
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1017215213198693199}
+    m_TransformParent: {fileID: 484224812918252959}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: bcebdd312048bcc4aaf801e39a25772f,
         type: 3}
@@ -677,7 +752,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: bcebdd312048bcc4aaf801e39a25772f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bcebdd312048bcc4aaf801e39a25772f,
         type: 3}
@@ -692,7 +767,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: bcebdd312048bcc4aaf801e39a25772f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bcebdd312048bcc4aaf801e39a25772f,
         type: 3}
@@ -702,7 +777,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: bcebdd312048bcc4aaf801e39a25772f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bcebdd312048bcc4aaf801e39a25772f,
         type: 3}
@@ -724,6 +799,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: prop
       objectReference: {fileID: 0}
+    - target: {fileID: -2971590244256713485, guid: bcebdd312048bcc4aaf801e39a25772f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 157432382697966697, guid: bcebdd312048bcc4aaf801e39a25772f,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -733,6 +813,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PropellerBux
+      objectReference: {fileID: 0}
+    - target: {fileID: 7861854473326295642, guid: bcebdd312048bcc4aaf801e39a25772f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -771,9 +856,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!137 &2861854377683396678 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 723050010780885623, guid: bcebdd312048bcc4aaf801e39a25772f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3296515371113695793}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3041383572715187674 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bcebdd312048bcc4aaf801e39a25772f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3296515371113695793}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &5773173785228129685 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -170576327021789276, guid: bcebdd312048bcc4aaf801e39a25772f,
     type: 3}
   m_PrefabInstance: {fileID: 3296515371113695793}
   m_PrefabAsset: {fileID: 0}

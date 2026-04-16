@@ -18,9 +18,9 @@ namespace Quantum {
         public bool DrawOnTimeUp;
         */
         public bool StarChasersEnabled;
-        public int StarFrequency;
+        public byte StarFrequency;
         public bool CoinRunnersEnabled;
-        public int StarcoinFrequency;
+        public byte StarcoinFrequency;
         public bool Hazards;
 
         public override void Serialize(BitStream stream) {
@@ -101,13 +101,13 @@ namespace Quantum {
                 rules.GamemodeStarChasersEnabled = StarChasersEnabled;
             }
             if (rulesChanges.HasFlag(Rules.StarFreq)) {
-                rules.starfrequency = StarFrequency;
+                rules.StarFrequency = StarFrequency;
             }
             if (rulesChanges.HasFlag(Rules.CoinRunners)) {
                 rules.GamemodeCoinRunnersEnabled = CoinRunnersEnabled;
             }
             if (rulesChanges.HasFlag(Rules.StarCoinFreq)) {
-                rules.starcoinfrequency = StarcoinFrequency;
+                rules.StarcoinFrequency = StarcoinFrequency;
             }
             if (rulesChanges.HasFlag(Rules.Hazards)) {
                 rules.HazardsEnabled = Hazards;

@@ -1,5 +1,6 @@
 using NSMB.Utilities.Extensions;
 using Quantum;
+using System.Collections.Generic;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
 
@@ -8,10 +9,10 @@ namespace NSMB.Entities.CoinItems {
 
         //---Serialized
         [SerializeField] private Transform graphicsRoot, moveBehindBlocksRoot;
-        [SerializeField] private new Renderer renderer;
+        [SerializeField] private List<Renderer> renderers;
         [SerializeField] private Animator childAnimator;
         [SerializeField] private Animation childAnimation;
-        [SerializeField] private float blinkingRate = 4, scaleRate = 0.1333f, scaleSize = 0.3f;
+        [SerializeField] private float blinkingRate = 4, scaleRate = 0.1333f, scaleSize = 0.3f, actualscale = 1;
         [SerializeField] private AudioSource sfx;
         [SerializeField] private ParticleSystem koopaSpawnParticles;
 
@@ -19,11 +20,12 @@ namespace NSMB.Entities.CoinItems {
         private int originalSortingOrder;
         private bool inSpawnAnimation;
         private MaterialPropertyBlock mpb;
+        private bool Previouslyenabled = true;
 
         public void OnValidate() {
-            this.SetIfNull(ref renderer, UnityExtensions.GetComponentType.Children);
-            this.SetIfNull(ref childAnimator, UnityExtensions.GetComponentType.Children);
-            this.SetIfNull(ref childAnimation, UnityExtensions.GetComponentType.Children);
+            //this.SetIfNull(ref renderer, UnityExtensions.GetComponentType.Children);
+            //this.SetIfNull(ref childAnimator, UnityExtensions.GetComponentType.Children);
+            //this.SetIfNull(ref childAnimation, UnityExtensions.GetComponentType.Children);
             this.SetIfNull(ref sfx);
         }
 
@@ -38,8 +40,10 @@ namespace NSMB.Entities.CoinItems {
             }
             var scriptable = QuantumUnityDB.GetGlobalAsset(coinItem->Scriptable);
 
-            originalSortingOrder = renderer.sortingOrder;
-            renderer.GetPropertyBlock(mpb = new());
+            originalSortingOrder = renderers[0].sortingOrder;
+            foreach (Renderer r in renderers) {
+                r.GetPropertyBlock(mpb = new());
+            }
 
             if (coinItem->SpawnReason == PowerupSpawnReason.BlueKoopa && koopaSpawnParticles) {
                 koopaSpawnParticles.Play();
@@ -47,7 +51,7 @@ namespace NSMB.Entities.CoinItems {
 
             if (f.Exists(coinItem->ParentMarioPlayer)) {
                 // Following mario
-                renderer.sortingOrder = 15;
+                SetSortingRange(15);
                 if (childAnimator) {
                     childAnimator.enabled = false;
                 }
@@ -59,7 +63,7 @@ namespace NSMB.Entities.CoinItems {
                     moveBehindBlocksRoot.localPosition = pos;
                 }
 
-                renderer.sortingOrder = -1000;
+                SetSortingRange(-1000);
                 if (!IsReplayFastForwarding) {
                     sfx.PlayOneShot(scriptable.BlockSpawnSoundEffect);
                 }
@@ -74,7 +78,7 @@ namespace NSMB.Entities.CoinItems {
                     moveBehindBlocksRoot.localPosition = pos;
                 }
 
-                renderer.sortingOrder = -1000;
+                SetSortingRange(-1000);
                 if (!IsReplayFastForwarding) {
                     sfx.PlayOneShot(scriptable.BlockSpawnSoundEffect);
                 }
@@ -86,28 +90,41 @@ namespace NSMB.Entities.CoinItems {
                 if (childAnimation) {
                     childAnimation.Play();
                 }
-                renderer.sortingOrder = originalSortingOrder;
+                SetSortingRange(originalSortingOrder);
+            }
+        }
+
+        private void SetPropertyBlocks() {
+            foreach (Renderer r in renderers) {
+                r.SetPropertyBlock(mpb);
+            }
+        }
+        private void SetSortingRange(int sortingnumber) {
+            foreach (Renderer r in renderers) {
+                r.sortingOrder = sortingnumber;
             }
         }
 
         public override void OnUpdateView() {
             Frame f = PredictedFrame;
-            if (!f.Unsafe.TryGetPointer(EntityRef, out CoinItem* coinItem)) {
-                return;
-            }
 
-            if (childAnimator) {
-                childAnimator.SetBool("blockSpawn", coinItem->BlockSpawn && coinItem->SpawnAnimationFrames > 0);
-            }
-            
-            if (f.Unsafe.TryGetPointer(EntityRef, out PhysicsObject* physicsObject)) {
+            var hazard = f.Unsafe.GetPointer<Hazard>(EntityRef);
+
+            if (f.Unsafe.TryGetPointer(EntityRef, out CoinItem* coinItem)) {
+                //we are coinitem
                 if (childAnimator) {
-                    childAnimator.SetBool("onGround", physicsObject->IsTouchingGround);
+                    childAnimator.SetBool("blockSpawn", coinItem->BlockSpawn && coinItem->SpawnAnimationFrames > 0);
                 }
-            }
 
-            HandleSpawningAnimation(f, coinItem);
-            HandleDespawningBlinking(coinItem);
+                if (f.Unsafe.TryGetPointer(EntityRef, out PhysicsObject* physicsObject)) {
+                    if (childAnimator) {
+                        childAnimator.SetBool("onGround", physicsObject->IsTouchingGround);
+                    }
+                }
+
+                HandleSpawningAnimation(f, coinItem);
+            }
+            HandleDespawningBlinking(hazard->LifeTime);
         }
 
         private void HandleSpawningAnimation(Frame f, CoinItem* coinItem) {
@@ -115,17 +132,17 @@ namespace NSMB.Entities.CoinItems {
                 // Following player
                 float timeRemaining = coinItem->SpawnAnimationFrames / 60f;
                 float adjustment = Mathf.PingPong(timeRemaining, scaleRate) / scaleRate * scaleSize;
-                graphicsRoot.localScale = Vector3.one * (1 + adjustment);
+                graphicsRoot.localScale = Vector3.one * actualscale * (1 + adjustment);
 
                 if (!inSpawnAnimation) {
                     mpb.SetFloat("WaveEnabled", 0);
-                    renderer.SetPropertyBlock(mpb);
+                    SetPropertyBlocks();
                     inSpawnAnimation = true;
                 }
             } else if (inSpawnAnimation) {
-                renderer.transform.localScale = Vector3.one;
+                //renderer.transform.localScale = Vector3.one * actualscale;
                 inSpawnAnimation = false;
-                renderer.sortingOrder = 15;
+                SetSortingRange(15);
 
                 if (moveBehindBlocksRoot) {
                     Vector3 pos = moveBehindBlocksRoot.localPosition;
@@ -134,13 +151,22 @@ namespace NSMB.Entities.CoinItems {
                 }
 
                 mpb.SetFloat("WaveEnabled", 1);
-                renderer.SetPropertyBlock(mpb);
+                SetPropertyBlocks();
             }
         }
 
-        private void HandleDespawningBlinking(CoinItem* coinItem) {
-            if (coinItem->Lifetime <= 60) {
-                renderer.enabled = ((coinItem->Lifetime / 60f * blinkingRate) % 1) > 0.5f;
+        private void HandleDespawningBlinking(float lifetime) {
+            bool newlyEnabled = false;
+            if (lifetime <= 60 && lifetime != 0) {
+                newlyEnabled = ((lifetime / 60f * blinkingRate) % 1) > 0.5f;
+            } else {
+                newlyEnabled = true;
+            }
+            if (Previouslyenabled != newlyEnabled) {
+                Previouslyenabled = newlyEnabled;
+                foreach (Renderer r in renderers) {
+                    r.enabled = newlyEnabled;
+                }
             }
         }
 
@@ -149,8 +175,8 @@ namespace NSMB.Entities.CoinItems {
                 return;
             }
 
-            renderer.sortingOrder = originalSortingOrder;
-            renderer.gameObject.transform.localScale = Vector3.one;
+            SetSortingRange(originalSortingOrder);
+            //renderer.gameObject.transform.localScale = Vector3.one;
             if (childAnimator) {
                 childAnimator.enabled = true;
             }

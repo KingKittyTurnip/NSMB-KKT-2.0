@@ -1,6 +1,6 @@
 component CoinItem {
 	AssetRef<CoinItemAsset> Scriptable;
-	ushort Lifetime;
+	//ushort Lifetime;
 	[ExcludeFromPrototype] PowerupSpawnReason SpawnReason;
 	[ExcludeFromPrototype] bool BlockSpawn;
 	[ExcludeFromPrototype] bool LaunchSpawn;

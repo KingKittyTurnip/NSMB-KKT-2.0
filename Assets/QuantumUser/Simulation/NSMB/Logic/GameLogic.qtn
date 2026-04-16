@@ -34,20 +34,27 @@ struct GameRules {
 	//KKT Mod
 	bool AdvancedLobby;
 	AssetRef<Map> Stage;
-	AssetRef<GamemodeAsset> Gamemode; //this is supposed to be unused but way too much things rely on it so i don't want to remove it to make merges easily compatable
+	//this is supposed to be unused but way too much things rely on it so i don't want to remove it to make merges easily compatable
+	AssetRef<GamemodeAsset> Gamemode;
+
 	bool GamemodeStarChasersEnabled;
 	  int StarsToWin;
-	  int starfrequency;
+	  byte StarFrequency;
 	bool GamemodeCoinRunnersEnabled;
-	  int starcoinfrequency;
+	  byte StarcoinFrequency;
 	bool GamemodeBalloonBattleEnabled;
 	  byte MaxBalloons;
 	bool GamemodeBombchasersEnabled;
 
 	int CoinsForPowerup;
-	//ItemMenu; //??
+	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<ItemList> Items;
 	
 	bool HazardsEnabled;
+	byte MaxHazards; //10 1-30
+    byte HazardFrequency;
+    FP HeftyPercentage; //0.12
+    int HazardLifetime;
+	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<HazardList> Hazards;
 
 	int Lives;
 
@@ -75,6 +82,49 @@ enum GameState : Byte {
     Starting,
     Playing,
     Ended
+}
+
+struct ItemList {
+	ItemChanceType Chance;
+	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<PowerupData> Items;
+}
+struct PowerupData {
+//Base
+    QString<64> Name;
+    AssetRef<EntityPrototype> PowerupPrototype;
+//Sub Data
+    byte Team;
+    //FP Scale;
+//Specific Data
+	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<byte> Extra;
+}
+
+struct HazardList {
+    QString<64> Name;
+    AssetRef<EntityPrototype> HazardPrototype;
+//Sub Data
+    byte Team;
+    bool Hefty;
+    bool SpawnRandom;
+    bool SpawnFridge;
+    //FP Scale;
+//Specific Data
+	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<byte> Extra;
+}
+
+enum ItemChanceType : Byte {
+    FirstCommon,
+	FirstRare,
+	Middling,
+	LastCommon,
+	LastRare,
+	Mushroom,
+	Vertical,
+	Large,
+	JokeFirst,
+	JokeMiddle,
+	Bulb,
+	Invalid,
 }
 
 signal OnLoadingComplete();

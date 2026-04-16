@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using Quantum.Collections;
 using System;
 using System.Drawing.Drawing2D;
 using UnityEngine;
@@ -84,6 +85,7 @@ namespace Quantum {
             var holdable = filter.holdable;
             var hazard = filter.hazard;
             var entity = filter.Entity;
+            var coinitem = f.Unsafe.GetPointer<CoinItem>(entity);
 
             if (Dis->IsFlying) {
                 // Slowly float downwards
@@ -154,8 +156,8 @@ namespace Quantum {
 
             //physicsObject->DisableCollision = false;
 
-            if (hazard->IsHazard && holdable->Holder != EntityRef.None && hazard->LifeTime < hazard->BaseLifeTime) { //?
-                hazard->LifeTime = hazard->BaseLifeTime;
+            if (holdable->Holder != EntityRef.None && hazard->LifeTime < hazard->BaseLifeTime && (hazard->IsHazard || hazard->IsCoinItem)) {
+                 hazard->LifeTime = hazard->BaseLifeTime;
             } else if (holdable->PreviousHolder != EntityRef.None && hazard->LifeTime > 1 && !Dis->Thrown) {
                 //if it was already interacted with and ignored, despawn faster
                 //UnityEngine.Debug.Log("Despawning Fast");
@@ -163,6 +165,10 @@ namespace Quantum {
             }
 
             bool holderExists = f.Exists(holdable->Holder);
+
+            if (coinitem->SpawnAnimationFrames > 0) {
+                return;
+            }
 
             // Special Updates
             switch (Dis->Type) {
@@ -185,9 +191,9 @@ namespace Quantum {
 
                     Dis->ReusableTimer += f.DeltaTime;
                     if (Dis->ReusableTimer > FP._0_20) {
-                        //weee!
+                        //weee! - springboards get 0 x velocity when jumping off springboards for silly spring towers
                         TargetTransform->Position.Y = transform->Position.Y + FP._0_05 - Offset;
-                        TargetPhysics->Velocity.X = FPMath.Clamp(TargetPhysics->Velocity.X * 5, -3, 3);
+                        TargetPhysics->Velocity.X = f.Has<SpringBoard>(Dis->ConnectedObject) ? 0 : FPMath.Clamp(TargetPhysics->Velocity.X * 5, -3, 3);
                         TargetPhysics->Velocity.Y = f.Has<MarioPlayer>(Dis->ConnectedObject) ? 9 : 12;
                         physicsObject->IsFrozen = false;
                         Dis->ConnectedObject = EntityRef.None;
@@ -218,12 +224,14 @@ namespace Quantum {
                     if (Dis->HitSomething /*|| (hazard->IPWSUntilGround && hazard->IPWSTime == 0 && physicsObject->IsTouchingGround)*/ || (Dis->Thrown &&
                     (physicsObject->IsTouchingGround || physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall || physicsObject->IsTouchingCeiling))) {
                         f.Unsafe.GetPointer<Interactable>(filter.Entity)->ColliderDisabled = physicsObject->DisableCollision = physicsObject->IsFrozen = true;
-                        hazard->LifeTime = 15;
+                        hazard->LifeTime = 120;
+                        Dis->HitSomething = false;
+                        physicsObject->IsFrozen = true;
                         f.Events.ThrowObjSimple(filter.Entity, transform->Position);
                     }
                 } else {
                     var type = Dis->Varient == 1 ? ExplosionType.Shockwave : ExplosionType.GroundedShockwave;
-                    if ((hazard->LifeTime <= 10 && hazard->LifeTime > 5) || type == ExplosionType.GroundedShockwave) {
+                    if ((hazard->LifeTime <= 115 && hazard->LifeTime > 110) || type == ExplosionType.GroundedShockwave) {
                         Shape2D shape = Shape2D.CreateCircle(Dis->Varient == 1 ? 2+FP._0_50 : 9);
                         var hits = f.Physics2D.OverlapShape(*transform, shape);
                         for (int i = 0; i < hits.Count; i++) {
@@ -257,7 +265,7 @@ namespace Quantum {
                     TryDrop();
                     if (!hazard->IsHazard) {
                         QuantumUtils.Decrement(ref hazard->LifeTime);
-                        if (hazard->LifeTime <= 1) {
+                        if (hazard->LifeTime <= 90) {
                             physicsObject->IsFrozen = false;
                             hazard->LifeTime = 0;
                             Dis->HitSomething = Dis->Thrown = false;
@@ -343,7 +351,7 @@ namespace Quantum {
                 /*if (marioPhys->IsTouchingGround || marioPhys->WasTouchingGround) { //Check if the "wastouchingground" being set to false when mario jumps is needed
                     Dis->ReusableTimer = 180;
                 } else */
-                if (Dis->ReusableTimer > 0 && f.GetPlayerInput(mario->PlayerRef)->PowerupAction.IsDown && (marioPhys->Velocity.Y <= 0 || Dis->ReusableTimer == 1)) { //get inputs
+                if (Dis->ReusableTimer > 0 && f.GetPlayerInput(mario->PlayerRef)->Jump.IsDown && (marioPhys->Velocity.Y <= 0 || Dis->ReusableTimer == 1)) { //get inputs
                     Dis->ReusableTimer -= 1;
                     if (Dis->ReusableTimer <= 0)
                         f.Events.ThrowObjSimple(filter.Entity, transform->Position);
@@ -424,7 +432,7 @@ namespace Quantum {
                         //create voidwall
                         hazard->LifeTime = 0;
                         var NewObject = f.Create(f.SimulationConfig.VoidWallWall);
-                        f.Signals.InitializeHazard(NewObject, EntityRef.None, transform->Position, SpawnReason.Forced, Dis->Varient);
+                        f.Signals.InitializeHazard(NewObject, EntityRef.None, transform->Position, SpawnReason.Forced, new QListPtr<byte>());
                         HazardSystem.DestroyHazard(f, filter.Entity);
                     }
                     holdable->Holder = EntityRef.None;
@@ -566,6 +574,10 @@ namespace Quantum {
         private void OnThrowingObjectMarioSolidPreContact(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts) {
             //test if this works better
             if (f.Unsafe.TryGetPointer<ThrowingObject>(contact.Entity, out var throwable)) {
+                if (f.Unsafe.GetPointer<Interactable>(contact.Entity)->ColliderDisabled) {
+                    keepContacts = false;
+                    return;
+                }
                 //spring
                 if (throwable->Type == ThrowingObjectType.Spring && f.Has<PhysicsObject>(contact.Entity)) {
                     keepContacts = HandleSpringboardInteraction(f, contact.Entity, entity, true);
@@ -969,7 +981,6 @@ namespace Quantum {
         }
         public static bool HandleSpringboardInteraction(Frame f, EntityRef anyEntity, EntityRef thisEntity, bool FromSolid) {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
-            //var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
             var phys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(anyEntity);
 
@@ -991,6 +1002,14 @@ namespace Quantum {
                 Dis->ConnectedObject = anyEntity;
                 phys->IsFrozen = true;
                 otherPhys->Velocity.Y = -1;
+
+                var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);
+                var coinitem = f.Unsafe.GetPointer<CoinItem>(thisEntity);
+                var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
+
+                if (holdable->Holder != EntityRef.None && hazard->LifeTime < hazard->BaseLifeTime && (hazard->IsHazard || hazard->IsCoinItem)) {
+                    hazard->LifeTime = hazard->BaseLifeTime;
+                }
                 f.Events.ThrowObjSimple(thisEntity, ourPos);
             }
             return true;
@@ -1106,7 +1125,7 @@ namespace Quantum {
             *doSplash = true;
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out ThrowingObject* Dis)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject)
@@ -1114,7 +1133,7 @@ namespace Quantum {
                 return;
             }
 
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
+            var specialValues = f.ResolveList(spawnData);
 
             switch (Dis->Type) {
             case ThrowingObjectType.Basic:
@@ -1122,12 +1141,12 @@ namespace Quantum {
             case ThrowingObjectType.Spring:
                 break;
             case ThrowingObjectType.Pow:
-                Dis->Varient = (byte) (hazardata.SpecialValues[0].BaseValue == 1 ? 1 : 0);
-                if (hazardata.SpecialValues[1].BaseValue == 1) {
+                Dis->Varient = (byte) (specialValues[0] == 1 ? 1 : 0);
+                if (specialValues[1] == 1) {
                     Dis->Thrown = true;
                     hazard->IPWSTime = 1;
                 }
-                if (hazardata.SpecialValues[1].BaseValue == 2) {
+                if (specialValues[1] == 2) {
                     physicsObject->Velocity.Y = 20;
                     //idk maybe play a fling sound
                 }
@@ -1143,7 +1162,11 @@ namespace Quantum {
             case ThrowingObjectType.Potion:
                 break;
             case ThrowingObjectType.Voidwall:
-                Dis->Varient = (byte)index;
+                if (specialValues[0] == 1) {
+                    Dis->Thrown = true;
+                    hazard->IPWSTime = 1;
+                }
+                //Dis->Varient = (byte)index;
                 break;
             case ThrowingObjectType.ChainPost:
                 if (spawnReason == SpawnReason.WasCreatedFromNested) {
@@ -1151,16 +1174,16 @@ namespace Quantum {
                     break;
                 }
 
-                Dis->Varient = (byte) (hazardata.SpecialValues[0].BaseValue == 1 ? 1 : 0);
-                if (false) {
+                Dis->Varient = (byte) (specialValues[0] == 1 ? 1 : 0);
+                if (specialValues[1] != 255) {
                     //spawn from hazard List
-                    int i = 0;
-                    Dis->ConnectedObject = f.Create(f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[i].hazardAsset);
-                    f.Signals.InitializeHazard(Dis->ConnectedObject, EntityRef.None, spawnpoint, spawnReason == SpawnReason.Forced ? SpawnReason.WasCreatedFromNested : (spawnReason == SpawnReason.Fridge ? SpawnReason.Forced : SpawnReason.Fridge), i);
+                    HazardManagerSystem.CreateHazardFromReference(f, specialValues[1], out var newEntity, out var newSpawndata);
+                    Dis->ConnectedObject = newEntity;
+                    f.Signals.InitializeHazard(Dis->ConnectedObject, EntityRef.None, spawnpoint, spawnReason == SpawnReason.Forced ? SpawnReason.WasCreatedFromNested : (spawnReason == SpawnReason.Fridge ? SpawnReason.Forced : SpawnReason.Fridge), newSpawndata.Extra);
                 } else {
-                    //Default Chain Chomp
+                    //Default To Chain Chomp
                     Dis->ConnectedObject = f.Create(f.SimulationConfig.Chainchomp);
-                    f.Signals.InitializeHazard(Dis->ConnectedObject, thisEntity, spawnpoint, SpawnReason.Forced, 0);
+                    f.Signals.InitializeHazard(Dis->ConnectedObject, thisEntity, spawnpoint, SpawnReason.Forced, spawnData);
                 }
                 break;
             }

@@ -62,7 +62,7 @@ public unsafe class BillBlockAnimator : QuantumEntityViewComponent {
             InterpolateFacingDirection(mario);
 
             //Model.rotation = Quaternion.Euler(0, holder.AnimationController.Rotation, 0);
-            bool Powered = billblock->ReusableTimer != 0 && f.GetPlayerInput(mario->PlayerRef)->PowerupAction.IsDown;
+            bool Powered = billblock->ReusableTimer != 0 && f.GetPlayerInput(mario->PlayerRef)->Jump.IsDown;
             animator.SetBool("Powered", Powered && billblock->ReusableTimer < 240);
             animator.SetBool("Failing", Powered && billblock->ReusableTimer <= 60);
         } else if (billblock->Thrown) {

@@ -1,6 +1,7 @@
 using Photon.Deterministic;
 using UnityEngine.Diagnostics;
 using UnityEngine;
+using Quantum.Collections;
 
 namespace Quantum {
     
@@ -127,7 +128,7 @@ namespace Quantum {
             *doSplash = true;
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out LemmyBall* lemmyball)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
                 return;

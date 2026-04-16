@@ -1,14 +1,5 @@
-using JetBrains.Annotations;
 using Photon.Deterministic;
 using Quantum.Collections;
-using System;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
-using System.Globalization;
-using UnityEngine;
-using UnityEngine.UIElements;
-using static Quantum.CurrentHazards.HazardDataList;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
@@ -278,26 +269,25 @@ Gp Interactions are weird
                 3
             );
         }
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Fan* fan)) {
                 return;
             }
+            var specialValues = f.ResolveList(spawnData);
 
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
-            UnityEngine.Debug.Log(hazardata.SpecialValues.Length + " " + hazardata.SpecialValues[0] + " " + index);
             //Set Sturdy
-            fan->Sturdy = hazardata.SpecialValues[0].BaseValue == 1;
+            fan->Sturdy = specialValues[0] == 1;
 
             //Set Constant Direction
-            fan->Broken = hazardata.SpecialValues[1].BaseValue == 1;
-            fan->FellOver = hazardata.SpecialValues[2].BaseValue == 1;
+            fan->Broken = specialValues[1] >= 1;
+            fan->FellOver = specialValues[1] == 2;
 
             //Starting Direction
             fan->FacingRight = (f.RNG->Next() >= FP._0_50);
 
             //Set FanTime
-            fan->FanTime = hazardata.SpecialValues[3].BaseValue * 59; // set to Basically 10 seconds
+            fan->FanTime = specialValues[2] * 59; // set to Basically 10 seconds
             fan->TurnEffectorDowntime = 45;
 
             fan->Cooldown = 2;

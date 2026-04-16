@@ -1,4 +1,5 @@
-﻿using Photon.Deterministic;
+﻿using Microsoft.SqlServer.Server;
+using Photon.Deterministic;
 using Quantum.Prototypes;
 using System;
 using System.Collections.Generic;
@@ -26,19 +27,21 @@ namespace Quantum {
                 public GameRulesPrototype DefaultRules;
 
                 //unimplemented but i want to add
-                public bool SpawnType;
-                public byte StarsSpawnableCount = 1;//0-30, restricted by map spawns
-                 public byte StarcoinsSpawnableCount = 1;//0-30, restricted by map spawns
-                  public bool AutomaticallyModifyTimerDependingOnLivesAndPlayerCount = true; //Depending On The Player Count and lives it will modify the timer { TIMER = 30 * (PlayerCount * lives) }
-                  public byte StartingBobombCount = 1; //0-10, players on the bobomb team from the lobby will count torwards this
-                  public bool FirstBombIsKingBobomb = true;
-                   public bool IsRoulette = false; //when enabled ? blocks pull from a list
-                    public byte HazardCount = 10; //0-30
-                    public byte HazardFreq = 10; //0-60
-                    public HefPercent HeftyPercentage = HefPercent.twelve; //if the hazards that exist exceed the percent they cannot spawn, the percent is used to spawn the hefties too
-                    public byte GlobalTimeTilDespawn = 80; //Multiply value by 60 when applying, base value of 80 (1:20 minutes)
-                     public bool TeamLock = false; //Show Prompt To Players Enabling It For The First Time Telling Them To Use It Responsibly 
-                     public bool FreindlyFire = false;
+                private bool SpawnType;
+
+                private byte StarsSpawnableCount = 1;//0-30, restricted by map spawns
+
+                private byte StarcoinsSpawnableCount = 1;//0-30, restricted by map spawns
+
+                private bool AutomaticallyModifyTimerDependingOnLivesAndPlayerCount = true; //Depending On The Player Count and lives it will modify the timer { TIMER = 30 * (PlayerCount * lives) }
+                private byte StartingBobombCount = 1; //0-10, players on the bobomb team from the lobby will count torwards this
+                private bool FirstBombIsKingBobomb = true;
+
+                private bool IsRoulette = false; //when enabled ? blocks pull from a list
+
+                private bool TeamLock = false; //Show Prompt To Players Enabling It For The First Time Telling Them To Use It Responsibly 
+
+                private bool FreindlyFire = false;
 
                 public HazardDefault bigstarBase;
                 public HazardDefault purplecoinBase;
@@ -60,14 +63,12 @@ namespace Quantum {
                 public ObjectPrimaryType type;
                 public CategoreyObject categorey;
                 [Header("---Subdata---")]
-                public bool Hefty; //Set As Hefty
                 public bool Teamable; //set to 255 to "disable" for the object
-                public bool SpawnRandom; //decides if it should spawn randomly
-                public bool SpawnFridge; //decides if it should spawn from a fridge
-                public bool SpawnBulb; //decides if it should spawn from the ideabulb powerup
-                public FP SpawnChance = FP._1;
-                public FP WinningBonus = 0;
-                public FP LosingBonus = FP._0_50;
+                public bool CanSpawnAsHazard = true; //decides if it works with randomly spawning
+                public bool Hefty; //spawns as a hefty
+                public ItemChanceType SpawnChance; //chance as a item 
+                public BulbSpawnType BulbSpawnType = BulbSpawnType.basic; //if bulb uses this ability again it will remove the old object
+                public BulbCooldown BulbCooldown = BulbCooldown.normal; //the cooldown for the bulb powerup
                 [Header("---SpecialData---")]
                 public HValue[] SpecialValues;
             }
@@ -85,6 +86,7 @@ namespace Quantum {
         public ValueType ButtonType = ValueType.toggle;
         public byte BaseValue = 0;
         public IntVector2 ValueRange = new IntVector2(0, 1);
+        public string[] valuenames;
     }
     public enum ValueType {
         toggle, // 0, 1
@@ -145,6 +147,39 @@ namespace Quantum {
         fivehundred = 500,
         thousand = 1000,
         heftyOnly = -1, //only hefty hazards spawn
+    }
+
+    public enum Frequency : byte {
+        instant = 0,
+        faster = 2,
+        fast = 6,
+        normal = 10,
+        lung = 20,
+        longer = 30,
+        minute = 60,
+    }
+
+    public enum DespawnTime : int {
+        fastest = 5,
+        faster = 10,
+        fast = 40,
+        normal = 80,
+        lung = 120,
+        longer = 200,
+        never = -1,
+    }
+    public enum BulbCooldown : byte {
+        basicallynothing, //1 second
+        fast, //2 seconds
+        normal, //4
+        slow, //6
+        entirenormalstarspawn, //10
+    }
+    public enum BulbSpawnType : byte {
+        basic,
+        replaceOld,
+        onlyOnce, //10, hardcoded to only spawn once (until it's gone)
+        Nope, //not a option
     }
     #endregion
 }

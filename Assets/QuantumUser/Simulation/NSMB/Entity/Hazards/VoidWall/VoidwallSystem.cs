@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using Quantum.Collections;
 using System.Numerics;
 using UnityEngine;
 
@@ -83,14 +84,12 @@ namespace Quantum {
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Voidwall* voidwall)
                 || !f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject)) {
                 return;
             }
-
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
 
             var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
             //collider->Shape.Compound.

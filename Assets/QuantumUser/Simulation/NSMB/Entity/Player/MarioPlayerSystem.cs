@@ -1474,7 +1474,7 @@ namespace Quantum {
                     PropellerStart(f, ref filter, physics, stage);
                 return;
             } else if (mario->BillBux) {
-                if (inputs.PowerupAction.IsDown && !physicsObject->IsTouchingGround && f.Unsafe.TryGetPointer(mario->HeldEntity, out ThrowingObject* ThrowingObj) && ThrowingObj->Type == ThrowingObjectType.BillBlock && ThrowingObj->ReusableTimer > 0) {
+                if (inputs.Jump.IsDown && !physicsObject->IsTouchingGround && f.Unsafe.TryGetPointer(mario->HeldEntity, out ThrowingObject* ThrowingObj) && ThrowingObj->Type == ThrowingObjectType.BillBlock && ThrowingObj->ReusableTimer > 0) {
                     if (physicsObject->Velocity.Y <= 0) {
                         physicsObject->Velocity.Y *= FP._0_50;
                         if (FPMath.Abs(physicsObject->Velocity.Y) < FP._0_50)
@@ -2108,6 +2108,7 @@ namespace Quantum {
         }
 
         public static EntityRef SpawnItem(Frame f, EntityRef marioEntity, MarioPlayer* mario, AssetRef<EntityPrototype> prefab, bool fromBlock) {
+            /*
             var gamemode = f.FindAsset(f.SimulationConfig.StarChasers);
             if (!prefab.IsValid) {
                 prefab = gamemode.GetRandomItem(f, mario, fromBlock).Prefab;
@@ -2117,6 +2118,26 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(newEntity, out CoinItem* coinItem)) {
                 coinItem->InitializePlayerSpawn(f, newEntity, marioEntity);
             }
+            */
+
+            #region KKT Mod
+            var gamemode = f.FindAsset(f.SimulationConfig.StarChasers);
+            PowerupData powerupdata = new PowerupData();
+            if (!prefab.IsValid) {
+                powerupdata = gamemode.NEWGetRandomItem(f, mario, fromBlock);
+                prefab = powerupdata.PowerupPrototype;
+            }
+
+            EntityRef newEntity = f.Create(prefab);
+            if (f.Unsafe.TryGetPointer(newEntity, out CoinItem* coinItem)) {
+                coinItem->InitializePlayerSpawn(f, newEntity, marioEntity);
+            } else {
+                f.Unsafe.GetPointer<Transform2D>(newEntity)->Position = f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + new FPVector2(0, 2);
+                UnityEngine.Debug.Log("MARIO THIS ISN'T A COINITEM");
+            }
+            f.Signals.InitializeHazard(newEntity, marioEntity, f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position, SpawnReason.Item, powerupdata.Extra);
+            #endregion
+
             return newEntity;
         }
 

@@ -9,7 +9,14 @@ namespace Quantum {
 
         public override void OnInit(Frame f) {
             //var gamemode = f.Context.GetAllAssets<GamemodeAsset>()[0];
+            f.Global->Rules.Items = f.AllocateList<ItemList>(64);
+            f.Global->Rules.Hazards = f.AllocateList<HazardList>(64);
             f.FindAsset(f.SimulationConfig.BaseRules).Rules.BaseRulesList.DefaultRules.Materialize(f, ref f.Global->Rules);
+
+            //RandomStage
+            //TODO: check if the stage is valid
+            var stages = f.Context.GetAllAssets<Map>();
+            f.Global->Rules.Stage = stages[f.RNG->Next(0, stages.Count)];
 
             // Support booting in the editor.
             if (!f.RuntimeConfig.IsRealGame) {

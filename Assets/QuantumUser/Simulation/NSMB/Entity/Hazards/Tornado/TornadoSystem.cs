@@ -99,28 +99,30 @@ namespace Quantum {
         }
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Tornado* tornado)) {
                 return;
             }
 
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
+            var specialValues = f.ResolveList(spawnData);
 
-            //decide random speed
-            int rng = f.RNG->Next(-2, 3);
-            if (rng <= 0) {
-                rng--;
+            //decide movement
+            if (specialValues[0] == 0) {
+                int rng = f.RNG->Next(-2, 3);
+                if (rng <= 0) {
+                    rng--;
+                }
+                tornado->Speed = ((FP) rng) * FP._0_50;
             }
-            tornado->Speed = ((FP) rng) * FP._0_50;
 
-            //place on ground 
+            //try place on ground 
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             VersusStageData stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-            if (PhysicsObjectSystem.Raycast(f, stage, transform->Position, FPVector2.Down, 2, out var hit)) {
+            if (PhysicsObjectSystem.Raycast(f, stage, transform->Position, FPVector2.Down, 3, out var hit)) {
                 transform->Position.Y = hit.Position.Y;
             } else {
-                transform->Position.Y -= 2;
+                transform->Position.Y -= 3;
             }
         }
         #endregion

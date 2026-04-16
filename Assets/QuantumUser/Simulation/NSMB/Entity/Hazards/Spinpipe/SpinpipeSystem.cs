@@ -1,14 +1,5 @@
-using JetBrains.Annotations;
 using Photon.Deterministic;
 using Quantum.Collections;
-using System;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
-using System.Globalization;
-using UnityEngine;
-using UnityEngine.UIElements;
-using static Quantum.CurrentHazards.HazardDataList;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
@@ -142,13 +133,11 @@ namespace Quantum {
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Spinpipe* spinpipe)) {
                 return;
             }
-
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
 
             //Set Constant Direction
             spinpipe->Broken = false;

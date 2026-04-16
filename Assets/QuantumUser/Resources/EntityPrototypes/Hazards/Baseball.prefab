@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: -6338529405283914546}
   - component: {fileID: -3897358826683353975}
   - component: {fileID: 5112170066020760427}
+  - component: {fileID: -4843760052727905602}
+  - component: {fileID: 2812685006140828945}
   m_Layer: 19
   m_Name: Baseball
   m_TagString: Powerup
@@ -618,6 +620,46 @@ MonoBehaviour:
   Model: {fileID: 7816910352173353143}
   FacingModel: {fileID: 1935555099709875129}
   sfx: {fileID: 4207910641862185911}
+--- !u!114 &-4843760052727905602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 330575751736567297
+--- !u!114 &2812685006140828945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 1935555099709875129}
+  moveBehindBlocksRoot: {fileID: 1935555099709875129}
+  renderers:
+  - {fileID: 8590226512072746039}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: 4
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 1
+  sfx: {fileID: 4207910641862185911}
+  koopaSpawnParticles: {fileID: 0}
 --- !u!1 &3184501115247793767
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,17 +735,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9f56ae78eeff24745a90f2c8c386ae27,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9f56ae78eeff24745a90f2c8c386ae27,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9f56ae78eeff24745a90f2c8c386ae27,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9f56ae78eeff24745a90f2c8c386ae27,
         type: 3}
@@ -758,7 +800,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9f56ae78eeff24745a90f2c8c386ae27,
         type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 9f56ae78eeff24745a90f2c8c386ae27,
         type: 3}
@@ -778,6 +820,12 @@ PrefabInstance:
 --- !u!4 &7457311873178984280 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9f56ae78eeff24745a90f2c8c386ae27,
+    type: 3}
+  m_PrefabInstance: {fileID: 6987063097045268659}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8590226512072746039 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 9f56ae78eeff24745a90f2c8c386ae27,
     type: 3}
   m_PrefabInstance: {fileID: 6987063097045268659}
   m_PrefabAsset: {fileID: 0}

@@ -1,6 +1,8 @@
 using Photon.Deterministic;
+using Quantum.Collections;
 using System;
 using UnityEngine;
+using static UnityEditor.Progress;
 using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
@@ -51,7 +53,8 @@ namespace Quantum {
             var transform = filter.Transform;
             var collider = filter.Collider;
 
-            if (!hazard->IsHazard) {
+            if (!hazard->IsHazard && !hazard->IsCoinItem) {
+                //stage object.
                 return;
             }
 
@@ -92,15 +95,12 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
                 return;
             }
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
-            var hazardsettings = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData;
-            //var hazardata = hazardsettings.HazardDatas[index];
 
-            hazard->IsHazard = hazard->JustSpawned = true;
             // IdeaBulb Carry On Creation :TOTEST:
             if (spawnReason == SpawnReason.Bulb && f.Exists(owner)) {
                 f.Unsafe.TryGetPointer(thisEntity, out Holdable* holdable);
@@ -109,29 +109,37 @@ namespace Quantum {
                 }
             }
 
-            if ((hazard->IPWSTime != 0 || hazard->IPWSUntilGround) && f.Unsafe.TryGetPointer(thisEntity, out Interactable* inter)) {
-                if (inter != null) {
-                    inter->ColliderDisabled = true;
-                } else {
-                    hazard->IPWSTime = 0;
-                    hazard->IPWSUntilGround = false;
+            hazard->JustSpawned = true;
+            if (spawnReason == SpawnReason.Item) {
+                hazard->IsCoinItem = true;
+                hazard->BaseLifeTime = hazard->LifeTime = 600;
+            } else {
+                hazard->IsHazard = true;
+
+                if ((hazard->IPWSTime != 0 || hazard->IPWSUntilGround) && f.Unsafe.TryGetPointer(thisEntity, out Interactable* inter)) {
+                    if (inter != null) {
+                        inter->ColliderDisabled = true;
+                    } else {
+                        hazard->IPWSTime = 0;
+                        hazard->IPWSUntilGround = false;
+                    }
                 }
+
+                //Set LifeTime
+                hazard->BaseLifeTime = hazard->LifeTime = f.Global->Rules.HazardLifetime * 60;
+
+                // Shoot in Random Direction
+                transform->Position = spawnpoint;
+                if (hazard->SpawningVelocityRange != FPVector2.Zero && f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject))
+                    physicsObject->Velocity = new(hazard->SpawningVelocityRange.X * ((f.RNG->Next() * 2) - 1), hazard->SpawningVelocityRange.Y);
+
+                // Create Icon on Map
+                ChangeHazardIcon(f, thisEntity, true);
             }
 
             //Set hazard team
             //TODO: Actually Set Team, code general team mechanics
             hazard->Team = 255;
-
-            //Set LifeTime
-            hazard->BaseLifeTime = hazard->LifeTime = hazardsettings.DespawnTime * 60;
-
-            // Shoot in Random Direction
-            transform->Position = spawnpoint;
-	    if (hazard->SpawningVelocityRange != FPVector2.Zero && f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject))
-                physicsObject->Velocity = new(hazard->SpawningVelocityRange.X * ((f.RNG->Next() * 2) - 1), hazard->SpawningVelocityRange.Y);
-
-            // Create Icon on Map
-            ChangeHazardIcon(f, thisEntity, true);
         }
 
         public static void DestroyHazard(Frame f, EntityRef entity) {
@@ -140,6 +148,8 @@ namespace Quantum {
                     if (hazard->IsHefty)
                         f.Global->HeftyCount--;
                     ChangeHazardIcon(f, entity, false);
+                    f.Destroy(entity);
+                } else if (hazard->IsCoinItem) {
                     f.Destroy(entity);
                 } else {
                     if (f.Unsafe.TryGetPointer(entity, out Transform2D* transform))
@@ -239,8 +249,11 @@ namespace Quantum {
                 return true;
             }
 
-            var mario = f.Unsafe.GetPointer<MarioPlayer>(hazardEntity);
-            return mario->GetTeam(f) == hazard->Team;
+            if (f.Unsafe.TryGetPointer<MarioPlayer>(hazardEntity, out var mario))
+                return mario->GetTeam(f) == hazard->Team;
+
+            //what.
+            return true;
         }
     }
 }

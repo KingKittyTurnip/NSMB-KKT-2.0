@@ -169,9 +169,9 @@ namespace NSMB.Replay {
                         TeamsEnabled = rules.TeamsEnabled,
                         //KKT Mod
                         GamemodeStarChasersEnabled = rules.GamemodeStarChasersEnabled,
-                        starfrequency = rules.starfrequency,
+                        StarFrequency = rules.StarFrequency,
                         GamemodeCoinRunnersEnabled = rules.GamemodeCoinRunnersEnabled,
-                        starcoinfrequency = rules.starcoinfrequency,
+                        StarcoinFrequency = rules.StarcoinFrequency,
                         GamemodeBalloonBattleEnabled = rules.GamemodeBalloonBattleEnabled,
                         MaxBalloons = rules.MaxBalloons,
                         GamemodeBombchasersEnabled = rules.GamemodeBombchasersEnabled,

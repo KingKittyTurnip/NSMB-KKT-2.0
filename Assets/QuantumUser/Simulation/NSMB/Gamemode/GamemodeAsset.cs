@@ -1,6 +1,10 @@
 using Photon.Deterministic;
 using Quantum.Prototypes;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using static Quantum.CommandChangePlayerData;
+using static UnityEditor.Progress;
 
 namespace Quantum {
     public abstract unsafe class GamemodeAsset : AssetObject, IOrderedAsset {
@@ -234,5 +238,124 @@ namespace Quantum {
 
             return newCoinEntity;
         }
+
+
+        #region KKT Mod
+        public PowerupData NEWGetRandomItem(Frame f, MarioPlayer* mario, bool fromBlock) {
+            var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+            var items = f.ResolveList(f.Global->Rules.Items);
+            int ourObjectiveCount = GetTeamObjectiveCount(f, mario->GetTeam(f)) ?? 0;
+
+            bool CanSpawnJoke = true;
+            FP MushroomChance = 1;
+
+            bool StageSpawnsBigItems;
+            bool StageSpawnsVerticalItems;
+
+            //pick random chance type
+            ItemChanceType chancePick = ItemChanceType.Middling;
+            FP totalChance = 0;
+            FP highestChance = -999;
+            ItemChanceType highestChanceGroup = ItemChanceType.FirstCommon;
+            byte MaxTypes = ((int) ItemChanceType.Invalid);
+
+            //get chances that exist
+            List<bool> chanceExists = new List<bool>();
+            for (int i = 0; i < MaxTypes; i++) {
+                var l = f.ResolveList(items[i].Items);
+                UnityEngine.Debug.Log("lisssssst " + l.Count);
+                chanceExists.Add(l.Count > 64);//????
+            }
+
+            //pick random chance type
+            for (int i = 0; i < MaxTypes; i++) {
+                if (chanceExists[i])
+                    continue;
+
+                var e = NEWGetSpawnWeight(f, (ItemChanceType) i, ourObjectiveCount);
+                totalChance += FPMath.Max(0, e);
+                if (e > highestChance) {
+                    highestChance = e;
+                    highestChanceGroup = (ItemChanceType) i;
+                }
+                UnityEngine.Debug.Log((ItemChanceType) i + " " + totalChance);
+            }
+            UnityEngine.Debug.Log(totalChance);
+            if (totalChance <= 0) {
+                UnityEngine.Debug.Log("powerup pick is at it's LAST RESORT: " + highestChanceGroup);
+                //the total of all the chances makes 0, pick the one that is the highest
+                chancePick = highestChanceGroup;
+            } else {
+                FP rand = mario->RNG.Next(0, totalChance);
+                for (int ik = 0; ik < MaxTypes; ik++) {
+                    if (chanceExists[ik])
+                        continue;
+                    FP chance = FPMath.Max(0, NEWGetSpawnWeight(f, (ItemChanceType) ik, ourObjectiveCount));
+
+                    if (rand < chance) {
+                        chancePick = (ItemChanceType) ik;
+                        UnityEngine.Debug.Log("Powerup pick, type: " + chancePick);
+                        break;
+                    }
+
+                    rand -= chance;
+                }
+            }
+
+            //pick a random object with this chance type
+            var listOfpowerups = f.ResolveList(items[(int) chancePick].Items);
+            PowerupData pick = listOfpowerups[f.RNG->Next(0, listOfpowerups.Count)];
+
+            UnityEngine.Debug.Log("item: " + pick.Name);
+
+            return pick;
+        }
+        public FP NEWGetSpawnWeight(Frame f, ItemChanceType j, int ourStars) {
+
+            (FP, FP, FP) SpawmAboveBellowChance = j switch {
+                ItemChanceType.FirstCommon => new (0, 1, -2),
+                ItemChanceType.FirstRare => new(FP._0_50, FP._0_50, -1),
+                ItemChanceType.Middling => new(1, -FP._0_25, 1),
+                ItemChanceType.LastCommon => new(-FP._0_25, 0, Constants._2_50),
+                ItemChanceType.LastRare => new(-2, 0, Constants._4_50),
+
+                ItemChanceType.Mushroom => new(FP._1_50, 1, -1),
+                ItemChanceType.Vertical => new(2, -FP._0_75, FP._0_50),
+                 ItemChanceType.Large => new(-2, 0, Constants._4_50),
+                 ItemChanceType.JokeFirst => new(FP._0_50, 2, -Constants._2_50),
+                 ItemChanceType.JokeMiddle => new(1, -FP._0_25, 1),
+                _ => new(0, 0, 0),
+            };
+
+            int starsToWin = f.Global->Rules.StarsToWin;
+
+            FP starsAvg = GetAverageObjectiveCount(f);
+            int starsFirstPlace = GetFirstPlaceObjectiveCount(f);
+            int starsLastPlace = GetLastPlaceObjectiveCount(f);
+
+            FP avgDiff = ourStars - starsAvg;
+            int diffLeader = starsFirstPlace - ourStars;
+
+            int starBand = starsFirstPlace - starsLastPlace;
+
+            FP normLeader = (FP) starsFirstPlace / starsToWin;
+            FP normStarAvg = starsAvg / starsToWin;
+
+            // item ranking formulas which is used for determining which items spawn
+            FP itemRank = avgDiff - diffLeader / 5 * starBand / starsToWin * (normLeader * starsToWin / 4);
+
+            // being above the average means you get different formula
+            FP bonus;
+            if (itemRank > 0) {
+                FP magni = (starBand + normStarAvg * starsToWin) / starsToWin;
+                bonus = SpawmAboveBellowChance.Item2 * FPMath.Log(FPMath.Abs(itemRank) + 1, FP.E) * magni;
+            } else {
+                FP magni = (starsAvg + starsFirstPlace * FP._0_50) / starsToWin;
+                bonus = SpawmAboveBellowChance.Item3 * FPMath.Log(FPMath.Abs(itemRank) + 1, FP.E) * magni;
+            }
+            return SpawmAboveBellowChance.Item1 + bonus;
+            return 0;
+        }
+        #endregion
     }
 }

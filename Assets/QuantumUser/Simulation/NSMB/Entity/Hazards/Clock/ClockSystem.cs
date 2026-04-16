@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using Quantum.Collections;
 
 namespace Quantum {
     
@@ -54,22 +55,22 @@ Use The Correct Sound For Collection(?)
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Clock* clock)) {
                 return;
             }
 
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
+            var specialValues = f.ResolveList(spawnData);
 
             //Set TickTimeup
-            clock->TickTimeup = hazardata.SpecialValues[0].BaseValue == 2;
+            clock->TickTimeup = specialValues[0] == 2;
 
             //Set ResetTime
-            clock->ResetTime = hazardata.SpecialValues[0].BaseValue == 1;
+            clock->ResetTime = specialValues[0] == 1;
 
             //SetTime
-            clock->Time = hazardata.SpecialValues[0].BaseValue == 0 ? 10 : -10;
+            clock->Time = specialValues[0] == 0 ? 10 : -10;
         }
         #endregion
     }

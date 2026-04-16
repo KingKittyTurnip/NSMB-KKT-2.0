@@ -1,6 +1,7 @@
 using Photon.Deterministic;
 using Quantum.Collections;
 using System;
+using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Numerics;
 using UnityEngine;
@@ -409,19 +410,14 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out KingBoo* kingboo)) {
                 return;
             }
 
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             boss->Health = Constants.GeneralBossHealth;
-
-            //relocate
-            //boss->ControllerPlayer
-            //bowser->IsDry = hazardata.SpecialValues[0].BaseValue == 1;
         }
         public void BossToBossInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Boss* boss)

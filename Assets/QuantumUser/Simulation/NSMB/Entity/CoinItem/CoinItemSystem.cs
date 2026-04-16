@@ -8,9 +8,15 @@ namespace Quantum {
             public CoinItem* CoinItem;
             public Transform2D* Transform;
             public PhysicsCollider2D* Collider;
+            public Hazard* hazard;
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
+            var hazard = filter.hazard;
+            if (hazard->IsHazard) {
+                return;
+            }
+
             var coinItem = filter.CoinItem;
             var transform = filter.Transform;
             var collider = filter.Collider;
@@ -78,19 +84,23 @@ namespace Quantum {
                 // Test that we're not in a wall anymore
                 if (!PhysicsObjectSystem.BoxInGround(f, transform->Position, collider->Shape, stage: stage)) {
                     physicsObject->DisableCollision = false;
+                    if (f.Unsafe.TryGetPointer(entity, out Interactable* interactable)) {
+                        interactable->ColliderDisabled = false;
+                    }
                 }
             }
-
+            /*
             if (coinItem->Lifetime > 0 && QuantumUtils.Decrement(ref coinItem->Lifetime)) {
                 f.Events.CollectableDespawned(entity, transform->Position, false);
                 f.Destroy(entity);
             }
+            */
         }
 
         public void OnStageReset(Frame f, QBoolean full) {
             VersusStageData stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-            var filter = f.Filter<CoinItem, Transform2D, PhysicsCollider2D>();
-            while (filter.NextUnsafe(out EntityRef entity, out var coinItem, out var transform, out var collider)) {
+            var filter = f.Filter<CoinItem, Transform2D, PhysicsCollider2D, Hazard>();
+            while (filter.NextUnsafe(out EntityRef entity, out var coinItem, out var transform, out var collider, out var hazard)) {
                 if (coinItem->SpawnAnimationFrames > 0
                     || !collider->Enabled
                     || (f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject) && physicsObject->DisableCollision)) {
@@ -99,7 +109,7 @@ namespace Quantum {
 
                 if (PhysicsObjectSystem.BoxInGround(f, transform->Position, collider->Shape, stage: stage, entity: entity)) {
                     // Insta-despawn. Crushed by blocks respawning.
-                    coinItem->Lifetime = 1;
+                    hazard->LifeTime = 1;
                 }
             }
         }

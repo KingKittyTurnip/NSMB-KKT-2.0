@@ -444,7 +444,9 @@ namespace Quantum {
         }
 
         public bool IsInHazardList(Frame f, string name) { //add the ability to "out" the special values
-            foreach (var h in f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas) {
+            var hazarddata = f.ResolveList(f.Global->Rules.Hazards);
+
+            foreach (var h in hazarddata) {
                 if (h.Name == name) {
                     return true;
                 }
@@ -652,7 +654,7 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Tanoomba* tanoomba)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {

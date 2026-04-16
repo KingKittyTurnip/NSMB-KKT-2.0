@@ -6,10 +6,13 @@ namespace Quantum {
         public void Initialize(Frame f, EntityRef thisEntity, byte spawnAnimationLength, PowerupSpawnReason spawnReason) {
             SpawnReason = spawnReason;
             SpawnAnimationFrames = spawnAnimationLength;
-            Lifetime += spawnAnimationLength;
+            f.Unsafe.GetPointer<Hazard>(thisEntity)->LifeTime += spawnAnimationLength;
 
             if (f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject)) {
                 physicsObject->DisableCollision = true;
+            }
+            if (f.Unsafe.TryGetPointer(thisEntity, out Interactable* interactable)) {
+                interactable->ColliderDisabled = true;
             }
         }
 

@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 3093743753026942761}
   - component: {fileID: -6338529405283914546}
   - component: {fileID: -3897358826683353975}
+  - component: {fileID: 8002875154183463578}
+  - component: {fileID: 7757788896078302315}
   m_Layer: 19
   m_Name: CannonBox
   m_TagString: Powerup
@@ -625,6 +627,49 @@ MonoBehaviour:
         RawValue: 196608
       Y:
         RawValue: 65536
+--- !u!114 &8002875154183463578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 330575751736567297
+--- !u!114 &7757788896078302315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 4372855850448594806}
+  moveBehindBlocksRoot: {fileID: 4372855850448594806}
+  renderers:
+  - {fileID: 6907191738157471899}
+  - {fileID: 5235683089945868377}
+  - {fileID: 41619031007488501}
+  - {fileID: 5715626045316194520}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: 4
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 0.19
+  sfx: {fileID: 4207910641862185911}
+  koopaSpawnParticles: {fileID: 0}
 --- !u!1 &3027269300647468023
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,8 +695,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3027269300647468023}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: 1.8}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2500001, z: 1.8000001}
   m_LocalScale: {x: 5.2631583, y: 5.2631583, z: 5.2631583}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5591,8 +5636,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5199633637318620069}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: 1.8}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2500001, z: 1.8000001}
   m_LocalScale: {x: 5.2631583, y: 5.2631583, z: 5.2631583}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -15462,6 +15507,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4022831164298315776}
   m_SourcePrefab: {fileID: 100100000, guid: 1589de5ecfa665241b9644cbef8310ec, type: 3}
+--- !u!137 &41619031007488501 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4302877246980335976, guid: 1589de5ecfa665241b9644cbef8310ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 4261874500997955741}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4027433675108548044 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1589de5ecfa665241b9644cbef8310ec,
@@ -15491,6 +15542,24 @@ MonoBehaviour:
 --- !u!4 &4372855850448594806 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1589de5ecfa665241b9644cbef8310ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 4261874500997955741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &5235683089945868377 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8326551258550335684, guid: 1589de5ecfa665241b9644cbef8310ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 4261874500997955741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &5715626045316194520 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8391547356319686725, guid: 1589de5ecfa665241b9644cbef8310ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 4261874500997955741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6907191738157471899 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7277392642196166662, guid: 1589de5ecfa665241b9644cbef8310ec,
     type: 3}
   m_PrefabInstance: {fileID: 4261874500997955741}
   m_PrefabAsset: {fileID: 0}

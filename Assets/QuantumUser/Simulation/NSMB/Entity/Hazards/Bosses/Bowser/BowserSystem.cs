@@ -488,20 +488,17 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Bowser* bowser)) {
                 return;
             }
 
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             boss->Health = Constants.GeneralBossHealth;
 
-            //relocate
-            //boss->ControllerPlayer
-            UnityEngine.Debug.Log(index);
-            bowser->IsDry = hazardata.SpecialValues[0].BaseValue == 1;
+            var specialValues = f.ResolveList(spawnData);
+            bowser->IsDry = specialValues[0] == 1;
         }
         public void BossToBossInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Boss* boss)

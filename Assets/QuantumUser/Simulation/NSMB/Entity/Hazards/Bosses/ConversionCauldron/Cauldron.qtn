@@ -1,6 +1,6 @@
 component Cauldron {
 	AssetRef<EntityPrototype> ConvertInto;
-	byte ConvertToHazardId; //set to 255
+	byte ConvertIntoHazardId; //set to 255
 	FP Hitboxheight;
 	
 	[ExcludeFromPrototype] EntityRef TransformingEntity;

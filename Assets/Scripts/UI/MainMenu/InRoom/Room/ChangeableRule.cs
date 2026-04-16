@@ -210,9 +210,9 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
                 CommandChangeRules.Rules.TeamsEnabled => (bool) rules.TeamsEnabled,
                 //KKT Mod
                 CommandChangeRules.Rules.StarChasers => (bool) rules.GamemodeStarChasersEnabled,
-                CommandChangeRules.Rules.StarFreq => rules.starfrequency,
+                CommandChangeRules.Rules.StarFreq => rules.StarFrequency,
                 CommandChangeRules.Rules.CoinRunners => (bool) rules.GamemodeCoinRunnersEnabled,
-                CommandChangeRules.Rules.StarCoinFreq => rules.starcoinfrequency,
+                CommandChangeRules.Rules.StarCoinFreq => rules.StarcoinFrequency,
                 CommandChangeRules.Rules.Hazards => rules.HazardsEnabled,
                 _ => null
             };

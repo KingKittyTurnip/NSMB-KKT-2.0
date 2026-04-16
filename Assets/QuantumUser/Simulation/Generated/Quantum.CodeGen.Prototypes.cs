@@ -325,7 +325,7 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.Cauldron))]
   public unsafe partial class CauldronPrototype : ComponentPrototype<Quantum.Cauldron> {
     public AssetRef<EntityPrototype> ConvertInto;
-    public Byte ConvertToHazardId;
+    public Byte ConvertIntoHazardId;
     public FP Hitboxheight;
     partial void MaterializeUser(Frame frame, ref Quantum.Cauldron result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
@@ -335,7 +335,7 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Cauldron result, in PrototypeMaterializationContext context = default) {
         result.ConvertInto = this.ConvertInto;
-        result.ConvertToHazardId = this.ConvertToHazardId;
+        result.ConvertIntoHazardId = this.ConvertIntoHazardId;
         result.Hitboxheight = this.Hitboxheight;
         MaterializeUser(frame, ref result, in context);
     }
@@ -414,7 +414,6 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.CoinItem))]
   public unsafe partial class CoinItemPrototype : ComponentPrototype<Quantum.CoinItem> {
     public AssetRef<CoinItemAsset> Scriptable;
-    public UInt16 Lifetime;
     partial void MaterializeUser(Frame frame, ref Quantum.CoinItem result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.CoinItem component = default;
@@ -423,7 +422,6 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.CoinItem result, in PrototypeMaterializationContext context = default) {
         result.Scriptable = this.Scriptable;
-        result.Lifetime = this.Lifetime;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -592,14 +590,26 @@ namespace Quantum.Prototypes {
     public AssetRef<GamemodeAsset> Gamemode;
     public QBoolean GamemodeStarChasersEnabled;
     public Int32 StarsToWin;
-    public Int32 starfrequency;
+    public Byte StarFrequency;
     public QBoolean GamemodeCoinRunnersEnabled;
-    public Int32 starcoinfrequency;
+    public Byte StarcoinFrequency;
     public QBoolean GamemodeBalloonBattleEnabled;
     public Byte MaxBalloons;
     public QBoolean GamemodeBombchasersEnabled;
     public Int32 CoinsForPowerup;
+    [AllocateOnComponentAdded()]
+    [FreeOnComponentRemoved()]
+    [DynamicCollectionAttribute()]
+    public Quantum.Prototypes.ItemListPrototype[] Items = {};
     public QBoolean HazardsEnabled;
+    public Byte MaxHazards;
+    public Byte HazardFrequency;
+    public FP HeftyPercentage;
+    public Int32 HazardLifetime;
+    [AllocateOnComponentAdded()]
+    [FreeOnComponentRemoved()]
+    [DynamicCollectionAttribute()]
+    public Quantum.Prototypes.HazardListPrototype[] Hazards = {};
     public Int32 Lives;
     public Int32 TimerMinutes;
     public QBoolean TeamsEnabled;
@@ -610,14 +620,38 @@ namespace Quantum.Prototypes {
         result.Gamemode = this.Gamemode;
         result.GamemodeStarChasersEnabled = this.GamemodeStarChasersEnabled;
         result.StarsToWin = this.StarsToWin;
-        result.starfrequency = this.starfrequency;
+        result.StarFrequency = this.StarFrequency;
         result.GamemodeCoinRunnersEnabled = this.GamemodeCoinRunnersEnabled;
-        result.starcoinfrequency = this.starcoinfrequency;
+        result.StarcoinFrequency = this.StarcoinFrequency;
         result.GamemodeBalloonBattleEnabled = this.GamemodeBalloonBattleEnabled;
         result.MaxBalloons = this.MaxBalloons;
         result.GamemodeBombchasersEnabled = this.GamemodeBombchasersEnabled;
         result.CoinsForPowerup = this.CoinsForPowerup;
+        if (this.Items.Length == 0) {
+          result.Items = default;
+        } else {
+          var list = frame.AllocateList(out result.Items, this.Items.Length);
+          for (int i = 0; i < this.Items.Length; ++i) {
+            Quantum.ItemList tmp = default;
+            this.Items[i].Materialize(frame, ref tmp, in context);
+            list.Add(tmp);
+          }
+        }
         result.HazardsEnabled = this.HazardsEnabled;
+        result.MaxHazards = this.MaxHazards;
+        result.HazardFrequency = this.HazardFrequency;
+        result.HeftyPercentage = this.HeftyPercentage;
+        result.HazardLifetime = this.HazardLifetime;
+        if (this.Hazards.Length == 0) {
+          result.Hazards = default;
+        } else {
+          var list = frame.AllocateList(out result.Hazards, this.Hazards.Length);
+          for (int i = 0; i < this.Hazards.Length; ++i) {
+            Quantum.HazardList tmp = default;
+            this.Hazards[i].Materialize(frame, ref tmp, in context);
+            list.Add(tmp);
+          }
+        }
         result.Lives = this.Lives;
         result.TimerMinutes = this.TimerMinutes;
         result.TeamsEnabled = this.TeamsEnabled;
@@ -709,6 +743,41 @@ namespace Quantum.Prototypes {
         result.IPWSUntilGround = this.IPWSUntilGround;
         result.IPWSTime = this.IPWSTime;
         result.SpawningVelocityRange = this.SpawningVelocityRange;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.HazardList))]
+  public unsafe partial class HazardListPrototype : StructPrototype {
+    [MaxStringByteCount(62, "Unicode")]
+    public string Name;
+    public AssetRef<EntityPrototype> HazardPrototype;
+    public Byte Team;
+    public QBoolean Hefty;
+    public QBoolean SpawnRandom;
+    public QBoolean SpawnFridge;
+    [AllocateOnComponentAdded()]
+    [FreeOnComponentRemoved()]
+    [DynamicCollectionAttribute()]
+    public Byte[] Extra = {};
+    partial void MaterializeUser(Frame frame, ref Quantum.HazardList result, in PrototypeMaterializationContext context);
+    public void Materialize(Frame frame, ref Quantum.HazardList result, in PrototypeMaterializationContext context = default) {
+        PrototypeValidator.AssignQString(this.Name, 64, in context, out result.Name);
+        result.HazardPrototype = this.HazardPrototype;
+        result.Team = this.Team;
+        result.Hefty = this.Hefty;
+        result.SpawnRandom = this.SpawnRandom;
+        result.SpawnFridge = this.SpawnFridge;
+        if (this.Extra.Length == 0) {
+          result.Extra = default;
+        } else {
+          var list = frame.AllocateList(out result.Extra, this.Extra.Length);
+          for (int i = 0; i < this.Extra.Length; ++i) {
+            Byte tmp = default;
+            tmp = this.Extra[i];
+            list.Add(tmp);
+          }
+        }
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -833,6 +902,30 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.InvisibleBlock result, in PrototypeMaterializationContext context = default) {
         result.BumpTile = this.BumpTile;
         result.Tile = this.Tile;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.ItemList))]
+  public unsafe partial class ItemListPrototype : StructPrototype {
+    public Quantum.QEnum8<ItemChanceType> Chance;
+    [AllocateOnComponentAdded()]
+    [FreeOnComponentRemoved()]
+    [DynamicCollectionAttribute()]
+    public Quantum.Prototypes.PowerupDataPrototype[] Items = {};
+    partial void MaterializeUser(Frame frame, ref Quantum.ItemList result, in PrototypeMaterializationContext context);
+    public void Materialize(Frame frame, ref Quantum.ItemList result, in PrototypeMaterializationContext context = default) {
+        result.Chance = this.Chance;
+        if (this.Items.Length == 0) {
+          result.Items = default;
+        } else {
+          var list = frame.AllocateList(out result.Items, this.Items.Length);
+          for (int i = 0; i < this.Items.Length; ++i) {
+            Quantum.PowerupData tmp = default;
+            this.Items[i].Materialize(frame, ref tmp, in context);
+            list.Add(tmp);
+          }
+        }
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -1160,6 +1253,35 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Powerup result, in PrototypeMaterializationContext context = default) {
         result.FacingRight = this.FacingRight;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.PowerupData))]
+  public unsafe partial class PowerupDataPrototype : StructPrototype {
+    [MaxStringByteCount(62, "Unicode")]
+    public string Name;
+    public AssetRef<EntityPrototype> PowerupPrototype;
+    public Byte Team;
+    [AllocateOnComponentAdded()]
+    [FreeOnComponentRemoved()]
+    [DynamicCollectionAttribute()]
+    public Byte[] Extra = {};
+    partial void MaterializeUser(Frame frame, ref Quantum.PowerupData result, in PrototypeMaterializationContext context);
+    public void Materialize(Frame frame, ref Quantum.PowerupData result, in PrototypeMaterializationContext context = default) {
+        PrototypeValidator.AssignQString(this.Name, 64, in context, out result.Name);
+        result.PowerupPrototype = this.PowerupPrototype;
+        result.Team = this.Team;
+        if (this.Extra.Length == 0) {
+          result.Extra = default;
+        } else {
+          var list = frame.AllocateList(out result.Extra, this.Extra.Length);
+          for (int i = 0; i < this.Extra.Length; ++i) {
+            Byte tmp = default;
+            tmp = this.Extra[i];
+            list.Add(tmp);
+          }
+        }
         MaterializeUser(frame, ref result, in context);
     }
   }

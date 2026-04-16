@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using Quantum.Collections;
 using Quantum.Physics2D;
 
 namespace Quantum {
@@ -270,16 +271,16 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, int index) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out BigStar* bigstar)) {
                 return;
             }
 
-            var hazardata = f.FindAsset(f.SimulationConfig.CurrentHazards).HazardGameData.HazardDatas[index];
+            var specialValues = f.ResolveList(spawnData);
 
             //Set Sturdy
-            bigstar->IsStationary = hazardata.SpecialValues[0].BaseValue == 1;
+            bigstar->IsStationary = specialValues[0] == 1;
             f.Unsafe.GetPointer<PhysicsObject>(thisEntity)->DisableCollision = bigstar->IsStationary;
             if (!bigstar->IsStationary) {
                 var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
