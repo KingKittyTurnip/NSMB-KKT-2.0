@@ -18,6 +18,9 @@ MonoBehaviour:
       Value: 425424764972781941
   Rules:
     BaseRulesList:
+    - Name: Default
+      Description: Collect The Stars, Use powerups ya get and hazards you find to
+        your advantage!
       DefaultRules:
         AdvancedLobby:
           Value: 0
@@ -30,13 +33,371 @@ MonoBehaviour:
         GamemodeStarChasersEnabled:
           Value: 1
         StarsToWin: 15
+        StarFrequency: 10
+        GamemodeCoinRunnersEnabled:
+          Value: 0
+        StarcoinFrequency: 10
+        GamemodeBalloonBattleEnabled:
+          Value: 0
+        MaxBalloons: 10
+        GamemodeBombchasersEnabled:
+          Value: 0
+        CoinsForPowerup: 5
+        Items:
+        - Chance:
+            Value: 0
+          Items:
+          - Name: Mini Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1414434856952255942
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 1
+          Items: []
+        - Chance:
+            Value: 2
+          Items:
+          - Name: FireFlower
+            PowerupPrototype:
+              Id:
+                Value: 1349070666859566638
+            Team: 255
+            Extra: 
+          - Name: BlueShell
+            PowerupPrototype:
+              Id:
+                Value: 1466930856010351358
+            Team: 255
+            Extra: 
+          - Name: IceFlower
+            PowerupPrototype:
+              Id:
+                Value: 1524544283524633813
+            Team: 255
+            Extra: 
+          - Name: Hammer
+            PowerupPrototype:
+              Id:
+                Value: 1472665878288241371
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 3
+          Items:
+          - Name: Starman
+            PowerupPrototype:
+              Id:
+                Value: 1502268950446962426
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 4
+          Items:
+          - Name: Metal Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1313060240537942267
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 5
+          Items:
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1268531089014898302
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 6
+          Items:
+          - Name: Propeller Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1286010981056643553
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 7
+          Items:
+          - Name: Mega Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1300211052819551813
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 8
+          Items: []
+        - Chance:
+            Value: 9
+          Items: []
+        - Chance:
+            Value: 10
+          Items: []
+        HazardsEnabled:
+          Value: 1
+        MaxHazards: 10
+        HazardFrequency: 10
+        HeftyPercentage:
+          RawValue: 7864
+        HazardLifetime: 80
+        Hazards:
+        - Name: Baseball
+          HazardPrototype:
+            Id:
+              Value: 1405620265549088569
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Heavystone
+          HazardPrototype:
+            Id:
+              Value: 1531969226459579775
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1278623128394802359
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Pow
+          HazardPrototype:
+            Id:
+              Value: 1337602123896873055
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        - Name: Pow
+          HazardPrototype:
+            Id:
+              Value: 1337602123896873055
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 010000
+        - Name: Freezie
+          HazardPrototype:
+            Id:
+              Value: 1349535369867306075
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 00
+        - Name: Propeller Block
+          HazardPrototype:
+            Id:
+              Value: 1519453281481461233
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Bill Block
+          HazardPrototype:
+            Id:
+              Value: 1523487431609673123
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Cannon Box
+          HazardPrototype:
+            Id:
+              Value: 1358951826669536181
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Coin Box
+          HazardPrototype:
+            Id:
+              Value: 1407489288256842837
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Chain Post
+          HazardPrototype:
+            Id:
+              Value: 1266191120316739523
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 00ff
+        - Name: Lemmy's Ball
+          HazardPrototype:
+            Id:
+              Value: 1381489562479131125
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Tanoomba
+          HazardPrototype:
+            Id:
+              Value: 1331816873224772261
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 0000
+        - Name: Spinpipe
+          HazardPrototype:
+            Id:
+              Value: 1341125926870955329
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        - Name: Fan Thing
+          HazardPrototype:
+            Id:
+              Value: 1368433557836402488
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        - Name: Voidwall
+          HazardPrototype:
+            Id:
+              Value: 1528374188268676239
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 00
+        - Name: Tornado
+          HazardPrototype:
+            Id:
+              Value: 1360934193958261155
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Starball
+          HazardPrototype:
+            Id:
+              Value: 1301824237093034110
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 00
+        - Name: Conversion Cauldron
+          HazardPrototype:
+            Id:
+              Value: 1516621902257113064
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 00
+        Lives: 0
+        TimerMinutes: 0
+        TeamsEnabled:
+          Value: 0
+    - Name: Bouncy House
+      Description: Try to collect the stars while everything is flying everywhere!
+      DefaultRules:
+        AdvancedLobby:
+          Value: 1
+        Stage:
+          Id:
+            Value: 438935048561577377
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        GamemodeStarChasersEnabled:
+          Value: 1
+        StarsToWin: 30
         StarFrequency: 0
         GamemodeCoinRunnersEnabled:
           Value: 0
         StarcoinFrequency: 0
         GamemodeBalloonBattleEnabled:
           Value: 0
-        MaxBalloons: 5
+        MaxBalloons: 0
         GamemodeBombchasersEnabled:
           Value: 0
         CoinsForPowerup: 1
@@ -50,72 +411,12 @@ MonoBehaviour:
         - Chance:
             Value: 2
           Items:
-          - Name: Fireflower
+          - Name: Mushroom
             PowerupPrototype:
               Id:
-                Value: 1278623128394802359
-            Team: 255
+                Value: 1268531089014898302
+            Team: 0
             Extra: 
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1531969226459579775
-            Team: 255
-            Extra: 
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1337602123896873055
-            Team: 255
-            Extra: 000000
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1349535369867306075
-            Team: 255
-            Extra: 
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1405620265549088569
-            Team: 255
-            Extra: 
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1523487431609673123
-            Team: 255
-            Extra: 
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1358951826669536181
-            Team: 255
-            Extra: 
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1266191120316739523
-            Team: 255
-            Extra: 00ff
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1407489288256842837
-            Team: 255
-            Extra: 
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1519453281481461233
-            Team: 255
-            Extra: 
-          - Name: Fireflower
-            PowerupPrototype:
-              Id:
-                Value: 1337602123896873055
-            Team: 255
-            Extra: 010000
         - Chance:
             Value: 3
           Items: []
@@ -141,29 +442,77 @@ MonoBehaviour:
             Value: 10
           Items: []
         HazardsEnabled:
-          Value: 1
-        MaxHazards: 0
-        HazardFrequency: 10
+          Value: 0
+        MaxHazards: 30
+        HazardFrequency: 1
         HeftyPercentage:
-          RawValue: 7864
-        HazardLifetime: 80
+          RawValue: 3277
+        HazardLifetime: 40
         Hazards:
-        - Name: HI I AM NOT BOB
+        - Name: Tornado
           HazardPrototype:
             Id:
-              Value: 1528374188268676239
+              Value: 1360934193958261155
           Team: 255
           Hefty:
             Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1368433557836402488
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 020000
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1368433557836402488
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 030000
+        - Name: LemmyBall
+          HazardPrototype:
+            Id:
+              Value: 1381489562479131125
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Cataquack
+          HazardPrototype:
+            Id:
+              Value: 1509128645920081087
+          Team: 255
+          Hefty:
+            Value: 0
           SpawnRandom:
             Value: 1
           SpawnFridge:
             Value: 1
           Extra: 00
-        - Name: the squeal
+        - Name: Cataquack
           HazardPrototype:
             Id:
-              Value: 1337602123896873055
+              Value: 1509128645920081087
           Team: 255
           Hefty:
             Value: 0
@@ -171,11 +520,11 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 000000
-        - Name: the squeal
+          Extra: 01
+        - Name: Cataquack
           HazardPrototype:
             Id:
-              Value: 1349535369867306075
+              Value: 1509128645920081087
           Team: 255
           Hefty:
             Value: 0
@@ -183,130 +532,71 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 0000
+          Extra: 02
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1278623128394802359
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1278623128394802359
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1278623128394802359
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Chainpost
+          HazardPrototype:
+            Id:
+              Value: 1266191120316739523
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 0003
+        - Name: Chainpost
+          HazardPrototype:
+            Id:
+              Value: 1266191120316739523
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 0106
         Lives: 0
         TimerMinutes: 0
         TeamsEnabled:
           Value: 0
-      bigstarBase:
-        Name: Bigstar
-        entityPrototype:
-          Id:
-            Value: 1295981493910502871
-        Icon: {fileID: 0}
-        type: 8
-        categorey: 2097152
-        Teamable: 1
-        CanSpawnAsHazard: 1
-        Hefty: 1
-        SpawnChance: 11
-        BulbSpawnType: 3
-        BulbCooldown: 4
-        SpecialValues:
-        - ButtonName: IsStationary
-          ButtonType: 0
-          BaseValue: 1
-          ValueRange:
-            X: 0
-            Y: 0
-          valuenames: []
-      purplecoinBase:
-        Name: Purple Coin
-        entityPrototype:
-          Id:
-            Value: 1441489962698596482
-        Icon: {fileID: 0}
-        type: 8
-        categorey: 4194304
-        Teamable: 1
-        CanSpawnAsHazard: 1
-        Hefty: 0
-        SpawnChance: 2
-        BulbSpawnType: 0
-        BulbCooldown: 2
-        SpecialValues: []
-      starcoinBase:
-        Name: Starcoin
-        entityPrototype:
-          Id:
-            Value: 1349860830661540207
-        Icon: {fileID: 0}
-        type: 8
-        categorey: 4194304
-        Teamable: 1
-        CanSpawnAsHazard: 1
-        Hefty: 1
-        SpawnChance: 11
-        BulbSpawnType: 3
-        BulbCooldown: 4
-        SpecialValues: []
-      kingbobombBase:
-        Name: King Bobomb
-        entityPrototype:
-          Id:
-            Value: 0
-        Icon: {fileID: 0}
-        type: 8
-        categorey: 16777216
-        Teamable: 1
-        CanSpawnAsHazard: 1
-        Hefty: 0
-        SpawnChance: 11
-        BulbSpawnType: 3
-        BulbCooldown: 4
-        SpecialValues: []
-      loosecoinBase:
-        Name: Loose coin
-        entityPrototype:
-          Id:
-            Value: 1464681621458001613
-        Icon: {fileID: 0}
-        type: 8
-        categorey: 4194304
-        Teamable: 1
-        CanSpawnAsHazard: 1
-        Hefty: 0
-        SpawnChance: 11
-        BulbSpawnType: 0
-        BulbCooldown: 0
-        SpecialValues: []
-      oneupBase:
-        Name: 1up Mushroom
-        entityPrototype:
-          Id:
-            Value: 1365421339623582075
-        Icon: {fileID: 0}
-        type: 1
-        categorey: 1
-        Teamable: 1
-        CanSpawnAsHazard: 1
-        Hefty: 0
-        SpawnChance: 0
-        BulbSpawnType: 3
-        BulbCooldown: 4
-        SpecialValues: []
-      clockBase:
-        Name: Clock
-        entityPrototype:
-          Id:
-            Value: 1459869503240347747
-        Icon: {fileID: 0}
-        type: 8
-        categorey: 268435456
-        Teamable: 1
-        CanSpawnAsHazard: 1
-        Hefty: 0
-        SpawnChance: 0
-        BulbSpawnType: 2
-        BulbCooldown: 0
-        SpecialValues:
-        - ButtonName: Clock Type
-          ButtonType: 0
-          BaseValue: 0
-          ValueRange:
-            X: 0
-            Y: 2
-          valuenames: []
     ListOfAvalibleObjects:
     - Name: Mushroom
       entityPrototype:
@@ -461,7 +751,14 @@ MonoBehaviour:
       SpawnChance: 1
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Red Koopa
       entityPrototype:
         Id:
@@ -475,7 +772,14 @@ MonoBehaviour:
       SpawnChance: 1
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Blue Koopa
       entityPrototype:
         Id:
@@ -489,7 +793,14 @@ MonoBehaviour:
       SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 2
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Spiny
       entityPrototype:
         Id:
@@ -503,7 +814,14 @@ MonoBehaviour:
       SpawnChance: 1
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Bobomb
       entityPrototype:
         Id:
@@ -517,7 +835,27 @@ MonoBehaviour:
       SpawnChance: 1
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Spawn Type
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 2
+        valuenames:
+        - Spawns walking
+        - Spawns lit
+        - Spawns & Explodes on contact
+      - ButtonName: Is Nuke Bobomb
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames:
+        - Spawns walking
+        - Spawns lit
+        - Spawns & Explodes on contact
     - Name: Bullet Bill
       entityPrototype:
         Id:
@@ -559,21 +897,38 @@ MonoBehaviour:
       SpawnChance: 0
       BulbSpawnType: 1
       BulbCooldown: 2
-      SpecialValues: []
-    - Name: Baseball
+      SpecialValues:
+      - ButtonName: Spawns while spinning
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: Cataquack
       entityPrototype:
         Id:
-          Value: 1405620265549088569
+          Value: 1509128645920081087
       Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
+      type: 4
+      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 1
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Varient
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 3
+        valuenames:
+        - Basic Blue
+        - Ready Red
+        - Sturdy Green
     - Name: Iceblock
       entityPrototype:
         Id:
@@ -586,6 +941,27 @@ MonoBehaviour:
       Hefty: 1
       SpawnChance: 1
       BulbSpawnType: 0
+      BulbCooldown: 1
+      SpecialValues:
+      - ButtonName: Contains
+        ButtonType: 2
+        BaseValue: 255
+        ValueRange:
+          X: 0
+          Y: 0
+        valuenames: []
+    - Name: Baseball
+      entityPrototype:
+        Id:
+          Value: 1405620265549088569
+      Icon: {fileID: 0}
+      type: 2
+      categorey: 1024
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 1
+      BulbSpawnType: 1
       BulbCooldown: 1
       SpecialValues: []
     - Name: Heavy Stone
@@ -601,7 +977,14 @@ MonoBehaviour:
       SpawnChance: 2
       BulbSpawnType: 1
       BulbCooldown: 4
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Is Bluestone
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Springboard
       entityPrototype:
         Id:
@@ -615,7 +998,14 @@ MonoBehaviour:
       SpawnChance: 2
       BulbSpawnType: 1
       BulbCooldown: 1
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Is Squished
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Pow
       entityPrototype:
         Id:
@@ -629,7 +1019,24 @@ MonoBehaviour:
       SpawnChance: 2
       BulbSpawnType: 1
       BulbCooldown: 3
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Is Red Pow
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      - ButtonName: Spawn Type
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 2
+        valuenames:
+        - Spawns Pickupable
+        - Spawns & Explodes on contact
+        - Flung into the air, and then explodes on contact
     - Name: Freezie
       entityPrototype:
         Id:
@@ -643,7 +1050,14 @@ MonoBehaviour:
       SpawnChance: 3
       BulbSpawnType: 1
       BulbCooldown: 3
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Does PermaFrost
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Propeller block
       entityPrototype:
         Id:
@@ -713,7 +1127,21 @@ MonoBehaviour:
       SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Chain Is Long
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      - ButtonName: Contains
+        ButtonType: 2
+        BaseValue: 255
+        ValueRange:
+          X: 0
+          Y: 0
+        valuenames: []
     - Name: Lemmy's ball
       entityPrototype:
         Id:
@@ -755,7 +1183,24 @@ MonoBehaviour:
       SpawnChance: 9
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Transform Type
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 2
+        valuenames:
+        - Anything that's in the match
+        - Anything it possibly could
+        - '[3rd option] somthing in particular'
+      - ButtonName: Transform When Spawned
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Spinpipe
       entityPrototype:
         Id:
@@ -769,7 +1214,39 @@ MonoBehaviour:
       SpawnChance: 3
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Type
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 0
+        valuenames:
+        - Normal - shifts side to side
+        - Broken - stays on one side
+        - Sturdy - shifts side to side, unbreakable
+      - ButtonName: Start Facing
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 2
+        valuenames:
+        - Random
+        - Left
+        - Right
+      - ButtonName: Turn Time
+        ButtonType: 1
+        BaseValue: 3
+        ValueRange:
+          X: 0
+          Y: 4
+        valuenames:
+        - 1 second
+        - 3 seconds
+        - 5 seconds
+        - 10 seconds
+        - 30 seconds
     - Name: Fan thing
       entityPrototype:
         Id:
@@ -783,7 +1260,41 @@ MonoBehaviour:
       SpawnChance: 3
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Type
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 5
+        valuenames:
+        - Normal - blows side to side
+        - Broken - blows in one direction
+        - Flipped Over - blows upwards
+        - Sturdy - blows side to side, unbreakable
+        - Sturdy & Broken - blows in one direction, unbreakable
+      - ButtonName: Start Facing
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 2
+        valuenames:
+        - Random
+        - Left
+        - Right
+      - ButtonName: Turn Time
+        ButtonType: 1
+        BaseValue: 3
+        ValueRange:
+          X: 0
+          Y: 4
+        valuenames:
+        - 1 second
+        - 3 seconds
+        - 5 seconds
+        - 10 seconds
+        - 30 seconds
     - Name: Voidwall
       entityPrototype:
         Id:
@@ -797,7 +1308,14 @@ MonoBehaviour:
       SpawnChance: 3
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: 'Spawn Wall Immediately '
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Bowsershell
       entityPrototype:
         Id:
@@ -839,7 +1357,15 @@ MonoBehaviour:
       SpawnChance: 4
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Contains
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 0
+        valuenames:
+        - Bigstar
     - Name: Conversion Cauldron
       entityPrototype:
         Id:
@@ -853,7 +1379,20 @@ MonoBehaviour:
       SpawnChance: 3
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Create Boss
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 5
+        valuenames:
+        - Random
+        - Bowser - King of koopas
+        - King Boo - king of boos
+        - Petey Piranha - that one guy with pants
+        - King Whomp - king of rocks
+        - Dry Bowser - king of dry
     - Name: Bowser
       entityPrototype:
         Id:
@@ -910,3 +1449,122 @@ MonoBehaviour:
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
+    bigstarBase:
+      Name: Bigstar
+      entityPrototype:
+        Id:
+          Value: 1295981493910502871
+      Icon: {fileID: 0}
+      type: 8
+      categorey: 2097152
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 1
+      SpawnChance: 11
+      BulbSpawnType: 3
+      BulbCooldown: 4
+      SpecialValues:
+      - ButtonName: IsStationary
+        ButtonType: 0
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 0
+        valuenames: []
+    purplecoinBase:
+      Name: Purple Coin
+      entityPrototype:
+        Id:
+          Value: 1441489962698596482
+      Icon: {fileID: 0}
+      type: 8
+      categorey: 4194304
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 2
+      BulbSpawnType: 0
+      BulbCooldown: 2
+      SpecialValues: []
+    starcoinBase:
+      Name: Starcoin
+      entityPrototype:
+        Id:
+          Value: 1349860830661540207
+      Icon: {fileID: 0}
+      type: 8
+      categorey: 4194304
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 1
+      SpawnChance: 11
+      BulbSpawnType: 3
+      BulbCooldown: 4
+      SpecialValues: []
+    kingbobombBase:
+      Name: King Bobomb
+      entityPrototype:
+        Id:
+          Value: 0
+      Icon: {fileID: 0}
+      type: 8
+      categorey: 16777216
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 11
+      BulbSpawnType: 3
+      BulbCooldown: 4
+      SpecialValues: []
+    loosecoinBase:
+      Name: Loose coin
+      entityPrototype:
+        Id:
+          Value: 1464681621458001613
+      Icon: {fileID: 0}
+      type: 8
+      categorey: 4194304
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 11
+      BulbSpawnType: 0
+      BulbCooldown: 0
+      SpecialValues: []
+    oneupBase:
+      Name: 1up Mushroom
+      entityPrototype:
+        Id:
+          Value: 1365421339623582075
+      Icon: {fileID: 0}
+      type: 1
+      categorey: 1
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 0
+      BulbSpawnType: 3
+      BulbCooldown: 4
+      SpecialValues: []
+    clockBase:
+      Name: Clock
+      entityPrototype:
+        Id:
+          Value: 1459869503240347747
+      Icon: {fileID: 0}
+      type: 8
+      categorey: 268435456
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 0
+      BulbSpawnType: 2
+      BulbCooldown: 0
+      SpecialValues:
+      - ButtonName: Clock Type
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 2
+        valuenames: []

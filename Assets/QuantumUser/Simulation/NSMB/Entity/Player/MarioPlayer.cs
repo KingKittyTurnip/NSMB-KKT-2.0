@@ -101,7 +101,7 @@ namespace Quantum {
         public readonly byte? GetTeam(Frame f) {
             var data = QuantumUtils.GetPlayerData(f, PlayerRef);
             if (data == null) {
-                return (byte) f.RNG->Next(5, 10);
+                return IsBot ? BotTeam : (byte) 0;
             } else {
                 return (byte) (data->RealTeam % Constants.MaxPlayers);
             }

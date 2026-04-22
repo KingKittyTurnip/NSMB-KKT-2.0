@@ -17,6 +17,9 @@ global {
 
 	int WinningTeam;
 	bool HasWinner;
+
+	
+	GameRules ClipboardRules;
 }
 
 struct PlayerInformation {

@@ -4,6 +4,7 @@ global {
 }
 
 component Spinpipe {
+	bool Sturdy;
 	bool Broken;
 	
 	[ExcludeFromPrototype] bool Right;
@@ -19,6 +20,7 @@ event SpinpipeLand {
 }
 
 event SpinpipeDestroy {
+	Frame f;
 	EntityRef Entity;
 	bool Right;
 }

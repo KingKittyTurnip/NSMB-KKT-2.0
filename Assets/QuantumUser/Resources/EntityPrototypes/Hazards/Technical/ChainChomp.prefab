@@ -54,6 +54,8 @@ GameObject:
   - component: {fileID: 3527695474151798566}
   - component: {fileID: 2844971730105225151}
   - component: {fileID: 8024543461919347038}
+  - component: {fileID: 8841061529745663616}
+  - component: {fileID: -6506126018249335485}
   m_Layer: 19
   m_Name: ChainChomp
   m_TagString: Untagged
@@ -652,6 +654,47 @@ MonoBehaviour:
   Bark: {fileID: 8300000, guid: 927e0c4d155e2c745ae4171697f387e7, type: 3}
   LaunchParticle: {fileID: 8258044260612326560, guid: ee148df9aadf7e24db61ed3e5ac86b29,
     type: 3}
+--- !u!114 &8841061529745663616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7523289063499453450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 6293087156269112722}
+  moveBehindBlocksRoot: {fileID: 6293087156269112722}
+  renderers:
+  - {fileID: 2828458635280816288}
+  - {fileID: 8693187088360895450}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: 4
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 1
+  sfx: {fileID: 5674404523704379184}
+  koopaSpawnParticles: {fileID: 0}
+--- !u!114 &-6506126018249335485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7523289063499453450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 330575751736567297
 --- !u!1001 &5188399925096874969
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -751,9 +794,21 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 5188399925096874969}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &2828458635280816288 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1206874426333947015, guid: f6056fa87970c654783a2c808732ef68,
+    type: 3}
+  m_PrefabInstance: {fileID: 5188399925096874969}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5731498218872464434 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f6056fa87970c654783a2c808732ef68,
+    type: 3}
+  m_PrefabInstance: {fileID: 5188399925096874969}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8693187088360895450 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3505068965197213699, guid: f6056fa87970c654783a2c808732ef68,
     type: 3}
   m_PrefabInstance: {fileID: 5188399925096874969}
   m_PrefabAsset: {fileID: 0}

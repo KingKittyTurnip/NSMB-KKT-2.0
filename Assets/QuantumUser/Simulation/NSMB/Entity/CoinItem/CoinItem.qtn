@@ -11,6 +11,9 @@ component CoinItem {
 	[ExcludeFromPrototype] byte SpawnAnimationFrames;
 	[ExcludeFromPrototype] byte IgnorePlayerFrames;
 	[ExcludeFromPrototype] EntityRef ParentMarioPlayer;
+
+	//KKT Mod
+	[ExcludeFromPrototype] bool Finished;
 }
 
 signal OnCoinItemSpawnEnded(EntityRef entity);

@@ -29,6 +29,5 @@ namespace Quantum {
         public AssetRef<GamemodeAsset> StarChasers;
         public AssetRef<GamemodeAsset> CoinRunners, BalloonBattle, BombChasers;
         public AssetRef<RulesBaser> BaseRules;
-        public AssetRef<CurrentHazards> CurrentHazards;
     }
 }

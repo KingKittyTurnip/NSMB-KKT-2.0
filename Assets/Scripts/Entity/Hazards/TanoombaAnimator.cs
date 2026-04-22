@@ -5,6 +5,9 @@ using UnityEngine;
 using NSMB.Utilities.Extensions;
 using static NSMB.Utilities.QuantumViewUtils;
 using NSMB.Utilities;
+using NSMB.Utilities.Components;
+using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
+using static LoopingMusicData;
 
 public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
 
@@ -14,9 +17,6 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
     [SerializeField] private AudioSource sfx;
     [SerializeField] private AudioClip laugh;
     [SerializeField] private GameObject PoofParticle;
-    [Header("Have Them In The Same Order As The States In Tanoomba.qtn")]
-    [SerializeField] private GameObject[] TransformModels;
-    [SerializeField] private Animator[] TransformModelsAnimator;
 
     private MaterialPropertyBlock materialBlock;
     public SkinnedMeshRenderer renderer;
@@ -28,11 +28,23 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
 
     private static readonly int ParamEyeState = Shader.PropertyToID("_EyeType");
 
+    [Header("TransformModels")]
+    [SerializeField] private GameObject Leaf;
+    [SerializeField] private SpriteRenderer Tail;
+    [SerializeField] private LegacyAnimateSpriteRenderer SpriteModel;
+    [SerializeField] private GameObject[] TransformModels;
+    [Space]
+    [SerializeField] private AudioClip[] UniqueSound;
+    [SerializeField] private GameObject[] UniqueParticle;
+    private TanoombaTransformationAsset.TanoombaFormFlipType FlipType;
+
     public void Start() {
         QuantumEvent.Subscribe<EventTanoombaAttack>(this, OnAttack);
         QuantumEvent.Subscribe<EventTanoombaFlee>(this, OnFlee);
         QuantumEvent.Subscribe<EventTanoombaLMAO>(this, OnLMAO);
         QuantumEvent.Subscribe<EventTanoombaPoof>(this, OnTanoombaPoof);
+        QuantumEvent.Subscribe<EventTanoombaTransform>(this, OnTanoombaTransform);
+        QuantumEvent.Subscribe<EventTanoombaPlaySoundType>(this, OnTanoombaUniquSound);
 
         QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward, onlyIfActiveAndEnabled: true);
         QuantumEvent.Subscribe<EventPlayBumpSound>(this, OnPlayBumpSound, FilterOutReplayFastForward, onlyIfActiveAndEnabled: true);
@@ -44,22 +56,28 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
             return;
         }
 
+        if (!f.Exists(EntityRef)) {
+            return;
+        }
+
         //Vars
         var tanoomba = f.Unsafe.GetPointer<Tanoomba>(EntityRef);
         var enemy = f.Unsafe.GetPointer<Enemy>(EntityRef);
         var hazard = f.Unsafe.GetPointer<Hazard>(EntityRef);
         var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
+        var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
+
+        Main.speed = freezable->IsFrozen(f) ? 0 : 1;
 
         //Model Showings
         Models.SetActive(enemy->IsActive);
         Main.gameObject.SetActive(tanoomba->State != TanoombaState.Searching && tanoomba->State != TanoombaState.Transformed);
-        for (int i = 0; i < TransformModels.Length; i++) {
-            bool activeform = tanoomba->Form == (TanoombaFormState) i;
-            TransformModels[i].SetActive(activeform);
-            if (activeform && TransformModelsAnimator[i] != null)
-                TransformModelsAnimator[i].SetInteger("Variant", tanoomba->FormVariant);
-        }
-        Models.transform.localScale = new Vector3(Main.isActiveAndEnabled ? 1 : (enemy->FacingRight ? -1 : 1), 1, 1);
+        Models.transform.localScale = FlipType switch {
+            TanoombaTransformationAsset.TanoombaFormFlipType.AlwaysRight => new Vector3(-1, 1, 1),
+            TanoombaTransformationAsset.TanoombaFormFlipType.FromFacing => new Vector3(enemy->FacingRight ? 1 : -1, 1, 1),
+            TanoombaTransformationAsset.TanoombaFormFlipType.FromFacingReversed => new Vector3(enemy->FacingRight ? -1 : 1, 1, 1),
+            TanoombaTransformationAsset.TanoombaFormFlipType.AlwaysLeft or _ => new Vector3(1, 1, 1),
+        };
         Tears.gameObject.SetActive(Main.GetCurrentAnimatorStateInfo(0).IsName("LMAO"));
 
         //rotation
@@ -136,6 +154,57 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
             return;
         }
         Instantiate(PoofParticle, transform.position, Quaternion.identity);
+    }
+    private unsafe void OnTanoombaTransform(EventTanoombaTransform e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+        if (e.FormId == -1) {
+            FlipType = TanoombaTransformationAsset.TanoombaFormFlipType.AlwaysLeft;
+            //disable all models
+            Leaf.SetActive(false);
+            Tail.gameObject.SetActive(false);
+            SpriteModel.gameObject.SetActive(false);
+            foreach (var model in TransformModels) {
+                model.SetActive(false);
+            }
+        } else {
+            var modelData = e.f.FindAsset(e.f.Unsafe.GetPointer<Tanoomba>(e.Entity)->FormData).ListOfTransforms[e.FormId].ModelData;
+
+            FlipType = modelData.FlipType;
+
+            //Enabled Leaf/Tail
+            if (modelData.UsesLeaf) {
+                Leaf.transform.localPosition = modelData.LeafLocation;
+            }
+            if (modelData.UsesTail) {
+                Tail.transform.localPosition = modelData.TailLocation;
+                Tail.flipX = FlipType != TanoombaTransformationAsset.TanoombaFormFlipType.FromFacingReversed;
+            }
+            Leaf.SetActive(modelData.UsesLeaf);
+            Tail.gameObject.SetActive(modelData.UsesTail);
+
+            //enable sprites
+            SpriteModel.gameObject.transform.localPosition = modelData.Offset;
+            SpriteModel.gameObject.SetActive(modelData.sprites.Length > 0);
+            SpriteModel.frames = modelData.sprites;
+            SpriteModel.fps = modelData.FPS;
+
+            //enable model
+            if (modelData.ModelId != -1) {
+                TransformModels[modelData.ModelId].SetActive(true);
+            }
+        }
+    }
+
+    private unsafe void OnTanoombaUniquSound(EventTanoombaPlaySoundType e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+        if (UniqueSound[e.SoundId] != null)
+            sfx.PlayOneShot(UniqueSound[e.SoundId]);
+        if (UniqueParticle[e.SoundId] != null)
+            Instantiate(UniqueParticle[e.SoundId], transform.position, Quaternion.identity);
     }
 
     private void OnPlayBumpSound(EventPlayBumpSound e) {

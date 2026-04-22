@@ -69,6 +69,9 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
         var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
         var transform = f.Unsafe.GetPointer<Transform2D>(EntityRef);
         var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
+
+        Animator.speed = freezable->IsFrozen(f) ? 0 : 1;
+
         bool IsSucking = kingboo->State == KingBooState.Sucking && kingboo->ReusableTimer == 0;
         SuckTimer = Mathf.Clamp01(SuckTimer + ((IsSucking ? 2 : -2) * Time.deltaTime));
 

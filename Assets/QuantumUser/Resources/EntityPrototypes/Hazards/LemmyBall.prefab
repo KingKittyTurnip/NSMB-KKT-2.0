@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: -3897358826683353975}
   - component: {fileID: 5945759445755647941}
   - component: {fileID: 3401964675710995153}
+  - component: {fileID: -8917653070352379718}
+  - component: {fileID: -5326818768159990358}
   m_Layer: 19
   m_Name: LemmyBall
   m_TagString: Powerup
@@ -611,6 +613,46 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-8917653070352379718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 330575751736567297
+--- !u!114 &-5326818768159990358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 3783262559728596419}
+  moveBehindBlocksRoot: {fileID: 3783262559728596419}
+  renderers:
+  - {fileID: 4392080273143640207}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: 4
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 1
+  sfx: {fileID: 4207910641862185911}
+  koopaSpawnParticles: {fileID: 0}
 --- !u!1 &7838035792991526948
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,6 +783,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cf71568d9553e44683c11b05607aab6, type: 3}
+--- !u!137 &4392080273143640207 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8489965453932020925, guid: 4cf71568d9553e44683c11b05607aab6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5269676819666105394}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5668657922435159001 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4cf71568d9553e44683c11b05607aab6,

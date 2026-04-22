@@ -6,7 +6,7 @@ using System;
 namespace Quantum {
     public unsafe class MarioPlayerSystem : SystemMainThreadEntityFilter<MarioPlayer, MarioPlayerSystem.Filter>, ISignalOnComponentRemoved<Projectile>,
         ISignalOnGameStarting, ISignalOnBobombExplodeEntity, ISignalOnTryLiquidSplash, ISignalOnEntityBumped, ISignalOnBeforeInteraction,
-        ISignalOnPlayerRemoved, ISignalOnIceBlockBroken, ISignalOnStageReset, ISignalOnEntityChangeUnderwaterState, ISignalOnEntityFreeze {
+        ISignalOnPlayerRemoved, ISignalOnIceBlockBroken, ISignalOnStageReset, ISignalOnEntityChangeUnderwaterState, ISignalOnEntityFreeze, ISignalOnEntityChangeFlipPannelState {
 
         private static readonly FPVector2 DeathUpForce = new FPVector2(0, FP.FromString("6.5"));
         private static readonly FPVector2 DeathUpGravity = new FPVector2(0, FP.FromString("-12.75"));
@@ -475,7 +475,7 @@ namespace Quantum {
             bool topSpeed = FPMath.Abs(physicsObject->Velocity.X) >= (physics.WalkMaxVelocity[physics.RunSpeedStage] - FP._0_10);
             bool canSpecialJump =
                 topSpeed
-                && !inputs.Down.IsDown
+                && !inputs.Down.IsDown && !mario->JumpHeld
                 && mario->CurrentPowerupState != PowerupState.MegaMushroom
                 && (doJump || (mario->DoEntityBounce && inputs.Jump.IsDown))
                 && mario->JumpState != JumpState.None
@@ -593,8 +593,11 @@ namespace Quantum {
                 FP[] accArr = swimming ? physics.GravitySwimmingAcceleration : (mega ? physics.GravityMegaAcceleration : (mini ? physics.GravityMiniAcceleration : physics.GravityAcceleration));
                 FP acc = accArr[stage];
 
+                if (physicsObject->Velocity.Y < 0)
+                    mario->JumpHeld = false;
+
                 ref var inputs = ref filter.Inputs;
-                if (stage == 0 && !(inputs.Jump.IsDown || swimming || (!swimming && mario->ForceJumpTimer > 0))) {
+                if (stage == 0 && !(inputs.Jump.IsDown || mario->JumpHeld || swimming || (!swimming && mario->ForceJumpTimer > 0))) {
                     acc = accArr[^1];
                 }
 
@@ -2978,9 +2981,9 @@ namespace Quantum {
             }
             //play the starjump anim?
             if (gravinversed) {
-                transform->Position.Y += collider->Shape.Box.Extents.Y * 2;
+                transform->Position.Y += collider->Shape.Box.Extents.Y*2;
             } else {
-                transform->Position.Y -= collider->Shape.Box.Extents.Y * 2;
+                transform->Position.Y -= collider->Shape.Box.Extents.Y*2;
             }
         }
 

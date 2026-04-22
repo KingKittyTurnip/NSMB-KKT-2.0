@@ -4,6 +4,7 @@ component Starball {
 	
 	[ExcludeFromPrototype] byte JumpBufferFrames;
 	[ExcludeFromPrototype] byte CoyoteTimeFrames;
+	[ExcludeFromPrototype] FP CrashBuffer;
 
 	[ExcludeFromPrototype] EntityRef Rider;
 	[ExcludeFromPrototype] EntityRef Goal;

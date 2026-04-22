@@ -6,7 +6,11 @@ component ChainChomp {
 	[ExcludeFromPrototype] FP ReusableTimer;
 	[ExcludeFromPrototype] FPVector2 TargetPosition;
 	[ExcludeFromPrototype] FPVector2 PreviousPostPosition;
-	//[ExcludeFromPrototype] FP AttackDelayCounter;
+
+	[ExcludeFromPrototype] EntityRef AttackTarget;
+	
+	[ExcludeFromPrototype] EntityRef LastBumped;
+	[ExcludeFromPrototype] FP LastBumpedTimer;
 }
 
 enum ChainChompState : Byte {

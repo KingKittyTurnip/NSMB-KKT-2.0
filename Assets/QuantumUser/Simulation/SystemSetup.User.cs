@@ -34,6 +34,10 @@ namespace Quantum {
                     new BulletBillLauncherSystem(),
                     new BulletBillSystem(),
                     new BooSystem(),
+
+                      //KKT Mod
+                      new CataquackSystem(),
+
                     new ProjectileSystem(),
                     new CoinItemSystem(),
                     new PowerupSystem(),

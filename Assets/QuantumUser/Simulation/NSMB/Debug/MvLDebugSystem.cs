@@ -43,15 +43,14 @@ namespace Quantum {
                 }
                 if (f.Unsafe.TryGetPointer(newEntity, out CoinItem* coinItem)) {
                     coinItem->InitializePlayerSpawn(f, newEntity, marioEntity);
+                } else if (f.Unsafe.TryGetPointer(newEntity, out Hazard* hazard)) {
+                    hazard->IsHazard = true;
+                    f.Signals.InitializeHazard(newEntity, marioEntity, f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + (mario->FacingRight ? FPVector2.Right : FPVector2.Left), SpawnReason.Forced, new QListPtr<byte>());
+                    //hazard->IsActive = true;
                 }
                 if (f.Unsafe.TryGetPointer(newEntity, out Enemy* enemy)) {
                     enemy->FacingRight = mario->FacingRight;
                     enemy->IsDead = false;
-                }
-                if (f.Unsafe.TryGetPointer(newEntity, out Hazard* hazard)) {
-                    hazard->IsHazard = true;
-                    f.Signals.InitializeHazard(newEntity, marioEntity, f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + (mario->FacingRight ? FPVector2.Right : FPVector2.Left), SpawnReason.Forced, new QListPtr<byte>());
-                    //hazard->IsActive = true;
                 }
                 break;
             case DebugCommand.KillSelf:

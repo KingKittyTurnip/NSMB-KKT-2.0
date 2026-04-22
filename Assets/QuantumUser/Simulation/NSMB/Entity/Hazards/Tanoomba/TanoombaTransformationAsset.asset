@@ -1,0 +1,1548 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de9292b23705e33418629436f600457d, type: 3}
+  m_Name: TanoombaTransformationAsset
+  m_EditorClassIdentifier: Quantum.Simulation::Quantum.TanoombaTransformationAsset
+  Identifier:
+    Path: QuantumUser/Simulation/NSMB/Entity/Hazards/Tanoomba/TanoombaTransformationAsset
+    Guid:
+      Value: 423381094844750745
+  ListOfTransforms:
+  - Name: BigStar
+    SpawnType: 1
+    comparePrototype:
+      Id:
+        Value: 0
+    ChanceWeight:
+      RawValue: 65536
+    MoveData:
+      MovementType: 0
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: -4.5}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: 0
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 0
+      sprites: []
+      UsesWavey: 0
+      soundType: 0
+  - Name: Coin
+    SpawnType: 3
+    comparePrototype:
+      Id:
+        Value: 0
+    ChanceWeight:
+      RawValue: 65536
+    MoveData:
+      MovementType: 0
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 6
+      sprites:
+      - {fileID: -1338127518, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: 274142541, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -272818395, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: 2059736846, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Loose
+    SpawnType: 5
+    comparePrototype:
+      Id:
+        Value: 1464681621458001613
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -996508
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 0
+      Deceleration:
+        RawValue: 13107
+      BounceIsThrust: 0
+      Bounciness:
+        RawValue: 32768
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 6
+      sprites:
+      - {fileID: -1338127518, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: 274142541, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -272818395, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: 2059736846, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      UsesWavey: 0
+      soundType: 2
+  - Name: Koopa
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1379843889611026990
+    ChanceWeight:
+      RawValue: 65536
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1409024
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 376832
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 2
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 1
+      TailLocation: {x: -0.128, y: -0.141, z: 1}
+      ModelId: -1
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 12
+      sprites:
+      - {fileID: 1254869696, guid: dbd41633b1a7b504aa8c1f606333f9cc, type: 3}
+      - {fileID: -515341110, guid: dbd41633b1a7b504aa8c1f606333f9cc, type: 3}
+      - {fileID: -478387707, guid: dbd41633b1a7b504aa8c1f606333f9cc, type: 3}
+      - {fileID: -515341110, guid: dbd41633b1a7b504aa8c1f606333f9cc, type: 3}
+      UsesWavey: 0
+      soundType: 1
+  - Name: Goomba
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1487534197368722732
+    ChanceWeight:
+      RawValue: 65536
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1409024
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 57344
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 2
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 1
+      TailLocation: {x: -0.1, y: -0.141, z: 1}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 12
+      sprites:
+      - {fileID: -2665958366948368982, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
+      - {fileID: 6268277884297706374, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
+      - {fileID: 1329094052204966939, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
+      - {fileID: -2646936077272662393, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
+      - {fileID: 8044139085597164931, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
+      - {fileID: 7518829234646223683, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
+      - {fileID: 2147156700845412417, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
+      - {fileID: -1837141360104208851, guid: b455056ca00f84e48a8040f94ae8170d, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: RedKoopa
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1284729198758392799
+    ChanceWeight:
+      RawValue: 65536
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1409024
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 376832
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 2
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 1
+      TailLocation: {x: -0.128, y: -0.141, z: 1}
+      ModelId: -1
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 12
+      sprites:
+      - {fileID: -1933111441, guid: 60f25f7bee1a7f84c946884c48261f34, type: 3}
+      - {fileID: 1356332131, guid: 60f25f7bee1a7f84c946884c48261f34, type: 3}
+      - {fileID: 1458908674, guid: 60f25f7bee1a7f84c946884c48261f34, type: 3}
+      - {fileID: 1356332131, guid: 60f25f7bee1a7f84c946884c48261f34, type: 3}
+      UsesWavey: 0
+      soundType: 1
+  - Name: Blue Koopa
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1402622061657310969
+    ChanceWeight:
+      RawValue: 6554
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1409024
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 376832
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 2
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 1
+      TailLocation: {x: -0.128, y: -0.141, z: 1}
+      ModelId: -1
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 12
+      sprites:
+      - {fileID: -2095952090, guid: d273f5e6f069ba7439cb125550745e1b, type: 3}
+      - {fileID: -821959118, guid: d273f5e6f069ba7439cb125550745e1b, type: 3}
+      - {fileID: 1618289247, guid: d273f5e6f069ba7439cb125550745e1b, type: 3}
+      - {fileID: -821959118, guid: d273f5e6f069ba7439cb125550745e1b, type: 3}
+      UsesWavey: 0
+      soundType: 1
+  - Name: Bobomb
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1416226096290300185
+    ChanceWeight:
+      RawValue: 65536
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1409024
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 39322
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 3
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 1
+      TailLocation: {x: 0.08, y: -0.05, z: 1}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 30
+      sprites:
+      - {fileID: 950155298242298425, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -6315618056669527334, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 2977297280237847164, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 2760095745575714983, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -4715812653539990423, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -6875700398245287810, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 6362811921231362306, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -3211164115330130309, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 9223304853912322222, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -1206508018138923714, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 1329537037601255902, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 1157878513374669233, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -6845693091979638373, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -6222616200178481078, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 3670274235265251618, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -592905804621014201, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 6008743476786152582, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 1526233655619345319, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 8188069437071901937, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -1488431409006078131, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -3749643160952500216, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 3293644232708274117, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 5600812996514500215, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -5186710341907233292, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -253029523573202968, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -1125004672782416895, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -4445207227111268028, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -4828959785328893112, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 2222306304690641395, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: -8555813526183740387, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 4233090646143567117, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      - {fileID: 1333658631221271914, guid: 044577968aa8cbd42a6330af35c59d85, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Bullet Bill
+    SpawnType: 6
+    comparePrototype:
+      Id:
+        Value: 0
+    ChanceWeight:
+      RawValue: 65536
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1966080
+      TerminalVelocity:
+        RawValue: 0
+      RequiresGroundToAffectVelocity: 0
+      MaxSpeed:
+        RawValue: 98304
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 0
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 1
+    ModelData:
+      FlipType: 2
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 1
+      TailLocation: {x: -0.128, y: -0.141, z: 1}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 24
+      sprites:
+      - {fileID: 2801264589581574561, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -2818031222768422380, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 4334051271889305020, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 1478413778195064918, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 7191136249163539515, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -7521696274918527525, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -7106124364265648615, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -927170474769652834, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -996603885120511269, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 3406488099570981050, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 6313132055520808705, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -6732196475982872372, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -3615920736292080735, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 6087690775682358850, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -2199199328808334208, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -7356728388599353748, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -5605002149365405448, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 5493740106489136956, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -2847493920732427658, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 1395841122740822184, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -294499784271422418, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 1145148965077268566, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 4057679638165308187, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -6543140737029061705, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -4398283605932973991, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -6352226591004578681, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 3165505910097845299, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -7084923413941219917, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 3522223965041152537, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -1636464415318447411, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 2886525785126744720, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 2740354904297333526, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 1245065480202249198, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 2883160672904108367, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 1343641698083305072, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -5819212398167860867, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 1133817184176290043, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: 3957211391672382866, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -519060384786953374, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      - {fileID: -3085684383362731524, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Mushroom
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 131072
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: 1718831643, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Fire Flower
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1349070666859566638
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -103930372, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Blue Shell
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1466930856010351358
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -2093995655, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Mini Mushroom
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1414434856952255942
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 131072
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: 1396456503, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Starman
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1502268950446962426
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 131072
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 393216
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 8
+      sprites:
+      - {fileID: -1773138413, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 162443161, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Mega Mushroom
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1300211052819551813
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: -98304
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 229376
+      FollowPlayer: 1
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 1
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.7, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: 1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites: []
+      UsesWavey: 0
+      soundType: 0
+  - Name: Ice Flower
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1524544283524633813
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -1147080563, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: PropellerMushroom
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1286010981056643553
+    ChanceWeight:
+      RawValue: 65536
+    MoveData:
+      MovementType: 2
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: 0
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 0
+      Deceleration:
+        RawValue: 0
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 30
+      sprites:
+      - {fileID: 974339405, guid: 752c51ce7499177419a33a6cddc8de5c, type: 3}
+      - {fileID: 94257346, guid: 752c51ce7499177419a33a6cddc8de5c, type: 3}
+      - {fileID: 896499514, guid: 752c51ce7499177419a33a6cddc8de5c, type: 3}
+      - {fileID: -872383749, guid: 752c51ce7499177419a33a6cddc8de5c, type: 3}
+      - {fileID: -74796952, guid: 752c51ce7499177419a33a6cddc8de5c, type: 3}
+      - {fileID: -404099666, guid: 752c51ce7499177419a33a6cddc8de5c, type: 3}
+      - {fileID: 1339308990, guid: 752c51ce7499177419a33a6cddc8de5c, type: 3}
+      - {fileID: 2093605636, guid: 752c51ce7499177419a33a6cddc8de5c, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Hammersuit
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1472665878288241371
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 98304
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 524288
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: 971353550, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Bubble Flower
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 49152
+    MoveData:
+      MovementType: 2
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: 0
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 0
+      Deceleration:
+        RawValue: 0
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -43001604, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Bubbless Flower
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 16384
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -276568315, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Bombro
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 98304
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 524288
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 24
+      sprites:
+      - {fileID: -1032125213, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -2135069423, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -1032125213, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -2135069423, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -1032125213, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -2135069423, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 677135010, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 1793765665, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 677135010, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 1793765665, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 677135010, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 1793765665, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Bio Flower
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.5, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 12
+      sprites:
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -702675803, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -423961548, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -423961548, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -423961548, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -702675803, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 366244360, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 1774005754, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -2141578426, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -2141578426, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: -2141578426, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      - {fileID: 1774005754, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: PocketDoor
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 98304
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 524288
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -1653097385, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Metal Mushroom
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -4166910
+      TerminalVelocity:
+        RawValue: -786432
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 131072
+      Acceleration:
+        RawValue: 65536
+      Deceleration:
+        RawValue: 65536
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 524288
+      FollowPlayer: 1
+      HopsUpBlocks: 1
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: 2
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 0
+      sprites: []
+      UsesWavey: 0
+      soundType: 4
+  - Name: Jumpsuit
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 275251
+      Acceleration:
+        RawValue: 65536
+      Deceleration:
+        RawValue: 65536
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 720896
+      FollowPlayer: 1
+      HopsUpBlocks: 1
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -1812075112, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Super Crown
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -1491811719, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Done Flower
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 6554
+      Acceleration:
+        RawValue: 65536
+      Deceleration:
+        RawValue: 65536
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 294912
+      FollowPlayer: 1
+      HopsUpBlocks: 1
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: 44143873, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Frosted Cake
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 0
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: -65536
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 524288
+      FollowPlayer: 1
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -272586131, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Turnip Basket
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1472665878288241371
+    ChanceWeight:
+      RawValue: 0
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: -65536
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 524288
+      FollowPlayer: 1
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -2071699596, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Spin Drill
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: 732068413, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 0
+      soundType: 0
+  - Name: Poison Mushroom
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 131072
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: 1709977549, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Rotten Mushroom
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1268531089014898302
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 131072
+      Acceleration:
+        RawValue: 65536
+      Deceleration:
+        RawValue: 65536
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 458752
+      FollowPlayer: 1
+      HopsUpBlocks: 1
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: 1105842496, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
+  - Name: Heavystone
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1531969226459579775
+    ChanceWeight:
+      RawValue: 65536
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1409024
+      TerminalVelocity:
+        RawValue: -786432
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 12
+      sprites:
+      - {fileID: -2111484488, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -665372625, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -189291932, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: 527840760, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      - {fileID: -270085218, guid: e8712e461a0a10540a47001f8e9603f7, type: 3}
+      UsesWavey: 0
+      soundType: 3

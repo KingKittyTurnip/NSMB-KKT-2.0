@@ -51,14 +51,15 @@ namespace Quantum {
                     f.Events.StarBallDestroyed(EntityRef.None, filter.Entity);
                 }
                 if (starballgoal->DespawnTimer > 221) {
-                    f.Destroy(filter.Entity);
                     f.Global->StarBallGoalExists = false;
+                    f.Destroy(filter.Entity);
                 }
             } else {
                 var Objects = f.Filter<Starball>();
                 while (Objects.NextUnsafe(out EntityRef OtherEntity, out Starball* starball)) {
                     if (starball->Rider != EntityRef.None) {
-                        starballgoal->DespawnTimer = 0;
+                         starballgoal->DespawnTimer = 0;
+                        //Note that stage starballs don't despawn so this bugs
                     }
                 }
             }
@@ -159,12 +160,12 @@ namespace Quantum {
             }
         }
 
-        public static void OnStarballGoalInteraction(Frame f, EntityRef goalEntity, EntityRef starballEntity) {
+        public static bool OnStarballGoalInteraction(Frame f, EntityRef goalEntity, EntityRef starballEntity, PhysicsContact contact) {
             var starball = f.Unsafe.GetPointer<Starball>(starballEntity);
             var starballgoal = f.Unsafe.GetPointer<Starballgoal>(goalEntity);
             if (starball->Rider == EntityRef.None) {
                 //Only Riders
-                return;
+                return false;
             }
 
             var ballTransform = f.Unsafe.GetPointer<Transform2D>(starballEntity); var DisTransform = f.Unsafe.GetPointer<Transform2D>(goalEntity);
@@ -177,6 +178,7 @@ namespace Quantum {
                 starballgoal->DespawnTimer = 0;
                 f.Unsafe.GetPointer<Interactable>(goalEntity)->ColliderDisabled = true;
             }
+            return true;
         }
     }
 }

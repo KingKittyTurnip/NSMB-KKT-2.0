@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 9150257369006672343}
   - component: {fileID: 612424219116081141}
   - component: {fileID: 6989136294608042370}
-  - component: {fileID: -1333812223858179726}
   - component: {fileID: 2210952625023297629}
   - component: {fileID: 3901402401622306172}
   - component: {fileID: -5656916731996867298}
@@ -21,6 +20,7 @@ GameObject:
   - component: {fileID: 1674532154087349797}
   - component: {fileID: 4407595474707189897}
   - component: {fileID: 6338714294745076904}
+  - component: {fileID: 3226910883086810773}
   m_Layer: 20
   m_Name: VoidwallWall
   m_TagString: Squishy
@@ -413,28 +413,6 @@ MonoBehaviour:
       Value: 0
     WindImmune:
       Value: 0
---- !u!114 &-1333812223858179726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1017215213198693191}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb8b4489d4860b2429b2badcd175e5ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prototype:
-    Velocity:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    IgnoreMovement:
-      Value: 0
-    CanCrushEntities:
-      Value: 0
 --- !u!114 &2210952625023297629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -652,6 +630,29 @@ MonoBehaviour:
   - {fileID: -1925890305, guid: 3d78c4eeabb75d742bac8d721ee9eba0, type: 3}
   TeamwallSprites: []
   VoidWallInjured: {fileID: 1894063128, guid: 3d78c4eeabb75d742bac8d721ee9eba0, type: 3}
+  voidwallRenderer: {fileID: 8627043044968174045}
+--- !u!114 &3226910883086810773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8b4489d4860b2429b2badcd175e5ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeMovingPlatform
+  Prototype:
+    Velocity:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    IgnoreMovement:
+      Value: 0
+    CanCrushEntities:
+      Value: 0
 --- !u!1 &9032870725918412890
 GameObject:
   m_ObjectHideFlags: 0

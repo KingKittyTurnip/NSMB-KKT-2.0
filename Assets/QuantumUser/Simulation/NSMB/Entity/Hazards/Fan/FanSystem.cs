@@ -1,5 +1,6 @@
 using Photon.Deterministic;
 using Quantum.Collections;
+using UnityEngine;
 
 namespace Quantum {
     
@@ -19,6 +20,10 @@ Gp Interactions are weird
 
  ---------------------------------------
 */
+
+
+        //THIS CODE IS SO BAD
+
         public struct Filter {
             public EntityRef Entity;
             public Fan* fan;
@@ -26,6 +31,7 @@ Gp Interactions are weird
             public Transform2D* Transform;
             public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* Collider;
+            public CoinItem* CoinItem;
         }
 
         public override void OnInit(Frame f) {
@@ -38,11 +44,19 @@ Gp Interactions are weird
             var entity = filter.Entity;
             var hazard = filter.hazard;
             var physicsObject = filter.PhysicsObject;
+            var collider = filter.Collider;
+            var coinitem = filter.CoinItem;
 
             //Velocity Reset
             if (physicsObject->IsTouchingGround) {
                 physicsObject->Velocity.X = 0;
             }
+
+            //Hacky Fix...
+            if (coinitem->SpawnAnimationFrames == 1) {
+                physicsObject->DisableCollision = false;
+            }
+            collider->Shape.Centroid.Y = physicsObject->DisableCollision ? 999 : Constants._0_12;
 
             //Fan Falling Over
             if (fan->FellOver && fan->TurnEffectorDowntime > 0) {
@@ -83,7 +97,23 @@ Gp Interactions are weird
                     }
                     if (Captain == Afan) { // Captain Calc
                         var CapnHazard = f.Unsafe.GetPointer<Hazard>(OtherEntity);
-                        if (Captain->FanTime != 0 && (CapnHazard->LifeTime > 120 || CapnHazard->LifeTime == 0)) {
+                        if (CapnHazard->LifeTime <= 120 && CapnHazard->LifeTime != 0) {
+                            //Despawn 
+                            if (!Captain->Broken && !Captain->FellOver) {
+                                if (CapnHazard->LifeTime == 120) {
+                                    f.Events.OnFanSwitch(OtherEntity, false);
+                                }
+                                if (Captain->TurnEffectorDowntime > 45) {
+                                    Captain->TurnEffectorDowntime--;
+                                } else if (Captain->TurnEffectorDowntime < 45) {
+                                    Captain->TurnEffectorDowntime++;
+                                }
+                                Captain->FanTime = 10 * 60;
+                                Captain->Cooldown = FP._0_50;
+                                Captain->CurrentStrength = (Captain->FacingRight ? Captain->Strength : -Captain->Strength) * ((Captain->TurnEffectorDowntime / (FP) 45) - 1);
+                            }
+                        } else if (Captain->FanTime != 0) {
+                            //blow
                             Captain->FanTime -= 1;
                             if (Captain->TurnEffectorDowntime != 0) {
                                 if (Captain->TurnEffectorDowntime > 45 || (QuantumUtils.Decrement(f, ref Captain->Cooldown))) {
@@ -97,13 +127,20 @@ Gp Interactions are weird
                                 }
                             }
                         } else if (!Captain->Broken && !Captain->FellOver) {
+                            //setup for next gust
                             Captain->FanTime = 10 * 60;
                             Captain->TurnEffectorDowntime = 90;
                             Captain->Cooldown = 2;
                             Captain->FacingRight = !Captain->FacingRight;
-                            if (CapnHazard->LifeTime >= 120 || CapnHazard->LifeTime == 0) {
-                                f.Events.OnFanSwitch(OtherEntity, false);
+                            f.Events.OnFanSwitch(OtherEntity, false);
+                        } else {
+                            //edge case with broken fans
+                            if (Captain->TurnEffectorDowntime != 0) {
+                                Captain->TurnEffectorDowntime = 44;
+                                f.Events.OnFanSwitch(OtherEntity, true);
                             }
+                            Captain->FanTime = 10 * 60;
+                            Captain->Cooldown = 0;
                         }
                     } else if (!Afan->Broken) { // Sync Other Fans
                         Afan->Cooldown = Captain->Cooldown;
@@ -193,7 +230,11 @@ Gp Interactions are weird
             FP upDot = FPVector2.Dot(damageDirection, FPVector2.Up);
             #endregion
 
-            if (mario->CurrentPowerupState == PowerupState.MegaMushroom && !fan->Sturdy) { //TODO: Add Metal
+            if (mario->CurrentPowerupState == PowerupState.MegaMushroom) { //TODO: Add Metal
+                if (fan->Sturdy) {
+                    f.Events.IsNowResistantHit(f.Number, thisEntity);
+                    return false;
+                }
                 if (hazard->LifeTime > 1200)
                     hazard->LifeTime = 1200;
                 physicsObject->IsFrozen = physicsObject->DisableCollision = f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = true;
@@ -205,10 +246,14 @@ Gp Interactions are weird
                 DisCollider->Shape.Centroid.Y = -999;
                 f.Events.OnFanHit(thisEntity, true);
                 return false;
-            } else if (upDot >= Constants.PhysicsGroundMaxAngleCos && (mario->IsGroundpounding || mario->GroundpoundStandFrames > 0) && !fan->Sturdy) {
+            } else if (upDot >= Constants.PhysicsGroundMaxAngleCos && (mario->IsGroundpounding || mario->GroundpoundStandFrames > 0)) {
+                if (fan->Sturdy) {
+                    f.Events.IsNowResistantHit(f.Number, thisEntity);
+                    return false;
+                }
                 physicsObject->IsTouchingGround = false;
-                physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
                 physicsObject->Velocity.Y = 3;
+                physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
                 fan->Broken = true;
                 fan->FanTime = 90;
                 mario->IsGroundpounding = mariophys->IsTouchingGround = false;
@@ -229,8 +274,10 @@ Gp Interactions are weird
 
             if (throwobj->Type == ThrowingObjectType.Stone && !f.Exists(holdable->Holder)) {
                 var fan = f.Unsafe.GetPointer<Fan>(thisEntity);
-                if (fan->Sturdy)
+                if (fan->Sturdy) {
+                    f.Events.IsNowResistantHit(f.Number, thisEntity);
                     return;
+                }
                 var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
                 var throwTransform = f.Unsafe.GetPointer<Transform2D>(throwEntity);
                 var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
@@ -242,6 +289,7 @@ Gp Interactions are weird
                 physicsObject->IsTouchingGround = false;
                 physicsObject->Velocity.X = damageDirection.X > 0 ? -2 : 2;
                 physicsObject->Velocity.Y = 3;
+
                 fan->Broken = true;
                 
                 f.Events.OnFanHit(thisEntity, false);
@@ -276,15 +324,13 @@ Gp Interactions are weird
             }
             var specialValues = f.ResolveList(spawnData);
 
-            //Set Sturdy
-            fan->Sturdy = specialValues[0] == 1;
-
-            //Set Constant Direction
-            fan->Broken = specialValues[1] >= 1;
-            fan->FellOver = specialValues[1] == 2;
+            //Set States
+            fan->Sturdy = specialValues[0] > 2;
+            fan->Broken = specialValues[0] == 1 || specialValues[0] == 4 || specialValues[0] == 2;
+            fan->FellOver = specialValues[0] == 2 || specialValues[0] == 5;
 
             //Starting Direction
-            fan->FacingRight = (f.RNG->Next() >= FP._0_50);
+            fan->FacingRight = !fan->FellOver && (specialValues[1] == 0 ? (f.RNG->Next() >= FP._0_50) : specialValues[1] == 2);
 
             //Set FanTime
             fan->FanTime = specialValues[2] * 59; // set to Basically 10 seconds

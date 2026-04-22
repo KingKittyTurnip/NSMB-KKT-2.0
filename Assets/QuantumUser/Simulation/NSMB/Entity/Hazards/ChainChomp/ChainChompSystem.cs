@@ -42,12 +42,15 @@ namespace Quantum {
 
             if (!f.Exists(chainchomp->Post)) {
                 //a chain chomp is on the loose!
-                TryHop(7, 8, false);
+                TryHop(6, 8, false);
                 if (hazard->DoNotDespawnInPit) {
                     hazard->DoNotDespawnInPit = false;
                     chainchomp->State = ChainChompState.Idle;
                     physicsObject->IsFrozen = false;
                     physicsObject->DisableCollision = false;
+                }
+                if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) {
+                    chainchomp->FacingRight = physicsObject->IsTouchingLeftWall;
                 }
                 return;
             }
@@ -62,6 +65,8 @@ namespace Quantum {
 
             var Owner = f.Unsafe.GetPointer<Holdable>(chainchomp->Post)->Holder;
 
+            QuantumUtils.Decrement(f, ref chainchomp->LastBumpedTimer);
+
             switch (chainchomp->State) {
             case ChainChompState.Idle:
                 if ((chainchomp->ReusableTimer += f.DeltaTime) > (f.Exists(Owner) ? ShortTime : IdleTime) && physicsObject->IsTouchingGround) {
@@ -73,9 +78,8 @@ namespace Quantum {
                         chainchomp->ReusableTimer -= ShortTime;
                     } else {
                         SwitchState(ChainChompState.Prepare);
-                        QuantumUtils.UnwrapWorldLocations(f, transform->Position, f.Unsafe.GetPointer<Transform2D>(TargetEntity)->Position + (FPVector2.Up * FP._0_50), out FPVector2 ourPos, out FPVector2 theirPos);
-                        chainchomp->TargetPosition = theirPos;
-                        chainchomp->FacingRight = ourPos.X < theirPos.X;
+                        chainchomp->AttackTarget = TargetEntity;
+                        GetTargetPosition();
                         break;
                     }
                 }
@@ -85,8 +89,11 @@ namespace Quantum {
                 }
                 break;
             case ChainChompState.Prepare:
+                GetTargetPosition();
+
                 if ((chainchomp->ReusableTimer += f.DeltaTime) > FP._0_33 && physicsObject->IsTouchingGround) {
                     SwitchState(ChainChompState.Lunge);
+                    chainchomp->LastBumpedTimer = FP._0_05;
                     f.Events.ChainChompSound(entity, true);
                 }
                 TryHop(0, JumpHeight, true);
@@ -98,7 +105,7 @@ namespace Quantum {
                 physicsObject->Velocity = new FPVector2(FPMath.Cos(TargetDirection), FPMath.Sin(TargetDirection)) * LungeSpeed;
                 chainchomp->TargetPosition += physicsObject->Velocity * f.DeltaTime;
 
-                if (distance > LungeLimit) {
+                if (distance > LungeLimit && chainchomp->LastBumpedTimer <= 0) {
                     SwitchState(ChainChompState.Chomp);
                     transform->Position = postPos + ((thisPos - postPos).Normalized * LungeLimit);
                 }
@@ -199,6 +206,11 @@ namespace Quantum {
                 if (ChompToo)
                     transform->Position += postPos - chainchomp->PreviousPostPosition;
             }
+            void GetTargetPosition() {
+                QuantumUtils.UnwrapWorldLocations(f, transform->Position, f.Unsafe.GetPointer<Transform2D>(chainchomp->AttackTarget)->Position + (FPVector2.Up * FP._0_50), out FPVector2 ourPos, out FPVector2 theirPos);
+                chainchomp->TargetPosition = theirPos;
+                chainchomp->FacingRight = ourPos.X < theirPos.X;
+            }
         }
 
         #region Interactions
@@ -209,7 +221,8 @@ namespace Quantum {
                 return;
             }
             var chainchomp = f.Unsafe.GetPointer<ChainChomp>(thisEntity);
-            if (chainchomp->State == ChainChompState.Return ||f.Unsafe.GetPointer<Holdable>(chainchomp->Post)->Holder == otherEntity) { //an exception error is thrown here
+            bool PartOfPost = f.Exists(chainchomp->Post);
+            if (chainchomp->State == ChainChompState.Return || (f.Exists(chainchomp->Post) && f.Unsafe.GetPointer<Holdable>(chainchomp->Post)->Holder == otherEntity)) {
                 return;
             }
 
@@ -227,12 +240,14 @@ namespace Quantum {
 
             if (Kill) {
                 //Kill Chomp
-            } else if (chainchomp->State == ChainChompState.Lunge || chainchomp->State == ChainChompState.Chomp) {
-                if (mario->DoKnockback(f, otherEntity, FromRight, 2, KnockbackStrength.CollisionBump, thisEntity)) {
+            } else if (chainchomp->State == ChainChompState.Lunge || chainchomp->State == ChainChompState.Chomp || !PartOfPost) {
+                if (mario->DoKnockback(f, otherEntity, FromRight, PartOfPost ? 2 : 1, KnockbackStrength.CollisionBump, thisEntity)) {
                     FPVector2 particlePos = (theirPos + ourPos) / 2;
                     f.Events.PlayKnockbackEffect(otherEntity, thisEntity, KnockbackStrength.CollisionBump, particlePos);
                 }
-            } else {
+            } else if (!(chainchomp->LastBumped == otherEntity && chainchomp->LastBumpedTimer > 0)) {
+                chainchomp->LastBumped = otherEntity;
+                chainchomp->LastBumpedTimer = 1;
                 if (chainchomp->State != ChainChompState.Prepare)
                     chainchomp->FacingRight = FromRight;
                 marphys->Velocity.X = FPMath.Min(FPMath.Abs(marphys->Velocity.X), 4) * (FromRight ? -1 : 1);
@@ -268,6 +283,10 @@ namespace Quantum {
             }
 
             chainchomp->Post = owner;
+
+            if (f.Unsafe.TryGetPointer(owner, out Hazard* ownerhazard)) {
+                hazard->BaseLifeTime = hazard->LifeTime = ownerhazard->LifeTime;
+            }
         }
         #endregion
     }

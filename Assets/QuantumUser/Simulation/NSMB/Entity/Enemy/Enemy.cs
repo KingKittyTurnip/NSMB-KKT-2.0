@@ -53,6 +53,11 @@ namespace Quantum {
                 physicsObject->IsFrozen = false;
                 physicsObject->Velocity = FPVector2.Zero;
                 physicsObject->DisableCollision = false;
+                physicsObject->UnderwaterCounter = 0;
+            }
+
+            if (f.Unsafe.TryGetPointer(entity, out CoinItem* coinitem)) {
+                coinitem->Finished = true;
             }
 
             // face left by default

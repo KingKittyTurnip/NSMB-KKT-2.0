@@ -15,7 +15,7 @@ namespace Quantum {
         public class DefaultRules {
             //You Can Customize Powerups From Coins, Items From Roulettes, And Hazards That Spawn
 
-            public RuleDefault BaseRulesList;
+            public RuleDefault[] BaseRulesList;
             //This Is All Of The Base Values Of Each Rule
             [Serializable]
             public class RuleDefault {
@@ -24,35 +24,20 @@ namespace Quantum {
                 //All Players Are On The Same Team
                 //There Is No Way To Win (ex. stars spawnable count set to 0 and Hazards can't spawn a star)
 
+                public string Name = "Ruleset";
+                public string Description = "";
                 public GameRulesPrototype DefaultRules;
-
-                //unimplemented but i want to add
-                private bool SpawnType;
-
-                private byte StarsSpawnableCount = 1;//0-30, restricted by map spawns
-
-                private byte StarcoinsSpawnableCount = 1;//0-30, restricted by map spawns
-
-                private bool AutomaticallyModifyTimerDependingOnLivesAndPlayerCount = true; //Depending On The Player Count and lives it will modify the timer { TIMER = 30 * (PlayerCount * lives) }
-                private byte StartingBobombCount = 1; //0-10, players on the bobomb team from the lobby will count torwards this
-                private bool FirstBombIsKingBobomb = true;
-
-                private bool IsRoulette = false; //when enabled ? blocks pull from a list
-
-                private bool TeamLock = false; //Show Prompt To Players Enabling It For The First Time Telling Them To Use It Responsibly 
-
-                private bool FreindlyFire = false;
-
-                public HazardDefault bigstarBase;
-                public HazardDefault purplecoinBase;
-                public HazardDefault starcoinBase;
-                public HazardDefault kingbobombBase;
-                public HazardDefault loosecoinBase;
-                public HazardDefault oneupBase;
-                public HazardDefault clockBase;
             }
 
             public HazardDefault[] ListOfAvalibleObjects;
+            [Header("GamemodeSpecific Objects")]
+            public HazardDefault bigstarBase;
+            public HazardDefault purplecoinBase;
+            public HazardDefault starcoinBase;
+            public HazardDefault kingbobombBase;
+            public HazardDefault loosecoinBase;
+            public HazardDefault oneupBase;
+            public HazardDefault clockBase;
 
             [Serializable]
             public class HazardDefault {

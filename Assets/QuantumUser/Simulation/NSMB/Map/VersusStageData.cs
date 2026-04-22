@@ -59,6 +59,10 @@ public unsafe class VersusStageData : AssetObject, ISoundOverrideProvider {
     public AssetRef<LoopingMusicData> MegaMushroomMusic;
     public AssetRef<LoopingMusicData> StarballMusic;
 
+    [Header("-- Overwrite Rules")]
+    //We use these in the "complex" maps, since it's mechanics aren't built for the entire mod
+    public AssetRef<OverwriteRules> OverwriteRules;
+
     [HideInInspector] public StageTileInstance[] TileData;
     [HideInInspector] public FPVector2[] BigStarSpawnpoints;
     [HideInInspector] public FPVector2[] HazardSpawnpoints;

@@ -322,11 +322,30 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Cataquack))]
+  public unsafe partial class CataquackPrototype : ComponentPrototype<Quantum.Cataquack> {
+    public FP Speed;
+    public FP LaunchSpeed;
+    public Quantum.QEnum8<CataquackVarient> Varient;
+    partial void MaterializeUser(Frame frame, ref Quantum.Cataquack result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Cataquack component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Cataquack result, in PrototypeMaterializationContext context = default) {
+        result.Speed = this.Speed;
+        result.LaunchSpeed = this.LaunchSpeed;
+        result.Varient = this.Varient;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Cauldron))]
   public unsafe partial class CauldronPrototype : ComponentPrototype<Quantum.Cauldron> {
-    public AssetRef<EntityPrototype> ConvertInto;
-    public Byte ConvertIntoHazardId;
+    public Byte ConvertIntoBossId;
     public FP Hitboxheight;
+    public AssetRef<CauldronBossesAsset> BossData;
     partial void MaterializeUser(Frame frame, ref Quantum.Cauldron result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Cauldron component = default;
@@ -334,9 +353,9 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Cauldron result, in PrototypeMaterializationContext context = default) {
-        result.ConvertInto = this.ConvertInto;
-        result.ConvertIntoHazardId = this.ConvertIntoHazardId;
+        result.ConvertIntoBossId = this.ConvertIntoBossId;
         result.Hitboxheight = this.Hitboxheight;
+        result.BossData = this.BossData;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -1032,6 +1051,7 @@ namespace Quantum.Prototypes {
     public AssetRef<MarioPlayerPhysicsInfo> PhysicsAsset;
     public AssetRef<CharacterAsset> CharacterAsset;
     public QBoolean IsBot;
+    public Byte BotTeam;
     partial void MaterializeUser(Frame frame, ref Quantum.MarioPlayer result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.MarioPlayer component = default;
@@ -1042,6 +1062,7 @@ namespace Quantum.Prototypes {
         result.PhysicsAsset = this.PhysicsAsset;
         result.CharacterAsset = this.CharacterAsset;
         result.IsBot = this.IsBot;
+        result.BotTeam = this.BotTeam;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -1324,6 +1345,7 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Spinpipe))]
   public unsafe partial class SpinpipePrototype : ComponentPrototype<Quantum.Spinpipe> {
+    public QBoolean Sturdy;
     public QBoolean Broken;
     partial void MaterializeUser(Frame frame, ref Quantum.Spinpipe result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
@@ -1332,6 +1354,7 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Spinpipe result, in PrototypeMaterializationContext context = default) {
+        result.Sturdy = this.Sturdy;
         result.Broken = this.Broken;
         MaterializeUser(frame, ref result, in context);
     }
@@ -1424,6 +1447,11 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.Tanoomba))]
   public unsafe partial class TanoombaPrototype : ComponentPrototype<Quantum.Tanoomba> {
     public FP JumpVelocity;
+    public FPVector2 BaseGravity;
+    public FP BaseTerminalVelocity;
+    public AssetRef<TanoombaTransformationAsset> FormData;
+    public AssetRef<PowerupAsset> PropellerAsset;
+    public AssetRef<PowerupAsset> BubbleAsset;
     partial void MaterializeUser(Frame frame, ref Quantum.Tanoomba result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Tanoomba component = default;
@@ -1432,6 +1460,11 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Tanoomba result, in PrototypeMaterializationContext context = default) {
         result.JumpVelocity = this.JumpVelocity;
+        result.BaseGravity = this.BaseGravity;
+        result.BaseTerminalVelocity = this.BaseTerminalVelocity;
+        result.FormData = this.FormData;
+        result.PropellerAsset = this.PropellerAsset;
+        result.BubbleAsset = this.BubbleAsset;
         MaterializeUser(frame, ref result, in context);
     }
   }

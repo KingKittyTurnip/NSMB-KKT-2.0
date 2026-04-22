@@ -80,13 +80,14 @@ namespace Quantum {
                 }
             }
 
-            if (physicsObject != null && coinItem->SpawnAnimationFrames == 0 && physicsObject->DisableCollision) {
+            if (physicsObject != null && coinItem->SpawnAnimationFrames == 0 && physicsObject->DisableCollision && !coinItem->Finished) {
                 // Test that we're not in a wall anymore
                 if (!PhysicsObjectSystem.BoxInGround(f, transform->Position, collider->Shape, stage: stage)) {
                     physicsObject->DisableCollision = false;
                     if (f.Unsafe.TryGetPointer(entity, out Interactable* interactable)) {
                         interactable->ColliderDisabled = false;
                     }
+                    coinItem->Finished = true;
                 }
             }
             /*

@@ -1,7 +1,8 @@
 component Cauldron {
-	AssetRef<EntityPrototype> ConvertInto;
-	byte ConvertIntoHazardId; //set to 255
+	byte ConvertIntoBossId;
 	FP Hitboxheight;
+	
+	AssetRef<CauldronBossesAsset> BossData;
 	
 	[ExcludeFromPrototype] EntityRef TransformingEntity;
 	[ExcludeFromPrototype] byte EnteredFrames;

@@ -2,6 +2,7 @@ using Photon.Deterministic;
 using Quantum.Collections;
 using static BreakableBrickTile;
 using static IInteractableTile;
+using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 namespace Quantum {
     
@@ -17,7 +18,7 @@ namespace Quantum {
         }
 
         public override void OnInit(Frame f) {
-            f.Context.Interactions.Register<MarioPlayer, Starball>(f, OnStarballMarioInteraction);
+            f.Context.Interactions.Register<MarioPlayer, Starball>(f, OnStarballMarioSolidInteraction);
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -135,7 +136,16 @@ namespace Quantum {
             TouchedBricks(f, filter.Entity, stage);
             physicsObject->BreakMegaObjects = FPMath.Abs(physicsObject->Velocity.X) > 6;
             if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) {
-                physicsObject->Velocity.X = FPMath.Abs(physicsObject->Velocity.X) * (physicsObject->IsTouchingLeftWall ? 1 : -1) * FP._0_75;
+                if (starball->CrashBuffer > 0/* && FPMath.Abs(physicsObject->Velocity.X) >= FPMath.Abs(physicsObject->PreviousFrameVelocity.X)*/) {
+                    //Crash buffer, this helps keep top speed
+                    QuantumUtils.Decrement(f, ref starball->CrashBuffer);
+                    physicsObject->Velocity.X = physicsObject->PreviousFrameVelocity.X;
+                } else {
+                    //bounce off
+                    physicsObject->Velocity.X = FPMath.Abs(physicsObject->Velocity.X) * (physicsObject->IsTouchingLeftWall ? 1 : -1) * FP._0_75;
+                }
+            } else {
+                starball->CrashBuffer = FP._0_10;
             }
             if (physicsObject->IsTouchingCeiling) {
                 physicsObject->Velocity.Y = 0;
@@ -216,12 +226,15 @@ namespace Quantum {
         }
 
         #region Interactions
-        public static void OnStarballMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
+        public static bool OnStarballMarioSolidInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
+            return OnStarballMario(f, marioEntity, thisEntity);
+        }
+        public static bool OnStarballMario(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
             var starball = f.Unsafe.GetPointer<Starball>(thisEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             if (starball->Rider == marioEntity) {
                 //Wait, This is OUR Mario!
-                return;
+                return false;
             }
 
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
@@ -237,7 +250,8 @@ namespace Quantum {
             if (starball->Rider == EntityRef.None && !mario->RidingStarball && FPVector2.Dot(damageDirection, FPVector2.Down) > FP._0_25 && mario->KnockbackGetupFrames <= 0 && mario->CurrentKnockback == KnockbackStrength.None && !marphys->WasTouchingGround) {
                 starball->Rider = marioEntity;
                 mario->RidingStarball = true;
-                return;
+                mario->WallslideLeft = mario->WallslideRight = false;
+                return true;
             }
 
             //Try Bonk Other Players
@@ -251,7 +265,7 @@ namespace Quantum {
             } else if (mario->IsDamageable) {
                 mario->DoKnockback(f, marioEntity, damageDirection.X >= 0, 1, attackFromAbove ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, thisEntity, false);
             }
-
+            return true;
         }
         #endregion
 

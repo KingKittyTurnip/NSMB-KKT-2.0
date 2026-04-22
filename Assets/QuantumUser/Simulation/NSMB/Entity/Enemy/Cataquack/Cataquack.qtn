@@ -1,0 +1,18 @@
+component Cataquack {
+	FP Speed;
+	FP LaunchSpeed;
+	CataquackVarient Varient;
+
+	[ExcludeFromPrototype] FP FlingTimer;
+}
+
+enum CataquackVarient : Byte {
+    BasicBlue,
+	ReadyRed,
+	SturdyGreen,
+}
+
+event CataquackFling {
+	Frame f;
+	EntityRef Entity;
+}

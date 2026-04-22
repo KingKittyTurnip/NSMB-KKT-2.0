@@ -1,5 +1,6 @@
 using Photon.Deterministic;
 using Quantum.Collections;
+using UnityEngine;
 
 namespace Quantum {
     
@@ -11,6 +12,8 @@ namespace Quantum {
             public Transform2D* Transform;
             public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* Collider;
+
+            public CoinItem* CoinItem;
         }
 
         public override void OnInit(Frame f) {
@@ -22,6 +25,13 @@ namespace Quantum {
             var entity = filter.Entity;
             var hazard = filter.hazard;
             var physicsObject = filter.PhysicsObject;
+            var coinitem = filter.CoinItem;
+            var collider = filter.Collider;
+
+            //Hacky Fix...
+            if (coinitem->SpawnAnimationFrames == 1) {
+                physicsObject->DisableCollision = false;
+            }
 
             //Handle Start And End Tipping
             if (hazard->LifeTime <= 60) {
@@ -46,6 +56,7 @@ namespace Quantum {
                     }
                 }
             }
+            collider->Shape.Centroid = (physicsObject->IsFrozen && !(spinpipe->Active || spinpipe->groundDelay > 0)) || physicsObject->Velocity.Y > 0 ? new FPVector2(0, 999) : spinpipe->Broken ? new FPVector2(0, -FP._0_50) : FPVector2.Zero;
 
             //Spinpipe Can Push
             // Multiple Pipes optimization
@@ -120,13 +131,17 @@ namespace Quantum {
             #endregion
 
             if (mario->CurrentPowerupState == PowerupState.MegaMushroom && !spinpipe->Broken) { //TODO: Add Metal
-                if (hazard->LifeTime > 1200)
-                    hazard->LifeTime = 1200;
-                spinpipe->Broken = true;
-                DisCollider->Shape.Box.Extents = new FPVector2(DisCollider->Shape.Box.Extents.X, FP._0_50);
-                DisCollider->Shape.Centroid.Y = -FP._0_50;
-                f.Events.SpinpipeDestroy(thisEntity, damageDirection.X > 0);
-                return false;
+                if (spinpipe->Sturdy) {
+                    f.Events.IsNowResistantHit(f.Number, thisEntity);
+                } else {
+                    if (hazard->LifeTime > 1200)
+                        hazard->LifeTime = 1200;
+                    spinpipe->Broken = true;
+                    DisCollider->Shape.Box.Extents = new FPVector2(DisCollider->Shape.Box.Extents.X, FP._0_50);
+                    DisCollider->Shape.Centroid.Y = -FP._0_50;
+                    f.Events.SpinpipeDestroy(f, thisEntity, damageDirection.X > 0);
+                    return false;
+                }
             }
             return false;
         }
@@ -138,12 +153,18 @@ namespace Quantum {
                 || !f.Unsafe.TryGetPointer(thisEntity, out Spinpipe* spinpipe)) {
                 return;
             }
+            var specialValues = f.ResolveList(spawnData);
 
+            spinpipe->Sturdy = specialValues[0] == 2;
             //Set Constant Direction
-            spinpipe->Broken = false;
+            spinpipe->Broken = specialValues[0] == 1;
+            if (spinpipe->Broken) {
+                var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
+                DisCollider->Shape.Box.Extents = new FPVector2(DisCollider->Shape.Box.Extents.X, FP._0_50);
+            }
 
             //Starting Direction
-            spinpipe->Right = (f.RNG->Next() >= FP._0_50);
+            spinpipe->Right = specialValues[1] == 0 ? (f.RNG->Next() >= FP._0_50) : specialValues[1] == 2;
 
             //Set FanTime
             spinpipe->TipTime = 10 * 59; // set to Basically 10 seconds

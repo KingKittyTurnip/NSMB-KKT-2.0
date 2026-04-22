@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33c961affce647046bba38695ff96f2e, type: 3}
+  m_Name: CauldronBossesAsset
+  m_EditorClassIdentifier: Quantum.Simulation::Quantum.CauldronBossesAsset
+  Identifier:
+    Path: QuantumUser/Simulation/NSMB/Entity/Hazards/Bosses/ConversionCauldron/CauldronBossesAsset
+    Guid:
+      Value: 421821552550649616
+  ListOfBosses:
+  - Name: Bowser
+    BossPrototype:
+      Id:
+        Value: 1425013984214867549
+    Extra: 00
+  - Name: King Boo
+    BossPrototype:
+      Id:
+        Value: 1417407889661057047
+    Extra: 
+  - Name: Petey
+    BossPrototype:
+      Id:
+        Value: 1357720639578944744
+    Extra: 
+  - Name: King Whomp
+    BossPrototype:
+      Id:
+        Value: 1500840674427279327
+    Extra: 
+  - Name: Dry Bowser
+    BossPrototype:
+      Id:
+        Value: 1425013984214867549
+    Extra: 01

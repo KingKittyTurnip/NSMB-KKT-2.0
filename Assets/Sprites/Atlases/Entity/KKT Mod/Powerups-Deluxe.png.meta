@@ -1333,8 +1333,8 @@ TextureImporter:
         y: 111
         width: 16
         height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -1343,6 +1343,28 @@ TextureImporter:
       bones: []
       spriteID: 475c2d05a6bbd45489abd16abe41a0cc
       internalID: 732068413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Powerups-BubbleFlowerInBubbleInOneImage
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 35
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d5d0b9a0c1740a488bc27e344c598e3
+      internalID: -43001604
       vertices: []
       indices: 
       edges: []
@@ -1409,6 +1431,7 @@ TextureImporter:
       Powerups-Bombro_C: 677135010
       Powerups-Bombro_D: 1793765665
       Powerups-BubbleFlower: -276568315
+      Powerups-BubbleFlowerInBubbleInOneImage: -43001604
       Powerups-Custard: 777432766
       Powerups-DoneFlower: 44143873
       Powerups-Door: -1653097385

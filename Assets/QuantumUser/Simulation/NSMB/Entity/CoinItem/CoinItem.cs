@@ -11,8 +11,12 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject)) {
                 physicsObject->DisableCollision = true;
             }
-            if (f.Unsafe.TryGetPointer(thisEntity, out Interactable* interactable)) {
+            if (SpawnReason != PowerupSpawnReason.PowerupBlock && f.Unsafe.TryGetPointer(thisEntity, out Interactable* interactable)) {
                 interactable->ColliderDisabled = true;
+            }
+            if (f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
+                hazard->IsCoinItem = true;
+                hazard->LifeTime = 600;
             }
         }
 

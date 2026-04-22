@@ -38,3 +38,8 @@ signal InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpo
 event PlayPuffParticle {
 	FPVector2 Position;
 }
+
+event IsNowResistantHit {
+	int ThisFrame;
+	EntityRef Entity;
+}

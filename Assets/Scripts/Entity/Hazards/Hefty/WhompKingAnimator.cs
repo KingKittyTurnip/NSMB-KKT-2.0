@@ -68,6 +68,8 @@ public unsafe class WhompKingAnimator : QuantumEntityViewComponent {
         var transform = f.Unsafe.GetPointer<Transform2D>(EntityRef);
         var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
 
+        Animator.speed = freezable->IsFrozen(f) ? 0 : 1;
+
         Model.SetActive(Boss->BossAnimator_ShowModel(f) || Animator.GetCurrentAnimatorStateInfo(0).IsName("Knockbacked"));
 
         materialBlock.SetFloat("Redness", Boss->BossAnimator_GetRedness());

@@ -1,0 +1,185 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d5cbd9d0a86fd4ab81898eb4718ac1, type: 3}
+  m_Name: FlipsidownRules
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: QuantumUser/Resources/AssetObjects/HazardDatas/FlipsidownRules
+    Guid:
+      Value: 357552766163820663
+  BaseRulesList:
+    Name: Flipsidown Rules
+    Description: Overwrites the current ruleset for this complex map to work well
+    DefaultRules:
+      AdvancedLobby:
+        Value: 0
+      Stage:
+        Id:
+          Value: 521702095770504271
+      Gamemode:
+        Id:
+          Value: 326486899682662279
+      GamemodeStarChasersEnabled:
+        Value: 1
+      StarsToWin: 10
+      StarFrequency: 10
+      GamemodeCoinRunnersEnabled:
+        Value: 0
+      StarcoinFrequency: 10
+      GamemodeBalloonBattleEnabled:
+        Value: 0
+      MaxBalloons: 10
+      GamemodeBombchasersEnabled:
+        Value: 0
+      CoinsForPowerup: 5
+      Items:
+      - Chance:
+          Value: 0
+        Items:
+        - Name: Mini Mushroom
+          PowerupPrototype:
+            Id:
+              Value: 1414434856952255942
+          Team: 255
+          Extra: 
+      - Chance:
+          Value: 1
+        Items: []
+      - Chance:
+          Value: 2
+        Items:
+        - Name: FireFlower
+          PowerupPrototype:
+            Id:
+              Value: 1349070666859566638
+          Team: 255
+          Extra: 
+        - Name: BlueShell
+          PowerupPrototype:
+            Id:
+              Value: 1466930856010351358
+          Team: 255
+          Extra: 
+        - Name: IceFlower
+          PowerupPrototype:
+            Id:
+              Value: 1524544283524633813
+          Team: 255
+          Extra: 
+        - Name: Hammer
+          PowerupPrototype:
+            Id:
+              Value: 1472665878288241371
+          Team: 255
+          Extra: 
+      - Chance:
+          Value: 3
+        Items:
+        - Name: Starman
+          PowerupPrototype:
+            Id:
+              Value: 1502268950446962426
+          Team: 255
+          Extra: 
+      - Chance:
+          Value: 4
+        Items:
+        - Name: Metal Mushroom
+          PowerupPrototype:
+            Id:
+              Value: 1313060240537942267
+          Team: 255
+          Extra: 
+      - Chance:
+          Value: 5
+        Items:
+        - Name: Mushroom
+          PowerupPrototype:
+            Id:
+              Value: 1268531089014898302
+          Team: 255
+          Extra: 
+      - Chance:
+          Value: 6
+        Items:
+        - Name: Propeller Mushroom
+          PowerupPrototype:
+            Id:
+              Value: 1286010981056643553
+          Team: 255
+          Extra: 
+      - Chance:
+          Value: 7
+        Items:
+        - Name: Mega Mushroom
+          PowerupPrototype:
+            Id:
+              Value: 1300211052819551813
+          Team: 255
+          Extra: 
+      - Chance:
+          Value: 8
+        Items: []
+      - Chance:
+          Value: 9
+        Items: []
+      - Chance:
+          Value: 10
+        Items: []
+      HazardsEnabled:
+        Value: 1
+      MaxHazards: 1
+      HazardFrequency: 60
+      HeftyPercentage:
+        RawValue: 52429
+      HazardLifetime: 80
+      Hazards:
+      - Name: Lemmy's Ball
+        HazardPrototype:
+          Id:
+            Value: 1381489562479131125
+        Team: 255
+        Hefty:
+          Value: 0
+        SpawnRandom:
+          Value: 1
+        SpawnFridge:
+          Value: 1
+        Extra: 
+      - Name: Spinpipe
+        HazardPrototype:
+          Id:
+            Value: 1341125926870955329
+        Team: 255
+        Hefty:
+          Value: 1
+        SpawnRandom:
+          Value: 1
+        SpawnFridge:
+          Value: 1
+        Extra: 000000
+      - Name: Voidwall
+        HazardPrototype:
+          Id:
+            Value: 1528374188268676239
+        Team: 255
+        Hefty:
+          Value: 1
+        SpawnRandom:
+          Value: 1
+        SpawnFridge:
+          Value: 1
+        Extra: 01
+      Lives: 0
+      TimerMinutes: 0
+      TeamsEnabled:
+        Value: 0

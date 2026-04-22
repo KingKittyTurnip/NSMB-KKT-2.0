@@ -13,6 +13,9 @@ public unsafe class StarballAnimator : QuantumEntityViewComponent {
     [SerializeField] private GameObject breakPrefab;
     public AudioSource sfx;
 
+    [SerializeField] private GameObject[] StorableObjects;
+    [SerializeField] private GameObject StarEyesNormal, StarEyesHappy;
+
     private Quaternion modelRotationTarget;
 
     public void Start() {
@@ -41,6 +44,9 @@ public unsafe class StarballAnimator : QuantumEntityViewComponent {
         Ball.rotation = Quaternion.RotateTowards(Contents.rotation, Quaternion.Euler(0, 0, Contents.rotation.eulerAngles.z), 200f * Time.deltaTime);
         Ring.localRotation = Quaternion.RotateTowards(Ring.localRotation, Quaternion.Euler(-5, 0, inputstrength), 400f * Time.deltaTime);
 
+        bool Fast = FPMath.Abs(physicsObject->Velocity.X) > 7;
+        StarEyesNormal.SetActive(!Fast);
+        StarEyesHappy.SetActive(Fast);
     }
 
     public override void OnDeactivate() {

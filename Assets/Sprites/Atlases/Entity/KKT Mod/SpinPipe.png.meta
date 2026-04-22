@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -123,7 +123,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SpinPipe_0
+      name: SpinPipe_Base
       rect:
         serializedVersion: 2
         x: 1
@@ -145,7 +145,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpinPipe_1
+      name: SpinPipe_Top
       rect:
         serializedVersion: 2
         x: 36
@@ -167,7 +167,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpinPipe_2
+      name: SpinPipe_Bottom
       rect:
         serializedVersion: 2
         x: 36
@@ -188,6 +188,72 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: SpinPipe_Sturdy_Base
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 2
+        width: 34
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bac8af77f3a15e647aaec78e1e95c25e
+      internalID: 131710058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpinPipe_Sturdy_Top
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 34
+        width: 34
+        height: 32
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 403fb9aafd4338e4c86b13c4836f9022
+      internalID: -2059068097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpinPipe_Sturdy_Bottom
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 1
+        width: 34
+        height: 32
+      alignment: 2
+      pivot: {x: 0.5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8d767b78fc82194eb0735ba4105909c
+      internalID: 2063473718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -202,11 +268,13 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SpinPipe_0: -226478828
-      SpinPipe_1: -1722824709
-      SpinPipe_2: 1037845662
-      SpinPipe_3: 2019472735
       SpinPipe_4: -1941537764
+      SpinPipe_Base: -226478828
+      SpinPipe_Bottom: 1037845662
+      SpinPipe_Sturdy_Base: 2019472735
+      SpinPipe_Sturdy_Bottom: 2063473718
+      SpinPipe_Sturdy_Top: -2059068097
+      SpinPipe_Top: -1722824709
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

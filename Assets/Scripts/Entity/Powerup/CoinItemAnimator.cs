@@ -20,7 +20,7 @@ namespace NSMB.Entities.CoinItems {
         private int originalSortingOrder;
         private bool inSpawnAnimation;
         private MaterialPropertyBlock mpb;
-        private bool Previouslyenabled = true;
+        private bool Previouslyenabled = false;
 
         public void OnValidate() {
             //this.SetIfNull(ref renderer, UnityExtensions.GetComponentType.Children);
@@ -42,6 +42,7 @@ namespace NSMB.Entities.CoinItems {
 
             originalSortingOrder = renderers[0].sortingOrder;
             foreach (Renderer r in renderers) {
+                r.enabled = true;
                 r.GetPropertyBlock(mpb = new());
             }
 
@@ -157,7 +158,7 @@ namespace NSMB.Entities.CoinItems {
 
         private void HandleDespawningBlinking(float lifetime) {
             bool newlyEnabled = false;
-            if (lifetime <= 60 && lifetime != 0) {
+            if (lifetime <= 60 && lifetime != 0 && blinkingRate != -1) {
                 newlyEnabled = ((lifetime / 60f * blinkingRate) % 1) > 0.5f;
             } else {
                 newlyEnabled = true;

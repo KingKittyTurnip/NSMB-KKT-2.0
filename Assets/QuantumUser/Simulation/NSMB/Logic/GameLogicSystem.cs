@@ -2,6 +2,7 @@ using Photon.Deterministic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.SceneManagement;
 
 namespace Quantum {
     public unsafe class GameLogicSystem : SystemMainThread, ISignalOnPlayerAdded, ISignalOnPlayerRemoved, ISignalOnMarioPlayerDied,
@@ -11,7 +12,7 @@ namespace Quantum {
             //var gamemode = f.Context.GetAllAssets<GamemodeAsset>()[0];
             f.Global->Rules.Items = f.AllocateList<ItemList>(64);
             f.Global->Rules.Hazards = f.AllocateList<HazardList>(64);
-            f.FindAsset(f.SimulationConfig.BaseRules).Rules.BaseRulesList.DefaultRules.Materialize(f, ref f.Global->Rules);
+            f.FindAsset(f.SimulationConfig.BaseRules).Rules.BaseRulesList[0].DefaultRules.Materialize(f, ref f.Global->Rules);
 
             //RandomStage
             //TODO: check if the stage is valid
@@ -241,6 +242,14 @@ namespace Quantum {
             foreach (var otherGamemode in f.Context.GetAllAssets<GamemodeAsset>()) {
                 otherGamemode.DisableGamemode(f);
             }
+
+            var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+            if (stage.OverwriteRules != null) {
+                UnityEngine.Debug.Log("rewrite overidden rules rules");
+
+                //rewrite old rules
+                f.Global->Rules = f.Global->ClipboardRules;
+            }
         }
 
         public void OnMarioPlayerDied(Frame f, EntityRef entity) {
@@ -392,6 +401,15 @@ namespace Quantum {
             var config = f.SimulationConfig;
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
             int teamCount = 0;
+
+            if (stage.OverwriteRules != null) {
+                UnityEngine.Debug.Log("Overwriting rules");
+
+                //remember our rules
+                f.Global->ClipboardRules = f.Global->Rules;
+                //set overwrite rules
+                f.FindAsset(stage.OverwriteRules).BaseRulesList.DefaultRules.Materialize(f, ref f.Global->Rules);
+            }
 
             int playerCount = 0;
             foreach ((_, var data) in f.Unsafe.GetComponentBlockIterator<PlayerData>()) {

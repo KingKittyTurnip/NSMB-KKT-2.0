@@ -2,9 +2,12 @@
 
 component Tanoomba {
 	[ExcludeFromPrototype] TanoombaState State;
-	[ExcludeFromPrototype] TanoombaFormState Form;
+	[ExcludeFromPrototype] int FormId;
 	[ExcludeFromPrototype] byte FormVariant;
+	[ExcludeFromPrototype] bool TransformIntoAnythingAnytime;
 	FP JumpVelocity;
+	FPVector2 BaseGravity;
+	FP BaseTerminalVelocity;
 	
 	[ExcludeFromPrototype] FP ReusableTimer;
 
@@ -14,6 +17,13 @@ component Tanoomba {
 	//[ExcludeFromPrototype] bool Laughing;
 	[ExcludeFromPrototype] bool PlayerPassedBy;
 	[ExcludeFromPrototype] bool Invulnrable;
+
+	//transform data stuff
+	AssetRef<TanoombaTransformationAsset> FormData;
+	[ExcludeFromPrototype] FP AnimationCurveTimer;
+	[ExcludeFromPrototype] FPVector2 AnimationCurveOrigin;
+	AssetRef<PowerupAsset> PropellerAsset;
+	AssetRef<PowerupAsset> BubbleAsset;
 }
 
 enum TanoombaState : Byte {
@@ -27,25 +37,6 @@ enum TanoombaState : Byte {
 	Shocked,
 }
 
-enum TanoombaFormState : Byte {
-	//General
-	Coin,
-	Block,
-	Star,
-	Powerup,
-
-	//Stage Elements ig
-	Goomba,
-	KoopaShell,
-
-	//Hazards
-	HeavyStone,
-	LemmyBall, //make stars be tanoomba's face
-
-	//Edge
-	Max,
-}
-
 event TanoombaFlee {
 	EntityRef Entity;
 }
@@ -57,4 +48,15 @@ event TanoombaLMAO {
 }
 event TanoombaPoof {
 	EntityRef Entity;
+}
+
+event TanoombaTransform {
+	Frame f;
+	EntityRef Entity;
+	int FormId;
+}
+
+event TanoombaPlaySoundType {
+	EntityRef Entity;
+	int SoundId;
 }

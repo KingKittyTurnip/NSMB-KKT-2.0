@@ -112,7 +112,11 @@ namespace Quantum {
             hazard->JustSpawned = true;
             if (spawnReason == SpawnReason.Item) {
                 hazard->IsCoinItem = true;
-                hazard->BaseLifeTime = hazard->LifeTime = 600;
+                if (hazard->BaseLifeTime == 0)
+                    hazard->BaseLifeTime = hazard->LifeTime = 600;
+
+                f.Unsafe.TryGetPointer(thisEntity, out Interactable* inter);
+                inter->ColliderDisabled = true;
             } else {
                 hazard->IsHazard = true;
 
@@ -126,7 +130,8 @@ namespace Quantum {
                 }
 
                 //Set LifeTime
-                hazard->BaseLifeTime = hazard->LifeTime = f.Global->Rules.HazardLifetime * 60;
+                if (hazard->BaseLifeTime == 0)
+                    hazard->BaseLifeTime = hazard->LifeTime = f.Global->Rules.HazardLifetime * 60;
 
                 // Shoot in Random Direction
                 transform->Position = spawnpoint;

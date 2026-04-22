@@ -132,7 +132,7 @@ namespace Quantum {
                 var position = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
 
                 //spawn a hefty or a normal hazard?
-                FP heftychance = f.Global->Rules.HeftyPercentage - f.Global->HeftyCount;
+                FP heftychance = f.Global->Rules.HeftyPercentage - ((FP)f.Global->HeftyCount);
                 bool hefty = f.RNG->Next() <= heftychance;
                 bool TryAgain = false;
 
@@ -162,6 +162,8 @@ namespace Quantum {
                 //pick a hazard selected
                 int pick = f.RNG->Next(0, spawnablehazards.Count);
                 UnityEngine.Debug.Log(pick + " " + spawnablehazards.Count);
+                if (hefty)
+                    f.Global->HeftyCount++;
 
                 //SpawnHazard
                 EntityRef newEntity = f.Create(spawnablehazards[pick].HazardPrototype); //error out of range?

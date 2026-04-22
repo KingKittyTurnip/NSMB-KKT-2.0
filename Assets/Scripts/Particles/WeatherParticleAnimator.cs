@@ -14,7 +14,6 @@ public class WeatherParticleAnimator : MonoBehaviour {
     */
 
     //---Public Variables
-    public bool Enabled;
     private Vector3  Pos;
     public float IntensityModifier = 1;
 
@@ -27,9 +26,6 @@ public class WeatherParticleAnimator : MonoBehaviour {
         // Set Vars
         ParticleSystem.ShapeModule area = Particle.shape;
         ParticleSystem.EmissionModule emission = Particle.emission;
-
-        // Enable?
-        emission.enabled = Enabled;
 
         // Set Size And Amount Relitive To The Stage
         stage = (VersusStageData) QuantumUnityDB.GetGlobalAsset(FindFirstObjectByType<QuantumMapData>().GetAsset(false).UserAsset);

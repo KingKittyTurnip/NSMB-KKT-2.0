@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using UnityEngine;
 using static IInteractableTile;
 using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 namespace Quantum {
     
@@ -198,6 +199,8 @@ namespace Quantum {
                         physicsObject->IsFrozen = false;
                         Dis->ConnectedObject = EntityRef.None;
                         Dis->ReusableTimer += f.DeltaTime * 3;
+
+                        physicsObject->Velocity.Y = 0;
                     } else {
                         //halt
                         TargetPhysics->Velocity.X = FPMath.Clamp(TargetPhysics->Velocity.X, -FP._0_50, FP._0_50);
@@ -225,14 +228,13 @@ namespace Quantum {
                     (physicsObject->IsTouchingGround || physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall || physicsObject->IsTouchingCeiling))) {
                         f.Unsafe.GetPointer<Interactable>(filter.Entity)->ColliderDisabled = physicsObject->DisableCollision = physicsObject->IsFrozen = true;
                         hazard->LifeTime = 120;
-                        Dis->HitSomething = false;
-                        physicsObject->IsFrozen = true;
+                        Dis->HitSomething = Dis->Thrown = false;
                         f.Events.ThrowObjSimple(filter.Entity, transform->Position);
                     }
                 } else {
                     var type = Dis->Varient == 1 ? ExplosionType.Shockwave : ExplosionType.GroundedShockwave;
                     if ((hazard->LifeTime <= 115 && hazard->LifeTime > 110) || type == ExplosionType.GroundedShockwave) {
-                        Shape2D shape = Shape2D.CreateCircle(Dis->Varient == 1 ? 2+FP._0_50 : 9);
+                        Shape2D shape = Shape2D.CreateCircle(Dis->Varient == 1 ? 3 : 11);
                         var hits = f.Physics2D.OverlapShape(*transform, shape);
                         for (int i = 0; i < hits.Count; i++) {
                             var hit = hits[i];
@@ -243,7 +245,7 @@ namespace Quantum {
                             f.Signals.OnBobombExplodeEntity(filter.Entity, hit.Entity, type);
                         }
                         if (Dis->Varient == 1 && (hazard->LifeTime == 10 && hazard->LifeTime == 5)) { //Red Pow Destroys Bricks
-                            int sizeTiles = FPMath.FloorToInt(hazard->LifeTime == 10 ? 1 : 2);
+                            int sizeTiles = FPMath.FloorToInt(hazard->LifeTime == 10 ? 1 : 3);
                             IntVector2 origin = QuantumUtils.WorldToRelativeTile(stage, transform->Position + collider->Shape.Centroid);
                             for (int x = -sizeTiles; x <= sizeTiles; x++) {
                                 for (int y = -sizeTiles; y <= sizeTiles; y++) {
@@ -436,9 +438,15 @@ namespace Quantum {
                         HazardSystem.DestroyHazard(f, filter.Entity);
                     }
                     holdable->Holder = EntityRef.None;
-                    if (!hazard->IsHazard) {
+                    /*if (!hazard->IsHazard) {
                         QuantumUtils.Decrement(ref hazard->LifeTime);
-                    }
+                        if (hazard->LifeTime <= 90) {
+                            physicsObject->IsFrozen = false;
+                            hazard->LifeTime = 0;
+                            Dis->HitSomething = Dis->Thrown = false;
+                            HazardSystem.DestroyHazard(f, filter.Entity);
+                        }
+                    }*/
                 }
                 break;
             case ThrowingObjectType.ChainPost:
@@ -628,6 +636,9 @@ namespace Quantum {
             if (holdable->PreviousHolder == marioEntity && holdable->IgnoreOwnerFrames > 0) {
                 return false;
             }
+            if (f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled) {
+                return false;
+            }
 
             #region SetValues
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
@@ -685,7 +696,8 @@ namespace Quantum {
                     return false;
                 case ThrowingObjectType.Pow:
                     //explode this
-                    Dis->Thrown = Dis->HitSomething = true;
+                    f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = true;
+                    Dis->HitSomething = true;
                     return false;
                 }
                 if (Dis->IsFlying) {
@@ -984,6 +996,9 @@ namespace Quantum {
             var phys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(anyEntity);
 
+            //if (f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled) {
+            //    return false;
+            //}
             //fix for lemmyball interaction bug
             if (f.Has<LemmyBall>(anyEntity))
                 LemmyBallSystem.TryLemmyBallPush(f, anyEntity, thisEntity, true);
@@ -998,7 +1013,7 @@ namespace Quantum {
             QuantumUtils.UnwrapWorldLocations(f, DisTransform->Position + ((DisCollider->Shape.Centroid.Y - DisCollider->Shape.Box.Extents.Y) * FPVector2.Up), otherTransform, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
-            if (damageDirection.Y > Constants._0_66) {
+            if (damageDirection.Y > FP._0_75) {
                 Dis->ConnectedObject = anyEntity;
                 phys->IsFrozen = true;
                 otherPhys->Velocity.Y = -1;
@@ -1145,8 +1160,7 @@ namespace Quantum {
                 if (specialValues[1] == 1) {
                     Dis->Thrown = true;
                     hazard->IPWSTime = 1;
-                }
-                if (specialValues[1] == 2) {
+                } else if (specialValues[1] == 2) {
                     physicsObject->Velocity.Y = 20;
                     //idk maybe play a fling sound
                 }
@@ -1164,6 +1178,7 @@ namespace Quantum {
             case ThrowingObjectType.Voidwall:
                 if (specialValues[0] == 1) {
                     Dis->Thrown = true;
+                    Dis->IsFlying = false;
                     hazard->IPWSTime = 1;
                 }
                 //Dis->Varient = (byte)index;

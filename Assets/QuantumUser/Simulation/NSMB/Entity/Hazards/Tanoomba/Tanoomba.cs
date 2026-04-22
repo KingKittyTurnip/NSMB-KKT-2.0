@@ -1,3 +1,4 @@
+using Microsoft.SqlServer.Server;
 using Photon.Deterministic;
 using UnityEngine.UIElements;
 
@@ -9,44 +10,44 @@ namespace Quantum {
             var tanoomba = f.Unsafe.GetPointer<Tanoomba>(entity);
             tanoomba->ReusableTimer = 0;
             tanoomba->State = TanoombaState.Idling;
-            tanoomba->Form = TanoombaFormState.Max;
+            tanoomba->FormId = -1;
             tanoomba->PlayerPassedBy = false;
         }
 
-        public void TanoombaStartTransform(Frame f, EntityRef thisEntity, EntityRef TurnedIntoObjectOverlay, bool Floating) {
+        public void TanoombaStartTransform(Frame f, EntityRef thisEntity, EntityRef TurnedIntoObjectOverlay, TanoombaTransformationAsset.TanoombaFormData form) {
             var enemy = f.Unsafe.GetPointer<Enemy>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
 
-            physicsObject->Velocity.X = 0;
-            physicsObject->Velocity.Y = 0;
-            physicsObject->IsFrozen = Floating;
+            SwitchState(f, thisEntity, TanoombaState.Transformed);
+
+            switch (form.MoveData.MovementType) {
+            case TanoombaTransformationAsset.TanoombaFormMovementType.Static: {
+                physicsObject->Velocity.X = 0;
+                physicsObject->Velocity.Y = 0;
+                physicsObject->Gravity = FPVector2.Zero;
+                physicsObject->TerminalVelocity = 0;
+                physicsObject->IsFrozen = true;
+                enemy->FacingRight = false;
+                break;
+            }
+            case TanoombaTransformationAsset.TanoombaFormMovementType.Basic: {
+                enemy->FacingRight = form.MoveData.MaxSpeed == 0 ? false : f.RNG->Next() > FP._0_50;
+                physicsObject->Gravity = form.MoveData.Gravity;
+                physicsObject->TerminalVelocity = form.MoveData.TerminalVelocity;
+                physicsObject->Velocity.X = (enemy->FacingRight ? 1 : -1) * form.MoveData.MaxSpeed;
+                break;
+            }
+            }
+            f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = false;
+            physicsObject->DisableCollision = form.MoveData.MoveThroughTerrain;
+            AnimationCurveTimer = 0;
 
             TransformedObject = TurnedIntoObjectOverlay;
             if (TransformedObject != EntityRef.None) {
                 transform->Teleport(f, f.Unsafe.GetPointer<Transform2D>(TransformedObject)->Position);
             }
-        }
-        public void TanoombaStartTransform(Frame f, EntityRef thisEntity, EntityRef TurnedIntoObjectOverlay, bool Floating, FPVector2 Position) {
-            var enemy = f.Unsafe.GetPointer<Enemy>(thisEntity);
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
-
-            physicsObject->Velocity.X = 0;
-            physicsObject->Velocity.Y = 0;
-            physicsObject->IsFrozen = Floating;
-
-            TransformedObject = TurnedIntoObjectOverlay;
-            transform->Teleport(f, Position);
-        }
-        public void TanoombaResetTransform(Frame f, EntityRef thisEntity, bool AttackMode) {
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-
-            SwitchState(f, thisEntity, AttackMode ? TanoombaState.Attacking : TanoombaState.Idling);
-
-            physicsObject->Velocity.X = 0;
-            physicsObject->Velocity.Y = 0;
-            physicsObject->IsFrozen = false;
+            f.Events.TanoombaTransform(f, thisEntity, FormId);
         }
 
         public void SwitchState(Frame f, EntityRef thisEntity, TanoombaState newState, bool FromRight = false) {
@@ -54,7 +55,11 @@ namespace Quantum {
             FP fleeTimer = Constants._0_66;
             FP attackTimer = Constants._2_50;
             FP getupTimer = FP._0_50;
+            physicsObject->IsFrozen = false;
             Invulnrable = false;
+
+            physicsObject->Velocity.X = 0;
+            physicsObject->Velocity.Y = 0;
 
             switch (newState) {
             case TanoombaState.Idling:
@@ -65,6 +70,9 @@ namespace Quantum {
             case TanoombaState.Searching:
                 resetVel();
                 Invulnrable = true;
+                f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = true;
+                FormId = -1;
+                f.Events.TanoombaTransform(f, thisEntity, FormId);
                 HazardSystem.ChangeHazardIcon(f, thisEntity, false);
                 break;
             case TanoombaState.Transformed:
@@ -105,12 +113,20 @@ namespace Quantum {
                 break;
             }
 
-            State = newState;
-            if (Form != TanoombaFormState.Max) {
+            if (State == TanoombaState.Transformed && newState != TanoombaState.Transformed && newState != TanoombaState.Searching) {
+                physicsObject->Gravity = BaseGravity;
+                physicsObject->TerminalVelocity = BaseTerminalVelocity;
+                if (physicsObject->DisableCollision) {
+                    PhysicsObjectSystem.TryEject(f, thisEntity);
+                    physicsObject->DisableCollision = false;
+                }
+                FormId = -1;
                 f.Events.PlayPuffParticle(f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position);
-                Form = TanoombaFormState.Max;
+                f.Events.TanoombaTransform(f, thisEntity, FormId);
                 HazardSystem.ChangeHazardIcon(f, thisEntity, true);
             }
+
+            State = newState;
 
             void resetVel() {
                 physicsObject->Velocity.X = 0;
@@ -123,12 +139,12 @@ namespace Quantum {
             var enemy = f.Unsafe.GetPointer<Enemy>(tanoombaEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(tanoombaEntity);
 
-            var koopaTransform = f.Unsafe.GetPointer<Transform2D>(tanoombaEntity);
-            var koopaCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(tanoombaEntity);
+            var transform = f.Unsafe.GetPointer<Transform2D>(tanoombaEntity);
+            var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(tanoombaEntity);
 
-            FPVector2 center = koopaTransform->Position + koopaCollider->Shape.Centroid;
+            FPVector2 center = transform->Position + collider->Shape.Centroid;
 
-            if (reason.ShouldSpawnCoin()) {
+            if (f.Global->Rules.IsStageCoinsEnabled) {
                 // Spawn coin
                 var gamemode = f.FindAsset(f.SimulationConfig.StarChasers);
                 gamemode.SpawnLooseCoin(f, center);
@@ -136,7 +152,7 @@ namespace Quantum {
 
             // Fall off screen
             if (f.Unsafe.TryGetPointer(killerEntity, out Transform2D* killerTransform)) {
-                QuantumUtils.UnwrapWorldLocations(f, koopaTransform->Position, killerTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+                QuantumUtils.UnwrapWorldLocations(f, transform->Position, killerTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
                 enemy->ChangeFacingRight(f, tanoombaEntity, ourPos.X < theirPos.X);
             } else {
                 enemy->ChangeFacingRight(f, tanoombaEntity, false);
@@ -148,6 +164,7 @@ namespace Quantum {
                 Constants._2_50
             );
             physicsObject->Gravity = new FPVector2(0, -Constants._14_75);
+            physicsObject->TerminalVelocity = -8;
 
             byte combo;
             if (f.Unsafe.TryGetPointer(killerEntity, out ComboKeeper* comboKeeper)) {

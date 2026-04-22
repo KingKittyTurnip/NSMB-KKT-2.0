@@ -3,6 +3,8 @@ using Photon.Deterministic;
 using Quantum;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
+using static LoopingMusicData;
 using static NSMB.Utilities.QuantumViewUtils;
 
 public unsafe class FanAnimator : QuantumEntityViewComponent {
@@ -15,6 +17,7 @@ public unsafe class FanAnimator : QuantumEntityViewComponent {
     [SerializeField] private AudioSource BrokenSound;
     //[SerializeField] private AudioSource FanTwirl;
     [SerializeField] private AudioSource GlobalStorm;
+    [SerializeField] private AudioSource sfx;
 
     private float BladeVelocity;
     private bool Broken = false;
@@ -29,6 +32,18 @@ public unsafe class FanAnimator : QuantumEntityViewComponent {
     public void Start() {
         QuantumEvent.Subscribe<EventOnFanHit>(this, OnFanHit);
         QuantumEvent.Subscribe<EventOnFanSwitch>(this, OnFanSwitch);
+        QuantumEvent.Subscribe<EventIsNowResistantHit>(this, OnResist);
+    }
+    public override void OnActivate(Frame f) {
+        if (f.Unsafe.TryGetPointer<Fan>(EntityRef, out var fan)) {
+            if (fan->Broken) {
+                Broken = true;
+                Base.SetTrigger(fan->FellOver ? "Kill" : "Break");
+                weatherPar.UpdateEmission(true);
+                ClickSound.Play();
+            }
+        }
+        OnUpdateView();
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -76,6 +91,17 @@ public unsafe class FanAnimator : QuantumEntityViewComponent {
             return;
         }
         ClickSound.Play();
+    }
+
+    private int LastFrame = 0;
+    private unsafe void OnResist(EventIsNowResistantHit e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+        if (e.ThisFrame > LastFrame) {
+            sfx.Play();
+        }
+        LastFrame = e.ThisFrame + 10;
     }
 
     public override void OnDeactivate() {

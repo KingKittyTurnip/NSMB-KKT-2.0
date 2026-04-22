@@ -77,6 +77,8 @@ GameObject:
   - component: {fileID: 3093743753026942761}
   - component: {fileID: -3897358826683353975}
   - component: {fileID: 8952250642179673941}
+  - component: {fileID: 623698746815425192}
+  - component: {fileID: 6782642859281704462}
   m_Layer: 19
   m_Name: Spinpipe
   m_TagString: Powerup
@@ -126,6 +128,10 @@ MonoBehaviour:
       Id:
         Value: 0
     SourceCollider: {fileID: 0}
+    SourceShapeSettings:
+      IsScaledBySource: 0
+      CapsuleDirection2D: 0
+      CapsuleDirection3D: 0
     Shape2D:
       ShapeType: 4
       PolygonCollider:
@@ -149,7 +155,7 @@ MonoBehaviour:
         X:
           RawValue: 0
         Y:
-          RawValue: 0
+          RawValue: 65470464
       RotationOffset:
         RawValue: 0
       UserTag: 0
@@ -196,12 +202,22 @@ MonoBehaviour:
     Config2D: 116
     Config3D: 58
     RotationFreeze: 0
+    InertiaMode: 0
     Mass:
       RawValue: 65536
     Drag:
       RawValue: 32768
     AngularDrag:
       RawValue: 32768
+    ExplicitInertia2D:
+      RawValue: 65536
+    ExplicitInertia3D:
+      X:
+        RawValue: 65536
+      Y:
+        RawValue: 65536
+      Z:
+        RawValue: 65536
     CenterOfMass2D:
       X:
         RawValue: 0
@@ -214,6 +230,71 @@ MonoBehaviour:
         RawValue: 0
       Z:
         RawValue: 0
+    ParametricInertiaShape2D:
+      ShapeType: 0
+      PolygonCollider:
+        Id:
+          Value: 0
+      CircleRadius:
+        RawValue: 32768
+      CapsuleSize:
+        X:
+          RawValue: 65536
+        Y:
+          RawValue: 131072
+      EdgeExtent:
+        RawValue: 32768
+      BoxExtents:
+        X:
+          RawValue: 32768
+        Y:
+          RawValue: 32768
+      PositionOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+      RotationOffset:
+        RawValue: 0
+      UserTag: 0
+      IsPersistent: 1
+      CompoundShapes: []
+    ParametricInertiaShape3D:
+      ShapeType: 0
+      SphereRadius:
+        RawValue: 32768
+      CapsuleRadius:
+        RawValue: 32768
+      CapsuleHeight:
+        RawValue: 131072
+      PositionOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+        Z:
+          RawValue: 0
+      BoxExtents:
+        X:
+          RawValue: 32768
+        Y:
+          RawValue: 32768
+        Z:
+          RawValue: 32768
+      RotationOffset:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: 0
+        Z:
+          RawValue: 0
+      UserTag: 0
+      IsPersistent: 1
+      CompoundShapes: []
+    InertiaScale:
+      _hasValue: 0
+      _value:
+        RawValue: 65536
     GravityScale:
       _hasValue: 0
       _value:
@@ -296,9 +377,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8359218312643153770, guid: b73add24eb026c844b85593f8bab1f8c,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 5b37bd296278e534a9d438cbf66937ca, type: 3}
-  m_Resource: {fileID: 8300000, guid: 5b37bd296278e534a9d438cbf66937ca, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: affa24b59dd5c2d4ab78a271f7585639, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -405,6 +486,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
+    Sturdy:
+      Value: 0
     Broken:
       Value: 0
 --- !u!114 &6989136294608042370
@@ -554,13 +637,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
-    Spawnpoint:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    IgnorePlayerWhenRespawning:
-      Value: 0
     DoNotDespawnInPit:
       Value: 0
     RestrictSpawnPosition:
@@ -589,9 +665,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 4904271417136955334}
   srenderer: {fileID: 8131463546934365591}
-  sprite: {fileID: 1037845662, guid: fb2a2eb0b5722d449b9c35ae598d08ac, type: 3}
+  SpriteNormal: {fileID: -226478828, guid: fb2a2eb0b5722d449b9c35ae598d08ac, type: 3}
+  SpriteNormalBottom: {fileID: 1037845662, guid: fb2a2eb0b5722d449b9c35ae598d08ac,
+    type: 3}
+  SpriteSturdy: {fileID: 131710058, guid: fb2a2eb0b5722d449b9c35ae598d08ac, type: 3}
+  SpriteSturdyBottom: {fileID: 2063473718, guid: fb2a2eb0b5722d449b9c35ae598d08ac,
+    type: 3}
   breakPrefab: {fileID: 6090458509712813838, guid: 7983e6125c40af747a4b34722e407993,
     type: 3}
+  sfx: {fileID: 4207910641862185911}
+--- !u!114 &623698746815425192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 330575751736567297
+--- !u!114 &6782642859281704462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 129481247266461849}
+  moveBehindBlocksRoot: {fileID: 0}
+  renderers:
+  - {fileID: 8131463546934365591}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: -1
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 1
+  sfx: {fileID: 4207910641862185911}
+  koopaSpawnParticles: {fileID: 0}
 --- !u!1 &2276692161212191875
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,13 +741,14 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 129481247266461849}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8131463546934365591
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -644,6 +767,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -665,9 +790,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -5536
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -226478828, guid: fb2a2eb0b5722d449b9c35ae598d08ac, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -677,5 +804,4 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0

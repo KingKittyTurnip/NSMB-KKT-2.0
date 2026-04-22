@@ -2,6 +2,8 @@ using Photon.Deterministic;
 using Quantum.Collections;
 using System.Numerics;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 namespace Quantum {
     
@@ -24,6 +26,8 @@ namespace Quantum {
         
         public override void OnInit(Frame f) {
             //f.Context.Interactions.Register<Voidwall, MarioPlayer>(f, OnVoidwallMarioInteraction);
+            f.Context.Interactions.Register<Voidwall, MarioPlayer>(f, OnVoidwallMarioSolidInteraction);
+            //f.Context.RegisterPreContactCallback(f, OnCauldronObjectSolidPreContact);
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -57,14 +61,23 @@ namespace Quantum {
         }
 
         #region Interactions
-        public static bool OnVoidwallMarioInteraction(Frame f, EntityRef thisEntity, EntityRef marioEntity, PhysicsContact contact) {
-            #region SetValues
+        /*public static void OnVoidwallMarioInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
+            OnVoidwallMario(f, thisEntity, otherEntity);
+        }*/
+        public static bool OnVoidwallMarioSolidInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity, PhysicsContact contact) {
+            return OnVoidwallMario(f, thisEntity, otherEntity);
+        }
+        /*private void OnCauldronObjectSolidPreContact(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts) {
+            if (f.Has<Voidwall>(entity) && f.Has<PhysicsObject>(contact.Entity)) {
+                keepContacts = OnVoidwallMario(f, entity, contact.Entity);
+            }
+        }*/
+        public static bool OnVoidwallMario(Frame f, EntityRef thisEntity, EntityRef marioEntity) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity); 
             var DisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
 
             QuantumUtils.UnwrapWorldLocations(f, DisTransform->Position, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
-            #endregion
 
             if (mario->CurrentPowerupState == PowerupState.MegaMushroom) { //TODO: Add Metal
                 var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
@@ -79,7 +92,7 @@ namespace Quantum {
                 collider->Shape.Centroid.Y = -999;
                 return false;
             }
-            return true;
+            return false;
         }
         #endregion
 

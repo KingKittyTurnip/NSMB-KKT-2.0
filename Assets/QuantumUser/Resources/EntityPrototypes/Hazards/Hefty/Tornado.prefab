@@ -145,6 +145,8 @@ GameObject:
   - component: {fileID: 3527695474151798566}
   - component: {fileID: 2287914521826614558}
   - component: {fileID: -1480368232768371881}
+  - component: {fileID: 2539970679744848495}
+  - component: {fileID: 5689246215351655245}
   m_Layer: 19
   m_Name: Tornado
   m_TagString: Untagged
@@ -214,14 +216,14 @@ MonoBehaviour:
         RawValue: 0
       BoxExtents:
         X:
-          RawValue: 104858
+          RawValue: 6554
         Y:
-          RawValue: 85197
+          RawValue: 6554
       PositionOffset:
         X:
           RawValue: 0
         Y:
-          RawValue: 39322
+          RawValue: 42598
       RotationOffset:
         RawValue: 0
       UserTag: 0
@@ -762,6 +764,47 @@ MonoBehaviour:
   Model: {fileID: 3145188379225183429}
   sfx: {fileID: 5674404523704379184}
   Launch: {fileID: 8300000, guid: 53e51a4280e79db45a01f926e692c33d, type: 3}
+--- !u!114 &2539970679744848495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7523289063499453450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 387104371510409836
+--- !u!114 &5689246215351655245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7523289063499453450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 5160554633631996689}
+  moveBehindBlocksRoot: {fileID: 5160554633631996689}
+  renderers:
+  - {fileID: 6162271254274237315}
+  - {fileID: 9060028654145293945}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: 4
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 1
+  sfx: {fileID: 5674404523704379184}
+  koopaSpawnParticles: {fileID: 0}
 --- !u!1001 &1303588586922629197
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -868,6 +911,12 @@ Transform:
 --- !u!4 &5181416928589901609 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3026610439551371420, guid: 162ba219284a580479e18a0a3452d3d3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1303588586922629197}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &9060028654145293945 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1176293931425065420, guid: 162ba219284a580479e18a0a3452d3d3,
     type: 3}
   m_PrefabInstance: {fileID: 1303588586922629197}
   m_PrefabAsset: {fileID: 0}
