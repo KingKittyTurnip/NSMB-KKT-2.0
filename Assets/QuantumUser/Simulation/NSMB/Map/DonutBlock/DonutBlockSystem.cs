@@ -43,7 +43,8 @@ namespace Quantum {
 
         public bool OnMarioPlayerDonutBlockInteraction(Frame f, EntityRef marioEntity, EntityRef donutBlockEntity, PhysicsContact contact) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
-            if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
+            if (currentPowerup.Form == PowerupAsset.PlayerForm.Mini) {
                 // Not affected by Mini Mario.
                 return true;
             }

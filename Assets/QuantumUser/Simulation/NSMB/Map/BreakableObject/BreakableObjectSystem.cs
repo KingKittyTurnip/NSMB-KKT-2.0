@@ -10,7 +10,8 @@ namespace Quantum {
 
         public static bool TryInteraction(Frame f, EntityRef marioEntity, EntityRef breakableObjectEntity, in PhysicsContact? contact = null) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
-            if (mario->CurrentPowerupState != PowerupState.MegaMushroom || mario->IsDead) {
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
+            if (currentPowerup.Form != PowerupAsset.PlayerForm.Mega || mario->IsDead) {
                 return true;
             }
 

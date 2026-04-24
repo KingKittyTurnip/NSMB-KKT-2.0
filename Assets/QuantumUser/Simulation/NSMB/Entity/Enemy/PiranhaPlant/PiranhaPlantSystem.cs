@@ -92,13 +92,14 @@ namespace Quantum {
 
         public void OnPiranhaPlantMarioInteraction(Frame f, EntityRef piranhaPlantEntity, EntityRef marioEntity) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
             var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
 
-            if (mario->InstakillsEnemies(marioPhysicsObject, false)) {
+            if (mario->InstakillsEnemies(marioPhysicsObject, currentPowerup, false)) {
                 var piranhaPlant = f.Unsafe.GetPointer<PiranhaPlant>(piranhaPlantEntity);
                 piranhaPlant->Kill(f, piranhaPlantEntity, marioEntity, EnemyKillReason.Special);
 
-            } else if (!mario->IsCrouchedInShell) {
+            } else if (!mario->IsCrouchedInShell(currentPowerup)) {
                 mario->Powerdown(f, marioEntity, false, piranhaPlantEntity);
             }
         }

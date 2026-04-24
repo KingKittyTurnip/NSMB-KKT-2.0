@@ -113,9 +113,10 @@ namespace Quantum {
         #region Interactions
         public static bool OnIceBlockMarioInteraction(Frame f, EntityRef marioEntity, EntityRef iceBlockEntity, PhysicsContact contact) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(iceBlockEntity);
 
-            if (mario->IsStarmanInvincible || mario->CurrentPowerupState == PowerupState.MegaMushroom) {
+            if (mario->IsStarmanInvincible || currentPowerup.Form == PowerupAsset.PlayerForm.Mega) {
                 Destroy(f, iceBlockEntity, IceBlockBreakReason.InvincibleMario, marioEntity);
                 return true;
             }

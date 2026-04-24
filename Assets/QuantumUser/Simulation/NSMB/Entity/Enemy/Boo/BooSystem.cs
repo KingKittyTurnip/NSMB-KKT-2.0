@@ -119,14 +119,15 @@ namespace Quantum {
 
         public void OnBooMarioPlayerInteraction(Frame f, EntityRef booEntity, EntityRef marioEntity) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
             var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
 
-            if (mario->InstakillsEnemies(marioPhysicsObject, false)) {
+            if (mario->InstakillsEnemies(marioPhysicsObject, currentPowerup, false)) {
                 var boo = f.Unsafe.GetPointer<Boo>(booEntity);
                 boo->Kill(f, booEntity, marioEntity, EnemyKillReason.Special);
             } else {
                 var booEnemy = f.Unsafe.GetPointer<Enemy>(booEntity);
-                if (!mario->IsCrouchedInShell && booEnemy->IntangibilityFrames == 0) {
+                if (!mario->IsCrouchedInShell(currentPowerup) && booEnemy->IntangibilityFrames == 0) {
                     mario->Powerdown(f, marioEntity, false, booEntity);
                 }
             }

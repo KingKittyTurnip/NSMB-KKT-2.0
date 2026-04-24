@@ -170,10 +170,11 @@ namespace Quantum {
             var bobombEnemy = f.Unsafe.GetPointer<Enemy>(bobombEntity);
             var bobombTransform = f.Unsafe.GetPointer<Transform2D>(bobombEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
 
             // Special insta-kill cases
-            if (mario->InstakillsEnemies(marioPhysicsObject, true)) {
+            if (mario->InstakillsEnemies(marioPhysicsObject, currentPowerup, true)) {
                 bobomb->Kill(f, bobombEntity, marioEntity, EnemyKillReason.Special);    
                 return;
             }
@@ -196,7 +197,7 @@ namespace Quantum {
             } else {
                 if (attackedFromAbove) {
                     // Light
-                    bool mini = mario->CurrentPowerupState == PowerupState.MiniMushroom;
+                    bool mini = currentPowerup.Form == PowerupAsset.PlayerForm.Mini;
                     if (!mini || mario->IsGroundpoundActive) {
                         Light(f, bobombEntity, bobomb, mini || !mario->IsGroundpoundActive);
                     }
@@ -209,7 +210,7 @@ namespace Quantum {
                     }
                     mario->IsDrilling = false;
 
-                } else if (mario->IsCrouchedInShell) {
+                } else if (mario->IsCrouchedInShell(currentPowerup)) {
                     // Bounce off blue shell crouched player 
                     bobombEnemy->ChangeFacingRight(f, bobombEntity, ourPos.X > theirPos.X);
                     marioPhysicsObject->Velocity.X = 0;

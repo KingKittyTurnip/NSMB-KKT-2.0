@@ -63,6 +63,7 @@ namespace Quantum {
             var goombaTransform = f.Unsafe.GetPointer<Transform2D>(goombaEntity);
             var goombaEnemy = f.Unsafe.GetPointer<Enemy>(goombaEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
             var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
 
@@ -70,15 +71,15 @@ namespace Quantum {
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
             bool attackedFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_25;
 
-            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
-            if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
+            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && currentPowerup.Form != PowerupAsset.PlayerForm.Mini;
+            if (mario->InstakillsEnemies(marioPhysicsObject, currentPowerup, true) || groundpounded) {
                 goomba->Kill(f, goombaEntity, marioEntity, groundpounded ? EnemyKillReason.Groundpounded : EnemyKillReason.Special);
                 mario->DoEntityBounce |= mario->IsDrilling;
                 return;
             }
 
             if (attackedFromAbove) {
-                if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
+                if (currentPowerup.Form == PowerupAsset.PlayerForm.Mini) {
                     if (mario->IsGroundpounding) {
                         mario->IsGroundpounding = false;
                         goomba->Kill(f, goombaEntity, marioEntity, EnemyKillReason.Normal);
@@ -91,7 +92,7 @@ namespace Quantum {
 
                 mario->IsDrilling = false;
 
-            } else if (mario->IsCrouchedInShell) {
+            } else if (mario->IsCrouchedInShell(currentPowerup)) {
                 marioPhysicsObject->Velocity.X = 0;
                 goombaEnemy->ChangeFacingRight(f, goombaEntity, ourPos.X > theirPos.X);
 

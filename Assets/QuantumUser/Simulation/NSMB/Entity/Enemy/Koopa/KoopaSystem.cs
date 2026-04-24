@@ -239,6 +239,7 @@ namespace Quantum {
             var koopa = f.Unsafe.GetPointer<Koopa>(koopaEntity);
             var koopaHoldable = f.Unsafe.GetPointer<Holdable>(koopaEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
             bool beingHeld = f.Exists(koopaHoldable->Holder);
 
             if (beingHeld || (koopaHoldable->PreviousHolder == marioEntity && koopaHoldable->IgnoreOwnerFrames > 0)) {
@@ -259,15 +260,15 @@ namespace Quantum {
 
             bool isSpiny = koopa->IsSpiny && !koopa->IsFlipped;
 
-            if (mario->InstakillsEnemies(marioPhysicsObject, false) || (!isSpiny && mario->InstakillsEnemies(marioPhysicsObject, true))) {
+            if (mario->InstakillsEnemies(marioPhysicsObject, currentPowerup, !isSpiny)) {
                 koopa->Kill(f, koopaEntity, marioEntity, EnemyKillReason.Special);
                 return;
             }
 
-            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
+            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && currentPowerup.Form != PowerupAsset.PlayerForm.Mini;
             if (isSpiny) {
                 // Mario is in Blue Shell (not spinning)
-                if (mario->IsCrouchedInShell) {
+                if (mario->IsCrouchedInShell(currentPowerup)) {
                     // hip dropping the spiny will cause it to spin identical to a regular Koopa Troopa
                     if (groundpounded) {
                         // Kick
@@ -342,7 +343,7 @@ namespace Quantum {
                         koopaEnemy->SetDelayedRespawn(600); // a little longer...
                         koopaPhysicsObject->IsFrozen = true;
 
-                    } else if (mario->CurrentPowerupState != PowerupState.MiniMushroom || mario->IsGroundpoundActive) {
+                    } else if (currentPowerup.Form != PowerupAsset.PlayerForm.Mini || mario->IsGroundpoundActive) {
                         koopa->EnterShell(f, koopaEntity, marioEntity, false, false);
                         koopaEnemy->IgnoreOffscreen = true; // stationary shells also don't return home
                     }
@@ -351,7 +352,7 @@ namespace Quantum {
                     koopaHoldable->IgnoreOwnerFrames = 5;
                 } else {
                     // Damage?
-                    if (mario->IsCrouchedInShell) {
+                    if (mario->IsCrouchedInShell(currentPowerup)) {
                         if (koopa->IsInShell) {
                             koopa->Kill(f, koopaEntity, marioEntity, EnemyKillReason.Special);
                         } else {

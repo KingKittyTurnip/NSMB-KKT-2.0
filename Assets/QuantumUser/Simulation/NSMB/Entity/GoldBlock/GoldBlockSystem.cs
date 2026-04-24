@@ -99,7 +99,9 @@ namespace Quantum {
             if (!f.Unsafe.TryGetPointer(marioEntity, out MarioPlayer* mario) || !f.Unsafe.TryGetPointer(goldBlockEntity, out GoldBlock* goldBlock)) {
                 return;
             }
-            if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
+
+            if (currentPowerup.Form == PowerupAsset.PlayerForm.Mega) {
                 // Break into 10 coins
                 var transform = f.Unsafe.GetPointer<Transform2D>(contact.Entity);
                 ObjectiveCoinSystem.SpawnObjectiveCoins(f, transform->Position, 10, 0, false);
@@ -169,7 +171,8 @@ namespace Quantum {
 
         public void OnMarioPlayerCollectedPowerup(Frame f, EntityRef marioEntity, EntityRef powerupEntity) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
-            if (mario->CurrentPowerupState != PowerupState.MegaMushroom) {
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
+            if (currentPowerup.Form != PowerupAsset.PlayerForm.Mega) {
                 return;
             }
 

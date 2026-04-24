@@ -23,8 +23,9 @@ public unsafe class BreakableBrickTile : StageTile, IInteractableTile {
         bool brokenByMega = false;
         EntityRef bumpOwner = default;
         if (f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)) {
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
             // Mario interacting with the block
-            if (mario->CurrentPowerupState < PowerupState.Mushroom) {
+            if (currentPowerup.OnDamagedAsset == null) {
                 doBreak = direction switch {
                     // Small Mario
                     InteractionDirection.Down when mario->IsGroundpoundActive => BreakingRules.HasFlag(BreakableBy.SmallMarioGroundpound),
@@ -32,7 +33,7 @@ public unsafe class BreakableBrickTile : StageTile, IInteractableTile {
                     InteractionDirection.Up => BreakingRules.HasFlag(BreakableBy.SmallMario),
                     _ => false
                 };
-            } else if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
+            } else if (currentPowerup.Form == PowerupAsset.PlayerForm.Mega) {
                 // Mega Mario
                 doBreak = BreakingRules.HasFlag(BreakableBy.MegaMario);
                 brokenByMega = true;

@@ -12,12 +12,13 @@ namespace Quantum {
             }
 
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
-            if (pipe->IsMiniOnly && mario->CurrentPowerupState != PowerupState.MiniMushroom) {
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
+            if (pipe->IsMiniOnly && currentPowerup.Form != PowerupAsset.PlayerForm.Mini) {
                 return;
             }
 
-            if (mario->IsCrouchedInShell || mario->IsInKnockback || mario->IsStuckInBlock
-                || mario->CurrentPowerupState == PowerupState.MegaMushroom || mario->MegaMushroomEndFrames > 0) {
+            if (mario->IsCrouchedInShell(currentPowerup) || mario->IsInKnockback || mario->IsStuckInBlock
+                || currentPowerup.Form == PowerupAsset.PlayerForm.Mega || mario->MegaMushroomEndFrames > 0) {
                 return;
             }
 

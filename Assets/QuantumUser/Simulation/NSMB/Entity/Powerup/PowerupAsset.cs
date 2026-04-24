@@ -45,7 +45,6 @@ public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
     public bool CanHoldItems = true;
     public bool IsLightweight;
     public bool IsFastSwim;
-    public bool DestroyesEverything;
 
     public enum PlayerForm : byte {
         Small = 0,
@@ -135,9 +134,6 @@ public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
         OnCollected(f, marioEntity);
 
         //kill
-        mario->PreviousPowerupState = mario->CurrentPowerupState;
-        mario->CurrentPowerupState = State;
-
         mario->PreviousPowerupAsset = mario->CurrentPowerupAsset;
         mario->CurrentPowerupAsset = this;
 
@@ -148,7 +144,7 @@ public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
         mario->IsInShell = false;
 
         if (previousPowerup != null && previousPowerup.EnterReserveIfOverridden) {
-            if (mario->CurrentPowerupState != PowerupState.NoPowerup) {
+            if (mario->CurrentPowerupAsset != f.SimulationConfig.SmallMarioAsset) {
                 mario->SetReserveItem(f, previousPowerup);
             }
             return PowerupReserveResult.CollectNewReserveOld;

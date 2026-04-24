@@ -66,22 +66,23 @@ namespace Quantum
             var bulletBillTransform = f.Unsafe.GetPointer<Transform2D>(bulletBillEntity);
             var bulletBillEnemy = f.Unsafe.GetPointer<Enemy>(bulletBillEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
+            var currentPowerup = f.FindAsset(mario->CurrentPowerupAsset);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
             var marioPhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
 
             QuantumUtils.UnwrapWorldLocations(f, bulletBillTransform->Position + FPVector2.Up * FP._0_10, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
             bool attackedFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > 0;
-            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
+            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && currentPowerup.Form != PowerupAsset.PlayerForm.Mini;
 
-            if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
+            if (mario->InstakillsEnemies(marioPhysicsObject, currentPowerup, true) || groundpounded) {
                 bulletBill->Kill(f, bulletBillEntity, marioEntity, groundpounded ? EnemyKillReason.Groundpounded : EnemyKillReason.Special);
                 mario->DoEntityBounce |= mario->IsDrilling;
                 return;
             }
 
             if (attackedFromAbove) {
-                if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
+                if (currentPowerup.Form == PowerupAsset.PlayerForm.Mini) {
                     if (mario->IsGroundpounding) {
                         mario->IsGroundpounding = false;
                         bulletBill->Kill(f, bulletBillEntity, marioEntity, EnemyKillReason.Normal);
@@ -94,7 +95,7 @@ namespace Quantum
 
                 mario->IsDrilling = false;
 
-            } else if (!mario->IsCrouchedInShell && mario->IsDamageable) {
+            } else if (!mario->IsCrouchedInShell(currentPowerup) && mario->IsDamageable) {
                 mario->Powerdown(f, marioEntity, false, bulletBillEntity);
             }
         }

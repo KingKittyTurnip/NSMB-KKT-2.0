@@ -8,7 +8,7 @@ public unsafe class MegaMushroomPowerupAsset : PowerupAsset {
     public override int CountPlayersWithState(Frame f) {
         int playersWithPower = 0;
         foreach ((_, var otherPlayer) in f.Unsafe.GetComponentBlockIterator<MarioPlayer>()) {
-            if (otherPlayer->CurrentPowerupState == PowerupState.MegaMushroom
+            if (otherPlayer->CurrentPowerupAsset == this //Does this work
                 && otherPlayer->MegaMushroomStartFrames == 0
                 && otherPlayer->MegaMushroomEndFrames == 0) {
 

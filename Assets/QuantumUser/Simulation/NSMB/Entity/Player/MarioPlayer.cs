@@ -176,7 +176,7 @@ namespace Quantum {
         }
 
         public readonly bool InstakillsEnemies(PhysicsObject* physicsObject, PowerupAsset currentPowerup, bool includeSliding) {
-            return currentPowerup.DestroyesEverything
+            return currentPowerup.Form == PowerupAsset.PlayerForm.Mega
                 || IsStarmanInvincible
                 || IsInShell
                 || includeSliding && IsSliding && FPMath.Abs(physicsObject->Velocity.X) > FP._0_33;
