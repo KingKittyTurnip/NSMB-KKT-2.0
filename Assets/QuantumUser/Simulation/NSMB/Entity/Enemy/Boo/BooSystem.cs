@@ -1,7 +1,8 @@
 using Photon.Deterministic;
+using Quantum.Collections;
 
 namespace Quantum {
-    public unsafe class BooSystem : SystemMainThreadEntityFilter<Boo, BooSystem.Filter>, ISignalOnEnemyRespawned, ISignalOnBobombExplodeEntity {
+    public unsafe class BooSystem : SystemMainThreadEntityFilter<Boo, BooSystem.Filter>, ISignalOnEnemyRespawned, ISignalOnBobombExplodeEntity, ISignalInitializeHazard {
         private const byte BooUnscaredFrames = 12;
 
         public struct Filter {
@@ -150,6 +151,15 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(entity, out Boo* boo)) {
                 boo->Kill(f, entity, bobomb, EnemyKillReason.Special);
             }
+        }
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Boo* boo)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
+                return;
+            }
+
+            enemy->IsActive = true;
         }
     }
 }

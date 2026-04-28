@@ -140,6 +140,9 @@ GameObject:
   - component: {fileID: -5171311978343019671}
   - component: {fileID: 761345706285113936}
   - component: {fileID: 3464633041449129214}
+  - component: {fileID: 9214879668486053979}
+  - component: {fileID: -5604260120720716286}
+  - component: {fileID: 8332169329391601838}
   m_Layer: 19
   m_Name: Koopa
   m_TagString: Untagged
@@ -634,6 +637,8 @@ MonoBehaviour:
   Prototype:
     HoldAboveHead:
       Value: 0
+    IsSolidCarryable:
+      Value: 0
 --- !u!114 &8298405619030623519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -663,6 +668,8 @@ MonoBehaviour:
     IsWaterSolid:
       Value: 0
     BreakMegaObjects:
+      Value: 0
+    WindImmune:
       Value: 0
 --- !u!114 &715936171356774739
 MonoBehaviour:
@@ -810,3 +817,70 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxOverrides: []
   source: {fileID: 3399800873378663516}
+--- !u!114 &9214879668486053979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8836298984178612590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 330575751736567297
+--- !u!114 &-5604260120720716286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8836298984178612590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c912ba00eb8780d468a9d5e4288668e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeHazard
+  Prototype:
+    DoNotDespawnInPit:
+      Value: 0
+    RestrictSpawnPosition:
+      Value: 0
+    IsHefty:
+      Value: 0
+    IPWSUntilGround:
+      Value: 1
+    IPWSTime: 30
+    SpawningVelocityRange:
+      X:
+        RawValue: 131072
+      Y:
+        RawValue: 65536
+--- !u!114 &8332169329391601838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8836298984178612590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 8088900794427276647}
+  moveBehindBlocksRoot: {fileID: 8088900794427276647}
+  renderers:
+  - {fileID: 8133877121043965814}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: 4
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 1
+  sfx: {fileID: 3399800873378663516}
+  koopaSpawnParticles: {fileID: 0}

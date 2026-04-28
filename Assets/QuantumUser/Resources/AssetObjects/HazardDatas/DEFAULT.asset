@@ -377,6 +377,214 @@ MonoBehaviour:
         TimerMinutes: 0
         TeamsEnabled:
           Value: 0
+    - Name: Test
+      Description: 
+      DefaultRules:
+        AdvancedLobby:
+          Value: 1
+        Stage:
+          Id:
+            Value: 438935048561577377
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        GamemodeStarChasersEnabled:
+          Value: 1
+        StarsToWin: 15
+        StarFrequency: 0
+        GamemodeCoinRunnersEnabled:
+          Value: 0
+        StarcoinFrequency: 0
+        GamemodeBalloonBattleEnabled:
+          Value: 0
+        MaxBalloons: 0
+        GamemodeBombchasersEnabled:
+          Value: 0
+        CoinsForPowerup: 1
+        Items:
+        - Chance:
+            Value: 0
+          Items: []
+        - Chance:
+            Value: 1
+          Items: []
+        - Chance:
+            Value: 2
+          Items:
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1487534197368722732
+            Team: 0
+            Extra: 00
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1379843889611026990
+            Team: 0
+            Extra: 00
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1284729198758392799
+            Team: 0
+            Extra: 00
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1402622061657310969
+            Team: 0
+            Extra: 00
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1416226096290300185
+            Team: 0
+            Extra: 00
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1440373003412769203
+            Team: 0
+            Extra: 00
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1304675416483732058
+            Team: 0
+            Extra: 00
+        - Chance:
+            Value: 3
+          Items: []
+        - Chance:
+            Value: 4
+          Items: []
+        - Chance:
+            Value: 5
+          Items: []
+        - Chance:
+            Value: 6
+          Items: []
+        - Chance:
+            Value: 7
+          Items: []
+        - Chance:
+            Value: 8
+          Items: []
+        - Chance:
+            Value: 9
+          Items: []
+        - Chance:
+            Value: 10
+          Items: []
+        HazardsEnabled:
+          Value: 0
+        MaxHazards: 0
+        HazardFrequency: 0
+        HeftyPercentage:
+          RawValue: 3277
+        HazardLifetime: 40
+        Hazards:
+        - Name: powerup
+          HazardPrototype:
+            Id:
+              Value: 1487534197368722732
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1379843889611026990
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1284729198758392799
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1402622061657310969
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1304675416483732058
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1440373003412769203
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1416226096290300185
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1509128645920081087
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 000000
+        Lives: 0
+        TimerMinutes: 0
+        TeamsEnabled:
+          Value: 0
     - Name: Bouncy House
       Description: Try to collect the stars while everything is flying everywhere!
       DefaultRules:

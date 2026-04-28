@@ -4,7 +4,7 @@ using Quantum.Collections;
 namespace Quantum {
     public unsafe class KoopaSystem : SystemMainThreadEntityFilter<Koopa, KoopaSystem.Filter>, ISignalOnThrowHoldable, ISignalOnEnemyRespawned, ISignalOnEntityBumped,
         ISignalOnBobombExplodeEntity, ISignalOnIceBlockBroken, ISignalOnEnemyKilledByStageReset, ISignalOnEnemyTurnaround, ISignalOnEntityCrushed,
-        ISignalOnMarioPlayerBecameInvincible, ISignalOnEnemyReturnedHome {
+        ISignalOnMarioPlayerBecameInvincible, ISignalOnEnemyReturnedHome, ISignalInitializeHazard {
 
         public struct Filter {
             public EntityRef Entity;
@@ -593,6 +593,25 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(entity, out Koopa* koopa) && koopa->IsInShell) {
                 koopa->Respawn(f, entity);
             }
+        }
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Koopa* koopa)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Holdable* holdable)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
+                return;
+            }
+            var specialValues = f.ResolveList(spawnData);
+
+            koopa->CurrentSpeed = koopa->Speed;
+
+            //Set Varient
+            if (specialValues[0] > 0) {
+                koopa->EnterShell(f, thisEntity, owner, false, false);
+            }
+
+            enemy->IsActive = true;
+            enemy->FacingRight = f.RNG->Next((FP) 0, 1) > FP._0_50;
         }
         #endregion
     }

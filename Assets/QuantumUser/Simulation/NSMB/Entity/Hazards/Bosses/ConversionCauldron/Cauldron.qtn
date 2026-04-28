@@ -9,12 +9,14 @@ component Cauldron {
 	[ExcludeFromPrototype] bool Activated;
 }
 
-event ObjectEntered {
+event CauldronSplash {
 	EntityRef Entity;
-	bool IsDeath;
 }
 
-event UpdateBossParticles {
+event CauldronHop {
 	EntityRef Entity;
-	byte Boss;
+}
+
+event CauldronExpand {
+	EntityRef Entity;
 }

@@ -48,6 +48,8 @@ namespace Quantum {
                 enemy->ChangeFacingRight(f, filter.Entity, physicsObject->IsTouchingLeftWall);
             }
 
+            QuantumUtils.Decrement(f, ref duckman->FlingTimer);
+
             if (physicsObject->IsTouchingGround) {
                 //Turn Around At Ledge
                 if (duckman->Varient > CataquackVarient.BasicBlue) {
@@ -79,7 +81,7 @@ namespace Quantum {
                 }
 
                 // Move
-                physicsObject->Velocity.X = QuantumUtils.Decrement(f, ref duckman->FlingTimer) ? duckman->Speed * (enemy->FacingRight ? 1 : -1) : 0;
+                physicsObject->Velocity.X = duckman->FlingTimer == 0 ? duckman->Speed * (enemy->FacingRight ? 1 : -1) : 0;
             }
         }
 
@@ -270,6 +272,7 @@ namespace Quantum {
             duckman->Varient = (CataquackVarient) specialValues[0];
 
             enemy->IsActive = true;
+            enemy->FacingRight = f.RNG->Next((FP) 0, 1) > FP._0_50;
         }
         #endregion
     }

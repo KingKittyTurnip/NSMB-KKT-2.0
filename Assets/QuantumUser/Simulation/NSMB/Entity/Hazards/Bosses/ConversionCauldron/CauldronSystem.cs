@@ -36,7 +36,7 @@ namespace Quantum {
 
             if (cauldron->TransformingEntity != EntityRef.None || cauldron->Activated) {
                 cauldron->EnteredFrames++;
-                if (cauldron->EnteredFrames > 30) {
+                if (cauldron->EnteredFrames > 15) {
                     if (!cauldron->Activated) {
                         cauldron->Activated = true;
                         collider->Shape.Centroid.Y = cauldron->Hitboxheight;
@@ -49,6 +49,7 @@ namespace Quantum {
                             HazardSystem.DestroyHazard(f, cauldron->TransformingEntity);
                             cauldron->TransformingEntity = EntityRef.None;
                         }
+                        f.Events.CauldronHop(filter.Entity);
                     } else if (cauldron->EnteredFrames > 130) {
                         //create boss hazard
                         var bossesAsset = f.FindAsset(cauldron->BossData);
@@ -72,6 +73,8 @@ namespace Quantum {
                         cauldron->TransformingEntity = EntityRef.None;
                         cauldron->Activated = false;
                         HazardSystem.DestroyHazard(f, filter.Entity);
+                    } else if (cauldron->EnteredFrames == 100) {
+                        f.Events.CauldronExpand(filter.Entity);
                     }
                 } else {
                     var otherTransform = f.Unsafe.GetPointer<Transform2D>(cauldron->TransformingEntity);
@@ -113,6 +116,7 @@ namespace Quantum {
             if (attackedFromAbove && FPMath.Abs(damageDirection.X) < FP._0_50) {
                 cauldron->TransformingEntity = otherEntity;
                 PhysicsObject->IsFrozen = PhysicsObject->DisableCollision = true;
+                PhysicsObject->Velocity = FPVector2.Zero;
                 f.Unsafe.GetPointer<Interactable>(thisEntity)->ColliderDisabled = true;
                 var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
                 collider->Shape.Centroid.Y = 0;
@@ -122,6 +126,7 @@ namespace Quantum {
                 if (hazard->IsHazard) {
                     hazard->LifeTime = 240;
                 }
+                f.Events.CauldronSplash(thisEntity);
                 return true;
             }
             return false;

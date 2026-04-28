@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using Quantum.Collections;
 
 namespace Quantum {
     public unsafe class PowerupSystem : SystemMainThreadEntityFilter<Powerup, PowerupSystem.Filter>, ISignalOnEntityBumped, ISignalOnEntityCrushed {
@@ -145,6 +146,18 @@ namespace Quantum {
                 f.Events.CollectableDespawned(entity, f.Unsafe.GetPointer<Transform2D>(entity)->Position, false);
                 f.Destroy(entity);
             }
+        }
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Powerup* powerup)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
+                || !f.Unsafe.TryGetPointer(thisEntity, out CoinItem* coinitem)
+                || !f.Unsafe.TryGetPointer(thisEntity, out PhysicsCollider2D* collider)) {
+                return;
+            }
+
+            var asset = f.FindAsset(coinitem->Scriptable) as PowerupAsset;
+
+            powerup->FacingRight = asset.Speed == 0 ? false : true;//uhh
         }
     }
 }

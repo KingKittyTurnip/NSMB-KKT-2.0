@@ -1,8 +1,9 @@
 using Photon.Deterministic;
+using Quantum.Collections;
 
 namespace Quantum {
     public unsafe class BobombSystem : SystemMainThreadEntityFilter<Bobomb, BobombSystem.Filter>, ISignalOnEntityBumped, ISignalOnEnemyRespawned, ISignalOnThrowHoldable,
-        ISignalOnBobombExplodeEntity, ISignalOnIceBlockBroken, ISignalOnEnemyKilledByStageReset, ISignalOnEntityCrushed, ISignalOnMarioPlayerBecameInvincible {
+        ISignalOnBobombExplodeEntity, ISignalOnIceBlockBroken, ISignalOnEnemyKilledByStageReset, ISignalOnEntityCrushed, ISignalOnMarioPlayerBecameInvincible, ISignalInitializeHazard {
 
         public struct Filter {
             public EntityRef Entity;
@@ -358,6 +359,26 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(mario->HeldEntity, out Bobomb* bobomb)) {
                 bobomb->Kill(f, mario->HeldEntity, entity, EnemyKillReason.Special);
             }
+        }
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Bobomb* bobomb)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
+                return;
+            }
+            var specialValues = f.ResolveList(spawnData);
+
+            //Set Varient
+            if (specialValues[0] > 0) {
+                if (specialValues[0] > 0) {
+                    Light(f, thisEntity, bobomb, false);
+                } else {
+                    //make bobomb explode on contact with ground
+                }
+            }
+
+            enemy->IsActive = true;
+            enemy->FacingRight = f.RNG->Next((FP) 0, 1) > FP._0_50;
         }
         #endregion
     }

@@ -5022,6 +5022,9 @@ GameObject:
   - component: {fileID: 4061144589790746280}
   - component: {fileID: 416401110570762230}
   - component: {fileID: 3226571454316056385}
+  - component: {fileID: 2160972791174678263}
+  - component: {fileID: 6968671032107424097}
+  - component: {fileID: 3721529937086678620}
   m_Layer: 19
   m_Name: BulletBill
   m_TagString: Untagged
@@ -5473,6 +5476,9 @@ MonoBehaviour:
       RawValue: 98304
     DespawnRadius:
       RawValue: 524288
+    Cloud:
+      Id:
+        Value: 0
 --- !u!114 &1099637356932663032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5503,6 +5509,8 @@ MonoBehaviour:
       Value: 0
     BreakMegaObjects:
       Value: 0
+    WindImmune:
+      Value: 0
 --- !u!114 &808433351997747540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5525,6 +5533,8 @@ MonoBehaviour:
       Value: 0
     DisableRespawning:
       Value: 1
+    StayAtHomeWhenOffscreen:
+      Value: 0
 --- !u!114 &-2707382414775849669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5633,3 +5643,70 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxOverrides: []
   source: {fileID: 5407584048357268515}
+--- !u!114 &2160972791174678263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2627485830306083579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c912ba00eb8780d468a9d5e4288668e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeHazard
+  Prototype:
+    DoNotDespawnInPit:
+      Value: 0
+    RestrictSpawnPosition:
+      Value: 0
+    IsHefty:
+      Value: 0
+    IPWSUntilGround:
+      Value: 0
+    IPWSTime: 90
+    SpawningVelocityRange:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+--- !u!114 &6968671032107424097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2627485830306083579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 330575751736567297
+--- !u!114 &3721529937086678620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2627485830306083579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 464766525613347646}
+  moveBehindBlocksRoot: {fileID: 0}
+  renderers:
+  - {fileID: 4540435544182297773}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: 4
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 1
+  sfx: {fileID: 5407584048357268515}
+  koopaSpawnParticles: {fileID: 0}

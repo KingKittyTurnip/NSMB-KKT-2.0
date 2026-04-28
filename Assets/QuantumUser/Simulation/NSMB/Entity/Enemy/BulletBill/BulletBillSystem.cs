@@ -1,7 +1,8 @@
 using Photon.Deterministic;
+using Quantum.Collections;
 
 namespace Quantum {
-    public unsafe class BulletBillSystem : SystemMainThreadEntityFilter<BulletBill, BulletBillSystem.Filter>, ISignalOnBobombExplodeEntity, ISignalOnIceBlockBroken {
+    public unsafe class BulletBillSystem : SystemMainThreadEntityFilter<BulletBill, BulletBillSystem.Filter>, ISignalOnBobombExplodeEntity, ISignalOnIceBlockBroken, ISignalInitializeHazard {
         public struct Filter {
             public EntityRef Entity;
             public BulletBill* BulletBill;
@@ -138,6 +139,16 @@ namespace Quantum {
                 bulletBill->Kill(f, iceBlock->Entity, brokenIceBlock, EnemyKillReason.Special);
                 f.Events.PlayComboSound(iceBlock->Entity, 0);
             }
+        }
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+            if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
+                || !f.Unsafe.TryGetPointer(thisEntity, out BulletBill* bill)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
+                return;
+            }
+
+            enemy->IsActive = true;
+            enemy->FacingRight = f.RNG->Next((FP) 0, 1) > FP._0_50;
         }
         #endregion
     }
