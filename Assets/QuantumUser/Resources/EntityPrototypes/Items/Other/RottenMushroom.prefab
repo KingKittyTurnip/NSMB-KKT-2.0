@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 3901402401622306172}
   - component: {fileID: 517697212848946230}
   - component: {fileID: 444447709282105010}
+  - component: {fileID: 2813311150480804721}
+  - component: {fileID: 8410956710071586042}
   m_Layer: 19
   m_Name: RottenMushroom
   m_TagString: Powerup
@@ -458,6 +460,8 @@ MonoBehaviour:
       Value: 1
     IsWaterSolid:
       Value: 0
+    SinksInQuickSandAndGoo:
+      Value: 1
     BreakMegaObjects:
       Value: 0
     WindImmune:
@@ -558,7 +562,7 @@ MonoBehaviour:
   Prototype:
     Scriptable:
       Id:
-        Value: 390055422968795145
+        Value: 303611879426237237
 --- !u!114 &444447709282105010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -586,6 +590,46 @@ MonoBehaviour:
         RawValue: 131072
       Y:
         RawValue: 65536
+--- !u!114 &2813311150480804721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1885d2a17ace89e469f425b39de1291c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeEnemy
+  Prototype:
+    Spawnpoint:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    IgnorePlayerWhenRespawning:
+      Value: 1
+    DisableRespawning:
+      Value: 1
+    StayAtHomeWhenOffscreen:
+      Value: 1
+--- !u!114 &8410956710071586042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b22d938fa9712a4d8a0658557dd8fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.Enemies.EnemyRespawnAnimator
+  sfx: {fileID: 4207910641862185911}
+  respawnParticle: {fileID: 5191653714546004373, guid: 82fd7a7a1d84c6e4aa4334f5ac629ebf,
+    type: 3}
+  respawnColor: {r: 0.77221155, g: 0, b: 1, a: 1}
 --- !u!1 &8453737792750304721
 GameObject:
   m_ObjectHideFlags: 0

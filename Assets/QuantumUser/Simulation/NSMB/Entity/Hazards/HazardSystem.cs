@@ -109,6 +109,10 @@ namespace Quantum {
                 }
             }
 
+            if (f.Unsafe.TryGetPointer<Enemy>(thisEntity, out var enemy)) {
+                enemy->DisableRespawning = true;
+            }
+
             hazard->JustSpawned = true;
             if (spawnReason == SpawnReason.Item) {
                 hazard->IsCoinItem = true;
@@ -166,7 +170,11 @@ namespace Quantum {
                     if (f.Unsafe.TryGetPointer(entity, out Interactable* inter))
                         inter->ColliderDisabled = true;
                     if (f.Unsafe.TryGetPointer(entity, out Enemy* enemy)) {
+                        enemy->IsActive = false;
                         enemy->IsDead = true;
+                        if (!enemy->DisableRespawning) {
+                            enemy->SetDelayedRespawn();
+                        }
                         f.Signals.OnEnemyDespawned(entity);
                     }
                 }

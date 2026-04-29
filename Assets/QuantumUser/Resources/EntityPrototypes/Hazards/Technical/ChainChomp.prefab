@@ -480,7 +480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
-    _empty_prototype_dummy_field_: 0
+    Post: {fileID: 0}
 --- !u!114 &6594219812404515847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,6 +509,8 @@ MonoBehaviour:
       Value: 1
     IsWaterSolid:
       Value: 0
+    SinksInQuickSandAndGoo:
+      Value: 1
     BreakMegaObjects:
       Value: 0
     WindImmune:

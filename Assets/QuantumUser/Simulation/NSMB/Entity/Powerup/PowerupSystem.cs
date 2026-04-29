@@ -65,6 +65,19 @@ namespace Quantum {
                 return;
             }
 
+            if (asset.IsSmart) {
+                //handle x movement
+                FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_50, asset.Speed);
+                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + ((powerup->FacingRight ? -1 : 1) * FP._0_20), -clamper, clamper);
+                //handle y movement
+                if ((physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) && physicsObject->IsTouchingGround) {
+                    //jump
+                    physicsObject->Velocity.Y = asset.BounceStrength;
+                    physicsObject->IsTouchingGround = physicsObject->Velocity.Y <= 0;
+                }
+                return;
+            }
+
             if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) {
                 powerup->FacingRight = physicsObject->IsTouchingLeftWall;
                 physicsObject->Velocity.X = asset.Speed * (powerup->FacingRight ? 1 : -1);
@@ -115,7 +128,9 @@ namespace Quantum {
             }
 
             f.Events.CollectableDespawned(powerupEntity, f.Unsafe.GetPointer<Transform2D>(powerupEntity)->Position, true);
-            f.Destroy(powerupEntity);
+            //KKT Mod, we want to use our special destroy code
+            //f.Destroy(powerupEntity);
+            HazardSystem.DestroyHazard(f,powerupEntity);
         }
 
         public void OnEntityBumped(Frame f, EntityRef entity, FPVector2 position, EntityRef bumpOwner, QBoolean fromBelow) {

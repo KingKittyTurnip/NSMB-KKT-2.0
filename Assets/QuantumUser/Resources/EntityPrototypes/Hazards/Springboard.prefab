@@ -477,6 +477,7 @@ MonoBehaviour:
     IgnoreTeamates:
       Value: 1
     Varient: 0
+    ConnectedObject: {fileID: 0}
 --- !u!114 &6989136294608042370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -505,6 +506,8 @@ MonoBehaviour:
       Value: 1
     IsWaterSolid:
       Value: 0
+    SinksInQuickSandAndGoo:
+      Value: 1
     BreakMegaObjects:
       Value: 0
     WindImmune:

@@ -71,6 +71,12 @@ namespace Quantum {
             }
 
             FacingRight = shouldFaceRight;
+
+            //KKT Mod, Other Stuff
+            if (f.Unsafe.TryGetPointer(entity, out PhysicsCollider2D* collider))
+                collider->Enabled = true;
+            if (f.Unsafe.TryGetPointer(entity, out Interactable* inter))
+                inter->ColliderDisabled = false;
         }
 
         public void ChangeFacingRight(Frame f, EntityRef entity, bool newFacingRight) {

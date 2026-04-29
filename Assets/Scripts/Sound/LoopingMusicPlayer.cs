@@ -13,6 +13,7 @@ namespace NSMB.Sound {
 
         //---Serialized Variables
         [SerializeField] protected AudioSource audioSource;
+        [SerializeField] protected AudioChorusFilter filter;
         [SerializeField] protected LoopingMusicData currentAudio;
         [SerializeField] private bool playOnAwake = true;
 
@@ -102,6 +103,14 @@ namespace NSMB.Sound {
                 audioSource.clip = song.clip;
             }
             audioSource.Play();
+            //KKT Mod
+            if (MonthEventScript.CurrentEventWeek == MonthEventScript.EventWeek.Spooky) {
+                filter.enabled = true;
+                AudioSource.pitch = 0.98f;
+            } else if (filter == null) {
+                //This is Here In Case I Forget To Fix It After A Git Merge
+                Debug.LogError("spooky event filter is unassigned");
+            }
         }
     }
 }

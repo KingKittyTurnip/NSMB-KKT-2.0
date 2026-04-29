@@ -1,0 +1,17 @@
+component Podobo {
+	PodoboType Varient;
+	FP JumpStrength;
+	FP HopBLocation;
+	[ExcludeFromPrototype] FP WaitTime;
+	[ExcludeFromPrototype] bool IsHopB;
+}
+
+enum PodoboType : Byte {
+	Lava,
+	Poison,
+	Cold,
+}
+
+event PodoboLeap {
+	EntityRef Entity;
+}

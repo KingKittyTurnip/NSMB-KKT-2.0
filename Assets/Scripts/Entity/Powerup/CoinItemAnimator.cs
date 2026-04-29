@@ -110,6 +110,13 @@ namespace NSMB.Entities.CoinItems {
             Frame f = PredictedFrame;
 
             var hazard = f.Unsafe.GetPointer<Hazard>(EntityRef);
+            if (!hazard->IsHazard && !hazard->IsCoinItem) { //Hide if in stage (for respawn shenanigans) this code is yuk otherwise.
+                var enemy = f.Unsafe.GetPointer<Enemy>(EntityRef);
+                foreach (Renderer r in renderers) {
+                    r.enabled = enemy->IsActive;
+                }
+                return;
+            }
 
             if (f.Unsafe.TryGetPointer(EntityRef, out CoinItem* coinItem)) {
                 //we are coinitem

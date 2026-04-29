@@ -22,7 +22,7 @@ component ThrowingObject {
 	[ExcludeFromPrototype] FP ReusableTimer;
 	byte Varient;
 
-	[ExcludeFromPrototype] EntityRef ConnectedObject;
+	EntityRef ConnectedObject;
 }
 
 component SpringBoard {

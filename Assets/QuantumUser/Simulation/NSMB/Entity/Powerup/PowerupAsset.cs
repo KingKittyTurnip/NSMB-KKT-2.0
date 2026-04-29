@@ -16,6 +16,7 @@ public unsafe class PowerupAsset : CoinItemAsset, ISoundOverrideProvider {
     public UnityEngine.Sprite ReserveSprite;
 #endif
 
+    public bool IsSmart;//KKT Mod
     public bool AvoidPlayers;
     public FP Speed;
     public FP BounceStrength;

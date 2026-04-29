@@ -63,6 +63,17 @@ namespace Quantum.Prototypes.Unity {
     }
   }
   [System.SerializableAttribute()]
+  public unsafe partial class ChainChompPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.ChainChompPrototype> {
+    public Quantum.QuantumEntityPrototype Post;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.ChainChompPrototype prototype);
+    public override Quantum.Prototypes.ChainChompPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.ChainChompPrototype();
+      converter.Convert(this.Post, out result.Post);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
   public unsafe partial class EnterablePipePrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.EnterablePipePrototype> {
     public Quantum.QuantumEntityPrototype OtherPipe;
     public QBoolean IsEnterable;
@@ -110,6 +121,7 @@ namespace Quantum.Prototypes.Unity {
     public QBoolean DisableCollision;
     public QBoolean SlowInLiquids;
     public QBoolean IsWaterSolid;
+    public QBoolean SinksInQuickSandAndGoo;
     public QBoolean BreakMegaObjects;
     public QBoolean WindImmune;
     partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.PhysicsObjectPrototype prototype);
@@ -121,6 +133,7 @@ namespace Quantum.Prototypes.Unity {
       converter.Convert(this.DisableCollision, out result.DisableCollision);
       converter.Convert(this.SlowInLiquids, out result.SlowInLiquids);
       converter.Convert(this.IsWaterSolid, out result.IsWaterSolid);
+      converter.Convert(this.SinksInQuickSandAndGoo, out result.SinksInQuickSandAndGoo);
       converter.Convert(this.BreakMegaObjects, out result.BreakMegaObjects);
       converter.Convert(this.WindImmune, out result.WindImmune);
       ConvertUser(converter, ref result);
@@ -147,6 +160,37 @@ namespace Quantum.Prototypes.Unity {
       var result = new Quantum.Prototypes.StarCoinPrototype();
       converter.Convert(this.DespawnCounter, out result.DespawnCounter);
       converter.Convert(this.Collector, out result.Collector);
+      ConvertUser(converter, ref result);
+      return result;
+    }
+  }
+  [System.SerializableAttribute()]
+  public unsafe partial class ThrowingObjectPrototype : Quantum.QuantumUnityPrototypeAdapter<Quantum.Prototypes.ThrowingObjectPrototype> {
+    public Quantum.QEnum8<ThrowingObjectType> Type;
+    public QBoolean GroundBounce;
+    public QBoolean IsBall;
+    public QBoolean IsFlying;
+    public QBoolean SlideAlong;
+    public QBoolean BouceOffPlayer;
+    public FP ThrowForce;
+    public Byte StarsToDrop;
+    public QBoolean IgnoreTeamates;
+    public Byte Varient;
+    public Quantum.QuantumEntityPrototype ConnectedObject;
+    partial void ConvertUser(Quantum.QuantumEntityPrototypeConverter converter, ref Quantum.Prototypes.ThrowingObjectPrototype prototype);
+    public override Quantum.Prototypes.ThrowingObjectPrototype Convert(Quantum.QuantumEntityPrototypeConverter converter) {
+      var result = new Quantum.Prototypes.ThrowingObjectPrototype();
+      converter.Convert(this.Type, out result.Type);
+      converter.Convert(this.GroundBounce, out result.GroundBounce);
+      converter.Convert(this.IsBall, out result.IsBall);
+      converter.Convert(this.IsFlying, out result.IsFlying);
+      converter.Convert(this.SlideAlong, out result.SlideAlong);
+      converter.Convert(this.BouceOffPlayer, out result.BouceOffPlayer);
+      converter.Convert(this.ThrowForce, out result.ThrowForce);
+      converter.Convert(this.StarsToDrop, out result.StarsToDrop);
+      converter.Convert(this.IgnoreTeamates, out result.IgnoreTeamates);
+      converter.Convert(this.Varient, out result.Varient);
+      converter.Convert(this.ConnectedObject, out result.ConnectedObject);
       ConvertUser(converter, ref result);
       return result;
     }

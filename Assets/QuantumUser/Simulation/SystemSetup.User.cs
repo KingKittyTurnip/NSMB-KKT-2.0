@@ -23,6 +23,11 @@ namespace Quantum {
                     new DonutBlockSystem(),
                     new MovingPlatformPhysicsQuerySystem(),
                     new PhysicsSystem2D(),
+
+                        //KKT Mod
+                        new ScalePlatformSystem(),
+                        new SeesawSystem(),
+
                     new MovingPlatformSystem(),
                     new EnemySystem(),
                     new InteractionSystem(),
@@ -37,6 +42,7 @@ namespace Quantum {
 
                       //KKT Mod
                       new CataquackSystem(),
+                      new PodoboSystem(),
 
                     new ProjectileSystem(),
                     new CoinItemSystem(),

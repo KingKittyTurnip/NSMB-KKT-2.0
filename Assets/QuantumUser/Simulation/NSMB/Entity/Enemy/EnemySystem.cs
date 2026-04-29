@@ -42,7 +42,7 @@ namespace Quantum {
                 if (f.Unsafe.TryGetPointer(filter.Entity, out PhysicsObject* physicsObject)) {
                     physicsObject->IsFrozen = true;
                 }
-
+                //HazardSystem.DestroyHazard(f, filter.Entity);
                 f.Signals.OnEnemyDespawned(filter.Entity);
                 return;
             }

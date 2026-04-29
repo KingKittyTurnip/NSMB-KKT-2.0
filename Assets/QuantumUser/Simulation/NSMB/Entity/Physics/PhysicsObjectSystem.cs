@@ -427,8 +427,9 @@ namespace Quantum {
                                 continue;
                             }
                             if (f.Unsafe.TryGetPointer(hit.Entity, out Liquid* liquid)) {
-                                if (liquid->LiquidType != LiquidType.Water || !physicsObject->IsWaterSolid || FPVector2.Dot(hit.Normal, FPVector2.Up) < Constants.PhysicsGroundMaxAngleCos) {
-                                    // Colliding with water and we cant interact
+                                if ((liquid->LiquidType == LiquidType.Water && (!physicsObject->IsWaterSolid || FPVector2.Dot(hit.Normal, FPVector2.Up) < Constants.PhysicsGroundMaxAngleCos)) || // Colliding with water and we cant interact
+                                    ((liquid->LiquidType == LiquidType.Quicksand || liquid->LiquidType == LiquidType.Goo) && physicsObject->SinksInQuickSandAndGoo) || //KKT Mod, colliding with quicksand or goo, it's either solid or we sink into it
+                                    liquid->LiquidType != LiquidType.Water || liquid->LiquidType != LiquidType.Quicksand || liquid->LiquidType != LiquidType.Goo) { //KKT Mod, these are ignored as solid collision always
                                     continue;
                                 }
                             }
@@ -667,8 +668,9 @@ namespace Quantum {
                                 continue;
                             }
                             if (f.Unsafe.TryGetPointer(hit.Entity, out Liquid* liquid)) {
-                                if (liquid->LiquidType != LiquidType.Water || !physicsObject->IsWaterSolid || FPVector2.Dot(hit.Normal, FPVector2.Up) < Constants.PhysicsGroundMaxAngleCos) {
-                                    // Colliding with water and we cant interact
+                                if ((liquid->LiquidType == LiquidType.Water && (!physicsObject->IsWaterSolid || FPVector2.Dot(hit.Normal, FPVector2.Up) < Constants.PhysicsGroundMaxAngleCos)) || // Colliding with water and we cant interact
+                                    ((liquid->LiquidType == LiquidType.Quicksand || liquid->LiquidType == LiquidType.Goo) && physicsObject->SinksInQuickSandAndGoo) || //KKT Mod, colliding with quicksand or goo, it's either solid or we sink into it
+                                    liquid->LiquidType != LiquidType.Water || liquid->LiquidType != LiquidType.Quicksand || liquid->LiquidType != LiquidType.Goo) { //KKT Mod, these are ignored as solid collision always
                                     continue;
                                 }
                             }

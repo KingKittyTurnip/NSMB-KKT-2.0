@@ -491,6 +491,8 @@ MonoBehaviour:
       Value: 1
     IsSpiny:
       Value: 1
+    IsBuzzy:
+      Value: 0
     Speed:
       RawValue: 57344
     KickSpeed:
@@ -573,6 +575,8 @@ MonoBehaviour:
       Value: 0
     BreakMegaObjects:
       Value: 0
+    WindImmune:
+      Value: 0
 --- !u!114 &5305366232122907052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -587,6 +591,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     HoldAboveHead:
+      Value: 0
+    IsSolidCarryable:
       Value: 0
 --- !u!114 &-3156354585278191863
 MonoBehaviour:

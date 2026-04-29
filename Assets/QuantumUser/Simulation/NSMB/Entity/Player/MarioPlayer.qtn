@@ -13,6 +13,8 @@
 
 #define DamageInvincibilityFrames 120
 
+import enum LiquidType(byte);//KKT Mod
+
 input {
 	button Up;
 	button Down;
@@ -141,6 +143,9 @@ component MarioPlayer {
 	[ExcludeFromPrototype] bool RidingStarball;
 	bool IsBot;
 	byte BotTeam;
+
+	//Extra Actions 
+	[ExcludeFromPrototype] LiquidType SwimmingType;
 }
 
 struct StarChasersData {

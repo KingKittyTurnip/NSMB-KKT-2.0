@@ -1,0 +1,16 @@
+component ScalePlatform {
+	FP Length;
+	FP Height;
+	FP Startoffset;
+	FP TerminalVelocity;
+	FP Acceleration;
+	FP PlatformbreakTime;
+	
+	[ExcludeFromPrototype] bool IsFalling;
+	[ExcludeFromPrototype] ushort Timer;
+	[ExcludeFromPrototype] FP Velocity;
+	[ExcludeFromPrototype] FP Offset;
+	
+	[ExcludeFromPrototype] int Delay;
+	[ExcludeFromPrototype] int WeightOnLift;
+}

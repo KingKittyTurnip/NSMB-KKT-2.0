@@ -1,7 +1,7 @@
 component ChainChomp {
 	[ExcludeFromPrototype] ChainChompState State;
 	[ExcludeFromPrototype] bool FacingRight;
-	[ExcludeFromPrototype] EntityRef Post;
+	EntityRef Post;
 	
 	[ExcludeFromPrototype] FP ReusableTimer;
 	[ExcludeFromPrototype] FPVector2 TargetPosition;

@@ -80,6 +80,9 @@ namespace Quantum {
                     enemy->IgnoreOffscreen = false; // woke UP and returned home if offscreen
                     koopa->TurnaroundWaitFrames = 18;
 
+
+                    physicsObject->SinksInQuickSandAndGoo = false;
+
                     // turn to face closest player
                     var shouldFaceRight = false;
                     var closestMario = FindClosestPlayer(f, ref filter, stage);
@@ -408,14 +411,18 @@ namespace Quantum {
 
         public static void OnKoopaProjectileInteraction(Frame f, EntityRef koopaEntity, EntityRef projectileEntity) {
             var projectileAsset = f.FindAsset(f.Unsafe.GetPointer<Projectile>(projectileEntity)->Asset);
+            var koopa = f.Unsafe.GetPointer<Koopa>(koopaEntity);
 
             switch (projectileAsset.Effect) {
             case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers:
             case ProjectileEffectType.Fire: {
-                f.Unsafe.GetPointer<Koopa>(koopaEntity)->Kill(f, koopaEntity, projectileEntity, EnemyKillReason.Special);
+                if (!koopa->IsBuzzy) {
+                    koopa->Kill(f, koopaEntity, projectileEntity, EnemyKillReason.Special);
+                }
                 break;
             }
             case ProjectileEffectType.Freeze: {
+                if (!koopa->IsTurnip)//KKT Mod
                 IceBlockSystem.Freeze(f, koopaEntity);
                 break;
             }

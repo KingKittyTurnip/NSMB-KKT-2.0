@@ -344,7 +344,7 @@ namespace NSMB.Entities.Player {
             drillPlayer.SetSoundData(mario->IsPropellerFlying ? propellerDrillData : spinnerDrillData);
             bubblesParticle.transform.localPosition = new(bubblesParticle.transform.localPosition.x, physicsCollider->Shape.Box.Extents.Y.AsFloat * 2);
 
-            if (!mario->IsDead) {
+            if (!mario->IsDead && mario->SwimmingType == LiquidType.Water) {
                 var waterColliders = f.ResolveHashSet(physicsObject->LiquidContacts);
                 float marioTop = transform.position.y + physicsCollider->Shape.Centroid.Y.AsFloat + physicsCollider->Shape.Box.Extents.Y.AsFloat;
                 foreach (EntityRef water in waterColliders) {
@@ -489,7 +489,7 @@ namespace NSMB.Entities.Player {
             animator.SetBool(ParamDead, mario->IsDead);
             animator.SetBool(ParamOnLeft, mario->WallslideLeft);
             animator.SetBool(ParamOnRight, mario->WallslideRight);
-            animator.SetBool(ParamOnGround, physicsObject->IsTouchingGround || mario->IsStuckInBlock || mario->CoyoteTimeFrames > 0);
+            animator.SetBool(ParamOnGround, physicsObject->IsTouchingGround || mario->IsStuckInBlock || mario->CoyoteTimeFrames > 0 || mario->SwimmingType == LiquidType.Quicksand);
             animator.SetBool(ParamInvincible, mario->IsStarmanInvincible || mario->RidingStarball);
             animator.SetBool(ParamSkidding, mario->IsSkidding);
             animator.SetBool(ParamPropeller, mario->IsPropellerFlying);
@@ -513,7 +513,7 @@ namespace NSMB.Entities.Player {
             animator.SetBool(ParamMega, mario->CurrentPowerupState == PowerupState.MegaMushroom);
             animator.SetBool(ParamInShell, mario->IsInShell || (mario->CurrentPowerupState == PowerupState.BlueShell && (mario->IsCrouching || mario->IsGroundpounding || mario->IsSliding) && mario->GroundpoundStartFrames <= 9));
             animator.SetBool(ParamTurnaround, mario->IsTurnaround);
-            animator.SetBool(ParamSwimming, physicsObject->IsUnderwater && !mario->IsGroundpounding && !mario->IsDrilling && !freezable->IsFrozen(f));
+            animator.SetBool(ParamSwimming, physicsObject->IsUnderwater && mario->SwimmingType == LiquidType.Water && !mario->IsGroundpounding && !mario->IsDrilling && !freezable->IsFrozen(f));
             animator.SetBool(ParamAHeld, inputs.Jump.IsDown);
             animator.SetBool(ParamFireballKnockback, mario->IsInWeakKnockback);
             animator.SetBool(ParamFireDeath, mario->FireDeath);

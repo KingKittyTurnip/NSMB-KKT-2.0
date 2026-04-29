@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5290eaf90a7a4a147a5900893d58a233, type: 3}
+  m_Script: {fileID: 11500000, guid: 5398fe9d2b3cae14f9e12514bf23f3b5, type: 3}
   m_Name: Tornado
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Quantum.Simulation::TornadoPowerupAsset
   Identifier:
     Path: QuantumUser/Resources/AssetObjects/Items/Hazard/Tornado
     Guid:
@@ -20,16 +20,60 @@ MonoBehaviour:
     Id:
       Value: 1360934193958261155
   SpawnChance:
-    RawValue: 0
+    RawValue: 6554
   AboveAverageBonus:
     RawValue: 0
   BelowAverageBonus:
     RawValue: 0
   BlockSpawnSoundEffect: 69
-  Flags: 7
+  Flags: 3
   MaxNumberOfItems: 0
   CameraSpawnOffset:
     X:
       RawValue: 0
     Y:
       RawValue: -163840
+  MaxMatchingPowerStates: 0
+  MaxMatchingReserveState: 0
+  State: 0
+  SoundPlaysEverywhere: 0
+  SoundEffect: 16
+  ReserveSprite: {fileID: 0}
+  AvoidPlayers: 0
+  Speed:
+    RawValue: 0
+  BounceStrength:
+    RawValue: 0
+  TerminalVelocity:
+    RawValue: 0
+  BumpedFromBelowVelocity:
+    RawValue: 360448
+  FollowAnimationCurve: 0
+  AnimationCurveX:
+    Samples: []
+    PreWrapMode: 0
+    PostWrapMode: 0
+    StartTime:
+      RawValue: 0
+    EndTime:
+      RawValue: 65536
+    Resolution: 32
+    OriginalPreWrapMode: 0
+    OriginalPostWrapMode: 0
+    Keys: []
+  AnimationCurveY:
+    Samples: []
+    PreWrapMode: 0
+    PostWrapMode: 0
+    StartTime:
+      RawValue: 0
+    EndTime:
+      RawValue: 65536
+    Resolution: 32
+    OriginalPreWrapMode: 0
+    OriginalPostWrapMode: 0
+    Keys: []
+  StatePriority: -1
+  ItemPriority: -1
+  EnterReserveIfOverridden: 0
+  SfxOverrides: []

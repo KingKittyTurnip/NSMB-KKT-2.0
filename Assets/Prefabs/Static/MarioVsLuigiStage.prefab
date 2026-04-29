@@ -176,6 +176,7 @@ GameObject:
   - component: {fileID: 2123900550533581102}
   - component: {fileID: 539312975697019843}
   - component: {fileID: 1361331830495777181}
+  - component: {fileID: 4122518531580451940}
   m_Layer: 0
   m_Name: MusicManager
   m_TagString: Untagged
@@ -227,6 +228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1361331830495777181}
+  filter: {fileID: 4122518531580451940}
   currentAudio: {fileID: 0}
   playOnAwake: 0
 --- !u!82 &1361331830495777181
@@ -327,6 +329,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!166 &4122518531580451940
+AudioChorusFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3446223911251472860}
+  m_Enabled: 0
+  m_DryMix: 0.5
+  m_WetMix1: 0.5
+  m_WetMix2: 0.5
+  m_WetMix3: 0.5
+  m_Delay: 1
+  m_Rate: 12
+  m_Depth: 1
 --- !u!1 &3858190478831269541
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,6 +693,7 @@ MonoBehaviour:
   UseFindUpdater: 0
   sfx: {fileID: 390882757022401945}
   musicPlayer: {fileID: 539312975697019843}
+  musicManager: {fileID: 0}
 --- !u!1 &8835350829400233188
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,6 +746,8 @@ MonoBehaviour:
     TimeDilationPercentage: 2
     SnapshotReferenceLatencyTicks: 4
     ElasticWindowTicks: 0.5
+    CurrentFrom: 0
+    Alpha: 0
 --- !u!114 &1990024770662139057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -824,6 +844,7 @@ MonoBehaviour:
       Id:
         Value: 3654882389298375385
     IsRealGame: 0
+  UseRandomSeed: 1
   SessionConfig: {fileID: 11400000, guid: a095ff8a2ef576047bdebfec7a20e387, type: 2}
   LocalPlayers:
   - PlayerAvatar:
@@ -839,18 +860,19 @@ MonoBehaviour:
     Palette:
       Id:
         Value: 0
+    IsGloballyMuted: 0
   MaxPlayerCount: 10
   SimulationSpeedMultiplier: 1
-  UseRandomSeed: 1
+  DisplaySaveAndReloadButton: 0
   PreloadAddressables: 0
   DynamicAssetDB:
     OnInitialDynamicAssetsRequested:
       m_PersistentCalls:
         m_Calls: []
     IsLegacyModeEnabled: 0
-  SnapshotFile: {fileID: 0}
-  DatabaseFile: {fileID: 0}
-  DBScopes: []
+  OnBeforeStart:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &193195408209990055
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -107,7 +107,36 @@ namespace Quantum {
             HandleWalkingRunning(f, ref filter, physics);
             HandleSpinners(f, ref filter, stage);
             HandleJumping(f, ref filter, physics, wasGroundpoundActive);
-            HandleSwimming(f, ref filter, physics);
+            switch (mario->SwimmingType) { //KKT Mod
+            case LiquidType.Water:
+            case LiquidType.Poison:
+            case LiquidType.Lava: {
+                HandleSwimming(f, ref filter, physics);
+                break;
+            }
+            case LiquidType.Quicksand: {
+                //quicksand
+                HandleQuicksand(f, ref filter);
+                break;
+            }
+            case LiquidType.Goo: {
+                //goo code, acts like climb code but overwrites
+                break;
+            }
+            case LiquidType.FreezingWater: {
+                //push out of the liquid, we don't want mario in here
+                filter.PhysicsObject->Velocity.Y = 10;
+                break;
+            }
+            case LiquidType.Fence: {
+                //climb code
+                break;
+            }
+            case LiquidType.Vine: {
+                //climb code with x momentum cutoff
+                break;
+            }
+            }
             HandleBlueShell(f, ref filter, physics, stage);
             HandleWallslide(f, ref filter, physics);
             HandleGravity(f, ref filter, physics);
@@ -189,10 +218,15 @@ namespace Quantum {
 
             FP acc;
             if (swimming) {
+                bool shellswim = mario->CurrentPowerupState == PowerupState.BlueShell && mario->SwimmingType == LiquidType.Water;
                 if (physicsObject->IsTouchingGround) {
-                    acc = mario->CurrentPowerupState == PowerupState.BlueShell ? physics.SwimWalkShellAcceleration[stage] : physics.SwimWalkAcceleration[stage];
+                    acc = shellswim ? physics.SwimWalkShellAcceleration[stage] : physics.SwimWalkAcceleration[stage];
                 } else {
-                    acc = mario->CurrentPowerupState == PowerupState.BlueShell ? physics.SwimShellAcceleration[stage] : physics.SwimAcceleration[stage];
+                    acc = shellswim ? physics.SwimShellAcceleration[stage] : physics.SwimAcceleration[stage];
+                }
+                if (mario->SwimmingType == LiquidType.Quicksand) {
+                    //accelerate faster in quicksand
+                    acc *= 2;
                 }
             } else if (mario->StoneBux) {
                 acc = physics.WalkAcceleration[stage] * FP._0_75;
@@ -324,6 +358,10 @@ namespace Quantum {
                         acc = -physics.WalkAcceleration[0];
                     } else {
                         acc = -physics.SwimDeceleration;
+                    }
+                    if (mario->SwimmingType == LiquidType.Quicksand) {
+                        //decelerate faster in quicksand
+                        acc *= 6;
                     }
                 } else if (mario->IsSliding) {
                     if (angle > physics.SlideMinimumAngle) {
@@ -1688,6 +1726,40 @@ namespace Quantum {
             }
         }
 
+        private void HandleQuicksand(Frame f, ref Filter filter) {
+            using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleQuicksand");
+            var mario = filter.MarioPlayer;
+            var physicsObject = filter.PhysicsObject;
+
+            if (!physicsObject->IsUnderwater || f.Exists(mario->CurrentPipe)) {
+                return;
+            }
+
+            FP SandJumpStrength = 10;
+
+            mario->WallslideLeft = false;
+            mario->WallslideRight = false;
+            mario->IsSpinnerFlying = false;
+            mario->IsCrouching |= physicsObject->IsTouchingGround && mario->IsSliding;
+            mario->IsSliding = false;
+            mario->IsSkidding = false;
+            mario->IsTurnaround = false;
+            mario->UsedPropellerThisJump = false;
+            //mario->IsInShell = false;
+            mario->JumpState = JumpState.None;
+
+            if (!mario->IsInKnockback && mario->JumpBufferFrames > 0) {
+                physicsObject->Velocity.Y = SandJumpStrength;
+                physicsObject->IsTouchingGround = false;
+                mario->JumpBufferFrames = 0;
+                mario->IsCrouching = false;
+
+                f.Events.MarioPlayerJumped(filter.Entity, mario->CurrentPowerupState, JumpState.None, mario->DoEntityBounce, false, mario->RidingStarball);
+            } else {
+                physicsObject->Velocity.Y *= physicsObject->Velocity.Y <= 0 ? Constants._0_90 : FP._0_50;
+            }
+        }
+
         private void HandleSliding(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics) {
             using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleSliding");
             ref var inputs = ref filter.Inputs;
@@ -2954,17 +3026,21 @@ namespace Quantum {
         public void OnEntityChangeUnderwaterState(Frame f, EntityRef entity, EntityRef liquid, QBoolean underwater) {
             if (!f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)
                 || f.Exists(mario->CurrentPipe)
-                || !f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)) {
+                || !f.Unsafe.TryGetPointer(entity, out PhysicsObject* physicsObject)
+                || !f.Unsafe.TryGetPointer(liquid, out Liquid* walter)) {
                 return;
             }
 
             if (underwater) {
+                mario->SwimmingType = walter->LiquidType;
+
                 if (mario->IsInKnockback) {
                     mario->KnockbackTick = f.Number;
                 }
                 physicsObject->Velocity.Y = mario->IsGroundpounding ? -5 : 0;
                 mario->CantJumpTimer = 10;
             } else {
+                mario->SwimmingType = LiquidType.ReversePlane; //e
                 if (physicsObject->Velocity.Y > 0 && !physicsObject->IsTouchingGround) {
                     mario->ForceJumpTimer = 10;
                 }

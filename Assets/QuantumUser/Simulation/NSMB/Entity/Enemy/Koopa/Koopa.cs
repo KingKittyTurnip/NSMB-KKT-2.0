@@ -15,6 +15,8 @@ namespace Quantum {
 
             f.Unsafe.GetPointer<Interactable>(entity)->ColliderDisabled = false;
             f.Unsafe.GetPointer<ComboKeeper>(entity)->Combo = 0;
+
+            f.Unsafe.GetPointer<PhysicsObject>(entity)->SinksInQuickSandAndGoo = false;
         }
 
         public void EnterShell(Frame f, EntityRef entity, EntityRef initiator, bool flipped, bool groundpounded) {
@@ -32,6 +34,8 @@ namespace Quantum {
             WakeupFrames = 15 * 60;
 
             f.Unsafe.GetPointer<ComboKeeper>(entity)->Combo = 0;
+
+            f.Unsafe.GetPointer<PhysicsObject>(entity)->SinksInQuickSandAndGoo = true;
         }
 
         public void Kick(Frame f, EntityRef entity, EntityRef initiator, FP speed) {
@@ -50,7 +54,7 @@ namespace Quantum {
 
         public void Kill(Frame f, EntityRef koopaEntity, EntityRef killerEntity, EnemyKillReason reason) {
             var enemy = f.Unsafe.GetPointer<Enemy>(koopaEntity);
-            if (enemy->IsDead) {
+            if (enemy->IsDead || IsTurnip) {
                 return;
             }
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(koopaEntity);

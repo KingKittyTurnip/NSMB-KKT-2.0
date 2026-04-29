@@ -899,6 +899,8 @@ MonoBehaviour:
   iceSkiddingParticle: {fileID: 5251921966134561398}
   waterRunningParticle: {fileID: 8602803811170997306}
   waterSkiddingParticle: {fileID: 3878221348697021963}
+  SmallModelScale: {x: 1, y: 1, z: 1}
+  LargeModelScale: {x: 1, y: 1, z: 1}
 --- !u!114 &8832712012989740833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1185,6 +1187,9 @@ MonoBehaviour:
     CharacterAsset:
       Id:
         Value: 532063855470386108
+    IsBot:
+      Value: 0
+    BotTeam: 0
 --- !u!114 &8682297443920381521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1213,11 +1218,11 @@ MonoBehaviour:
       Value: 0
     IsWaterSolid:
       Value: 0
+    SinksInQuickSandAndGoo:
+      Value: 1
     BreakMegaObjects:
       Value: 0
     WindImmune:
-      Value: 0
-    GravityInversed:
       Value: 0
 --- !u!114 &-2541758970786198444
 MonoBehaviour:

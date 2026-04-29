@@ -361,17 +361,15 @@ namespace Quantum.Prototypes {
   }
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.ChainChomp))]
-  public unsafe partial class ChainChompPrototype : ComponentPrototype<Quantum.ChainChomp> {
-    [HideInInspector()]
-    public Int32 _empty_prototype_dummy_field_;
-    partial void MaterializeUser(Frame frame, ref Quantum.ChainChomp result, in PrototypeMaterializationContext context);
+  public unsafe class ChainChompPrototype : ComponentPrototype<Quantum.ChainChomp> {
+    public MapEntityId Post;
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.ChainChomp component = default;
         Materialize((Frame)f, ref component, in context);
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.ChainChomp result, in PrototypeMaterializationContext context = default) {
-        MaterializeUser(frame, ref result, in context);
+        PrototypeValidator.FindMapEntity(this.Post, in context, out result.Post);
     }
   }
   [System.SerializableAttribute()]
@@ -971,6 +969,8 @@ namespace Quantum.Prototypes {
     public AssetRef<PowerupAsset> SpawnPowerupWhenStomped;
     public QBoolean DontWalkOfLedges;
     public QBoolean IsSpiny;
+    public QBoolean IsBuzzy;
+    public QBoolean IsTurnip;
     public FP Speed;
     public FP KickSpeed;
     public FPVector2 IceBlockInShellSize;
@@ -985,6 +985,8 @@ namespace Quantum.Prototypes {
         result.SpawnPowerupWhenStomped = this.SpawnPowerupWhenStomped;
         result.DontWalkOfLedges = this.DontWalkOfLedges;
         result.IsSpiny = this.IsSpiny;
+        result.IsBuzzy = this.IsBuzzy;
+        result.IsTurnip = this.IsTurnip;
         result.Speed = this.Speed;
         result.KickSpeed = this.KickSpeed;
         result.IceBlockInShellSize = this.IceBlockInShellSize;
@@ -1148,6 +1150,7 @@ namespace Quantum.Prototypes {
     public QBoolean DisableCollision;
     public QBoolean SlowInLiquids;
     public QBoolean IsWaterSolid;
+    public QBoolean SinksInQuickSandAndGoo;
     public QBoolean BreakMegaObjects;
     public QBoolean WindImmune;
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
@@ -1162,6 +1165,7 @@ namespace Quantum.Prototypes {
         result.DisableCollision = this.DisableCollision;
         result.SlowInLiquids = this.SlowInLiquids;
         result.IsWaterSolid = this.IsWaterSolid;
+        result.SinksInQuickSandAndGoo = this.SinksInQuickSandAndGoo;
         result.BreakMegaObjects = this.BreakMegaObjects;
         result.WindImmune = this.WindImmune;
     }
@@ -1263,6 +1267,25 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Podobo))]
+  public unsafe partial class PodoboPrototype : ComponentPrototype<Quantum.Podobo> {
+    public Quantum.QEnum8<PodoboType> Varient;
+    public FP JumpStrength;
+    public FP HopBLocation;
+    partial void MaterializeUser(Frame frame, ref Quantum.Podobo result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Podobo component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Podobo result, in PrototypeMaterializationContext context = default) {
+        result.Varient = this.Varient;
+        result.JumpStrength = this.JumpStrength;
+        result.HopBLocation = this.HopBLocation;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Powerup))]
   public unsafe partial class PowerupPrototype : ComponentPrototype<Quantum.Powerup> {
     public QBoolean FacingRight;
@@ -1320,6 +1343,50 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.Projectile result, in PrototypeMaterializationContext context = default) {
         result.Asset = this.Asset;
         result.Speed = this.Speed;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.ScalePlatform))]
+  public unsafe partial class ScalePlatformPrototype : ComponentPrototype<Quantum.ScalePlatform> {
+    public FP Length;
+    public FP Height;
+    public FP Startoffset;
+    public FP TerminalVelocity;
+    public FP Acceleration;
+    public FP PlatformbreakTime;
+    partial void MaterializeUser(Frame frame, ref Quantum.ScalePlatform result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.ScalePlatform component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.ScalePlatform result, in PrototypeMaterializationContext context = default) {
+        result.Length = this.Length;
+        result.Height = this.Height;
+        result.Startoffset = this.Startoffset;
+        result.TerminalVelocity = this.TerminalVelocity;
+        result.Acceleration = this.Acceleration;
+        result.PlatformbreakTime = this.PlatformbreakTime;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Seesaw))]
+  public unsafe partial class SeesawPrototype : ComponentPrototype<Quantum.Seesaw> {
+    public FP MaxTipping;
+    public FP Acceleration;
+    public FP TerminalVelocity;
+    partial void MaterializeUser(Frame frame, ref Quantum.Seesaw result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Seesaw component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Seesaw result, in PrototypeMaterializationContext context = default) {
+        result.MaxTipping = this.MaxTipping;
+        result.Acceleration = this.Acceleration;
+        result.TerminalVelocity = this.TerminalVelocity;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -1470,7 +1537,7 @@ namespace Quantum.Prototypes {
   }
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.ThrowingObject))]
-  public unsafe partial class ThrowingObjectPrototype : ComponentPrototype<Quantum.ThrowingObject> {
+  public unsafe class ThrowingObjectPrototype : ComponentPrototype<Quantum.ThrowingObject> {
     public Quantum.QEnum8<ThrowingObjectType> Type;
     public QBoolean GroundBounce;
     public QBoolean IsBall;
@@ -1481,7 +1548,7 @@ namespace Quantum.Prototypes {
     public Byte StarsToDrop;
     public QBoolean IgnoreTeamates;
     public Byte Varient;
-    partial void MaterializeUser(Frame frame, ref Quantum.ThrowingObject result, in PrototypeMaterializationContext context);
+    public MapEntityId ConnectedObject;
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.ThrowingObject component = default;
         Materialize((Frame)f, ref component, in context);
@@ -1498,7 +1565,7 @@ namespace Quantum.Prototypes {
         result.StarsToDrop = this.StarsToDrop;
         result.IgnoreTeamates = this.IgnoreTeamates;
         result.Varient = this.Varient;
-        MaterializeUser(frame, ref result, in context);
+        PrototypeValidator.FindMapEntity(this.ConnectedObject, in context, out result.ConnectedObject);
     }
   }
   [System.SerializableAttribute()]

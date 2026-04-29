@@ -1,0 +1,10 @@
+component Seesaw {
+	FP MaxTipping;
+	FP Acceleration;
+	FP TerminalVelocity;
+	
+	[ExcludeFromPrototype] FP Velocity;
+	
+	[ExcludeFromPrototype] FP WeightOnLift;
+	[ExcludeFromPrototype] byte Delay;
+}
