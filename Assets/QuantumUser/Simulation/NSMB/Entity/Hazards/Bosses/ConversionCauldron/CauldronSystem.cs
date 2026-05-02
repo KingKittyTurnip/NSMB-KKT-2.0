@@ -1,6 +1,7 @@
 using Photon.Deterministic;
 using Quantum.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Quantum {
     
@@ -52,27 +53,8 @@ namespace Quantum {
                         f.Events.CauldronHop(filter.Entity);
                     } else if (cauldron->EnteredFrames > 130) {
                         //create boss hazard
-                        var bossesAsset = f.FindAsset(cauldron->BossData);
-                        EntityRef newEntity = f.Create(bossesAsset.ListOfBosses[cauldron->ConvertIntoBossId].BossPrototype);
+                        ConvertToBoss(f, filter.Entity, false);
 
-                        f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity.Y = 8;
-
-                        if (cauldron->TransformingEntity != EntityRef.None) {
-                            f.Unsafe.GetPointer<Boss>(newEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
-                            f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
-                        }
-                        //this code should always be ran, outside of putting it in stages if that's what i want to do
-                        var extradata = bossesAsset.ListOfBosses[cauldron->ConvertIntoBossId].Extra;
-                        var h = f.ResolveList(new QListPtr<byte>());
-                        foreach (var item in extradata) {
-                            h.Add(item);
-                        }
-                        
-                        f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, h);
-                        f.Events.PlayPuffParticle(transform->Position);
-                        cauldron->TransformingEntity = EntityRef.None;
-                        cauldron->Activated = false;
-                        HazardSystem.DestroyHazard(f, filter.Entity);
                     } else if (cauldron->EnteredFrames == 100) {
                         f.Events.CauldronExpand(filter.Entity);
                     }
@@ -84,6 +66,38 @@ namespace Quantum {
                     FPVector2 damageDirection = (theirPos - ourPos).Normalized;
                     otherTransform->Position += damageDirection * -FP._0_10;
                 }
+            }
+        }
+
+        public void ConvertToBoss(Frame f, EntityRef thisEntity, bool IsInstantVarient) {
+            var cauldron = f.Unsafe.GetPointer<Cauldron>(thisEntity);
+            var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+
+            var bossesAsset = f.FindAsset(cauldron->BossData);
+            EntityRef newEntity = f.Create(bossesAsset.ListOfBosses[cauldron->ConvertIntoBossId].BossPrototype);
+
+            f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity.Y = 8;
+
+            if (cauldron->TransformingEntity != EntityRef.None) {
+                f.Unsafe.GetPointer<Boss>(newEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
+                f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
+            }
+            //this code should always be ran, outside of putting it in stages if that's what i want to do
+            var extradata = bossesAsset.ListOfBosses[cauldron->ConvertIntoBossId].Extra;
+            var h = f.ResolveList(new QListPtr<byte>());
+            foreach (var item in extradata) {
+                h.Add(item);
+            }
+
+            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, h);
+            f.Events.PlayPuffParticle(transform->Position);
+            cauldron->TransformingEntity = EntityRef.None;
+            cauldron->Activated = false;
+            if (IsInstantVarient) {
+                var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
+                hazard->LifeTime = 1;
+            } else {
+                HazardSystem.DestroyHazard(f, thisEntity);
             }
         }
 
@@ -148,6 +162,10 @@ namespace Quantum {
             } else {
                 //pick specific
                 cauldron->ConvertIntoBossId = specialValues[0];
+            }
+
+            if (specialValues[1] == 1) {
+                ConvertToBoss(f, thisEntity, true);
             }
         }
         #endregion

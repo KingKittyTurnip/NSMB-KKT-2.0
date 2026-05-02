@@ -102,6 +102,16 @@ namespace Quantum {
                     f.Global->RealPlayers = (byte) loadedPlayers;
                     f.Global->GameState = GameState.Starting;
                     f.Global->GameStartFrames = (ushort) (6 * f.UpdateRate);
+                    //KKT Mod, we want this here so we can properly set the timer
+                    var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+                    if (stage.OverwriteRules != null) {
+                        UnityEngine.Debug.Log("Overwriting rules");
+
+                        //remember our rules
+                        f.Global->ClipboardRules = f.Global->Rules;
+                        //set overwrite rules
+                        f.FindAsset(stage.OverwriteRules).BaseRulesList.DefaultRules.Materialize(f, ref f.Global->Rules);
+                    }
                     f.Global->Timer = f.Global->Rules.TimerMinutes * 60;
 
                     f.Signals.OnLoadingComplete();
@@ -402,15 +412,6 @@ namespace Quantum {
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
             int teamCount = 0;
 
-            if (stage.OverwriteRules != null) {
-                UnityEngine.Debug.Log("Overwriting rules");
-
-                //remember our rules
-                f.Global->ClipboardRules = f.Global->Rules;
-                //set overwrite rules
-                f.FindAsset(stage.OverwriteRules).BaseRulesList.DefaultRules.Materialize(f, ref f.Global->Rules);
-            }
-
             int playerCount = 0;
             foreach ((_, var data) in f.Unsafe.GetComponentBlockIterator<PlayerData>()) {
                 if (!data->IsLoaded) {
@@ -425,6 +426,9 @@ namespace Quantum {
 
                 if (!f.TryFindAsset(data->Character, out var character)) {
                     character = f.Context.GetAllAssets<CharacterAsset>()[0];
+                }
+                if (stage.ForceCharacter != null) { //if the overwrite rules are skipped then skip this too
+                    character = f.FindAsset(stage.ForceCharacter);
                 }
 
                 EntityRef newPlayer = f.Create(character.Prototype);

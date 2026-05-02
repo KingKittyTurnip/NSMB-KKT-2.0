@@ -20,6 +20,7 @@ MonoBehaviour:
   StageAuthor: 
   MusicComposer: 
   TranslationKey: levels.custom.KKTBeach
+  StageDescription: 
   GroupingTranslationKey: 
   DiscordStageImage: 
   SortOrder: 0
@@ -60,12 +61,16 @@ MonoBehaviour:
       RawValue: 65536000
     Y:
       RawValue: 131072
+  ThreeDeeCamera: 0
+  CaptureCamera: 0
   UIColor:
-    R: 24
-    G: 178
-    B: 170
+    R: 224
+    G: 208
+    B: 153
     A: 255
   HidePlayersOnMinimap: 0
+  MultiAreaMap: 0
+  YAreaBounds: []
   BannedCoinItems: []
   SfxOverrides: []
   MainMusic:
@@ -80,6 +85,10 @@ MonoBehaviour:
   StarballMusic:
     Id:
       Value: 491395174244541078
+  UsesBrawlJumps: 0
+  ForceCharacter:
+    Id:
+      Value: 0
   OverwriteRules:
     Id:
       Value: 0

@@ -265,14 +265,14 @@ namespace Quantum {
                         }
                     }
                     TryDrop();
-                    if (!hazard->IsHazard) {
+                    if (!hazard->IsHazard && !hazard->IsCoinItem) {
                         QuantumUtils.Decrement(ref hazard->LifeTime);
-                        if (hazard->LifeTime <= 90) {
-                            physicsObject->IsFrozen = false;
-                            hazard->LifeTime = 0;
-                            Dis->HitSomething = Dis->Thrown = false;
-                            HazardSystem.DestroyHazard(f, filter.Entity);
-                        }
+                    }
+                    if (hazard->LifeTime <= 90) {
+                        physicsObject->IsFrozen = false;
+                        hazard->LifeTime = 0;
+                        Dis->HitSomething = Dis->Thrown = false;
+                        HazardSystem.DestroyHazard(f, filter.Entity);
                     }
                 }
 
@@ -1082,6 +1082,9 @@ namespace Quantum {
                 mario->IsPropellerFlying = false;
                 mario->IsSpinnerFlying = false;
                 mario->UsedPropellerThisJump = false;
+                mario->IsDrilling = false;
+                mario->PropellerLaunchFrames = 0;
+                mario->PropellerDrillCooldown = 0;
                 break;
             case ThrowingObjectType.BillBlock:
                 mario->BillBux = false;

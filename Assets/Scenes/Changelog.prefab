@@ -51,18 +51,20 @@ MonoBehaviour:
     - the game now uses mvlo 2.0 as a base, this fixes MANY janky interactions and
       bugs, and comes with a couple new features such as the hammer suit
     - several maps/features were "removed" due to requireing more development time,
-      these most likely will return in future betas
-    - reworked the gamerules customisation
+      these most likely WILL RETURN in future versions
+    - reworked the gamerules customisation for advanced lobbies
     - you can now set powerups, enemies, and more as hazards
     - added new characters (shy guy, toadette)
     - added boss hazards (bowser, petey piranha, king boo, whomp king)
     - added conversion cauldron, chainpost, baseball, billblock, cannonbox, tanoomba,
       fan, & starball hazards
-    - added conversion cauldron, chainpost, baseball, billblock, cannonbox, tanoomba,
-      fan, & starball hazards
     - non-hefty hazards also appear on the minimap
     - added drill joke powerup
     Changes:
+    - added scale lifts, if you step on it it moves down and the other moves up
+    - added dry bones, and big dry bones
+    - added big thwomps
+    - multi area maps now only show things on the minimap that are on your layer
     - improved model quality a bit
     - added more animations to some characters
     - bubbleflower bubbles now lightly explode when popped
@@ -96,7 +98,8 @@ MonoBehaviour:
   - Version: 1.2.1 (640.2.1) & bellow
     VanillaVersionBase: 1.7.1-1.7.1
     MajorChanges:
-    - pre-1.7.1 changelogs are no longer supported & are really old
+    - pre-1.7.1 changelogs are no longer supported, are in poor quality, and are
+      quite old
     - you can view them in the archived versions if you insist on seeing them (insert
       link to archive)
     Changes:

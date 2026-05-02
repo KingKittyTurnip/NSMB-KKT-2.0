@@ -12,5 +12,12 @@ component ScalePlatform {
 	[ExcludeFromPrototype] FP Offset;
 	
 	[ExcludeFromPrototype] int Delay;
-	[ExcludeFromPrototype] int WeightOnLift;
+    [ExcludeFromPrototype] int WeightOnLift;
+    [ExcludeFromPrototype] bool WeightIsEven;
+}
+
+event ScaleplatformStepped {
+    EntityRef Entity;
+	bool IsRightPlatform;
+	bool Broken;
 }

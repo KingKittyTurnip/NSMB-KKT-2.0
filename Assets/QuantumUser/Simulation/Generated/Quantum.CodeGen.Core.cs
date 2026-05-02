@@ -4537,19 +4537,19 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct ScalePlatform : Quantum.IComponent {
-    public const Int32 SIZE = 80;
+    public const Int32 SIZE = 88;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(32)]
+    [FieldOffset(40)]
     public FP Length;
-    [FieldOffset(24)]
+    [FieldOffset(32)]
     public FP Height;
-    [FieldOffset(56)]
-    public FP Startoffset;
     [FieldOffset(64)]
+    public FP Startoffset;
+    [FieldOffset(72)]
     public FP TerminalVelocity;
-    [FieldOffset(16)]
+    [FieldOffset(24)]
     public FP Acceleration;
-    [FieldOffset(48)]
+    [FieldOffset(56)]
     public FP PlatformbreakTime;
     [FieldOffset(12)]
     [ExcludeFromPrototype()]
@@ -4557,10 +4557,10 @@ namespace Quantum {
     [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public UInt16 Timer;
-    [FieldOffset(72)]
+    [FieldOffset(80)]
     [ExcludeFromPrototype()]
     public FP Velocity;
-    [FieldOffset(40)]
+    [FieldOffset(48)]
     [ExcludeFromPrototype()]
     public FP Offset;
     [FieldOffset(4)]
@@ -4569,6 +4569,9 @@ namespace Quantum {
     [FieldOffset(8)]
     [ExcludeFromPrototype()]
     public Int32 WeightOnLift;
+    [FieldOffset(16)]
+    [ExcludeFromPrototype()]
+    public QBoolean WeightIsEven;
     public override readonly Int32 GetHashCode() {
       unchecked { 
         var hash = 20147;
@@ -4584,6 +4587,7 @@ namespace Quantum {
         hash = hash * 31 + Offset.GetHashCode();
         hash = hash * 31 + Delay.GetHashCode();
         hash = hash * 31 + WeightOnLift.GetHashCode();
+        hash = hash * 31 + WeightIsEven.GetHashCode();
         return hash;
       }
     }
@@ -4593,6 +4597,7 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->Delay);
         serializer.Stream.Serialize(&p->WeightOnLift);
         QBoolean.Serialize(&p->IsFalling, serializer);
+        QBoolean.Serialize(&p->WeightIsEven, serializer);
         FP.Serialize(&p->Acceleration, serializer);
         FP.Serialize(&p->Height, serializer);
         FP.Serialize(&p->Length, serializer);

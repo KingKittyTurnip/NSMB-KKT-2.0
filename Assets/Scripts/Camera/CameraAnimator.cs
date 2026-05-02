@@ -49,6 +49,14 @@ namespace NSMB.Cameras {
             QuantumEvent.Subscribe<EventMarioPlayerEnteredPipe>(this, OnMarioPlayerEnteredPipe);
             stage = (VersusStageData) QuantumUnityDB.GetGlobalAsset(FindFirstObjectByType<QuantumMapData>().GetAsset(false).UserAsset);
 
+            if (stage.CaptureCamera) {
+                Mode = CameraMode.Encapsulate;
+            }
+            if (stage.ThreeDeeCamera) {
+                ourCamera.orthographic = false;
+                ourCamera.fieldOfView = 30;
+            }
+
             Settings.Controls.Replay.Reset.performed += OnReset;
             OnScreenshake += OnScreenshakeCallback;
         }
@@ -74,6 +82,13 @@ namespace NSMB.Cameras {
                 break;
             case CameraMode.Freecam:
                 UpdateCameraFreecamMode(e);
+                break;
+            //KKT Mod, Encapsulate all players
+            case CameraMode.Encapsulate:
+                Debug.LogWarning("KKT This Camera Type Isn't Finished Yet");
+                UpdateCameraFollowPlayerMode(e);
+                ourCamera.transform.position = new Vector3(ourCamera.transform.position.x, ourCamera.transform.position.y+3, -20);
+                ourCamera.transform.rotation = Quaternion.Euler(10, 0, 0);
                 break;
             }
 
@@ -392,6 +407,7 @@ namespace NSMB.Cameras {
 
         public enum CameraMode {
             FollowPlayer, Freecam
+                , Encapsulate //KKT Mod
         }
     }
 }

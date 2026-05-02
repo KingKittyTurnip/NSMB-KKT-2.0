@@ -18,10 +18,12 @@ MonoBehaviour:
     Guid:
       Value: 530648339201792602
   ShowAuthorAndComposer: 0
-  StageAuthor: 
-  MusicComposer: 
-  TranslationKey: levels.custom.U-Grassland Deja vu
-  GroupingTranslationKey: 
+  StageAuthor: Nintendo/KingKittyTurnip
+  MusicComposer: Nintendo
+  TranslationKey: Door District
+  StageDescription: An unused map from the og, renewed! Travel through doors to get
+    to stars before your opponents do
+  GroupingTranslationKey: Unused Renewed
   DiscordStageImage: 
   SortOrder: 0
   Icon: {fileID: 0}
@@ -62,11 +64,13 @@ MonoBehaviour:
     Y:
       RawValue: 2719744
   UIColor:
-    R: 24
+    R: 45
     G: 178
-    B: 170
+    B: 24
     A: 255
   HidePlayersOnMinimap: 0
+  MultiAreaMap: 1
+  YAreaBounds: []
   BannedCoinItems: []
   SfxOverrides: []
   MainMusic:

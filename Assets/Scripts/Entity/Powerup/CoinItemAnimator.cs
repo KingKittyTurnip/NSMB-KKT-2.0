@@ -111,11 +111,12 @@ namespace NSMB.Entities.CoinItems {
 
             var hazard = f.Unsafe.GetPointer<Hazard>(EntityRef);
             if (!hazard->IsHazard && !hazard->IsCoinItem) { //Hide if in stage (for respawn shenanigans) this code is yuk otherwise.
-                var enemy = f.Unsafe.GetPointer<Enemy>(EntityRef);
-                foreach (Renderer r in renderers) {
-                    r.enabled = enemy->IsActive;
+                if (f.Unsafe.TryGetPointer<Enemy>(EntityRef, out var enemy)) {
+                    foreach (Renderer r in renderers) {
+                        r.enabled = enemy->IsActive;
+                    }
+                    return;
                 }
-                return;
             }
 
             if (f.Unsafe.TryGetPointer(EntityRef, out CoinItem* coinItem)) {

@@ -19,7 +19,9 @@ MonoBehaviour:
   ShowAuthorAndComposer: 0
   StageAuthor: Nintendo/KingKittyTurnip
   MusicComposer: Nintendo
-  TranslationKey: Castle
+  TranslationKey: Circle Castle
+  StageDescription: An unused map from the og, renewed! Fight in the pit of doom,
+    or the circle area around it
   GroupingTranslationKey: Unused Renewed
   DiscordStageImage: 
   SortOrder: 0
@@ -60,12 +62,16 @@ MonoBehaviour:
       RawValue: 1048576
     Y:
       RawValue: 1146880
+  ThreeDeeCamera: 0
+  CaptureCamera: 0
   UIColor:
-    R: 96
-    G: 96
-    B: 96
+    R: 213
+    G: 140
+    B: 38
     A: 255
   HidePlayersOnMinimap: 0
+  MultiAreaMap: 0
+  YAreaBounds: []
   BannedCoinItems: []
   SfxOverrides: []
   MainMusic:
@@ -80,6 +86,10 @@ MonoBehaviour:
   StarballMusic:
     Id:
       Value: 491395174244541078
+  UsesBrawlJumps: 0
+  ForceCharacter:
+    Id:
+      Value: 0
   OverwriteRules:
     Id:
       Value: 0

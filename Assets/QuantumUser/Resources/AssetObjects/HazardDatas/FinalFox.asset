@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d5cbd9d0a86fd4ab81898eb4718ac1, type: 3}
+  m_Name: FinalFox
+  m_EditorClassIdentifier: Quantum.Simulation::Quantum.OverwriteRules
+  Identifier:
+    Path: QuantumUser/Resources/AssetObjects/HazardDatas/FinalFox
+    Guid:
+      Value: 371441101682118360
+  BaseRulesList:
+    Name: Final Destonation
+    Description: No Items. Fox Only.
+    DefaultRules:
+      AdvancedLobby:
+        Value: 0
+      Stage:
+        Id:
+          Value: 462791273099701333
+      Gamemode:
+        Id:
+          Value: 326486899682662279
+      GamemodeStarChasersEnabled:
+        Value: 0
+      StarsToWin: 15
+      StarFrequency: 3
+      GamemodeCoinRunnersEnabled:
+        Value: 0
+      StarcoinFrequency: 0
+      GamemodeBalloonBattleEnabled:
+        Value: 0
+      MaxBalloons: 0
+      GamemodeBombchasersEnabled:
+        Value: 0
+      CoinsForPowerup: 0
+      Items:
+      - Chance:
+          Value: 0
+        Items: []
+      - Chance:
+          Value: 1
+        Items: []
+      - Chance:
+          Value: 2
+        Items:
+        - Name: Mushroom
+          PowerupPrototype:
+            Id:
+              Value: 1268531089014898302
+          Team: 255
+          Extra: 
+      - Chance:
+          Value: 3
+        Items: []
+      - Chance:
+          Value: 4
+        Items: []
+      - Chance:
+          Value: 5
+        Items: []
+      - Chance:
+          Value: 6
+        Items: []
+      - Chance:
+          Value: 7
+        Items: []
+      - Chance:
+          Value: 8
+        Items: []
+      - Chance:
+          Value: 9
+        Items: []
+      - Chance:
+          Value: 10
+        Items: []
+      HazardsEnabled:
+        Value: 0
+      MaxHazards: 0
+      HazardFrequency: 0
+      HeftyPercentage:
+        RawValue: 0
+      HazardLifetime: 0
+      Hazards: []
+      Lives: 5
+      TimerMinutes: 10
+      TeamsEnabled:
+        Value: 0

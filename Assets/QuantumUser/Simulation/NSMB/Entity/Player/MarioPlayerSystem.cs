@@ -1526,7 +1526,7 @@ namespace Quantum {
                         //Bump On Wall
                         ThrowingObj->ReusableTimer = 1;
                         physicsObject->Velocity.Y = 6;
-                        physicsObject->Velocity.X = physicsObject->IsTouchingLeftWall ? 4 : -4;
+                        physicsObject->Velocity.X = physicsObject->IsTouchingLeftWall ? 2 : -2;
                     }
                 }
                 return;

@@ -18,6 +18,7 @@ public unsafe class VersusStageData : AssetObject, ISoundOverrideProvider {
     public string StageAuthor;
     public string MusicComposer;
     public string TranslationKey;
+    public string StageDescription;//KKT Mod
     public string GroupingTranslationKey;
     public string DiscordStageImage;
     public int SortOrder;
@@ -42,10 +43,16 @@ public unsafe class VersusStageData : AssetObject, ISoundOverrideProvider {
     public bool OverrideAutomaticCameraSettings;
     public FPVector2 CameraMinPosition;
     public FPVector2 CameraMaxPosition;
+    //KKT Mod, these make the camera render as 3d, or try to keep all players in it at once
+    public bool ThreeDeeCamera;
+    public bool CaptureCamera;
 
     [Header("-- UI")]
     public ColorRGBA UIColor = new(24, 178, 170);
     public bool HidePlayersOnMinimap;
+    //KKT Mod, in this mode the minimap will only show icons that are inside the area in the list you are in
+    public bool MultiAreaMap;
+    public List<Vector2> YAreaBounds;
 
     [Header("-- Coin Items")]
     public List<AssetRef<CoinItemAsset>> BannedCoinItems;
@@ -59,8 +66,13 @@ public unsafe class VersusStageData : AssetObject, ISoundOverrideProvider {
     public AssetRef<LoopingMusicData> MegaMushroomMusic;
     public AssetRef<LoopingMusicData> StarballMusic;
 
+    [Header("Map Rules")]
+    public bool UsesBrawlJumps;
+    public AssetRef<CharacterAsset> ForceCharacter;
+
     [Header("-- Overwrite Rules")]
     //We use these in the "complex" maps, since it's mechanics aren't built for the entire mod
+    //if the "Advancedlobby" toggle is disabled in the overwrite rules you can opt out of it to play with custom rules
     public AssetRef<OverwriteRules> OverwriteRules;
 
     [HideInInspector] public StageTileInstance[] TileData;
