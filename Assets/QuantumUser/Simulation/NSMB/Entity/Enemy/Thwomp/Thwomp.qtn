@@ -1,0 +1,19 @@
+component Thwomp {
+	bool Big;
+	[ExcludeFromPrototype] bool PlayerNear;
+	[ExcludeFromPrototype] ThwompState State;
+	[ExcludeFromPrototype] ushort Timer;
+}
+
+enum ThwompState : Byte {
+	Idle,
+	Fall,
+	Landed,
+	Recover,
+}
+
+event ThwompLanded {
+    Frame f;
+	EntityRef Entity;
+	bool Big;
+}

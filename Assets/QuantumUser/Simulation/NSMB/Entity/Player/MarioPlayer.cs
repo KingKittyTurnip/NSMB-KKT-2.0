@@ -90,6 +90,7 @@ namespace Quantum {
         }
 
         public readonly bool IsStarmanInvincible => InvincibilityFrames > 0;
+        public readonly bool IsMetal => MetalMushroomFrames > 0; //KKT Mod
         public readonly bool IsWallsliding => WallslideLeft || WallslideRight;
         public readonly bool IsCrouchedInShell => CurrentPowerupState == PowerupState.BlueShell && (IsCrouching || IsGroundpounding && GroundpoundStartFrames <= 11) && !IsInShell;
         public readonly bool IsDamageable => !IsStarmanInvincible && DamageInvincibilityFrames == 0;
@@ -172,6 +173,7 @@ namespace Quantum {
 
         public readonly bool InstakillsEnemies(PhysicsObject* physicsObject, bool includeSliding) {
             return CurrentPowerupState == PowerupState.MegaMushroom
+                || IsMetal //KKT Mod
                 || IsStarmanInvincible
                 || IsInShell
                 || includeSliding && IsSliding && FPMath.Abs(physicsObject->Velocity.X) > FP._0_33;

@@ -43,6 +43,8 @@ MonoBehaviour:
         GamemodeBombchasersEnabled:
           Value: 0
         CoinsForPowerup: 5
+        RouletteBlocksEnabled:
+          Value: 0
         Items:
         - Chance:
             Value: 0
@@ -53,11 +55,14 @@ MonoBehaviour:
                 Value: 1414434856952255942
             Team: 255
             Extra: 
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1268531089014898302
+            Team: 255
+            Extra: 
         - Chance:
             Value: 1
-          Items: []
-        - Chance:
-            Value: 2
           Items:
           - Name: FireFlower
             PowerupPrototype:
@@ -77,6 +82,12 @@ MonoBehaviour:
                 Value: 1524544283524633813
             Team: 255
             Extra: 
+          - Name: Propeller Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1286010981056643553
+            Team: 255
+            Extra: 
           - Name: Hammer
             PowerupPrototype:
               Id:
@@ -84,7 +95,7 @@ MonoBehaviour:
             Team: 255
             Extra: 
         - Chance:
-            Value: 3
+            Value: 2
           Items:
           - Name: Starman
             PowerupPrototype:
@@ -93,7 +104,7 @@ MonoBehaviour:
             Team: 255
             Extra: 
         - Chance:
-            Value: 4
+            Value: 3
           Items:
           - Name: Metal Mushroom
             PowerupPrototype:
@@ -102,25 +113,7 @@ MonoBehaviour:
             Team: 255
             Extra: 
         - Chance:
-            Value: 5
-          Items:
-          - Name: Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1268531089014898302
-            Team: 255
-            Extra: 
-        - Chance:
-            Value: 6
-          Items:
-          - Name: Propeller Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1286010981056643553
-            Team: 255
-            Extra: 
-        - Chance:
-            Value: 7
+            Value: 4
           Items:
           - Name: Mega Mushroom
             PowerupPrototype:
@@ -129,18 +122,16 @@ MonoBehaviour:
             Team: 255
             Extra: 
         - Chance:
-            Value: 8
+            Value: 5
           Items: []
         - Chance:
-            Value: 9
+            Value: 6
           Items: []
         - Chance:
-            Value: 10
+            Value: 7
           Items: []
-        HazardsEnabled:
-          Value: 1
-        MaxHazards: 10
-        HazardFrequency: 10
+        MaxHazards: 255
+        HazardFrequency: 0
         HeftyPercentage:
           RawValue: 7864
         HazardLifetime: 80
@@ -348,7 +339,7 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 
+          Extra: 00
         - Name: Starball
           HazardPrototype:
             Id:
@@ -389,117 +380,14 @@ MonoBehaviour:
         TimerMinutes: 0
         TeamsEnabled:
           Value: 0
-    - Name: OG
-      Description: Collect The Stars, Use powerups ya get to your advantage!
-      DefaultRules:
-        AdvancedLobby:
+        BulbAbilityCount: 0
+        HostControl:
           Value: 0
-        Stage:
-          Id:
-            Value: 438935048561577377
-        Gamemode:
-          Id:
-            Value: 326486899682662279
-        GamemodeStarChasersEnabled:
-          Value: 1
-        StarsToWin: 15
-        StarFrequency: 10
-        GamemodeCoinRunnersEnabled:
+        DisableStageRestrictions:
           Value: 0
-        StarcoinFrequency: 10
-        GamemodeBalloonBattleEnabled:
+        DisableComplexStageRestrictions:
           Value: 0
-        MaxBalloons: 10
-        GamemodeBombchasersEnabled:
-          Value: 0
-        CoinsForPowerup: 8
-        Items:
-        - Chance:
-            Value: 0
-          Items:
-          - Name: Mini Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1414434856952255942
-            Team: 255
-            Extra: 
-        - Chance:
-            Value: 1
-          Items: []
-        - Chance:
-            Value: 2
-          Items:
-          - Name: FireFlower
-            PowerupPrototype:
-              Id:
-                Value: 1349070666859566638
-            Team: 255
-            Extra: 
-          - Name: BlueShell
-            PowerupPrototype:
-              Id:
-                Value: 1466930856010351358
-            Team: 255
-            Extra: 
-        - Chance:
-            Value: 3
-          Items:
-          - Name: Starman
-            PowerupPrototype:
-              Id:
-                Value: 1502268950446962426
-            Team: 255
-            Extra: 
-        - Chance:
-            Value: 4
-          Items:
-          - Name: Metal Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1313060240537942267
-            Team: 255
-            Extra: 
-        - Chance:
-            Value: 5
-          Items:
-          - Name: Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1268531089014898302
-            Team: 255
-            Extra: 
-        - Chance:
-            Value: 6
-          Items: []
-        - Chance:
-            Value: 7
-          Items:
-          - Name: Mega Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1300211052819551813
-            Team: 255
-            Extra: 
-        - Chance:
-            Value: 8
-          Items: []
-        - Chance:
-            Value: 9
-          Items: []
-        - Chance:
-            Value: 10
-          Items: []
-        HazardsEnabled:
-          Value: 0
-        MaxHazards: 0
-        HazardFrequency: 0
-        HeftyPercentage:
-          RawValue: 7864
-        HazardLifetime: 80
-        Hazards: []
-        Lives: 0
-        TimerMinutes: 0
-        TeamsEnabled:
+        EveryItemHasTheSameChance:
           Value: 0
     - Name: Test
       Description: 
@@ -524,65 +412,85 @@ MonoBehaviour:
         MaxBalloons: 0
         GamemodeBombchasersEnabled:
           Value: 0
-        CoinsForPowerup: 5
+        CoinsForPowerup: 1
+        RouletteBlocksEnabled:
+          Value: 0
         Items:
         - Chance:
             Value: 0
-          Items: []
+          Items:
+          - Name: Mini Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1414434856952255942
+            Team: 255
+            Extra: 
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1268531089014898302
+            Team: 255
+            Extra: 
         - Chance:
             Value: 1
-          Items: []
+          Items:
+          - Name: FireFlower
+            PowerupPrototype:
+              Id:
+                Value: 1349070666859566638
+            Team: 255
+            Extra: 
+          - Name: BlueShell
+            PowerupPrototype:
+              Id:
+                Value: 1466930856010351358
+            Team: 255
+            Extra: 
+          - Name: IceFlower
+            PowerupPrototype:
+              Id:
+                Value: 1524544283524633813
+            Team: 255
+            Extra: 
+          - Name: Propeller Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1286010981056643553
+            Team: 255
+            Extra: 
+          - Name: Hammer
+            PowerupPrototype:
+              Id:
+                Value: 1472665878288241371
+            Team: 255
+            Extra: 
         - Chance:
             Value: 2
           Items:
-          - Name: Mushroom
+          - Name: Starman
             PowerupPrototype:
               Id:
-                Value: 1487534197368722732
-            Team: 0
-            Extra: 00
-          - Name: Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1379843889611026990
-            Team: 0
-            Extra: 00
-          - Name: Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1284729198758392799
-            Team: 0
-            Extra: 00
-          - Name: Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1402622061657310969
-            Team: 0
-            Extra: 00
-          - Name: Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1416226096290300185
-            Team: 0
-            Extra: 00
-          - Name: Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1440373003412769203
-            Team: 0
-            Extra: 00
-          - Name: Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1304675416483732058
-            Team: 0
-            Extra: 00
+                Value: 1502268950446962426
+            Team: 255
+            Extra: 
         - Chance:
             Value: 3
-          Items: []
+          Items:
+          - Name: Metal Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1313060240537942267
+            Team: 255
+            Extra: 
         - Chance:
             Value: 4
-          Items: []
+          Items:
+          - Name: Mega Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1300211052819551813
+            Team: 255
+            Extra: 
         - Chance:
             Value: 5
           Items: []
@@ -592,27 +500,16 @@ MonoBehaviour:
         - Chance:
             Value: 7
           Items: []
-        - Chance:
-            Value: 8
-          Items: []
-        - Chance:
-            Value: 9
-          Items: []
-        - Chance:
-            Value: 10
-          Items: []
-        HazardsEnabled:
-          Value: 0
-        MaxHazards: 0
-        HazardFrequency: 0
+        MaxHazards: 3
+        HazardFrequency: 4
         HeftyPercentage:
-          RawValue: 3277
+          RawValue: 65536
         HazardLifetime: 40
         Hazards:
-        - Name: powerup
+        - Name: Heavystone
           HazardPrototype:
             Id:
-              Value: 1487534197368722732
+              Value: 1425013984214867549
           Team: 255
           Hefty:
             Value: 1
@@ -620,11 +517,11 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 
-        - Name: Fan
+          Extra: 00
+        - Name: Springboard
           HazardPrototype:
             Id:
-              Value: 1379843889611026990
+              Value: 1425013984214867549
           Team: 255
           Hefty:
             Value: 1
@@ -632,11 +529,11 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 000000
-        - Name: Fan
+          Extra: 01
+        - Name: Pow
           HazardPrototype:
             Id:
-              Value: 1284729198758392799
+              Value: 1357720639578944744
           Team: 255
           Hefty:
             Value: 1
@@ -644,23 +541,11 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 000000
-        - Name: Fan
+          Extra: 010000
+        - Name: Pow
           HazardPrototype:
             Id:
-              Value: 1402622061657310969
-          Team: 255
-          Hefty:
-            Value: 1
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra: 000000
-        - Name: Fan
-          HazardPrototype:
-            Id:
-              Value: 1304675416483732058
+              Value: 1417407889661057047
           Team: 255
           Hefty:
             Value: 1
@@ -669,10 +554,10 @@ MonoBehaviour:
           SpawnFridge:
             Value: 1
           Extra: 000000
-        - Name: Fan
+        - Name: Pow
           HazardPrototype:
             Id:
-              Value: 1440373003412769203
+              Value: 1500840674427279327
           Team: 255
           Hefty:
             Value: 1
@@ -681,10 +566,34 @@ MonoBehaviour:
           SpawnFridge:
             Value: 1
           Extra: 000000
-        - Name: Fan
+        - Name: Baseball
           HazardPrototype:
             Id:
-              Value: 1416226096290300185
+              Value: 1266191120316739523
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 00ff
+        - Name: Baseball
+          HazardPrototype:
+            Id:
+              Value: 1266191120316739523
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 01ff
+        - Name: Baseball
+          HazardPrototype:
+            Id:
+              Value: 1516621902257113064
           Team: 255
           Hefty:
             Value: 1
@@ -692,22 +601,125 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 000000
-        - Name: Fan
-          HazardPrototype:
-            Id:
-              Value: 1509128645920081087
-          Team: 255
-          Hefty:
-            Value: 1
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra: 000000
+          Extra: 0000
         Lives: 0
         TimerMinutes: 0
         TeamsEnabled:
+          Value: 0
+        BulbAbilityCount: 0
+        HostControl:
+          Value: 0
+        DisableStageRestrictions:
+          Value: 0
+        DisableComplexStageRestrictions:
+          Value: 0
+        EveryItemHasTheSameChance:
+          Value: 0
+    - Name: OG
+      Description: Collect The Stars, Use powerups ya get to your advantage!
+      DefaultRules:
+        AdvancedLobby:
+          Value: 0
+        Stage:
+          Id:
+            Value: 438935048561577377
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        GamemodeStarChasersEnabled:
+          Value: 1
+        StarsToWin: 15
+        StarFrequency: 10
+        GamemodeCoinRunnersEnabled:
+          Value: 0
+        StarcoinFrequency: 10
+        GamemodeBalloonBattleEnabled:
+          Value: 0
+        MaxBalloons: 10
+        GamemodeBombchasersEnabled:
+          Value: 0
+        CoinsForPowerup: 8
+        RouletteBlocksEnabled:
+          Value: 0
+        Items:
+        - Chance:
+            Value: 0
+          Items:
+          - Name: Mini Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1414434856952255942
+            Team: 255
+            Extra: 
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1268531089014898302
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 1
+          Items:
+          - Name: FireFlower
+            PowerupPrototype:
+              Id:
+                Value: 1349070666859566638
+            Team: 255
+            Extra: 
+          - Name: BlueShell
+            PowerupPrototype:
+              Id:
+                Value: 1466930856010351358
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 2
+          Items:
+          - Name: Starman
+            PowerupPrototype:
+              Id:
+                Value: 1502268950446962426
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 3
+          Items: []
+        - Chance:
+            Value: 4
+          Items:
+          - Name: Mega Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1300211052819551813
+            Team: 255
+            Extra: 
+        - Chance:
+            Value: 5
+          Items: []
+        - Chance:
+            Value: 6
+          Items: []
+        - Chance:
+            Value: 7
+          Items: []
+        MaxHazards: 0
+        HazardFrequency: 0
+        HeftyPercentage:
+          RawValue: 7864
+        HazardLifetime: 80
+        Hazards: []
+        Lives: 0
+        TimerMinutes: 0
+        TeamsEnabled:
+          Value: 0
+        BulbAbilityCount: 0
+        HostControl:
+          Value: 0
+        DisableStageRestrictions:
+          Value: 0
+        DisableComplexStageRestrictions:
+          Value: 0
+        EveryItemHasTheSameChance:
           Value: 0
     - Name: Bouncy House
       Description: Try to collect the stars while everything is flying everywhere!
@@ -733,6 +745,8 @@ MonoBehaviour:
         GamemodeBombchasersEnabled:
           Value: 0
         CoinsForPowerup: 1
+        RouletteBlocksEnabled:
+          Value: 0
         Items:
         - Chance:
             Value: 0
@@ -773,8 +787,6 @@ MonoBehaviour:
         - Chance:
             Value: 10
           Items: []
-        HazardsEnabled:
-          Value: 0
         MaxHazards: 30
         HazardFrequency: 1
         HeftyPercentage:
@@ -929,6 +941,15 @@ MonoBehaviour:
         TimerMinutes: 0
         TeamsEnabled:
           Value: 0
+        BulbAbilityCount: 0
+        HostControl:
+          Value: 0
+        DisableStageRestrictions:
+          Value: 0
+        DisableComplexStageRestrictions:
+          Value: 0
+        EveryItemHasTheSameChance:
+          Value: 0
     ListOfAvalibleObjects:
     - Name: Mushroom
       entityPrototype:
@@ -940,7 +961,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 5
+      SpawnChance: 0
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -954,7 +975,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -968,7 +989,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -982,7 +1003,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 3
+      SpawnChance: 2
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1010,7 +1031,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 7
+      SpawnChance: 4
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1024,7 +1045,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1052,7 +1073,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1122,7 +1143,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 1
       BulbSpawnType: 2
       BulbCooldown: 2
       SpecialValues:
@@ -1154,6 +1175,20 @@ MonoBehaviour:
           X: 0
           Y: 1
         valuenames: []
+    - Name: Bullet Bill
+      entityPrototype:
+        Id:
+          Value: 1440373003412769203
+      Icon: {fileID: 0}
+      type: 4
+      categorey: 1048576
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 0
+      BulbSpawnType: 0
+      BulbCooldown: 1
+      SpecialValues: []
     - Name: Bobomb
       entityPrototype:
         Id:
@@ -1188,20 +1223,6 @@ MonoBehaviour:
         - Spawns walking
         - Spawns lit
         - Spawns & Explodes on contact
-    - Name: Bullet Bill
-      entityPrototype:
-        Id:
-          Value: 1440373003412769203
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 0
-      BulbSpawnType: 0
-      BulbCooldown: 1
-      SpecialValues: []
     - Name: Boo
       entityPrototype:
         Id:
@@ -1216,10 +1237,52 @@ MonoBehaviour:
       BulbSpawnType: 1
       BulbCooldown: 3
       SpecialValues: []
-    - Name: Turnip
+    - Name: Thwomp
       entityPrototype:
         Id:
-          Value: 0
+          Value: 1508147813115421691
+      Icon: {fileID: 0}
+      type: 4
+      categorey: 1048576
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 1
+      BulbSpawnType: 1
+      BulbCooldown: 1
+      SpecialValues:
+      - ButtonName: Is Big
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: Buzzy Beetle
+      entityPrototype:
+        Id:
+          Value: 1278307627880243838
+      Icon: {fileID: 0}
+      type: 4
+      categorey: 1049600
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 1
+      BulbSpawnType: 0
+      BulbCooldown: 2
+      SpecialValues:
+      - ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: Podobo
+      entityPrototype:
+        Id:
+          Value: 1490928927700818155
       Icon: {fileID: 0}
       type: 4
       categorey: 1048576
@@ -1228,15 +1291,53 @@ MonoBehaviour:
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 1
+      BulbCooldown: 1
+      SpecialValues:
+      - ButtonName: Varient
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 0
+        valuenames:
+        - Lava
+        - Posion
+        - Ice
+    - Name: Dry Bones
+      entityPrototype:
+        Id:
+          Value: 1490928927700818155
+      Icon: {fileID: 0}
+      type: 4
+      categorey: 1048576
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 0
+      BulbSpawnType: 0
       BulbCooldown: 2
       SpecialValues:
-      - ButtonName: Spawns while spinning
+      - ButtonName: IsBig
         ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
         valuenames: []
+    - Name: Wubba
+      entityPrototype:
+        Id:
+          Value: 1386060608069232861
+      Icon: {fileID: 0}
+      type: 4
+      categorey: 1048576
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 0
+      BulbSpawnType: 0
+      BulbCooldown: 0
+      SpecialValues: []
     - Name: Cataquack
       entityPrototype:
         Id:
@@ -1252,7 +1353,7 @@ MonoBehaviour:
       BulbCooldown: 1
       SpecialValues:
       - ButtonName: Varient
-        ButtonType: 0
+        ButtonType: 1
         BaseValue: 0
         ValueRange:
           X: 0
@@ -1261,6 +1362,27 @@ MonoBehaviour:
         - Basic Blue
         - Ready Red
         - Sturdy Green
+    - Name: Turnip
+      entityPrototype:
+        Id:
+          Value: 0
+      Icon: {fileID: 0}
+      type: 4
+      categorey: 1048576
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 2
+      BulbSpawnType: 1
+      BulbCooldown: 2
+      SpecialValues:
+      - ButtonName: Spawns while spinning
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Iceblock
       entityPrototype:
         Id:
@@ -1271,7 +1393,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 1
+      SpawnChance: 0
       BulbSpawnType: 0
       BulbCooldown: 1
       SpecialValues:
@@ -1327,7 +1449,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 1
       SpecialValues:
@@ -1348,7 +1470,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 3
       SpecialValues:
@@ -1379,7 +1501,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 3
+      SpawnChance: 0
       BulbSpawnType: 1
       BulbCooldown: 3
       SpecialValues:
@@ -1400,7 +1522,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 6
+      SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 3
       SpecialValues: []
@@ -1414,7 +1536,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 3
       SpecialValues: []
@@ -1428,7 +1550,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 3
       SpecialValues: []
@@ -1442,7 +1564,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 11
+      SpawnChance: 2
       BulbSpawnType: 1
       BulbCooldown: 3
       SpecialValues: []
@@ -1498,7 +1620,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 6
+      SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 3
       SpecialValues: []
@@ -1512,7 +1634,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 9
+      SpawnChance: 5
       BulbSpawnType: 0
       BulbCooldown: 2
       SpecialValues:
@@ -1543,7 +1665,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 3
+      SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 4
       SpecialValues:
@@ -1589,7 +1711,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 3
+      SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 4
       SpecialValues:
@@ -1637,7 +1759,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 3
+      SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 4
       SpecialValues:
@@ -1658,7 +1780,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 3
+      SpawnChance: 4
       BulbSpawnType: 2
       BulbCooldown: 3
       SpecialValues: []
@@ -1672,7 +1794,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 8
+      SpawnChance: 5
       BulbSpawnType: 2
       BulbCooldown: 4
       SpecialValues: []
@@ -1686,7 +1808,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 4
+      SpawnChance: 8
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues:
@@ -1708,7 +1830,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 3
+      SpawnChance: 1
       BulbSpawnType: 2
       BulbCooldown: 4
       SpecialValues:
@@ -1735,7 +1857,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 11
+      SpawnChance: 8
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1749,7 +1871,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 11
+      SpawnChance: 8
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1763,7 +1885,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 11
+      SpawnChance: 8
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1777,7 +1899,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 11
+      SpawnChance: 8
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1792,7 +1914,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 11
+      SpawnChance: 8
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues:
@@ -1814,7 +1936,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 2
+      SpawnChance: 5
       BulbSpawnType: 0
       BulbCooldown: 2
       SpecialValues: []
@@ -1829,7 +1951,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 11
+      SpawnChance: 8
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1844,7 +1966,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 11
+      SpawnChance: 8
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []
@@ -1859,7 +1981,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 11
+      SpawnChance: 5
       BulbSpawnType: 0
       BulbCooldown: 0
       SpecialValues: []
@@ -1874,7 +1996,7 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
-      SpawnChance: 0
+      SpawnChance: 2
       BulbSpawnType: 3
       BulbCooldown: 4
       SpecialValues: []

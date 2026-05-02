@@ -40,32 +40,57 @@ struct GameRules {
 	//this is supposed to be unused but way too much things rely on it so i don't want to remove it to make merges easily compatable
 	AssetRef<GamemodeAsset> Gamemode;
 
+	//Star Chasers Group
 	bool GamemodeStarChasersEnabled;
 	  int StarsToWin;
 	  byte StarFrequency;
+	//Coin Runners Group
 	bool GamemodeCoinRunnersEnabled;
 	  byte StarcoinFrequency;
+	//Balloon Battle Group
 	bool GamemodeBalloonBattleEnabled;
 	  byte MaxBalloons;
+	//Bombchasers Group
 	bool GamemodeBombchasersEnabled;
 
+	//Stage Coins Group
 	int CoinsForPowerup;
+	bool RouletteBlocksEnabled; //the stage might have to commit to one ? block type, perhaps store it in the stage asset, this will also be used for the disabling of coins
 	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<ItemList> Items;
 	
-	bool HazardsEnabled;
+	//Hazards Group
 	byte MaxHazards; //10 1-30
     byte HazardFrequency;
     FP HeftyPercentage; //0.12
     int HazardLifetime;
 	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<HazardList> Hazards;
 
+	//Lives Group
 	int Lives;
 
+	//Timer Group
 	int TimerMinutes;
+	//TODO: time up behavior
 
+	//Teams Group
 	bool TeamsEnabled;
+	//TODO: Spawn Teams Together Separate from foes
 
-	/*
+	//Bulb
+	byte BulbAbilityCount; //The Amount Of Options Bulb Has, 0-3
+	bool HostControl; //only the host can choose what the bulb does
+
+    //Extras/Experimental Group
+    bool DisableStageRestrictions; //disables restrictions stages have (banned hazards, forced character) 
+    bool DisableComplexStageRestrictions; //disables restrictions in the complex stage category, this comes with a warning
+    bool EveryItemHasTheSameChance; //every item is labeled under middling, insanity occurs
+    //bool DisableSpecialUnlocks; //disables the ability to use special unlockables, this is to prevent players from using the unlockables in weird ways --- this one is GOOD
+	//bool DisableReserve; //disables all Reverse functionality
+    //bool PlayersSpawnFromPipes;
+    //bool HideMinimap; //enabled ghost house minimap
+    //bool RemoveStageHazards; //removes stage hazards ??? like should we remove everything fortressmovers to enemies?
+
+    /*
 	AssetRef<Map> Stage;
 	AssetRef<GamemodeAsset> Gamemode;
 
@@ -116,14 +141,10 @@ struct HazardList {
 }
 
 enum ItemChanceType : Byte {
-    FirstCommon,
-	FirstRare,
+    First,
 	Middling,
 	LastCommon,
 	LastRare,
-	Mushroom,
-	Vertical,
-	Large,
 	JokeFirst,
 	JokeMiddle,
 	Bulb,

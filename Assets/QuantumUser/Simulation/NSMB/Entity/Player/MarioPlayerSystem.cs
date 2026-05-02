@@ -196,7 +196,7 @@ namespace Quantum {
                 } else {
                     maxStage = physics.SwimMaxVelocity.Length - 1;
                 }
-            } else if (mario->StoneBux) {
+            } else if (mario->StoneBux || mario->IsMetal) { //KKT Mod
                 maxStage = 2;
             } else if (mario->IsStarmanInvincible && run && physicsObject->IsTouchingGround) {
                 maxStage = physics.StarSpeedStage;
@@ -234,6 +234,8 @@ namespace Quantum {
                 acc = physics.WalkIceAcceleration[stage];
             } else if (mario->CurrentPowerupState == PowerupState.MegaMushroom) {
                 acc = physics.WalkMegaAcceleration[stage];
+            } else if (mario->IsMetal) { //KKT Mod
+                acc = physics.WalkMegaAcceleration[physics.RunSpeedStage];
             } else {
                 acc = physics.WalkAcceleration[stage];
             }
@@ -272,7 +274,7 @@ namespace Quantum {
                 bool reverse = physicsObject->Velocity.X != 0 && (direction != sign);
 
                 // Check that we're not going above our limit
-                FP max = maxArray[maxStage];
+                FP max = maxArray[maxStage] + mario->MetalBoost;
                 if (!swimming) {
                     max += CalculateSlopeMaxSpeedOffset(FPMath.Abs(physicsObject->FloorAngle) * (uphill ? 1 : -1));
                 }
@@ -452,6 +454,21 @@ namespace Quantum {
                     f.Signals.OnMarioPlayerMegaMushroomFootstep();
                 }
                 mario->PreviousJumpState = mario->JumpState;
+
+                //KKT Mod, add to metalmushroom boost
+                if (mario->MetalMushroomFrames > 0) {
+                    FP cap = physics.WalkMaxVelocity[physics.RunSpeedStage] + mario->MetalBoost;
+
+                    if (FPMath.Abs(physicsObject->Velocity.X) >= 4) //start to add boosts if near top speed
+                        mario->MetalBoost = FPMath.Min(mario->MetalBoost + 1, 10);
+
+                    if (inputs.Left ^ inputs.Right) {
+                        //add a bit extra velocity
+                        physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (inputs.Left ? -2 : 2), -cap, cap);
+                    }
+                    mario->MetalSlowdownDelay = FP._0_50;
+                    f.Events.MetalLanded(filter.Entity, filter.Transform->Position);
+                }
             }
 
             bool doJump =
@@ -642,6 +659,12 @@ namespace Quantum {
                 gravity = acc;
             }
 
+            //KKT Mod
+            if (mario->MetalMushroomFrames > 0) {
+                if (physicsObject->Velocity.Y < 0)
+                    gravity *= 2;
+            }
+
             physicsObject->Gravity = FPVector2.Up * gravity;
         }
 
@@ -673,7 +696,9 @@ namespace Quantum {
             } else if (physicsObject->IsUnderwater && !(mario->IsGroundpounding || mario->IsDrilling)) {
                 terminalVelocity = inputs.Jump.IsDown ? physics.SwimTerminalVelocityButtonHeld : physics.SwimTerminalVelocity;
                 physicsObject->Velocity.Y = FPMath.Min(physicsObject->Velocity.Y, physics.SwimMaxVerticalVelocity);
-            } else if (mario->IsSpinnerFlying) {
+            } else if (mario->MetalMushroomFrames > 0) { //KKT Mod
+                terminalVelocity = -15;
+            }  else if (mario->IsSpinnerFlying) {
                 terminalVelocity = mario->IsDrilling ? physics.TerminalVelocityDrilling : physics.TerminalVelocityFlying;
             } else if (mario->IsPropellerFlying) {
 
@@ -751,7 +776,8 @@ namespace Quantum {
 
             if (mario->IsWallsliding) {
                 // Walljump check
-                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -FP._0_25, FP._0_25);
+                if (mario->MetalSlowdownDelay <= 0)//KKT Mod, this messes with our boost preservation
+                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -FP._0_25, FP._0_25);
                 mario->FacingRight = mario->WallslideLeft;
                 if (mario->JumpBufferFrames > 0 && mario->WalljumpFrames == 0 /* && !BounceJump */) {
                     // Perform walljump
@@ -769,8 +795,8 @@ namespace Quantum {
                     mario->JumpBufferFrames = 0;
                 }
             } else if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) {
-                // Walljump starting check
-                bool canWallslide = !mario->IsInShell && physicsObject->Velocity.Y < -FP._0_10 && !mario->IsGroundpounding && !physicsObject->IsTouchingGround && !mario->HeldEntity.IsValid && mario->CurrentPowerupState != PowerupState.MegaMushroom && !mario->IsSpinnerFlying && !mario->IsDrilling && !mario->IsCrouching && !mario->IsSliding && !mario->IsInKnockback && mario->PropellerLaunchFrames == 0;
+                // Walljump starting check --- KKT Mod, removed the check that stops you from going up and not walljumping
+                bool canWallslide = !mario->IsInShell /*&& physicsObject->Velocity.Y < -FP._0_10*/ && !mario->IsGroundpounding && !physicsObject->IsTouchingGround && !mario->HeldEntity.IsValid && mario->CurrentPowerupState != PowerupState.MegaMushroom && !mario->IsSpinnerFlying && !mario->IsDrilling && !mario->IsCrouching && !mario->IsSliding && !mario->IsInKnockback && mario->PropellerLaunchFrames == 0;
                 if (!canWallslide) {
                     return;
                 }
@@ -1471,6 +1497,34 @@ namespace Quantum {
                     if (f.Has<Liquid>(contact.Entity)) {
                         f.Events.LiquidSplashed(contact.Entity, filter.Entity, 2, filter.Transform->Position, false);
                         break;
+                    }
+                }
+            }
+
+            //KKT Mod
+            if (mario->IsMetal) {
+                QuantumUtils.Decrement(f, ref mario->MetalMushroomFrames);
+
+                if (mario->MetalMushroomFrames <= 0) {
+                    //no more metal :C
+                    mario->MetalBoost = 0;
+                    mario->MetalSlowdownDelay = 0;
+                } else {
+                    bool PressingDirectionOfBoost = ((inputs.Left.IsDown ^ inputs.Right.IsDown) && ((physicsObject->Velocity.X > 0) == inputs.Right.IsDown || physicsObject->Velocity.X == 0));
+                    //maintain speed if we've hit a wall
+                    if ((physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) && PressingDirectionOfBoost)
+                        physicsObject->Velocity.X = physicsObject->PreviousFrameVelocity.X;
+
+                    //slow down boost
+                    if ((physicsObject->IsTouchingGround || !PressingDirectionOfBoost 
+                        || ((physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) && !mario->IsWallsliding) || (FPMath.Abs(physicsObject->Velocity.X) < 5 && mario->WalljumpFrames <= 0)) 
+                        && QuantumUtils.Decrement(f, ref mario->MetalSlowdownDelay)) {
+                        mario->MetalSlowdownDelay = 0;
+                        if (mario->MetalBoost > 0) {
+                            mario->MetalBoost -= f.DeltaTime * 20;
+                            if (mario->MetalBoost <= 0)
+                                mario->MetalBoost = 0;
+                        }
                     }
                 }
             }
@@ -2806,8 +2860,10 @@ namespace Quantum {
                         break;
 
                     //Hit Player if red shockwave, if grounded shockwave hit them only when grounded, and ignore iframes
-                    if (Dis->StarsToDrop != 0 && (type == ExplosionType.Shockwave || f.Unsafe.GetPointer<PhysicsObject>(entity)->IsTouchingGround))
+                    if (Dis->StarsToDrop != 0 && (type == ExplosionType.Shockwave || f.Unsafe.GetPointer<PhysicsObject>(entity)->IsTouchingGround)) {
+                        mario->CurrentKnockback = KnockbackStrength.None;
                         mario->DoKnockback(f, entity, fromRight, Dis->StarsToDrop, KnockbackStrength.CollisionBump, bobomb, type == ExplosionType.GroundedShockwave);
+                    }
                     break;
                 }
             }

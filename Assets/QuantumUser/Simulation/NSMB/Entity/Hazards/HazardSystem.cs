@@ -123,6 +123,8 @@ namespace Quantum {
                 inter->ColliderDisabled = true;
             } else {
                 hazard->IsHazard = true;
+                if (hazard->IsHefty)
+                    f.Global->HeftyCount++;
 
                 if ((hazard->IPWSTime != 0 || hazard->IPWSUntilGround) && f.Unsafe.TryGetPointer(thisEntity, out Interactable* inter)) {
                     if (inter != null) {

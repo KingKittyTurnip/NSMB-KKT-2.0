@@ -213,7 +213,7 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
                 CommandChangeRules.Rules.StarFreq => rules.StarFrequency,
                 CommandChangeRules.Rules.CoinRunners => (bool) rules.GamemodeCoinRunnersEnabled,
                 CommandChangeRules.Rules.StarCoinFreq => rules.StarcoinFrequency,
-                CommandChangeRules.Rules.Hazards => rules.HazardsEnabled,
+                //CommandChangeRules.Rules.Hazards => rules.HazardsEnabled,
                 _ => null
             };
 

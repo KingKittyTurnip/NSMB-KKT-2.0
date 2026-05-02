@@ -10,6 +10,7 @@ namespace Quantum {
             public Transform2D* Transform;
             public Podobo* Podobo;
             public Enemy* Enemy;
+            public Hazard* Hazard;
             public PhysicsObject* PhysicsObject;
         }
 
@@ -26,11 +27,16 @@ namespace Quantum {
             }
 
             var podobo = filter.Podobo;
+            var hazard = filter.Hazard;
             var physicsObject = filter.PhysicsObject;
             var entity = filter.Entity;
             var transform = filter.Transform;
 
             if (physicsObject->IsUnderwater && physicsObject->Velocity.Y <= 0) {
+                if (hazard->IsHazard || hazard->IsCoinItem) {
+                    HazardSystem.DestroyHazard(f, entity);
+                    return;
+                }
 
                 QuantumUtils.UnwrapWorldLocations(f, transform->Position, podobo->IsHopB ? new FPVector2(podobo->HopBLocation, 0) : enemy->Spawnpoint, out FPVector2 ourPos, out FPVector2 theirPos);
 
@@ -64,6 +70,10 @@ namespace Quantum {
                         f.Events.PodoboLeap(entity);
                     }
                 }
+            } else if (physicsObject->IsTouchingGround || physicsObject->IsTouchingCeiling) {
+                //yuk. we are only doing this for item and hazardspawn functionality
+                physicsObject->DisableCollision = true;
+                physicsObject->Velocity = physicsObject->PreviousFrameVelocity;
             }
         }
 
@@ -142,13 +152,19 @@ namespace Quantum {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Podobo* podobo)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)
-                || !f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* phys)) {
+                || !f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* phys)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Transform2D* transform)) {
                 return;
             }
+            var specialValues = f.ResolveList(spawnData);
 
             enemy->IsActive = true;
             hazard->DoNotDespawnInPit = false;
             phys->Velocity.Y = podobo->JumpStrength;
+            phys->DisableCollision = true;
+            hazard->LifeTime = 60 * 4;
+
+            podobo->Varient = (PodoboType) specialValues[0];
         }
     }
 }

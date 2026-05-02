@@ -70,6 +70,7 @@ namespace NSMB.Sound {
             bool boss = false;
             bool invincible = false;
             bool mega = false;
+            bool metal = false;
             bool speedup = false;
 
             if (f.TryFindAsset(f.Global->Rules.Gamemode, out var gamemode)) {
@@ -81,6 +82,7 @@ namespace NSMB.Sound {
                     speedup |= rules.IsLivesEnabled && mario->Lives == 1;
                     mega |= Settings.Instance.audioSpecialPowerupMusic.HasFlag(Enums.SpecialPowerupMusic.MegaMushroom) && mario->MegaMushroomFrames > 0;
                     invincible |= Settings.Instance.audioSpecialPowerupMusic.HasFlag(Enums.SpecialPowerupMusic.Starman) && mario->IsStarmanInvincible;
+                    metal |= mario->IsMetal;
                     boss |= mario->IsBoss != EntityRef.None;
                 }
             }
@@ -91,6 +93,8 @@ namespace NSMB.Sound {
                     CurrentBossMusic = f.RNG->Next(0, f.SimulationConfig.BossMusic.Length); //maybe we want unique boss music for each boss?
                 }
                 musicPlayer.Play(f.FindAsset(f.SimulationConfig.BossMusic[CurrentBossMusic]));
+            } else if (metal) {
+                musicPlayer.Play(f.FindAsset(stage.MetalMushroomMusic));
             } else if (mega) {
                 musicPlayer.Play(f.FindAsset(stage.MegaMushroomMusic));
             } else if (invincible) {

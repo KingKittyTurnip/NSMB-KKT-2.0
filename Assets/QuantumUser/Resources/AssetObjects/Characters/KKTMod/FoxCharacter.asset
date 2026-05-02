@@ -33,7 +33,7 @@ MonoBehaviour:
   SelectionOrder: -899
   SmallOverrides: {fileID: 22100000, guid: 201e85f2dda6c6f42b8d48b1ca4e4a66, type: 2}
   LargeOverrides: {fileID: 22100000, guid: 201e85f2dda6c6f42b8d48b1ca4e4a66, type: 2}
-  Order: -1
+  Order: 9
   SfxOverrides:
   - SoundEffect: 33
     Mode: 0
@@ -115,6 +115,12 @@ MonoBehaviour:
     AudioClips:
     - {fileID: 8300000, guid: a1005bf0a92ef644f86e7e9fc8d1410f, type: 3}
   - SoundEffect: 47
+    Mode: 0
+    Priority: 1
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: a1005bf0a92ef644f86e7e9fc8d1410f, type: 3}
+  - SoundEffect: 106
     Mode: 0
     Priority: 1
     PlayGlobally: 0

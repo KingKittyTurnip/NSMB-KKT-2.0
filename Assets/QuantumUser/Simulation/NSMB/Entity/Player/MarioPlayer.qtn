@@ -131,8 +131,10 @@ component MarioPlayer {
 	
 	// KKT Mod
 	[ExcludeFromPrototype] bool JumpHeld;
-	[ExcludeFromPrototype] byte MetalMushroomFrames;
-	
+	[ExcludeFromPrototype] FP MetalMushroomFrames;
+	[ExcludeFromPrototype] FP MetalBoost;
+	[ExcludeFromPrototype] FP MetalSlowdownDelay;
+
 	// Carryables
 	[ExcludeFromPrototype] bool StoneBux;
 	[ExcludeFromPrototype] bool PropellerBux;
@@ -345,4 +347,10 @@ event MarioPlayerTookKnockback {
 
 event MarioPlayerKnockbackOver {
 	EntityRef Entity;
+}
+
+//KKT Mod
+event MetalLanded {
+    EntityRef Entity;
+	FPVector2 Position;
 }

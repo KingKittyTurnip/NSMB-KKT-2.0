@@ -46,6 +46,11 @@ namespace Quantum {
                 }
             }
 
+            //KKT Mod, Metal Landing
+            if (physicsObject->IsTouchingGround && !physicsObject->WasTouchingGround && asset is MetalPowerupAsset) {
+                f.Events.MetalLanded(filter.Entity, transform->Position);
+            }
+
             HandleCollision(f, ref filter, asset);
 
             if (powerup->AnimationCurveTimer > 0) {

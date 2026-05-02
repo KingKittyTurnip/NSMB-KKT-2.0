@@ -614,11 +614,11 @@ namespace Quantum.Prototypes {
     public Byte MaxBalloons;
     public QBoolean GamemodeBombchasersEnabled;
     public Int32 CoinsForPowerup;
+    public QBoolean RouletteBlocksEnabled;
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
     [DynamicCollectionAttribute()]
     public Quantum.Prototypes.ItemListPrototype[] Items = {};
-    public QBoolean HazardsEnabled;
     public Byte MaxHazards;
     public Byte HazardFrequency;
     public FP HeftyPercentage;
@@ -630,6 +630,11 @@ namespace Quantum.Prototypes {
     public Int32 Lives;
     public Int32 TimerMinutes;
     public QBoolean TeamsEnabled;
+    public Byte BulbAbilityCount;
+    public QBoolean HostControl;
+    public QBoolean DisableStageRestrictions;
+    public QBoolean DisableComplexStageRestrictions;
+    public QBoolean EveryItemHasTheSameChance;
     partial void MaterializeUser(Frame frame, ref Quantum.GameRules result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.GameRules result, in PrototypeMaterializationContext context = default) {
         result.AdvancedLobby = this.AdvancedLobby;
@@ -644,6 +649,7 @@ namespace Quantum.Prototypes {
         result.MaxBalloons = this.MaxBalloons;
         result.GamemodeBombchasersEnabled = this.GamemodeBombchasersEnabled;
         result.CoinsForPowerup = this.CoinsForPowerup;
+        result.RouletteBlocksEnabled = this.RouletteBlocksEnabled;
         if (this.Items.Length == 0) {
           result.Items = default;
         } else {
@@ -654,7 +660,6 @@ namespace Quantum.Prototypes {
             list.Add(tmp);
           }
         }
-        result.HazardsEnabled = this.HazardsEnabled;
         result.MaxHazards = this.MaxHazards;
         result.HazardFrequency = this.HazardFrequency;
         result.HeftyPercentage = this.HeftyPercentage;
@@ -672,6 +677,11 @@ namespace Quantum.Prototypes {
         result.Lives = this.Lives;
         result.TimerMinutes = this.TimerMinutes;
         result.TeamsEnabled = this.TeamsEnabled;
+        result.BulbAbilityCount = this.BulbAbilityCount;
+        result.HostControl = this.HostControl;
+        result.DisableStageRestrictions = this.DisableStageRestrictions;
+        result.DisableComplexStageRestrictions = this.DisableComplexStageRestrictions;
+        result.EveryItemHasTheSameChance = this.EveryItemHasTheSameChance;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -1566,6 +1576,21 @@ namespace Quantum.Prototypes {
         result.IgnoreTeamates = this.IgnoreTeamates;
         result.Varient = this.Varient;
         PrototypeValidator.FindMapEntity(this.ConnectedObject, in context, out result.ConnectedObject);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Thwomp))]
+  public unsafe partial class ThwompPrototype : ComponentPrototype<Quantum.Thwomp> {
+    public QBoolean Big;
+    partial void MaterializeUser(Frame frame, ref Quantum.Thwomp result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Thwomp component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Thwomp result, in PrototypeMaterializationContext context = default) {
+        result.Big = this.Big;
+        MaterializeUser(frame, ref result, in context);
     }
   }
   [System.SerializableAttribute()]

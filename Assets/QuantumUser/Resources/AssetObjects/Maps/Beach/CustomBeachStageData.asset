@@ -20,6 +20,7 @@ MonoBehaviour:
   StageAuthor: venturesonic
   MusicComposer: vincells
   TranslationKey: level.custom.beach
+  StageDescription: 
   GroupingTranslationKey: level.header.custom
   DiscordStageImage: beach
   SortOrder: 5
@@ -61,12 +62,16 @@ MonoBehaviour:
       RawValue: 65536000
     Y:
       RawValue: 589824
+  ThreeDeeCamera: 0
+  CaptureCamera: 0
   UIColor:
     R: 224
     G: 208
     B: 153
     A: 255
   HidePlayersOnMinimap: 0
+  MultiAreaMap: 0
+  YAreaBounds: []
   BannedCoinItems:
   - Id:
       Value: 481353246829238635
@@ -80,7 +85,17 @@ MonoBehaviour:
   MegaMushroomMusic:
     Id:
       Value: 451321131049702687
+  MetalMushroomMusic:
+    Id:
+      Value: 310568023837081092
   StarballMusic:
+    Id:
+      Value: 491395174244541078
+  UsesBrawlJumps: 0
+  ForceCharacter:
+    Id:
+      Value: 0
+  OverwriteRules:
     Id:
       Value: 0
   TileData:

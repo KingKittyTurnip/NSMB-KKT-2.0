@@ -43,6 +43,7 @@ namespace Quantum {
                       //KKT Mod
                       new CataquackSystem(),
                       new PodoboSystem(),
+                      new ThwompSystem(),
 
                     new ProjectileSystem(),
                     new CoinItemSystem(),

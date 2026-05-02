@@ -256,14 +256,14 @@ namespace Quantum {
             ItemChanceType chancePick = ItemChanceType.Middling;
             FP totalChance = 0;
             FP highestChance = -999;
-            ItemChanceType highestChanceGroup = ItemChanceType.FirstCommon;
+            ItemChanceType highestChanceGroup = ItemChanceType.First;
             byte MaxTypes = ((int) ItemChanceType.Invalid);
 
             //get chances that exist
             List<bool> chanceExists = new List<bool>();
             for (int i = 0; i < MaxTypes; i++) {
                 var l = f.ResolveList(items[i].Items);
-                UnityEngine.Debug.Log("lisssssst " + l.Count);
+                //UnityEngine.Debug.Log("lisssssst " + l.Count);
                 chanceExists.Add(l.Count > 64);//????
             }
 
@@ -282,7 +282,7 @@ namespace Quantum {
             }
             UnityEngine.Debug.Log(totalChance);
             if (totalChance <= 0) {
-                UnityEngine.Debug.Log("powerup pick is at it's LAST RESORT: " + highestChanceGroup);
+                //UnityEngine.Debug.Log("powerup pick is at it's LAST RESORT: " + highestChanceGroup);
                 //the total of all the chances makes 0, pick the one that is the highest
                 chancePick = highestChanceGroup;
             } else {
@@ -294,7 +294,7 @@ namespace Quantum {
 
                     if (rand < chance) {
                         chancePick = (ItemChanceType) ik;
-                        UnityEngine.Debug.Log("Powerup pick, type: " + chancePick);
+                        //UnityEngine.Debug.Log("Powerup pick, type: " + chancePick);
                         break;
                     }
 
@@ -306,25 +306,34 @@ namespace Quantum {
             var listOfpowerups = f.ResolveList(items[(int) chancePick].Items);
             PowerupData pick = listOfpowerups[f.RNG->Next(0, listOfpowerups.Count)];
 
-            UnityEngine.Debug.Log("item: " + pick.Name);
+            //UnityEngine.Debug.Log("item: " + pick.Name);
 
             return pick;
         }
         public FP NEWGetSpawnWeight(Frame f, ItemChanceType j, int ourStars) {
 
-            (FP, FP, FP) SpawmAboveBellowChance = j switch {
-                ItemChanceType.FirstCommon => new (0, 1, -2),
+            (FP, FP, FP) SpawmAboveBellowChance = j switch { //A == base chance, B == first bonus, C == last Bonus
+                //this set of chances means last place is near guerenteed to get a power item, first place will often get first stuff, sometimes middle stuff
+                ItemChanceType.First => new(-FP._0_50, 2, -4), //mini & mushrooms
+                ItemChanceType.Middling => new(2, -1, -1),//2nd stage powerups
+                ItemChanceType.LastCommon => new(-FP._0_20, 0, 3), //weaker catchup, not guerenteed
+                ItemChanceType.LastRare => new(-3, -1, 5), //strong catchup, guerenteed if yur very behind
+                ItemChanceType.JokeFirst => new(-FP._0_25, FP._1_50, -4), //doneflower & jumpsuit
+                ItemChanceType.JokeMiddle => new(1, -FP._0_50, -FP._0_50), //cake & turnipbasket
+                _ => new(0, 0, 0),
+                /*
+                ItemChanceType.FirstCommon => new(0, 1, -4),
                 ItemChanceType.FirstRare => new(FP._0_50, FP._0_50, -1),
                 ItemChanceType.Middling => new(1, -FP._0_25, 1),
                 ItemChanceType.LastCommon => new(-FP._0_25, 0, Constants._2_50),
                 ItemChanceType.LastRare => new(-2, 0, Constants._4_50),
 
-                ItemChanceType.Mushroom => new(FP._1_50, 1, -1),
+                ItemChanceType.Mushroom => new(FP._1_50, FP._0_50, -2), //new(FP._1_50, 1, -1), old chance, maybe we want this when we add the tpf mushroom mechanic
                 ItemChanceType.Vertical => new(2, -FP._0_75, FP._0_50),
-                 ItemChanceType.Large => new(-2, 0, Constants._4_50),
-                 ItemChanceType.JokeFirst => new(FP._0_50, 2, -Constants._2_50),
-                 ItemChanceType.JokeMiddle => new(1, -FP._0_25, 1),
-                _ => new(0, 0, 0),
+                ItemChanceType.Large => new(-2, 0, Constants._4_50),
+                ItemChanceType.JokeFirst => new(FP._0_50, 2, -Constants._2_50),
+                ItemChanceType.JokeMiddle => new(1, -FP._0_25, 1),
+                _ => new(0, 0, 0),*/
             };
 
             int starsToWin = f.Global->Rules.StarsToWin;

@@ -20,6 +20,7 @@ MonoBehaviour:
   StageAuthor: Nintendo
   MusicComposer: Nintendo
   TranslationKey: level.default.pipes
+  StageDescription: 
   GroupingTranslationKey: level.header.default
   DiscordStageImage: level-pipes
   SortOrder: 3
@@ -61,12 +62,16 @@ MonoBehaviour:
       RawValue: 1048576
     Y:
       RawValue: 360448
+  ThreeDeeCamera: 0
+  CaptureCamera: 0
   UIColor:
     R: 24
     G: 178
     B: 170
     A: 255
   HidePlayersOnMinimap: 0
+  MultiAreaMap: 0
+  YAreaBounds: []
   BannedCoinItems: []
   SfxOverrides: []
   MainMusic:
@@ -80,9 +85,19 @@ MonoBehaviour:
   MegaMushroomMusic:
     Id:
       Value: 451321131049702687
+  MetalMushroomMusic:
+    Id:
+      Value: 310568023837081092
   StarballMusic:
     Id:
       Value: 491395174244541078
+  UsesBrawlJumps: 0
+  ForceCharacter:
+    Id:
+      Value: 0
+  OverwriteRules:
+    Id:
+      Value: 0
   TileData:
   - Tile:
       Id:

@@ -9,24 +9,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52c4ffc49d3be9b478562d614a7f6433, type: 3}
-  m_Name: MetalMushroom
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 11500000, guid: 2dc58b001057a064a94ff220fc099d0a, type: 3}
+  m_Name: MetalMushroomAsset
+  m_EditorClassIdentifier: Quantum.Simulation::MetalPowerupAsset
   Identifier:
-    Path: QuantumUser/Resources/AssetObjects/Items/MetalMushroom
+    Path: QuantumUser/Resources/AssetObjects/Items/KKT/MetalMushroomAsset
     Guid:
-      Value: 524841558788979830
+      Value: 536263258462308378
   Prefab:
     Id:
       Value: 1313060240537942267
   SpawnChance:
-    RawValue: -131072
+    RawValue: 6554
   AboveAverageBonus:
     RawValue: 0
   BelowAverageBonus:
-    RawValue: 311296
+    RawValue: 0
   BlockSpawnSoundEffect: 69
-  Flags: 23
+  Flags: 19
   MaxNumberOfItems: 0
   CameraSpawnOffset:
     X:
@@ -39,11 +39,12 @@ MonoBehaviour:
   SoundPlaysEverywhere: 0
   SoundEffect: 16
   ReserveSprite: {fileID: 0}
-  AvoidPlayers: 0
+  IsSmart: 1
+  AvoidPlayers: 1
   Speed:
     RawValue: 196608
   BounceStrength:
-    RawValue: 0
+    RawValue: 786432
   TerminalVelocity:
     RawValue: -983040
   BumpedFromBelowVelocity:
@@ -77,5 +78,5 @@ MonoBehaviour:
   ItemPriority: -1
   EnterReserveIfOverridden: 1
   SfxOverrides: []
-  StarmanDuration:
-    RawValue: 655360
+  MetalDuration:
+    RawValue: 1310720

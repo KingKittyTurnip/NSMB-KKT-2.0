@@ -118,6 +118,12 @@ namespace Quantum {
             if (cauldron->TransformingEntity != EntityRef.None || (f.Unsafe.TryGetPointer(otherEntity, out Hazard* hazarde) && hazarde->IsHefty) || (hazarde == null && !f.Has<MarioPlayer>(otherEntity)))
                 //Cauldron Cannot Accept This Object
                 return false;
+
+            if (f.Has<BigStar>(otherEntity) || f.Has<ChainChomp>(otherEntity) || (f.Unsafe.TryGetPointer<ThrowingObject>(otherEntity, out ThrowingObject* throwable) && throwable->Type == ThrowingObjectType.KingBooStone)) {
+                //Cauldron ALSO Cannot Accept These more specific edge cases
+                return false;
+            }
+
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var PhysicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             var otherTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity);

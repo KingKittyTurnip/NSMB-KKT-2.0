@@ -111,6 +111,7 @@ namespace NSMB.Entities.Player {
         [Header("Shaders")]
         [SerializeField] private Shader normalShader;
         [SerializeField] private Shader rainbowShader;
+        [SerializeField] private Shader metalShader; //KKT Mod
 
         [Header("Sound")]
         [SerializeField] private AudioSource sfx;
@@ -127,6 +128,7 @@ namespace NSMB.Entities.Player {
         [Header("Particle Systems")]
         [SerializeField] private ParticleSystem dust;
         [SerializeField] private ParticleSystem sparkles, drillParticle, giantParticle, fireParticle, bubblesParticle, iceSkiddingParticle, waterRunningParticle, waterSkiddingParticle;
+        [SerializeField] private ParticleSystem MetalSparkles; //KKT Mod
 
         //---Components
         private readonly List<Renderer> renderers = new();
@@ -216,6 +218,9 @@ namespace NSMB.Entities.Player {
             QuantumEvent.Subscribe<EventPhysicsObjectLanded>(this, OnPhysicsObjectLanded, FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventMarioPlayerLandedWithAnimation>(this, OnMarioPlayerLandedWithAnimation, FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventEnemyKicked>(this, OnEnemyKicked, FilterOutReplayFastForward);
+
+            //KKT Mod
+            QuantumEvent.Subscribe<EventMetalLanded>(this, OnMetalLanded, FilterOutReplayFastForward);
         }
 
         public override void OnActivate(Frame f) {
@@ -273,6 +278,7 @@ namespace NSMB.Entities.Player {
                 SetParticleEmission(giantParticle, false);
                 SetParticleEmission(fireParticle, false);
                 SetParticleEmission(bubblesParticle, false);
+                SetParticleEmission(MetalSparkles, false); //KKT Mod
                 return;
             }
             animator.speed = 1;
@@ -328,6 +334,8 @@ namespace NSMB.Entities.Player {
             SetParticleEmission(giantParticle, !disableParticles && mario->CurrentPowerupState == PowerupState.MegaMushroom && mario->MegaMushroomStartFrames == 0);
             SetParticleEmission(fireParticle, mario->IsDead && !mario->IsRespawning && mario->FireDeath && !physicsObject->IsFrozen);
             SetParticleEmission(bubblesParticle, !disableParticles && physicsObject->IsUnderwater);
+            //KKT Mod
+            SetParticleEmission(MetalSparkles, !disableParticles && mario->IsMetal);
 
             var physicsCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(EntityRef);
             if (mario->IsCrouching || mario->IsSliding || mario->IsSkidding || mario->IsInShell) {
@@ -599,7 +607,7 @@ namespace NSMB.Entities.Player {
             foreach (Renderer r in renderers) {
                 r.SetPropertyBlock(materialBlock);
                 foreach (var m in materials[r]) {
-                    var newShader = mario->IsStarmanInvincible ? rainbowShader : normalShader;
+                    var newShader = mario->IsMetal ? metalShader : mario->IsStarmanInvincible ? rainbowShader : normalShader;
                     if (m.shader != newShader) {
                         m.shader = newShader;
                     }
@@ -1287,6 +1295,15 @@ namespace NSMB.Entities.Player {
             }
 
             sfx.PlayOneShot(SoundEffect.Powerup_HammerSuit_Bounce);
+        }
+
+        //KKT Mod
+        private void OnMetalLanded(EventMetalLanded e) {
+            if (e.Entity != EntityRef) {
+                return;
+            }
+
+            SpawnParticle(Enums.PrefabParticle.Player_MetalLand.GetGameObject(), transform.position + (Vector3.back * 5));
         }
     }
 }

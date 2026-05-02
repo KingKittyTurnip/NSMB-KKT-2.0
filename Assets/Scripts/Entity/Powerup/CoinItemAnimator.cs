@@ -3,6 +3,8 @@ using Quantum;
 using System.Collections.Generic;
 using UnityEngine;
 using static NSMB.Utilities.QuantumViewUtils;
+using static UnityEngine.ParticleSystem;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 namespace NSMB.Entities.CoinItems {
     public unsafe class CoinItemAnimator : QuantumEntityViewComponent {
@@ -32,6 +34,8 @@ namespace NSMB.Entities.CoinItems {
         public void Start() {
             QuantumEvent.Subscribe<EventCoinItemBecameActive>(this, OnCoinItemBecameActive);
             QuantumEvent.Subscribe<EventGameEnded>(this, OnGameEnded);
+            //KKT Mod
+            QuantumEvent.Subscribe<EventMetalLanded>(this, OnMetalLanded);
         }
 
         public override void OnActivate(Frame f) {
@@ -198,6 +202,16 @@ namespace NSMB.Entities.CoinItems {
             if (childAnimation) {
                 childAnimation.enabled = false;
             }
+        }
+
+        //KKT Mod
+        private void OnMetalLanded(EventMetalLanded e) {
+            if (e.Entity != EntityRef) {
+                return;
+            }
+
+            childAnimator.SetTrigger("Landed");
+            Instantiate(Enums.PrefabParticle.Player_MetalLand.GetGameObject(), new Vector3(e.Position.X.AsFloat, e.Position.Y.AsFloat, -5), Quaternion.identity);
         }
     }
 }

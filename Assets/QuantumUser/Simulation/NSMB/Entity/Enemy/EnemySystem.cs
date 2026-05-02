@@ -7,6 +7,7 @@ namespace Quantum {
             public EntityRef Entity;
             public Transform2D* Transform;
             public Enemy* Enemy;
+            public Hazard* Hazard;
             public PhysicsCollider2D* Collider;
         }
 
@@ -29,6 +30,7 @@ namespace Quantum {
 
             var transform = filter.Transform;
             var collider = filter.Collider;
+            var hazard = filter.Hazard;
 
             QuantumUtils.Decrement(ref enemy->IntangibilityFrames);
 
@@ -42,13 +44,16 @@ namespace Quantum {
                 if (f.Unsafe.TryGetPointer(filter.Entity, out PhysicsObject* physicsObject)) {
                     physicsObject->IsFrozen = true;
                 }
-                //HazardSystem.DestroyHazard(f, filter.Entity);
-                f.Signals.OnEnemyDespawned(filter.Entity);
+                if (hazard->IsHazard || hazard->IsCoinItem) {
+                    HazardSystem.DestroyHazard(f, filter.Entity);
+                } else {
+                    f.Signals.OnEnemyDespawned(filter.Entity);
+                }
                 return;
             }
 
             // ignore offscreen should get reset when the enemy is killed
-            if (enemy->StayAtHomeWhenOffscreen && !enemy->IgnoreOffscreen && !enemy->IsDead) {
+            if (enemy->StayAtHomeWhenOffscreen && !enemy->IgnoreOffscreen && !enemy->IsDead && !hazard->IsHazard && !hazard->IsCoinItem) {
                 OffscreenCheck(f, ref filter, stage);
             }
         }

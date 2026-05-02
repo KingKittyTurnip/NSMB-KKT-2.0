@@ -300,7 +300,7 @@ namespace Quantum {
                 if (Dis->ReusableTimer > 0) {
                     FP Distance = Dis->Thrown ? FP._0_50 : f.Unsafe.TryGetPointer(holdable->Holder, out PhysicsObject* marioPhysicsObject) ? (FPMath.Abs(marioPhysicsObject->Velocity.X) / 10) : 0;
                     Dis->ReusableTimer -= Distance;
-                } else {
+                } else if (f.Exists(holdable->PreviousHolder)) {
                     var mario = f.Unsafe.GetPointer<MarioPlayer>(holdable->PreviousHolder);
                     EntityRef spawnedItem = EntityRef.None;
 
@@ -583,34 +583,36 @@ namespace Quantum {
             //test if this works better
             if (f.Unsafe.TryGetPointer<ThrowingObject>(contact.Entity, out var throwable)) {
                 if (f.Unsafe.GetPointer<Interactable>(contact.Entity)->ColliderDisabled) {
+                    //don't interact
                     keepContacts = false;
                     return;
                 }
                 //spring
-                if (throwable->Type == ThrowingObjectType.Spring && f.Has<PhysicsObject>(contact.Entity)) {
+                if (throwable->Type == ThrowingObjectType.Spring && f.Has<PhysicsObject>(contact.Entity)) { 
                     keepContacts = HandleSpringboardInteraction(f, contact.Entity, entity, true);
 
                 } else if (f.Unsafe.TryGetPointer<Holdable>(contact.Entity, out var holdable) && holdable->IsSolidCarryable) {
                     //if it's solid
-                    if (f.Has<MarioPlayer>(entity) && !f.Exists(holdable->Holder)) {
-                        //no holder, try to pickup so we don't lose velocity
+                    if (f.Has<MarioPlayer>(entity) && !f.Exists(holdable->Holder)) { //no holder, try to pickup so we don't lose velocity
                         keepContacts = OnMarInteraction(f, entity, contact.Entity);
 
                     } else if (f.Has<Boss>(entity)) {
                         keepContacts = OnBossInteraction(f, contact.Entity, entity);
 
-                    } else if (f.Has<BigStar>(entity)) {
+                    } else if (f.Has<BigStar>(entity)) { //stars pass through us regardless
                         keepContacts = false;
 
                     } else if (f.Exists(holdable->Holder) && !holdable->HoldAboveHead) { //same as bellow
-                        if (f.Has<Projectile>(entity)) { //the stone will make contact, but not eerything else
+                        if (f.Has<Projectile>(entity)) { //only the stone breaks the projectiles at all times
                             if (throwable->Type != ThrowingObjectType.Stone)
                                 keepContacts = false;
-                        } else if (f.Has<PhysicsObject>(entity) && !holdable->HoldAboveHead && f.Exists(holdable->Holder)) { //things will only make contact if it's a head held object
+                        } else if (f.Has<PhysicsObject>(entity) && !holdable->HoldAboveHead && f.Exists(holdable->Holder)) { //we will only make contact with them if it's a head held object
                             keepContacts = false;
                         } else {
                             keepContacts = true;
                         }
+                    } else {
+                        keepContacts = true;
                     }
                 }
             }
@@ -792,7 +794,7 @@ namespace Quantum {
             var Dis = f.Unsafe.GetPointer<ThrowingObject>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
 
-            if (!(Dis->Thrown && f.Exists(holdable->PreviousHolder))) {
+            if (!(Dis->Thrown && f.Exists(holdable->PreviousHolder) && f.Has<MarioPlayer>(holdable->PreviousHolder))) {
                 return;
             }
 

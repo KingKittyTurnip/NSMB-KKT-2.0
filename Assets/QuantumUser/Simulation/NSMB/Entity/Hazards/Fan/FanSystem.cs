@@ -333,9 +333,10 @@ Gp Interactions are weird
             fan->FacingRight = !fan->FellOver && (specialValues[1] == 0 ? (f.RNG->Next() >= FP._0_50) : specialValues[1] == 2);
 
             //Set FanTime
-            fan->FanTime = specialValues[2] * 59; // set to Basically 10 seconds
-            fan->TurnEffectorDowntime = 45;
+            fan->FanTime = specialValues[2] * 59; // set to Basically 10 seconds, this is WIP i've realized no code properly uses this
 
+            fan->FanTime = 0;
+            fan->TurnEffectorDowntime = 45;
             fan->Cooldown = 2;
         }
         #endregion

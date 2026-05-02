@@ -21,7 +21,6 @@ namespace Quantum {
         public byte StarFrequency;
         public bool CoinRunnersEnabled;
         public byte StarcoinFrequency;
-        public bool Hazards;
 
         public override void Serialize(BitStream stream) {
             if (stream.Writing) {
@@ -109,9 +108,6 @@ namespace Quantum {
             if (rulesChanges.HasFlag(Rules.StarCoinFreq)) {
                 rules.StarcoinFrequency = StarcoinFrequency;
             }
-            if (rulesChanges.HasFlag(Rules.Hazards)) {
-                rules.HazardsEnabled = Hazards;
-            }
 
             f.Global->Rules = rules;
             f.Events.RulesChanged(gamemodeChanged, levelChanged);
@@ -138,7 +134,7 @@ namespace Quantum {
             StarFreq = 1 << 10,
             CoinRunners = 1 << 11,
             StarCoinFreq = 1 << 12,
-            Hazards = 1 << 13,
+            //Hazards = 1 << 13,
         }
     }
 }

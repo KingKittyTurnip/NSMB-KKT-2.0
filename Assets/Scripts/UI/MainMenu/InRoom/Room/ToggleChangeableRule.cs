@@ -44,9 +44,6 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
             case CommandChangeRules.Rules.CoinRunners:
                 cmd.CoinRunnersEnabled = (bool) value;
                 break;
-            case CommandChangeRules.Rules.Hazards:
-                cmd.Hazards = (bool) value;
-                break;
             }
 
             QuantumGame game = QuantumRunner.DefaultGame;

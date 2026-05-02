@@ -37,9 +37,10 @@ namespace Quantum {
         private void UpdateCameraSize(FrameThreadSafe f, ref Filter filter) {
             var mario = filter.Mario;
             var camera = filter.Camera;
+            var vel = FPMath.Abs(filter.PhysicsObject->Velocity.X); //KKT Mod
 
             FP targetSize;
-            if (mario->IsPropellerFlying || mario->IsSpinnerFlying) {
+            if (mario->IsPropellerFlying || mario->IsSpinnerFlying || vel >= 8) {//KKT Mod
                 targetSize = 8;
             } else {
                 targetSize = 7;

@@ -44,6 +44,9 @@ public static class Enums {
         [PrefabParticleData("Particle/TripleJumpLandingDust")] Player_TripleJumpLandingDust,
         [PrefabParticleData("Particle/MegaFootstep")] Player_MegaFootstep,
         [PrefabParticleData("Particle/PlayerBounce")] Player_PlayerBump,
+
+        //KKT Mod
+        [PrefabParticleData("Particle/MetalLand")] Player_MetalLand,
     }
 
     #endregion

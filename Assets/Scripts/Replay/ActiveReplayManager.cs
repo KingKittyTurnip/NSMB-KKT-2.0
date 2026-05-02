@@ -175,7 +175,7 @@ namespace NSMB.Replay {
                         GamemodeBalloonBattleEnabled = rules.GamemodeBalloonBattleEnabled,
                         MaxBalloons = rules.MaxBalloons,
                         GamemodeBombchasersEnabled = rules.GamemodeBombchasersEnabled,
-                        HazardsEnabled = rules.HazardsEnabled,
+                        //MaxHazards = rules.IsHazardsEnabled,
                     },
                     PlayerInformation = playerInformation,
                     WinningTeam = winner,
