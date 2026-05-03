@@ -278,9 +278,9 @@ namespace Quantum {
                     highestChance = e;
                     highestChanceGroup = (ItemChanceType) i;
                 }
-                UnityEngine.Debug.Log((ItemChanceType) i + " " + totalChance);
+                //UnityEngine.Debug.Log((ItemChanceType) i + " " + totalChance);
             }
-            UnityEngine.Debug.Log(totalChance);
+            //UnityEngine.Debug.Log(totalChance);
             if (totalChance <= 0) {
                 //UnityEngine.Debug.Log("powerup pick is at it's LAST RESORT: " + highestChanceGroup);
                 //the total of all the chances makes 0, pick the one that is the highest

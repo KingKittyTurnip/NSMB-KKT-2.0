@@ -11,7 +11,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
-    public unsafe class KingBooSystem : SystemMainThreadEntityFilter<KingBoo, KingBooSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
+    public unsafe class KingBooSystem : SystemMainThreadEntityFilter<KingBoo, KingBooSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken, ISignalOnBobombExplodeEntity {
         public struct Filter {
             public EntityRef Entity;
             public KingBoo* KingBoo;
@@ -170,10 +170,10 @@ namespace Quantum {
             case KingBooState.Barfing:
                 HandleMovement(FPVector2.Zero, false, 4);
                 kingboo->ReusableTimer++;
-                int CycleTimer = kingboo->ReusableTimer % 41;
-                if (kingboo->ReusableTimer >= 123) {
+                int CycleTimer = kingboo->ReusableTimer % 35;
+                if (kingboo->ReusableTimer >= 105) {
                     //cannot shoot a 4th
-                    if (kingboo->ReusableTimer >= 170) {
+                    if (kingboo->ReusableTimer >= 150) {
                         //if you try to shoot a 5th sucking won't be an option
                         kingboo->ReusableTimer--;
                         if (!FireballHeld) {
@@ -184,7 +184,7 @@ namespace Quantum {
                     }
                 } else {
                     if (CycleTimer == 6) {
-                        CreateProjectile(new FPVector2(boss->FacingRight ? 1 : -1, 0), kingboo->ReusableTimer/41);
+                        CreateProjectile(new FPVector2(boss->FacingRight ? 1 : -1, 0), kingboo->ReusableTimer/35);
                     }
                 }
 
@@ -202,7 +202,7 @@ namespace Quantum {
                     var projectiles = f.Filter<ThrowingObject, Holdable, PhysicsObject, Hazard>();
                     byte Count = 0;
                     while (projectiles.NextUnsafe(out EntityRef throwableEntity, out ThrowingObject* throwable, out Holdable* throwholdable, out PhysicsObject* throwphys, out Hazard* throwhazard)) {
-                        if (throwholdable->PreviousHolder == disRef2) {
+                        if (throwholdable->PreviousHolder == disRef2 && f.Exists(throwableEntity)) {
                             Count++;
                             QuantumUtils.UnwrapWorldLocations(f, transform->Position + (FPVector2.Up * FP._0_33), f.Unsafe.GetPointer<Transform2D>(throwableEntity)->Position, out FPVector2 ourPos, out FPVector2 theirPos);
                             var Direction = (ourPos - theirPos).Normalized;
@@ -288,7 +288,7 @@ namespace Quantum {
                 Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
 
                 f.Unsafe.GetPointer<Transform2D>(newEntity)->Position = spawnPos;
-                f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity = ((Direction * (4 + FP._0_10)) + (FPVector2.Up*Bonus*2));
+                f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity = ((Direction * (4 + FP._0_10)) + (FPVector2.Up*Bonus*3));
                 throwhazard->IsHazard = true;
                 throwhazard->LifeTime = 250;
                 f.Unsafe.GetPointer<ThrowingObject>(newEntity)->Thrown = true;
@@ -407,6 +407,11 @@ namespace Quantum {
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(brokenIceBlock);
             if (f.Unsafe.TryGetPointer(iceBlock->Entity, out Interactable* inter)) {
                 inter->ColliderDisabled = false;
+            }
+        }
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
+            if (f.Unsafe.TryGetPointer(entity, out Boss* boss)) {
+                boss->BossHarmed(f, entity, boss->FacingRight, KnockbackStrength.Normal, true);
             }
         }
 

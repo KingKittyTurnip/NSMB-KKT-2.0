@@ -30,6 +30,8 @@ public unsafe class PropellerBlockAnimator : QuantumEntityViewComponent {
 
         renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
         renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
+    }
+    public override unsafe void OnActivate(Frame f) {
         materialBlock = new();
     }
     public override unsafe void OnUpdateView() {

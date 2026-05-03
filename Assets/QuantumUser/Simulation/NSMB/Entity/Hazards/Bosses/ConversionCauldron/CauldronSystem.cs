@@ -95,7 +95,8 @@ namespace Quantum {
             cauldron->Activated = false;
             if (IsInstantVarient) {
                 var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
-                hazard->LifeTime = 1;
+                hazard->LifeTime = 3;
+                transform->Position.Y = 1346;//idk
             } else {
                 HazardSystem.DestroyHazard(f, thisEntity);
             }

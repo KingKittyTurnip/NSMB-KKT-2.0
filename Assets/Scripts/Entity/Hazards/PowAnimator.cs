@@ -15,7 +15,7 @@ public unsafe class PowAnimator : QuantumEntityViewComponent {
         QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
     }
     public override void OnActivate(Frame f) {
-        if (RedPowController != null && f.Unsafe.GetPointer<ThrowingObject>(EntityRef)->Varient == 1) {
+        if (RedPowController != null && f.Unsafe.TryGetPointer<ThrowingObject>(EntityRef, out var pow) && pow->Varient == 1) {
             animator.runtimeAnimatorController = RedPowController;
         }
         OnUpdateView();

@@ -22,7 +22,7 @@ MonoBehaviour:
   TranslationKey: Grass Gaze
   StageDescription: An unused map from the og, renewed! Moving platforms are everywhere
     in this playground
-  GroupingTranslationKey: Unused Renewed
+  GroupingTranslationKey: '- Unused Renewed -'
   DiscordStageImage: 
   SortOrder: 0
   Icon: {fileID: 21300000, guid: e64cca18721d2d14e95065a64ba3f71c, type: 3}
@@ -73,6 +73,11 @@ MonoBehaviour:
   MultiAreaMap: 0
   YAreaBounds: []
   BannedCoinItems: []
+  BannedHazards:
+  - Id:
+      Value: 1528374188268676239
+  - Id:
+      Value: 1300211052819551813
   SfxOverrides: []
   MainMusic:
   - Id:

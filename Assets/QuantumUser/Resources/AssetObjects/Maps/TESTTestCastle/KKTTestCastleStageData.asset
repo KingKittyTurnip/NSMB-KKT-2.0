@@ -18,10 +18,10 @@ MonoBehaviour:
       Value: 280184820493485487
   ShowAuthorAndComposer: 0
   StageAuthor: KingKittyTurnip
-  MusicComposer: 
+  MusicComposer: Nintendo
   TranslationKey: KKTTestCastle
-  StageDescription: 
-  GroupingTranslationKey: 
+  StageDescription: A map KKT used to test the many mechanics of the mod
+  GroupingTranslationKey: '- Test -'
   DiscordStageImage: 
   SortOrder: 0
   Icon: {fileID: 0}
@@ -72,6 +72,9 @@ MonoBehaviour:
   MultiAreaMap: 0
   YAreaBounds: []
   BannedCoinItems: []
+  BannedHazards:
+  - Id:
+      Value: 1300211052819551813
   SfxOverrides: []
   MainMusic:
   - Id:

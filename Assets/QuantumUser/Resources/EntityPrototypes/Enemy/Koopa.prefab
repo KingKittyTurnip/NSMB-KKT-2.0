@@ -608,6 +608,10 @@ MonoBehaviour:
       Value: 0
     IsSpiny:
       Value: 0
+    IsBuzzy:
+      Value: 0
+    IsTurnip:
+      Value: 0
     Speed:
       RawValue: 57344
     KickSpeed:
@@ -666,6 +670,8 @@ MonoBehaviour:
     SlowInLiquids:
       Value: 1
     IsWaterSolid:
+      Value: 0
+    SinksInQuickSandAndGoo:
       Value: 0
     BreakMegaObjects:
       Value: 0
@@ -873,7 +879,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
   graphicsRoot: {fileID: 8088900794427276647}
-  moveBehindBlocksRoot: {fileID: 8088900794427276647}
+  moveBehindBlocksRoot: {fileID: 0}
   renderers:
   - {fileID: 8133877121043965814}
   childAnimator: {fileID: 0}

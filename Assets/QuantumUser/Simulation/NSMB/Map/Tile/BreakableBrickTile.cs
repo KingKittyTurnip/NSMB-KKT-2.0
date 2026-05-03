@@ -73,9 +73,11 @@ public unsafe class BreakableBrickTile : StageTile, IInteractableTile {
             bumpOwner = entity;
             allowSelfDamage = false;
 
-        } else if (f.Has<ThrowingObject>(entity)) {
-            doBreak = BreakingRules.HasFlag(BreakableBy.Shells);
+        } else if (f.Unsafe.TryGetPointer(entity, out ThrowingObject* throwable)) {
+            doBreak = throwable->Type == ThrowingObjectType.BowserShell ? BreakingRules.HasFlag(BreakableBy.MegaMario) : BreakingRules.HasFlag(BreakableBy.Shells);
             doBump = false;
+            bumpOwner = entity;
+            allowSelfDamage = false;
         } else if (f.Has<Bobomb>(entity)) {
             doBreak = BreakingRules.HasFlag(BreakableBy.Bombs);
             doBump = false;

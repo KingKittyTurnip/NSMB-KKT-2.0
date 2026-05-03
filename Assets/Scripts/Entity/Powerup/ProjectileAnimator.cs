@@ -25,16 +25,17 @@ namespace NSMB.Entities.CoinItems {
 
         public override unsafe void OnActivate(Frame f) {
             RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
-            var projectile = f.Unsafe.GetPointer<Projectile>(EntityRef);
+            if (f.Unsafe.TryGetPointer<Projectile>(EntityRef, out var projectile)) {
 
-            owner = projectile->Owner;
+                owner = projectile->Owner;
 
-            if (projectile->FacingRight) {
-                if (sRenderer) {
-                    sRenderer.flipX = true;
-                }
-                if (animator) {
-                    animator.Play("Left");
+                if (projectile->FacingRight) {
+                    if (sRenderer) {
+                        sRenderer.flipX = true;
+                    }
+                    if (animator) {
+                        animator.Play("Left");
+                    }
                 }
             }
         }

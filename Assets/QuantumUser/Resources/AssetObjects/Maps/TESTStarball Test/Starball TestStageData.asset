@@ -17,11 +17,11 @@ MonoBehaviour:
     Guid:
       Value: 351188226666307243
   ShowAuthorAndComposer: 0
-  StageAuthor: ipodtouch0218
-  MusicComposer: 
+  StageAuthor: KingKittyTurnip
+  MusicComposer: Nintendo
   TranslationKey: levels.custom.Starball Test
-  StageDescription: 
-  GroupingTranslationKey: 
+  StageDescription: A map KKT used to test starball goal spawning
+  GroupingTranslationKey: '- Test -'
   DiscordStageImage: 
   SortOrder: 0
   Icon: {fileID: 0}
@@ -72,6 +72,9 @@ MonoBehaviour:
   MultiAreaMap: 0
   YAreaBounds: []
   BannedCoinItems: []
+  BannedHazards:
+  - Id:
+      Value: 1313060240537942267
   SfxOverrides: []
   MainMusic:
   - Id:

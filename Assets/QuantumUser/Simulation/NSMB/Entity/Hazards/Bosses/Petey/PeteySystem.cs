@@ -4,7 +4,7 @@ using static IInteractableTile;
 
 namespace Quantum {
     
-    public unsafe class PeteySystem : SystemMainThreadEntityFilter<Petey, PeteySystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
+    public unsafe class PeteySystem : SystemMainThreadEntityFilter<Petey, PeteySystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken, ISignalOnBobombExplodeEntity {
         public struct Filter {
             public EntityRef Entity;
             public Petey* Petey;
@@ -148,7 +148,7 @@ namespace Quantum {
                     f.Events.PeteyJump(filter.Entity);
                     physicsObject->IsTouchingGround = false;
                     physicsObject->Velocity.Y = 6;
-                    physicsObject->Velocity.X = FPMath.Clamp(leftrightinput * FPMath.Max(FPMath.Abs(physicsObject->Velocity.X), 1), -6, 6);
+                    //physicsObject->Velocity.X = FPMath.Clamp(leftrightinput * FPMath.Max(FPMath.Abs(physicsObject->Velocity.X), 1), -6, 6);
                     petey->PreviousLandLevel = FPMath.Min(transform->Position.Y + 4, stage.StageWorldMax.Y - 1);
                 } else if (petey->Flying) {
                     petey->State = PeteyState.Flying;
@@ -189,6 +189,12 @@ namespace Quantum {
                         petey->State = PeteyState.Fallen;
                         collider->Shape.Centroid.Y = petey->FallenBox.Y;
                         collider->Shape.Box.Extents = petey->FallenBox;
+                    } else if (petey->HitATarget) {
+                        petey->HitATarget = false;
+                        petey->State = PeteyState.Jumping;
+                        physicsObject->Velocity.Y = 6;
+                        petey->ReusableTimer = 0;
+                        petey->Flying = false;
                     } else {
                         physicsObject->Velocity.X = (boss->FacingRight ? 2 : -2) + leftrightinput;
                         physicsObject->Velocity.Y = -12;
@@ -222,7 +228,7 @@ namespace Quantum {
                     var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
                     projectile->Initialize(f, newEntity, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : entity, transform->Position + collider->Shape.Centroid, boss->FacingRight, false);
                     f.Events.PeteyAttack(filter.Entity);
-                } else if (physicsObject->IsTouchingGround) {
+                } else if (physicsObject->IsTouchingGround || (physicsObject->Velocity.Y < -6 && petey->Flying)) {
                     petey->State = PeteyState.Jumping;
                     petey->ReusableTimer = 0;
                 }
@@ -271,7 +277,7 @@ namespace Quantum {
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
             bool peteyDivingCanHitMario = petey->State == PeteyState.Diving && petey->ReusableTimer >= 8 && !(FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_50);
-            bool vulnrable = petey->State == PeteyState.Fallen;
+            bool vulnrable = petey->State == PeteyState.Fallen && petey->ReusableTimer <= 100;
             bool peteyHarmed = false;
 
             switch (boss->BossMarioContact(f, thisEntity, marioEntity, damageDirection, peteyDivingCanHitMario && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 2, KnockbackStrength.Groundpound, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity), vulnrable)) {
@@ -377,6 +383,11 @@ namespace Quantum {
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(brokenIceBlock);
             if (f.Unsafe.TryGetPointer(iceBlock->Entity, out Interactable* inter)) {
                 inter->ColliderDisabled = false;
+            }
+        }
+        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
+            if (f.Unsafe.TryGetPointer(entity, out Boss* boss)) {
+                boss->BossHarmed(f, entity, boss->FacingRight, KnockbackStrength.Normal, true);
             }
         }
 

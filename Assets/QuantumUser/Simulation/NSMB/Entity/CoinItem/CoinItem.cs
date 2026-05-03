@@ -32,6 +32,12 @@ namespace Quantum {
             if (f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject)) {
                 physicsObject->IsFrozen = true;
             }
+            if (f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
+                enemy->IsActive = true;
+            }
+            if (f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
+                hazard->IsCoinItem = true;
+            }
         }
 
         public void InitializeLaunchSpawn(Frame f, EntityRef thisEntity, bool facingRight, FPVector2 spawnOrigin) {
@@ -46,6 +52,13 @@ namespace Quantum {
             }
             if (f.Unsafe.TryGetPointer(thisEntity, out Powerup* powerup)) {
                 powerup->FacingRight = facingRight;
+            }
+            if (f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
+                enemy->FacingRight = facingRight;
+                enemy->IsActive = true;
+            }
+            if (f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
+                hazard->IsCoinItem = true;
             }
         }
 

@@ -625,6 +625,8 @@ MonoBehaviour:
       Value: 1
     IsWaterSolid:
       Value: 0
+    SinksInQuickSandAndGoo:
+      Value: 0
     BreakMegaObjects:
       Value: 0
     WindImmune:
@@ -789,7 +791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
   graphicsRoot: {fileID: 7523289063499453456}
-  moveBehindBlocksRoot: {fileID: 7523289063499453456}
+  moveBehindBlocksRoot: {fileID: 0}
   renderers:
   - {fileID: 7821411591339125535}
   childAnimator: {fileID: 0}
@@ -815,7 +817,7 @@ MonoBehaviour:
   Prototype:
     Scriptable:
       Id:
-        Value: 330575751736567297
+        Value: 351453161337192497
 --- !u!114 &6790376210854081975
 MonoBehaviour:
   m_ObjectHideFlags: 0

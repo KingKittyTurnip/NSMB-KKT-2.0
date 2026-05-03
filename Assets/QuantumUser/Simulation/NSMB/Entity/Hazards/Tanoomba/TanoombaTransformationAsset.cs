@@ -68,6 +68,7 @@ namespace Quantum {
             Basic, //affected by physics
             PropellerMushroom, //uses the propeller mushroom path
             BubbleFlowerBubble, //uses the bubble flower path
+            LemmyBall, //unique physics
         }
         public enum TanoombaFormSpawnType : byte {
             AwayFromPlayers, //Spawns Away From Players
@@ -81,6 +82,7 @@ namespace Quantum {
             //only if coins are enabled
             AwayAndCoinsEnabled, //replaces a coin in the stage, if there are no coins we skip this option
             AwayAndBillBlasters, //Can also spawns if a BillBlaser exists
+            AwayAtAPipe, //Appears at a pipe, for PiranhaPlant transformation
         }
         public enum TanoombaFormExtraSoundType : byte {
             None,

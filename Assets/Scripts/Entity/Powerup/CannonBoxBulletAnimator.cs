@@ -17,19 +17,20 @@ namespace NSMB.Entities.Player {
             if (!f.Exists(EntityRef)) {
                 return;
             }
-            var proj = f.Unsafe.GetPointer<Projectile>(EntityRef);
 
-            //Set Color
-            var i = BaseTexture;
-            if (f.Exists(proj->Owner)) {
-                i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(proj->Owner)->CharacterAsset).CannonboxTexture;
-                if (i == null) {
-                    i = InvalidTexture;
+            if (f.Unsafe.TryGetPointer<Projectile>(EntityRef, out var proj)) {
+                //Set Color
+                var i = BaseTexture;
+                if (f.Exists(proj->Owner)) {
+                    i = f.FindAsset(f.Unsafe.GetPointer<MarioPlayer>(proj->Owner)->CharacterAsset).CannonboxTexture;
+                    if (i == null) {
+                        i = InvalidTexture;
+                    }
                 }
-            }
-            materialBlock.SetTexture("Texture", i);
-            foreach (Renderer r in renderers) {
-                r.SetPropertyBlock(materialBlock);
+                materialBlock.SetTexture("Texture", i);
+                foreach (Renderer r in renderers) {
+                    r.SetPropertyBlock(materialBlock);
+                }
             }
         }
 

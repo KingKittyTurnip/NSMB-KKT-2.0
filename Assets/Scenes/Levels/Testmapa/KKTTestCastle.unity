@@ -1011,7 +1011,7 @@ PrefabInstance:
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
       propertyPath: MapEntityReferences.Array.size
-      value: 21
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
@@ -1122,12 +1122,12 @@ PrefabInstance:
         type: 3}
       propertyPath: 'MapEntityReferences.Array.data[21]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 648782168}
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
       propertyPath: 'MapEntityReferences.Array.data[22]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 532531144}
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
       propertyPath: 'MapEntityReferences.Array.data[23]'
@@ -1665,7 +1665,7 @@ PrefabInstance:
     - target: {fileID: 1616545714016825238, guid: 12d2c14817098f34b9ff355aabcd2e64,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8220411383588218999, guid: 12d2c14817098f34b9ff355aabcd2e64,
         type: 3}
@@ -1706,6 +1706,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeBot
   Prototype:
     _empty_prototype_dummy_field_: 0
+--- !u!114 &532531144 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3316921559169369209, guid: 12d2c14817098f34b9ff355aabcd2e64,
+    type: 3}
+  m_PrefabInstance: {fileID: 532531128}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532531129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b14052113b8414abfdb2effb52d984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &571327439
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1917,7 +1929,7 @@ PrefabInstance:
     - target: {fileID: 1616545714016825238, guid: 4b5cd7c9084bfbf41931cf04f2ed66a4,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8220411383588218999, guid: 4b5cd7c9084bfbf41931cf04f2ed66a4,
         type: 3}
@@ -1958,6 +1970,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeBot
   Prototype:
     _empty_prototype_dummy_field_: 0
+--- !u!114 &648782168 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3316921559169369209, guid: 4b5cd7c9084bfbf41931cf04f2ed66a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 648782152}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648782153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b14052113b8414abfdb2effb52d984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &771280539
 PrefabInstance:
   m_ObjectHideFlags: 0

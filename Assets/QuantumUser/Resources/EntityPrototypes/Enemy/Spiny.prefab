@@ -26,6 +26,9 @@ GameObject:
   - component: {fileID: -2455541069636724775}
   - component: {fileID: 7712224105823239235}
   - component: {fileID: 1632668266777924140}
+  - component: {fileID: 4965084896009642428}
+  - component: {fileID: 1942580388312711147}
+  - component: {fileID: 5884208433862255085}
   m_Layer: 19
   m_Name: Spiny
   m_TagString: Untagged
@@ -493,6 +496,8 @@ MonoBehaviour:
       Value: 1
     IsBuzzy:
       Value: 0
+    IsTurnip:
+      Value: 0
     Speed:
       RawValue: 57344
     KickSpeed:
@@ -572,6 +577,8 @@ MonoBehaviour:
     SlowInLiquids:
       Value: 1
     IsWaterSolid:
+      Value: 0
+    SinksInQuickSandAndGoo:
       Value: 0
     BreakMegaObjects:
       Value: 0
@@ -702,6 +709,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxOverrides: []
   source: {fileID: 5072740182388110993}
+--- !u!114 &4965084896009642428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435431862184428451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
+  graphicsRoot: {fileID: 7237572828892493257}
+  moveBehindBlocksRoot: {fileID: 0}
+  renderers:
+  - {fileID: 5045576353537437192}
+  childAnimator: {fileID: 0}
+  childAnimation: {fileID: 0}
+  blinkingRate: 4
+  scaleRate: 0.1333
+  scaleSize: 0.3
+  actualscale: 1
+  sfx: {fileID: 5072740182388110993}
+  koopaSpawnParticles: {fileID: 0}
+--- !u!114 &1942580388312711147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435431862184428451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c56e80143ded340882f1dd834f2abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeCoinItem
+  Prototype:
+    Scriptable:
+      Id:
+        Value: 330575751736567297
+--- !u!114 &5884208433862255085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435431862184428451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c912ba00eb8780d468a9d5e4288668e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeHazard
+  Prototype:
+    DoNotDespawnInPit:
+      Value: 0
+    RestrictSpawnPosition:
+      Value: 0
+    IsHefty:
+      Value: 0
+    IPWSUntilGround:
+      Value: 1
+    IPWSTime: 30
+    SpawningVelocityRange:
+      X:
+        RawValue: 131072
+      Y:
+        RawValue: 65536
 --- !u!1 &2736979299832079342
 GameObject:
   m_ObjectHideFlags: 0

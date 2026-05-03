@@ -21,7 +21,7 @@ MonoBehaviour:
   MusicComposer: Nintendo
   TranslationKey: levels.custom.U-E3 Desert
   StageDescription: An unused map from the og, renewed!
-  GroupingTranslationKey: Unused Renewed
+  GroupingTranslationKey: '- Unused Renewed -'
   DiscordStageImage: 
   SortOrder: 0
   Icon: {fileID: 0}
@@ -72,6 +72,9 @@ MonoBehaviour:
   MultiAreaMap: 0
   YAreaBounds: []
   BannedCoinItems: []
+  BannedHazards:
+  - Id:
+      Value: 1528374188268676239
   SfxOverrides: []
   MainMusic: []
   InvincibleMusic:

@@ -25,9 +25,9 @@ public unsafe class SpinpipeAnimator : QuantumEntityViewComponent {
     //public override unsafe void OnUpdateView() {
     //}
     public override void OnActivate(Frame f) {
-        var spinpipe = f.Unsafe.GetPointer<Spinpipe>(EntityRef);
-
-        srenderer.sprite = spinpipe->Broken ? spinpipe->Sturdy ? SpriteSturdyBottom : SpriteNormalBottom : spinpipe->Sturdy ? SpriteSturdy : SpriteNormal;
+        if (f.Unsafe.TryGetPointer<Spinpipe>(EntityRef, out var spinpipe)) {
+            srenderer.sprite = spinpipe->Broken ? spinpipe->Sturdy ? SpriteSturdyBottom : SpriteNormalBottom : spinpipe->Sturdy ? SpriteSturdy : SpriteNormal;
+        }
     }
     private unsafe void OnPipeLand(EventSpinpipeLand e) {
         if (e.Entity != EntityRef) {

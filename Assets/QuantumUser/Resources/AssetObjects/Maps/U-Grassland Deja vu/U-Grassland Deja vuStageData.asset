@@ -23,7 +23,7 @@ MonoBehaviour:
   TranslationKey: Door District
   StageDescription: An unused map from the og, renewed! Travel through doors to get
     to stars before your opponents do
-  GroupingTranslationKey: Unused Renewed
+  GroupingTranslationKey: '- Unused Renewed -'
   DiscordStageImage: 
   SortOrder: 0
   Icon: {fileID: 0}
@@ -74,6 +74,11 @@ MonoBehaviour:
   MultiAreaMap: 1
   YAreaBounds: []
   BannedCoinItems: []
+  BannedHazards:
+  - Id:
+      Value: 1528374188268676239
+  - Id:
+      Value: 1300211052819551813
   SfxOverrides: []
   MainMusic:
   - Id:

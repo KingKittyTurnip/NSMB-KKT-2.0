@@ -21,7 +21,7 @@ MonoBehaviour:
   MusicComposer: 
   TranslationKey: levels.custom.WaterRunCastle
   StageDescription: 
-  GroupingTranslationKey: 
+  GroupingTranslationKey: '- KKT Maps -'
   DiscordStageImage: 
   SortOrder: 0
   Icon: {fileID: 0}
@@ -72,6 +72,9 @@ MonoBehaviour:
   MultiAreaMap: 0
   YAreaBounds: []
   BannedCoinItems: []
+  BannedHazards:
+  - Id:
+      Value: 1300211052819551813
   SfxOverrides: []
   MainMusic:
   - Id:

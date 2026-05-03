@@ -42,18 +42,16 @@ public unsafe class KingBooAnimator : QuantumEntityViewComponent {
 
         QuantumEvent.Subscribe<EventBossDeathAnimation>(this, OnDeath);
         QuantumEvent.Subscribe<EventPlayBossHitSound>(this, OnPlayBossHitSound);
-        if (materialBlock != null) {
-            return;
-        }
-
-        materialBlock = new();
 
         renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
         renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
 
-        renderers[0].SetPropertyBlock(materialBlock);
+        foreach (Renderer r in renderers) {
+            r.SetPropertyBlock(materialBlock);
+        }
     }
     public override void OnActivate(Frame f) {
+        materialBlock = new();
         OnUpdateView();
     }
     public override unsafe void OnUpdateView() {

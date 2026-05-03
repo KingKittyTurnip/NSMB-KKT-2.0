@@ -130,8 +130,8 @@ MonoBehaviour:
         - Chance:
             Value: 7
           Items: []
-        MaxHazards: 255
-        HazardFrequency: 0
+        MaxHazards: 10
+        HazardFrequency: 10
         HeftyPercentage:
           RawValue: 7864
         HazardLifetime: 80
@@ -376,6 +376,18 @@ MonoBehaviour:
           SpawnFridge:
             Value: 1
           Extra: 0001
+        - Name: Bowser Shell
+          HazardPrototype:
+            Id:
+              Value: 1394417262128408316
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 0000
         Lives: 0
         TimerMinutes: 0
         TeamsEnabled:
@@ -402,7 +414,7 @@ MonoBehaviour:
             Value: 326486899682662279
         GamemodeStarChasersEnabled:
           Value: 1
-        StarsToWin: 15
+        StarsToWin: 30
         StarFrequency: 0
         GamemodeCoinRunnersEnabled:
           Value: 0
@@ -412,7 +424,7 @@ MonoBehaviour:
         MaxBalloons: 0
         GamemodeBombchasersEnabled:
           Value: 0
-        CoinsForPowerup: 1
+        CoinsForPowerup: 3
         RouletteBlocksEnabled:
           Value: 0
         Items:
@@ -500,13 +512,13 @@ MonoBehaviour:
         - Chance:
             Value: 7
           Items: []
-        MaxHazards: 3
-        HazardFrequency: 4
+        MaxHazards: 2
+        HazardFrequency: 0
         HeftyPercentage:
           RawValue: 65536
-        HazardLifetime: 40
+        HazardLifetime: 80
         Hazards:
-        - Name: Heavystone
+        - Name: Springboard
           HazardPrototype:
             Id:
               Value: 1425013984214867549
@@ -530,7 +542,7 @@ MonoBehaviour:
           SpawnFridge:
             Value: 1
           Extra: 01
-        - Name: Pow
+        - Name: Springboard
           HazardPrototype:
             Id:
               Value: 1357720639578944744
@@ -541,8 +553,8 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 010000
-        - Name: Pow
+          Extra: 01
+        - Name: Springboard
           HazardPrototype:
             Id:
               Value: 1417407889661057047
@@ -553,44 +565,8 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 000000
-        - Name: Pow
-          HazardPrototype:
-            Id:
-              Value: 1500840674427279327
-          Team: 255
-          Hefty:
-            Value: 1
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra: 000000
-        - Name: Baseball
-          HazardPrototype:
-            Id:
-              Value: 1266191120316739523
-          Team: 255
-          Hefty:
-            Value: 0
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra: 00ff
-        - Name: Baseball
-          HazardPrototype:
-            Id:
-              Value: 1266191120316739523
-          Team: 255
-          Hefty:
-            Value: 0
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra: 01ff
-        - Name: Baseball
+          Extra: 01
+        - Name: Springboard
           HazardPrototype:
             Id:
               Value: 1516621902257113064
@@ -602,6 +578,502 @@ MonoBehaviour:
           SpawnFridge:
             Value: 1
           Extra: 0000
+        Lives: 0
+        TimerMinutes: 0
+        TeamsEnabled:
+          Value: 0
+        BulbAbilityCount: 0
+        HostControl:
+          Value: 0
+        DisableStageRestrictions:
+          Value: 0
+        DisableComplexStageRestrictions:
+          Value: 0
+        EveryItemHasTheSameChance:
+          Value: 0
+    - Name: Everything as Item
+      Description: 
+      DefaultRules:
+        AdvancedLobby:
+          Value: 1
+        Stage:
+          Id:
+            Value: 438935048561577377
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        GamemodeStarChasersEnabled:
+          Value: 1
+        StarsToWin: 30
+        StarFrequency: 0
+        GamemodeCoinRunnersEnabled:
+          Value: 0
+        StarcoinFrequency: 0
+        GamemodeBalloonBattleEnabled:
+          Value: 0
+        MaxBalloons: 0
+        GamemodeBombchasersEnabled:
+          Value: 0
+        CoinsForPowerup: 1
+        RouletteBlocksEnabled:
+          Value: 0
+        Items:
+        - Chance:
+            Value: 0
+          Items: []
+        - Chance:
+            Value: 1
+          Items:
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1268531089014898302
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1349070666859566638
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1466930856010351358
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1524544283524633813
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1286010981056643553
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1472665878288241371
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1414434856952255942
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1502268950446962426
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1300211052819551813
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1313060240537942267
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1320646330750276199
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1280739377753837815
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1365421339623582075
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1490579344614088993
+            Team: 0
+            Extra: 0000000000
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1360720116195219965
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1487534197368722732
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1379843889611026990
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1284729198758392799
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1402622061657310969
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1278307627880243838
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1365566619514412880
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1334308035881873411
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1440373003412769203
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1508147813115421691
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1386060608069232861
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1490928927700818155
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1416226096290300185
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1304675416483732058
+            Team: 0
+            Extra: 0000000000
+          - Name: enm
+            PowerupPrototype:
+              Id:
+                Value: 1509128645920081087
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1405620265549088569
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1523487431609673123
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1358951826669536181
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1266191120316739523
+            Team: 0
+            Extra: 00ff000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1407489288256842837
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1349535369867306075
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1531969226459579775
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1381489562479131125
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1337602123896873055
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1519453281481461233
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1278623128394802359
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1331816873224772261
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1516621902257113064
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1368433557836402488
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1341125926870955329
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1360934193958261155
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1528374188268676239
+            Team: 0
+            Extra: 0000000000
+          - Name: haz
+            PowerupPrototype:
+              Id:
+                Value: 1394417262128408316
+            Team: 0
+            Extra: 0000000000
+        - Chance:
+            Value: 2
+          Items: []
+        - Chance:
+            Value: 3
+          Items: []
+        - Chance:
+            Value: 4
+          Items: []
+        - Chance:
+            Value: 5
+          Items: []
+        - Chance:
+            Value: 6
+          Items: []
+        - Chance:
+            Value: 7
+          Items: []
+        MaxHazards: 0
+        HazardFrequency: 0
+        HeftyPercentage:
+          RawValue: 3277
+        HazardLifetime: 40
+        Hazards:
+        - Name: Tornado
+          HazardPrototype:
+            Id:
+              Value: 1360934193958261155
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1368433557836402488
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 020000
+        - Name: Fan
+          HazardPrototype:
+            Id:
+              Value: 1368433557836402488
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 030000
+        - Name: LemmyBall
+          HazardPrototype:
+            Id:
+              Value: 1381489562479131125
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Cataquack
+          HazardPrototype:
+            Id:
+              Value: 1509128645920081087
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 00
+        - Name: Cataquack
+          HazardPrototype:
+            Id:
+              Value: 1509128645920081087
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 01
+        - Name: Cataquack
+          HazardPrototype:
+            Id:
+              Value: 1509128645920081087
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 02
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1278623128394802359
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1278623128394802359
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1278623128394802359
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 
+        - Name: Chainpost
+          HazardPrototype:
+            Id:
+              Value: 1266191120316739523
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 0003
+        - Name: Chainpost
+          HazardPrototype:
+            Id:
+              Value: 1266191120316739523
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 0106
         Lives: 0
         TimerMinutes: 0
         TeamsEnabled:
@@ -1773,14 +2245,14 @@ MonoBehaviour:
     - Name: Bowsershell
       entityPrototype:
         Id:
-          Value: 0
+          Value: 1394417262128408316
       Icon: {fileID: 0}
       type: 2
       categorey: 1024
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
-      SpawnChance: 4
+      SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 3
       SpecialValues: []

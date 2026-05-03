@@ -53,7 +53,8 @@ MonoBehaviour:
     - several maps/features were "removed" due to requireing more development time,
       these most likely WILL RETURN in future versions
     - reworked the gamerules customisation for advanced lobbies
-    - you can now set powerups, enemies, and more as hazards
+    - ANYTHING can spawn as a powerup if you make it part of the *powerup list
+    - ANYTHING can spawn as a hazard if you make it part of the *hazard list
     - added new characters (shy guy, toadette)
     - added boss hazards (bowser, petey piranha, king boo, whomp king)
     - added conversion cauldron, chainpost, baseball, billblock, cannonbox, tanoomba,
@@ -80,10 +81,11 @@ MonoBehaviour:
     - bioflower grappling a star no longer makes it go torwards you, instead you
       go torwards it
     - pocketdoor teleport is entierly reworked (again)
+    - metalmushroom item uses a model
+    - metalmushroom's top speed increases in speed everytime you land
     - jumpsuit now lets you triplejump anywhere, not just doublejump
     - supercrown no longer spawns naturally
     - doneflower doneballs will swap your powerup with whatever player you hit
-    - metalmushroom uses a new model, it also works much differently
     - goldblock is no longer a wearable, and is now a throwable. it keeps ALL of
       it's previous features otherwise
     - pows now linger for 10 extra frames, making them easier to hit (looking at
@@ -92,6 +94,7 @@ MonoBehaviour:
       by some new carryables
     - freezie now freezes your foes for longer making it more worth using
     - the voidwall is now a carryable, after thrown it creates the wall
+    - bowsershell's speed has been increased, inflicts a different type of knockback
     - springboard & lemmyball hazards now interact with everything that moves
     - lemmyball no longer hops on liquids
     - 'several other changes to improve the experience '

@@ -2,7 +2,10 @@ using Photon.Deterministic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEditor.SceneManagement;
+using UnityEditor.ShaderKeywordFilter;
+using static UnityEditor.Progress;
 
 namespace Quantum {
     public unsafe class GameLogicSystem : SystemMainThread, ISignalOnPlayerAdded, ISignalOnPlayerRemoved, ISignalOnMarioPlayerDied,
@@ -103,15 +106,7 @@ namespace Quantum {
                     f.Global->GameState = GameState.Starting;
                     f.Global->GameStartFrames = (ushort) (6 * f.UpdateRate);
                     //KKT Mod, we want this here so we can properly set the timer
-                    var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-                    if (stage.OverwriteRules != null) {
-                        UnityEngine.Debug.Log("Overwriting rules");
-
-                        //remember our rules
-                        f.Global->ClipboardRules = f.Global->Rules;
-                        //set overwrite rules
-                        f.FindAsset(stage.OverwriteRules).BaseRulesList.DefaultRules.Materialize(f, ref f.Global->Rules);
-                    }
+                    ResolveRules(f);
                     f.Global->Timer = f.Global->Rules.TimerMinutes * 60;
 
                     f.Signals.OnLoadingComplete();
@@ -253,13 +248,7 @@ namespace Quantum {
                 otherGamemode.DisableGamemode(f);
             }
 
-            var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-            if (stage.OverwriteRules != null) {
-                UnityEngine.Debug.Log("rewrite overidden rules rules");
-
-                //rewrite old rules
-                f.Global->Rules = f.Global->ClipboardRules;
-            }
+            RewriteRules(f);
         }
 
         public void OnMarioPlayerDied(Frame f, EntityRef entity) {
@@ -503,6 +492,47 @@ namespace Quantum {
                 info.Disqualified = true;
                 break;
             }
+        }
+
+
+        public static void ResolveRules(Frame f) {
+            //remember our rules
+            f.Global->ClipboardRules = f.Global->Rules;
+            var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+
+            if (!f.Global->Rules.DisableStageRestrictions) {
+                if (stage.OverwriteRules != null) {
+                    UnityEngine.Debug.Log("Overwriting rules");
+
+                    //set overwrite rules
+                    f.FindAsset(stage.OverwriteRules).BaseRulesList.DefaultRules.Materialize(f, ref f.Global->Rules);
+                } else {
+                    //remove banned items from list
+                    var itemslist = f.ResolveList(f.Global->Rules.Items);
+                    for (int i = 0; i < itemslist.Count; i++) {
+                        var items = f.ResolveList(itemslist[i].Items);
+                        foreach (var item in items) {
+                            foreach (var banned in stage.BannedHazards) {
+                                if (item.PowerupPrototype == banned) {
+                                    items.Remove(item);
+                                }
+                            }
+                        }
+                    }
+                    var hazards = f.ResolveList(f.Global->Rules.Hazards);
+                    foreach (var hazard in hazards) {
+                        foreach (var banned in stage.BannedHazards) {
+                            if (hazard.HazardPrototype == banned) {
+                                hazards.Remove(hazard);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void RewriteRules(Frame f) {
+            f.Global->Rules = f.Global->ClipboardRules;
         }
     }
 }

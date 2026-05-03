@@ -40,11 +40,6 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
 
         QuantumEvent.Subscribe<EventBossDeathAnimation>(this, OnDeath);
         QuantumEvent.Subscribe<EventPlayBossHitSound>(this, OnPlayBossHitSound);
-        if (materialBlock != null) {
-            return;
-        }
-
-        materialBlock = new();
 
         renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
         renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
@@ -52,6 +47,7 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
         renderers[0].SetPropertyBlock(materialBlock);
     }
     public override void OnActivate(Frame f) {
+        materialBlock = new();
         if (f.Unsafe.GetPointer<Bowser>(EntityRef)->IsDry) {
             Model = DryModel;
             Animator.avatar = DryAvatar;
@@ -77,7 +73,7 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
         Animator.speed = freezable->IsFrozen(f) ? 0 : 1;
 
         Model.SetActive(Boss->BossAnimator_ShowModel(f) || Animator.GetCurrentAnimatorStateInfo(0).IsName("Knockbacked"));
-        
+
         materialBlock.SetFloat("Redness", Boss->BossAnimator_GetRedness());
         foreach (Renderer r in renderers) {
             r.SetPropertyBlock(materialBlock);

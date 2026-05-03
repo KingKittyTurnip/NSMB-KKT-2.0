@@ -22,7 +22,7 @@ component ThrowingObject {
 	[ExcludeFromPrototype] FP ReusableTimer;
 	byte Varient;
 
-	EntityRef ConnectedObject;
+    EntityRef ConnectedObject;
 }
 
 component SpringBoard {
@@ -43,7 +43,8 @@ enum ThrowingObjectType : Byte {
 	Voidwall, //For Voidwall
 	Potion, // For Creating WarpDoor
 	ChainPost, // For Chainchomp's Post
-	KingBooStone, // For KingBoo
+    KingBooStone, // For KingBoo
+    BowserShell, // For BowserShell
 }
 
 event ThrowObjSimple {

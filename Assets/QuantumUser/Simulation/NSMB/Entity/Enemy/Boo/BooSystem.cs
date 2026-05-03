@@ -93,6 +93,11 @@ namespace Quantum {
 
                 physicsObject->Velocity = newVelocity;
             }
+            if (!physicsObject->DisableCollision) {
+                //yuk. we are only doing this for item and hazardspawn functionality
+                physicsObject->DisableCollision = true;
+                physicsObject->Velocity = physicsObject->PreviousFrameVelocity;
+            }
         }
 
         public EntityRef FindClosestPlayer(Frame f, ref Filter filter, VersusStageData stage) {

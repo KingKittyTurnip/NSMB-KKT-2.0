@@ -17,11 +17,12 @@ MonoBehaviour:
     Guid:
       Value: 325611170111553676
   ShowAuthorAndComposer: 0
-  StageAuthor: 
-  MusicComposer: 
-  TranslationKey: levels.custom.BamboozlingJungle
-  StageDescription: 
-  GroupingTranslationKey: 
+  StageAuthor: KingKittyTurnip
+  MusicComposer: Nintendo
+  TranslationKey: Bamboozling Jungle
+  StageDescription: This is a dangerous forest is filled with bamboo! It's very...
+    BAMBOOZLING
+  GroupingTranslationKey: '- KKT Maps -'
   DiscordStageImage: 
   SortOrder: 0
   Icon: {fileID: 0}
@@ -72,6 +73,9 @@ MonoBehaviour:
   MultiAreaMap: 0
   YAreaBounds: []
   BannedCoinItems: []
+  BannedHazards:
+  - Id:
+      Value: 1300211052819551813
   SfxOverrides: []
   MainMusic:
   - Id:

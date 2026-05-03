@@ -70,7 +70,7 @@ namespace Quantum {
                         f.Events.PodoboLeap(entity);
                     }
                 }
-            } else if (physicsObject->IsTouchingGround || physicsObject->IsTouchingCeiling) {
+            } else if (!physicsObject->DisableCollision) {
                 //yuk. we are only doing this for item and hazardspawn functionality
                 physicsObject->DisableCollision = true;
                 physicsObject->Velocity = physicsObject->PreviousFrameVelocity;

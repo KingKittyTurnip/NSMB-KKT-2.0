@@ -459,7 +459,7 @@ namespace Quantum {
                 if (mario->MetalMushroomFrames > 0) {
                     FP cap = physics.WalkMaxVelocity[physics.RunSpeedStage] + mario->MetalBoost;
 
-                    if (FPMath.Abs(physicsObject->Velocity.X) >= 4) //start to add boosts if near top speed
+                    if (FPMath.Abs(physicsObject->Velocity.X) >= 3 && (inputs.Left.IsDown || inputs.Right.IsDown)) //start to add boosts if near top speed
                         mario->MetalBoost = FPMath.Min(mario->MetalBoost + 1, 10);
 
                     if (inputs.Left ^ inputs.Right) {

@@ -224,6 +224,7 @@ namespace Quantum {
     Potion,
     ChainPost,
     KingBooStone,
+    BowserShell,
   }
   public enum ThwompState : byte {
     Idle,

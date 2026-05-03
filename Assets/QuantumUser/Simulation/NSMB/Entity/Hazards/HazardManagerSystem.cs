@@ -132,7 +132,7 @@ namespace Quantum {
                 var position = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
 
                 //spawn a hefty or a normal hazard?
-                UnityEngine.Debug.LogError("hefty's: " + f.Global->HeftyCount + " percentage: " + f.Global->Rules.HeftyPercentage);
+                //UnityEngine.Debug.LogError("hefty's: " + f.Global->HeftyCount + " percentage: " + f.Global->Rules.HeftyPercentage);
                 FP heftychance = f.Global->Rules.HeftyPercentage - ((FP)f.Global->HeftyCount);
                 bool hefty = f.RNG->Next() < heftychance;
                 bool TryAgain = false;

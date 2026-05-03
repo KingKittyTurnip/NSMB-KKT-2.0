@@ -273,9 +273,13 @@ namespace Quantum {
                     transform->Position += postPos - chainchomp->PreviousPostPosition;
             }
             void GetTargetPosition() {
-                QuantumUtils.UnwrapWorldLocations(f, transform->Position, f.Unsafe.GetPointer<Transform2D>(chainchomp->AttackTarget)->Position + (FPVector2.Up * FP._0_50), out FPVector2 ourPos, out FPVector2 theirPos);
-                chainchomp->TargetPosition = theirPos;
-                chainchomp->FacingRight = ourPos.X < theirPos.X;
+                if (f.Exists(chainchomp->AttackTarget)) {
+                    QuantumUtils.UnwrapWorldLocations(f, transform->Position, f.Unsafe.GetPointer<Transform2D>(chainchomp->AttackTarget)->Position + (FPVector2.Up * FP._0_50), out FPVector2 ourPos, out FPVector2 theirPos);
+                    chainchomp->TargetPosition = theirPos;
+                    chainchomp->FacingRight = ourPos.X < theirPos.X;
+                } else {
+                    SwitchState(ChainChompState.Idle);
+                }
             }
         }
 
@@ -290,7 +294,7 @@ namespace Quantum {
                 QuantumUtils.UnwrapWorldLocations(f, transform->Position + ((DisCollider->Shape.Centroid.Y - DisCollider->Shape.Box.Extents.Y) * FPVector2.Up), otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
                 FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
-                chainchomp->ReusableTimer = 3;
+                chainchomp->ReusableTimer = -1;
                 chainchomp->State = ChainChompState.Idle;
                 physicsObject->IsFrozen = false;
                 physicsObject->DisableCollision = false;

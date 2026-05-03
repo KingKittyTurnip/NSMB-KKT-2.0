@@ -115,7 +115,11 @@ namespace Quantum {
 
             bool addContact = !movingAway || FPVector3.Project(physicsObject->Velocity.XYO, platform->Velocity.Normalized.XYO).Magnitude < platform->Velocity.Magnitude;
             if (addContact) {
-                contacts.Add(newContact);
+                if (contacts.Capacity > contacts.Count) { //KKT Mod
+                    contacts.Add(newContact);
+                } else { //KKT Mod
+                    UnityEngine.Debug.LogWarning("CONTACT OVERFLOW, i mean stopping the error kind of works but it's still a problem maybe?");
+                }
             }
 
             if (platform->CanCrushEntities && (tempHit1 || tempHit2) && shape->Type != Shape2DType.Edge) {

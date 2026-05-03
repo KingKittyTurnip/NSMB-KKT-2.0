@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6586883381842576040}
   - component: {fileID: 7108855868518954447}
   - component: {fileID: 1405676214599914507}
+  - component: {fileID: 4341717518542301095}
   m_Layer: 19
   m_Name: Graphic
   m_TagString: Untagged
@@ -105,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NSMB.Utilities.Components.LegacyAnimateSpriteRenderer
   isDisplaying: 1
-  frame: 0
+  frame: 0.4530939
   runInEditor: 0
   fps: 8
   frames:
@@ -114,6 +115,18 @@ MonoBehaviour:
   useUnscaledDelta: 0
   sRenderer: {fileID: 7108855868518954447}
   image: {fileID: 0}
+--- !u!114 &4341717518542301095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 306854735675107749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88eb6ee564c020f48a3b1cf851277386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5669064217863857783
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,10 +826,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aff24fad35d79d24d8d4415d4f61750b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.CoinItems.CoinItemAnimator
-  graphicsRoot: {fileID: 7523289063499453456}
-  moveBehindBlocksRoot: {fileID: 7523289063499453456}
+  graphicsRoot: {fileID: 3591845850498963736}
+  moveBehindBlocksRoot: {fileID: 0}
   renderers:
-  - {fileID: 0}
+  - {fileID: 7108855868518954447}
   childAnimator: {fileID: 0}
   childAnimation: {fileID: 0}
   blinkingRate: 4

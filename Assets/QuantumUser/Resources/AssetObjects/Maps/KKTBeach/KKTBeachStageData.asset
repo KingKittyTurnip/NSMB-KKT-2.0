@@ -17,11 +17,12 @@ MonoBehaviour:
     Guid:
       Value: 534798372954523084
   ShowAuthorAndComposer: 0
-  StageAuthor: 
-  MusicComposer: 
-  TranslationKey: levels.custom.KKTBeach
-  StageDescription: 
-  GroupingTranslationKey: 
+  StageAuthor: KingKittyTurnip
+  MusicComposer: Nintendo
+  TranslationKey: Hurlawhirl Beach
+  StageDescription: Cataquacks roam these beaches, they might fling you into the
+    air!
+  GroupingTranslationKey: '- KKT Maps -'
   DiscordStageImage: 
   SortOrder: 0
   Icon: {fileID: 0}
@@ -72,7 +73,9 @@ MonoBehaviour:
   MultiAreaMap: 0
   YAreaBounds: []
   BannedCoinItems: []
-  BannedHazards: []
+  BannedHazards:
+  - Id:
+      Value: 1313060240537942267
   SfxOverrides: []
   MainMusic:
   - Id:
