@@ -796,11 +796,14 @@ namespace Quantum {
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
                 return;
             }
+            var specialValues = f.ResolveList(spawnData);
 
             enemy->IsActive = true;
 
             //uhh i would put specific hazard spawn data here
             tanoomba->FormId = -1;
+
+            tanoomba->TransformIntoAnythingAnytime = specialValues[0] == 1;
 
             /*switch (Dis->Type) {
             case ThrowingObjectType.Basic:

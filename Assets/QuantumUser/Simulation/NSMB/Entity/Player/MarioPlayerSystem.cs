@@ -775,7 +775,7 @@ namespace Quantum {
                 return;
             }
 
-            if (mario->IsWallsliding || (mario->JumpBufferFrames > 0 && mario->WalljumpFrames == 0 && (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall))) {
+            if (mario->IsWallsliding) {
                 // Walljump check
                 if (mario->MetalSlowdownDelay <= 0)//KKT Mod, this messes with our boost preservation
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -FP._0_25, FP._0_25);
@@ -1784,6 +1784,7 @@ namespace Quantum {
         private void HandleQuicksand(Frame f, ref Filter filter) {
             using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleQuicksand");
             var mario = filter.MarioPlayer;
+            ref var inputs = ref filter.Inputs;
             var physicsObject = filter.PhysicsObject;
 
             if (!physicsObject->IsUnderwater || f.Exists(mario->CurrentPipe)) {
@@ -1811,7 +1812,9 @@ namespace Quantum {
 
                 f.Events.MarioPlayerJumped(filter.Entity, mario->CurrentPowerupState, JumpState.None, mario->DoEntityBounce, false, mario->RidingStarball);
             } else {
-                physicsObject->Velocity.Y *= physicsObject->Velocity.Y <= 0 ? Constants._0_90 : FP._0_50;
+                physicsObject->Velocity.Y *= (physicsObject->Velocity.Y <= 0 ? 
+                    (inputs.Down.IsDown ? Constants._0_95 : FP._0_75) : //fall velocity
+                    (inputs.Down.IsDown ? FP._0_25 : FP._0_75)); //jump velocity
             }
         }
 
@@ -3098,7 +3101,7 @@ namespace Quantum {
                 mario->CantJumpTimer = 10;
             } else {
                 mario->SwimmingType = LiquidType.ReversePlane; //e
-                if (physicsObject->Velocity.Y > 0 && !physicsObject->IsTouchingGround) {
+                if ((physicsObject->Velocity.Y > 0 || walter->LiquidType == LiquidType.Quicksand) && !physicsObject->IsTouchingGround) {
                     mario->ForceJumpTimer = 10;
                 }
                 mario->CantJumpTimer = 0;

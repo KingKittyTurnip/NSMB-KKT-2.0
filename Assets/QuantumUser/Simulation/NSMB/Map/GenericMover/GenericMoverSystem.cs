@@ -44,8 +44,11 @@ namespace Quantum {
                 velocity = FPVector2.Zero;
             }
 
-            if (f.Unsafe.TryGetPointer<MovingPlatform>(filter.Entity, out var platform)) //KKT Mod
+            if (f.Unsafe.TryGetPointer(filter.Entity, out MovingPlatform* platform)) {
                 platform->Velocity = velocity * f.UpdateRate;
+            } else {
+                transform->Position += velocity;
+            }
         }
 
         private static FPVector2 SamplePosition(GenericMoverAsset.PathNode[] positions, FP sample, GenericMoverAsset.LoopingMode loopMode) {

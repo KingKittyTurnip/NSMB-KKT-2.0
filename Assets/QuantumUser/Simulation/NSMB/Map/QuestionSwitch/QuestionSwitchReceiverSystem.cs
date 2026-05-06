@@ -17,10 +17,6 @@ namespace Quantum {
             var entity = filter.Entity;
 
             if (receiver->TicksTimer && receiver->Timer > 0 && QuantumUtils.Decrement(f, ref receiver->Timer)) {
-                if (!receiver->EndedMusic) {
-                    receiver->EndedMusic = true;
-                    f.Events.QuestionSwitchEndMusic();
-                }
                 if (f.Unsafe.TryGetPointer<GenericMover>(entity, out var genericMover)) {
                     //We Are generic mover, wait til we finish moving before the switches are hitable again
                     var asset = f.FindAsset(genericMover->MoverAsset);
@@ -29,7 +25,7 @@ namespace Quantum {
                         totalDuration += asset.ObjectPath[i].TravelDuration;
                     }
                     FP currentTime = ((f.Number - f.Global->StartFrame) * f.DeltaTime) + genericMover->StartOffset;
-                    UnityEngine.Debug.Log("current: " + currentTime + " total: " + totalDuration);
+
                     if (currentTime < totalDuration) {
                         receiver->Timer = FP._0_10;
                         return;
@@ -49,8 +45,7 @@ namespace Quantum {
                     if (!SelectedTickerTimer) {
                         if (Activated) {
                             receiver->TicksTimer = true;
-                            receiver->Timer = 10;
-                            receiver->EndedMusic = false;
+                            receiver->Timer = 8; //Switches last 8 Seconds
 
                             //Start
                             if (f.Unsafe.TryGetPointer<GenericMover>(entity, out var mover)) {

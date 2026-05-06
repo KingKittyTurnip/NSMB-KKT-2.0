@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e9c5479bb850b640b3d5d2032677f8c, type: 3}
-  m_Name: QSwitchTestMover
+  m_Name: QSwitchSandySewers_1
   m_EditorClassIdentifier: 
   Identifier:
-    Path: QuantumUser/Resources/AssetObjects/World/QSwitchTestMover
+    Path: QuantumUser/Resources/AssetObjects/World/QSwitchSandySewers_1
     Guid:
       Value: 300749491575284304
   ObjectPath:
@@ -24,33 +24,33 @@ MonoBehaviour:
         RawValue: 0
     TravelDuration:
       RawValue: 0
-    EaseIn: 1
-    EaseOut: 1
+    EaseIn: 0
+    EaseOut: 0
   - Position:
       X:
         RawValue: 0
       Y:
         RawValue: 0
     TravelDuration:
-      RawValue: 98304
+      RawValue: 196608
+    EaseIn: 0
+    EaseOut: 1
+  - Position:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 524288
+    TravelDuration:
+      RawValue: 327680
     EaseIn: 1
     EaseOut: 1
   - Position:
       X:
         RawValue: 0
       Y:
-        RawValue: 196608
+        RawValue: 524288
     TravelDuration:
-      RawValue: 557056
-    EaseIn: 1
-    EaseOut: 1
-  - Position:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 196608
-    TravelDuration:
-      RawValue: 98304
+      RawValue: 196608
     EaseIn: 1
     EaseOut: 1
   - Position:
@@ -61,5 +61,5 @@ MonoBehaviour:
     TravelDuration:
       RawValue: 0
     EaseIn: 1
-    EaseOut: 1
+    EaseOut: 0
   LoopMode: 0

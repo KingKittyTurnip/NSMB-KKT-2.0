@@ -6,11 +6,14 @@ public unsafe class QuestionSwitchAnimator : QuantumEntityViewComponent {
 
     //---Serialized Variables
     [SerializeField] private Animator animator;
-    [SerializeField] private AudioSource captainSfx;
+    [SerializeField] private AudioSource globalSfx;
+    [SerializeField] private AudioSource sfx;
+    [Space]
+    [SerializeField] private AudioClip ActivateSound;
+    [SerializeField] private AudioClip Music, MusicEnd, Appear;
 
     public void Start() {
         QuantumEvent.Subscribe<EventQuestionSwitchAnimation>(this, OnAnimation);
-        QuantumEvent.Subscribe<EventQuestionSwitchEndMusic>(this, OnEndMusic);
     }
 
     private void OnAnimation(EventQuestionSwitchAnimation e) {
@@ -18,28 +21,45 @@ public unsafe class QuestionSwitchAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        if (e.Activate) {
-            animator.Play("Hit");
-            captainSfx.volume = 1;
-            captainSfx.Play();
+        if (e.ForHitSwitch) {
+            //set stuff up with the hit switch
+            sfx.PlayOneShot(ActivateSound);
+
+            //SetupMusicPlayer
+            StopCoroutine(HandleMusic());
+            StartCoroutine(HandleMusic());
         } else {
-            animator.Play("Idle");
-        }
-    }
-    private void OnEndMusic(EventQuestionSwitchEndMusic e) {
-        if (this.gameObject == captainSfx.gameObject) {
-            Debug.Log("END");
-            StartCoroutine(FadeOutMusic());
+            //Play animation for all of the same switches
+            if (e.Activate) {
+                animator.Play("Hit");
+            } else {
+                animator.Play("Idle");
+            }
         }
     }
 
-    private IEnumerator FadeOutMusic() {
-        float timer = 1;
+    private IEnumerator HandleMusic() {
+        //Normal
+        int interval = 5;
+        float timer = interval+1;
+        globalSfx.clip = Music;
 
+        tryInterval:
         while (timer > 0) {
+            if (timer < interval) {
+                interval--;
+                globalSfx.Play();
+            }
             timer -= Time.deltaTime;
-            captainSfx.volume = timer;
             yield return null;
         }
+        //Ending
+        if (globalSfx.clip != MusicEnd) {
+            interval = 3;
+            timer = interval;
+            globalSfx.clip = MusicEnd;
+            goto tryInterval;
+        }
+        yield break;
     }
 }

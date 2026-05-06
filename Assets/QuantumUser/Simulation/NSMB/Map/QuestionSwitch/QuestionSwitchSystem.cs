@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using System;
 
 namespace Quantum {
     public unsafe class QuestionSwitchSystem : SystemSignalsOnly, ISignalOnQuestionSwitchSignal {
@@ -15,6 +16,18 @@ namespace Quantum {
             if (dot > Constants.PhysicsGroundMaxAngleCos) {
                 var QSwitch = f.Unsafe.GetPointer<QuestionSwitch>(switchEntity);
                 if (!QSwitch->Pressed) {
+                    if (transform->Rotation == 0) {
+                        var marPhys = f.Unsafe.GetPointer<PhysicsObject>(marioEntity);
+                        var marTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
+                        if (marPhys->Velocity.Y < 0)
+                            marPhys->Velocity.Y = 0;
+                        marPhys->IsTouchingGround = true;
+                        marTransform->Position.Y = transform->Position.Y + Constants._0_66;
+                    } else if (FPMath.Abs(transform->Rotation) == FP.Pi/2) {
+                        f.Unsafe.GetPointer<PhysicsObject>(marioEntity)->Velocity.X = 0;
+                    }
+
+                    f.Events.QuestionSwitchAnimation(true, switchEntity, true);
                     f.Signals.OnQuestionSwitchSignal(QSwitch->SignalSent, true);
                 }
             }
@@ -28,7 +41,7 @@ namespace Quantum {
                     QSwitch->Pressed = Activated;
                     collider->Shape.Box.Extents = Activated ? QSwitch->UnpressedSize : QSwitch->PressedSize;
                     collider->Shape.Centroid.Y = collider->Shape.Box.Extents.Y;
-                    f.Events.QuestionSwitchAnimation(entity, Activated);
+                    f.Events.QuestionSwitchAnimation(false, entity, Activated);
                 }
             }
         }

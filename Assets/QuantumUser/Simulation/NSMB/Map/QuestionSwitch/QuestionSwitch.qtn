@@ -1,9 +1,3 @@
-global {
-	ushort QSwitchATimer;
-    ushort QSwitchBTimer;
-    ushort QSwitchCTimer;
-}
-
 component QuestionSwitch {
     SwitchFlag SignalSent;
 
@@ -17,22 +11,25 @@ component QuestionSwitchReceiver {
     SwitchFlag ListenFor;
     bool TicksTimer;
     FP Timer;
-
-    [ExcludeFromPrototype] bool EndedMusic;
 }
 
 enum SwitchFlag : Byte {
-    QSwitchA,
-    QSwitchB,
-    QSwitchC,
+    QSwitch_1,
+    QSwitch_2,
+    QSwitch_3,
+    QSwitch_4,
+    QSwitch_5,
+    QSwitch_6,
+    QSwitch_7,
+    QSwitch_8,
+    QSwitch_9,
+    QSwitch_10,
 }
 
 signal OnQuestionSwitchSignal(SwitchFlag flag, bool Activated);
 
 event QuestionSwitchAnimation {
+    bool ForHitSwitch;
     EntityRef Entity;
     bool Activate;
-}
-
-event QuestionSwitchEndMusic {
 }

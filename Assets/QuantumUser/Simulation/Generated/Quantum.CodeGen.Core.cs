@@ -199,9 +199,16 @@ namespace Quantum {
     MirrorY = 2,
   }
   public enum SwitchFlag : byte {
-    QSwitchA,
-    QSwitchB,
-    QSwitchC,
+    QSwitch_1,
+    QSwitch_2,
+    QSwitch_3,
+    QSwitch_4,
+    QSwitch_5,
+    QSwitch_6,
+    QSwitch_7,
+    QSwitch_8,
+    QSwitch_9,
+    QSwitch_10,
   }
   public enum TanoombaState : byte {
     Idling,
@@ -1752,7 +1759,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct _globals_ {
-    public const Int32 SIZE = 3352;
+    public const Int32 SIZE = 3344;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(0)]
     public AssetRef<Map> Map;
@@ -1781,17 +1788,17 @@ namespace Quantum {
     public BitSet10 PlayerLastConnectionState;
     [FieldOffset(1824)]
     public UInt16 BigStarSpawnTimer;
-    [FieldOffset(1896)]
-    public EntityRef MainBigStar;
     [FieldOffset(1888)]
+    public EntityRef MainBigStar;
+    [FieldOffset(1880)]
     public BitSet64 UsedStarSpawns;
-    [FieldOffset(2040)]
+    [FieldOffset(2032)]
     public GameRules Rules;
     [FieldOffset(1819)]
     public GameState GameState;
-    [FieldOffset(1840)]
+    [FieldOffset(1832)]
     public Int32 StartFrame;
-    [FieldOffset(1844)]
+    [FieldOffset(1836)]
     public Int32 TotalGamesPlayed;
     [FieldOffset(1826)]
     public UInt16 GameStartFrames;
@@ -1801,48 +1808,42 @@ namespace Quantum {
     public UInt16 AutomaticStageRefreshInterval;
     [FieldOffset(1822)]
     public UInt16 AutomaticStageRefreshTimer;
-    [FieldOffset(2152)]
+    [FieldOffset(2144)]
     [FramePrinter.FixedArrayAttribute(typeof(PlayerInformation), 10)]
     private fixed Byte _PlayerInfo_[1200];
     [FieldOffset(1817)]
     public Byte RealPlayers;
     [FieldOffset(1818)]
     public Byte TotalMarios;
-    [FieldOffset(1852)]
+    [FieldOffset(1844)]
     public Int32 WinningTeam;
-    [FieldOffset(1860)]
+    [FieldOffset(1852)]
     public QBoolean HasWinner;
-    [FieldOffset(1928)]
+    [FieldOffset(1920)]
     public GameRules ClipboardRules;
-    [FieldOffset(1836)]
+    [FieldOffset(1830)]
     public UInt16 TimeTilNextHazard;
-    [FieldOffset(1880)]
+    [FieldOffset(1872)]
     public BitSet64 UsedHazardSpawns;
-    [FieldOffset(1848)]
+    [FieldOffset(1840)]
     public Int32 UsedHazardSpawnCount;
     [FieldOffset(1816)]
     public Byte HeftyCount;
-    [FieldOffset(1830)]
-    public UInt16 QSwitchATimer;
-    [FieldOffset(1832)]
-    public UInt16 QSwitchBTimer;
-    [FieldOffset(1834)]
-    public UInt16 QSwitchCTimer;
-    [FieldOffset(1856)]
+    [FieldOffset(1848)]
     public PlayerRef Host;
-    [FieldOffset(1868)]
+    [FieldOffset(1860)]
     [AllocateOnComponentAdded()]
     public QDictionaryPtr<PlayerRef, EntityRef> PlayerDatas;
-    [FieldOffset(1872)]
+    [FieldOffset(1864)]
     [AllocateOnComponentAdded()]
     public QListPtr<BannedPlayerInfo> BannedPlayerIds;
-    [FieldOffset(1912)]
-    public FP SpinpipeSlope;
     [FieldOffset(1904)]
+    public FP SpinpipeSlope;
+    [FieldOffset(1896)]
     public FP SpinpipeMAX;
-    [FieldOffset(1864)]
+    [FieldOffset(1856)]
     public QBoolean StarBallGoalExists;
-    [FieldOffset(1920)]
+    [FieldOffset(1912)]
     public FP Timer;
     public readonly FixedArray<Input> input {
       get {
@@ -1890,9 +1891,6 @@ namespace Quantum {
         hash = hash * 31 + UsedHazardSpawns.GetHashCode();
         hash = hash * 31 + UsedHazardSpawnCount.GetHashCode();
         hash = hash * 31 + HeftyCount.GetHashCode();
-        hash = hash * 31 + QSwitchATimer.GetHashCode();
-        hash = hash * 31 + QSwitchBTimer.GetHashCode();
-        hash = hash * 31 + QSwitchCTimer.GetHashCode();
         hash = hash * 31 + Host.GetHashCode();
         hash = hash * 31 + PlayerDatas.GetHashCode();
         hash = hash * 31 + BannedPlayerIds.GetHashCode();
@@ -1938,9 +1936,6 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->BigStarSpawnTimer);
         serializer.Stream.Serialize(&p->GameStartFrames);
         serializer.Stream.Serialize(&p->PlayerLoadFrames);
-        serializer.Stream.Serialize(&p->QSwitchATimer);
-        serializer.Stream.Serialize(&p->QSwitchBTimer);
-        serializer.Stream.Serialize(&p->QSwitchCTimer);
         serializer.Stream.Serialize(&p->TimeTilNextHazard);
         serializer.Stream.Serialize(&p->StartFrame);
         serializer.Stream.Serialize(&p->TotalGamesPlayed);
@@ -4718,31 +4713,26 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct QuestionSwitchReceiver : Quantum.IComponent {
-    public const Int32 SIZE = 24;
+    public const Int32 SIZE = 16;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(0)]
     public SwitchFlag ListenFor;
-    [FieldOffset(8)]
-    public QBoolean TicksTimer;
-    [FieldOffset(16)]
-    public FP Timer;
     [FieldOffset(4)]
-    [ExcludeFromPrototype()]
-    public QBoolean EndedMusic;
+    public QBoolean TicksTimer;
+    [FieldOffset(8)]
+    public FP Timer;
     public override readonly Int32 GetHashCode() {
       unchecked { 
         var hash = 9419;
         hash = hash * 31 + (Byte)ListenFor;
         hash = hash * 31 + TicksTimer.GetHashCode();
         hash = hash * 31 + Timer.GetHashCode();
-        hash = hash * 31 + EndedMusic.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (QuestionSwitchReceiver*)ptr;
         serializer.Stream.Serialize((Byte*)&p->ListenFor);
-        QBoolean.Serialize(&p->EndedMusic, serializer);
         QBoolean.Serialize(&p->TicksTimer, serializer);
         FP.Serialize(&p->Timer, serializer);
     }

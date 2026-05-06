@@ -7,7 +7,7 @@ namespace Quantum {
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            if (boss->iframes != 0)
+            if (boss->iframes != 0 || boss->Dead)
                 return;
 
             if (boss->ControllerPlayer != EntityRef.None) {

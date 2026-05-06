@@ -486,6 +486,47 @@ MonoBehaviour:
       - {fileID: -3085684383362731524, guid: 6a8295a206a133847aa7c4b37eaa0337, type: 3}
       UsesWavey: 0
       soundType: 0
+  - Name: Dry Bones
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1402811127699692469
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1409024
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 0
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 0
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 1
+      UsesLeaf: 0
+      LeafLocation: {x: 0, y: 0, z: 0}
+      UsesTail: 1
+      TailLocation: {x: -0.079, y: -0.182, z: 1}
+      ModelId: 4
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites: []
+      UsesWavey: 0
+      soundType: 0
   - Name: Turnip
     SpawnType: 0
     comparePrototype:
@@ -1671,8 +1712,8 @@ MonoBehaviour:
       UsesTail: 0
       TailLocation: {x: 0, y: 0, z: 0}
       ModelId: -1
-      Offset: {x: 0, y: -0.25, z: 0}
-      FPS: 0
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 18
       sprites:
       - {fileID: 1645395959, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
       - {fileID: 1645395959, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
@@ -1727,8 +1768,8 @@ MonoBehaviour:
       UsesTail: 0
       TailLocation: {x: 0, y: 0, z: 0}
       ModelId: -1
-      Offset: {x: 0, y: -0.25, z: 0}
-      FPS: 0
+      Offset: {x: 0, y: 0, z: 0}
+      FPS: 18
       sprites:
       - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
       - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
@@ -1753,7 +1794,7 @@ MonoBehaviour:
       Id:
         Value: 1381489562479131125
     ChanceWeight:
-      RawValue: 32768
+      RawValue: 65536
     MoveData:
       MovementType: 1
       Gravity:
@@ -1781,35 +1822,20 @@ MonoBehaviour:
       UsesLeaf: 0
       LeafLocation: {x: 0, y: 0.25, z: 0}
       UsesTail: 1
-      TailLocation: {x: 0.65, y: 0.1, z: 0}
+      TailLocation: {x: -0.45, y: 0.1, z: 0}
       ModelId: 3
       Offset: {x: 0, y: -0.25, z: 0}
       FPS: 0
-      sprites:
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: -330342055, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1839761188, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 835418070, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1839761188, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: -330342055, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
+      sprites: []
       UsesWavey: 0
       soundType: 0
   - Name: Lemmyball
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1381489562479131125
+        Value: 1519453281481461233
     ChanceWeight:
-      RawValue: 32768
+      RawValue: 0
     MoveData:
       MovementType: 1
       Gravity:
