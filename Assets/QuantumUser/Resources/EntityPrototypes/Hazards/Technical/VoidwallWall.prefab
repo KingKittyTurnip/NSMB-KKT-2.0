@@ -75,7 +75,7 @@ MonoBehaviour:
       CapsuleDirection2D: 0
       CapsuleDirection3D: 0
     Shape2D:
-      ShapeType: 4
+      ShapeType: 16
       PolygonCollider:
         Id:
           Value: 0
@@ -102,61 +102,7 @@ MonoBehaviour:
         RawValue: 0
       UserTag: 0
       IsPersistent: 1
-      CompoundShapes:
-      - ShapeType: 4
-        PolygonCollider:
-          Id:
-            Value: 0
-        CircleRadius:
-          RawValue: 0
-        CapsuleSize:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        EdgeExtent:
-          RawValue: 0
-        BoxExtents:
-          X:
-            RawValue: 13107
-          Y:
-            RawValue: 655
-        PositionOffset:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        RotationOffset:
-          RawValue: 0
-        UserTag: 0
-        IsSetFromSourceCollider: 0
-      - ShapeType: 4
-        PolygonCollider:
-          Id:
-            Value: 0
-        CircleRadius:
-          RawValue: 0
-        CapsuleSize:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        EdgeExtent:
-          RawValue: 0
-        BoxExtents:
-          X:
-            RawValue: 13107
-          Y:
-            RawValue: 655
-        PositionOffset:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        RotationOffset:
-          RawValue: 0
-        UserTag: 0
-        IsSetFromSourceCollider: 0
+      CompoundShapes: []
     Shape3D:
       ShapeType: 0
       SphereRadius:
@@ -408,6 +354,8 @@ MonoBehaviour:
     SlowInLiquids:
       Value: 0
     IsWaterSolid:
+      Value: 0
+    SinksInQuickSandAndGoo:
       Value: 0
     BreakMegaObjects:
       Value: 0

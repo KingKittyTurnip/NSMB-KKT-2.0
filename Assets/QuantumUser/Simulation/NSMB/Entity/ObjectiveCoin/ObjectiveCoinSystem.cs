@@ -73,7 +73,7 @@ namespace Quantum {
 
                 if (hits.Count == 0) {
                     // Hit no players
-                    var gamemode = (CoinRunnersGamemode) f.FindAsset(f.SimulationConfig.CoinRunners);
+                    var gamemode = (CoinRunnersGamemode) f.FindAsset(f.Global->Rules.Gamemode);
                     EntityRef newEntity = f.Create(gamemode.StarCoinPrototype);
                     f.Global->MainBigStar = newEntity;
                     var newStarCoinTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
@@ -97,7 +97,7 @@ namespace Quantum {
             }
 
             VersusStageData stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-            var gamemode = f.FindAsset(f.SimulationConfig.CoinRunners) as CoinRunnersGamemode;
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode) as CoinRunnersGamemode;
             for (int i = 0; i < amount; i++) {
                 EntityRef newCoin = f.Create(gamemode.ObjectiveCoinPrototype);
                 var transform = f.Unsafe.GetPointer<Transform2D>(newCoin);
@@ -157,7 +157,7 @@ namespace Quantum {
             var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(entity);
             int coinsToSpawn = (10 + 5 * (amount - 1)) / coinDivideFactor;
             SpawnObjectiveCoins(f, transform->Position + collider->Shape.Centroid + (FPVector2.Up * collider->Shape.Box.Extents.Y), coinsToSpawn, excludeTeamNumber, selfDamage);
-            mario->GamemodeData.CoinRunners.ObjectiveCoins -= (int) FPMath.Min(mario->GamemodeData.CoinRunners.ObjectiveCoins, coinsToSpawn) / 2;//kkt mod changed a -> into a dot for the union to struct conversion
+            mario->GamemodeData.CoinRunners->ObjectiveCoins -= (int) FPMath.Min(mario->GamemodeData.CoinRunners->ObjectiveCoins, coinsToSpawn) / 2;
             f.Events.MarioPlayerObjectiveCoinsChanged(entity);
         }
 
@@ -179,7 +179,7 @@ namespace Quantum {
             f.FindAsset<VersusStageData>(f.Map.UserAsset).ResetStage(f, false);
             f.Global->BigStarSpawnTimer = (ushort) (624 - (f.Global->RealPlayers * 12));
             
-            mario->GamemodeData.CoinRunners.ObjectiveCoins += 25;//kkt mod changed a -> into a dot for the union to struct conversion
+            mario->GamemodeData.CoinRunners->ObjectiveCoins += 25;
             starCoin->DespawnCounter = 105;
             starCoin->Collector = marioEntity;
             f.Events.MarioPlayerCollectedStarCoin(marioEntity, starCoinEntity);
@@ -192,7 +192,7 @@ namespace Quantum {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(entity);
             var transform = f.Unsafe.GetPointer<Transform2D>(entity);
 
-            mario->GamemodeData.CoinRunners.ObjectiveCoins -= mario->GamemodeData.CoinRunners.ObjectiveCoins / 5;//kkt mod changed a -> into a dot for the union to struct conversion
+            mario->GamemodeData.CoinRunners->ObjectiveCoins -= mario->GamemodeData.CoinRunners->ObjectiveCoins / 5;
             f.Events.MarioPlayerObjectiveCoinsChanged(entity);
         }
 
@@ -203,7 +203,7 @@ namespace Quantum {
             }
 
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
-            mario->GamemodeData.CoinRunners.ObjectiveCoins++;//kkt mod changed a -> into a dot for the union to struct conversion
+            mario->GamemodeData.CoinRunners->ObjectiveCoins++;
 
             f.Events.MarioPlayerCollectedObjectiveCoin(marioEntity);
             f.Events.MarioPlayerObjectiveCoinsChanged(marioEntity);

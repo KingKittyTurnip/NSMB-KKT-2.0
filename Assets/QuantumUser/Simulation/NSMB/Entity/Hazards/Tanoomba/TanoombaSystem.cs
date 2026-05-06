@@ -587,7 +587,7 @@ namespace Quantum {
             //if (f.Global->Rules.HazardsEnabled && thing.SpawnType == TanoombaTransformationAsset.TanoombaFormSpawnType.SpawnsAtHazardSpawn) {
             //    return true;
             //}
-            if (f.Global->Rules.IsStageCoinsEnabled && 
+            if (f.Global->Rules.ModifierCoinsEnabled && 
                 (thing.SpawnType == TanoombaTransformationAsset.TanoombaFormSpawnType.SpawnsAtCoinAndReplace || thing.SpawnType == TanoombaTransformationAsset.TanoombaFormSpawnType.AwayAndCoinsEnabled)) {
                 return true;
             }

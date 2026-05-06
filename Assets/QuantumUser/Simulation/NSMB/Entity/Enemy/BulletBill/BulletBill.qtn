@@ -3,8 +3,6 @@ component BulletBill {
 	FP DespawnRadius;
 	[ExcludeFromPrototype] byte DespawnFrames;
 	[ExcludeFromPrototype] EntityRef Owner;
-
-	AssetRef<EntityPrototype> Cloud;
 }
 
 component BulletBillLauncher {

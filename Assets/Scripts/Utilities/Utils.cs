@@ -233,7 +233,7 @@ namespace NSMB.Utilities {
             }
 
             // Then team
-            if (f.Global->Rules.TeamsEnabled) {
+            if (f.Global->Rules.ModifierTeamsEnabled) {
                 return GetTeamColor(f, f.Global->GameState == GameState.PreGameRoom ? playerData->RequestedTeam : playerData->RealTeam, s, v);
             }
 

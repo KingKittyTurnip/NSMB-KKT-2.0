@@ -269,7 +269,6 @@ namespace Quantum.Prototypes {
   public unsafe partial class BulletBillPrototype : ComponentPrototype<Quantum.BulletBill> {
     public FP Speed;
     public FP DespawnRadius;
-    public AssetRef<EntityPrototype> Cloud;
     partial void MaterializeUser(Frame frame, ref Quantum.BulletBill result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.BulletBill component = default;
@@ -279,7 +278,6 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.BulletBill result, in PrototypeMaterializationContext context = default) {
         result.Speed = this.Speed;
         result.DespawnRadius = this.DespawnRadius;
-        result.Cloud = this.Cloud;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -394,9 +392,7 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.CloudBillPlatform))]
   public unsafe partial class CloudBillPlatformPrototype : ComponentPrototype<Quantum.CloudBillPlatform> {
-    [BitSetAttribute(64)]
-    [ArrayLengthAttribute(1)]
-    public UInt64[] Clouds = new UInt64[1];
+    public AssetRef<EntityPrototype> CloudBillPrototype;
     partial void MaterializeUser(Frame frame, ref Quantum.CloudBillPlatform result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.CloudBillPlatform component = default;
@@ -404,7 +400,7 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.CloudBillPlatform result, in PrototypeMaterializationContext context = default) {
-        result.Clouds = BitSet64.FromArray(this.Clouds);
+        result.CloudBillPrototype = this.CloudBillPrototype;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -605,20 +601,16 @@ namespace Quantum.Prototypes {
     public QBoolean AdvancedLobby;
     public AssetRef<Map> Stage;
     public AssetRef<GamemodeAsset> Gamemode;
-    public QBoolean GamemodeStarChasersEnabled;
     public Int32 StarsToWin;
     public Byte StarFrequency;
-    public QBoolean GamemodeCoinRunnersEnabled;
-    public Byte StarcoinFrequency;
-    public QBoolean GamemodeBalloonBattleEnabled;
-    public Byte MaxBalloons;
-    public QBoolean GamemodeBombchasersEnabled;
+    public QBoolean ModifierCoinsEnabled;
     public Int32 CoinsForPowerup;
     public QBoolean RouletteBlocksEnabled;
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
     [DynamicCollectionAttribute()]
     public Quantum.Prototypes.ItemListPrototype[] Items = {};
+    public QBoolean ModifierHazardsEnabled;
     public Byte MaxHazards;
     public Byte HazardFrequency;
     public FP HeftyPercentage;
@@ -627,11 +619,15 @@ namespace Quantum.Prototypes {
     [FreeOnComponentRemoved()]
     [DynamicCollectionAttribute()]
     public Quantum.Prototypes.HazardListPrototype[] Hazards = {};
+    public QBoolean ModifierLivesEnabled;
     public Int32 Lives;
+    public QBoolean ModifierTimerEnabled;
     public Int32 TimerMinutes;
-    public QBoolean TeamsEnabled;
+    public QBoolean ModifierTeamsEnabled;
+    public QBoolean ModifierBulbEnabled;
     public Byte BulbAbilityCount;
     public QBoolean HostControl;
+    public QBoolean ModifierExtrasEnabled;
     public QBoolean DisableStageRestrictions;
     public QBoolean DisableComplexStageRestrictions;
     public QBoolean EveryItemHasTheSameChance;
@@ -640,14 +636,9 @@ namespace Quantum.Prototypes {
         result.AdvancedLobby = this.AdvancedLobby;
         result.Stage = this.Stage;
         result.Gamemode = this.Gamemode;
-        result.GamemodeStarChasersEnabled = this.GamemodeStarChasersEnabled;
         result.StarsToWin = this.StarsToWin;
         result.StarFrequency = this.StarFrequency;
-        result.GamemodeCoinRunnersEnabled = this.GamemodeCoinRunnersEnabled;
-        result.StarcoinFrequency = this.StarcoinFrequency;
-        result.GamemodeBalloonBattleEnabled = this.GamemodeBalloonBattleEnabled;
-        result.MaxBalloons = this.MaxBalloons;
-        result.GamemodeBombchasersEnabled = this.GamemodeBombchasersEnabled;
+        result.ModifierCoinsEnabled = this.ModifierCoinsEnabled;
         result.CoinsForPowerup = this.CoinsForPowerup;
         result.RouletteBlocksEnabled = this.RouletteBlocksEnabled;
         if (this.Items.Length == 0) {
@@ -660,6 +651,7 @@ namespace Quantum.Prototypes {
             list.Add(tmp);
           }
         }
+        result.ModifierHazardsEnabled = this.ModifierHazardsEnabled;
         result.MaxHazards = this.MaxHazards;
         result.HazardFrequency = this.HazardFrequency;
         result.HeftyPercentage = this.HeftyPercentage;
@@ -674,11 +666,15 @@ namespace Quantum.Prototypes {
             list.Add(tmp);
           }
         }
+        result.ModifierLivesEnabled = this.ModifierLivesEnabled;
         result.Lives = this.Lives;
+        result.ModifierTimerEnabled = this.ModifierTimerEnabled;
         result.TimerMinutes = this.TimerMinutes;
-        result.TeamsEnabled = this.TeamsEnabled;
+        result.ModifierTeamsEnabled = this.ModifierTeamsEnabled;
+        result.ModifierBulbEnabled = this.ModifierBulbEnabled;
         result.BulbAbilityCount = this.BulbAbilityCount;
         result.HostControl = this.HostControl;
+        result.ModifierExtrasEnabled = this.ModifierExtrasEnabled;
         result.DisableStageRestrictions = this.DisableStageRestrictions;
         result.DisableComplexStageRestrictions = this.DisableComplexStageRestrictions;
         result.EveryItemHasTheSameChance = this.EveryItemHasTheSameChance;
@@ -687,17 +683,22 @@ namespace Quantum.Prototypes {
   }
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.GamemodeSpecificData))]
-  public unsafe partial class GamemodeSpecificDataPrototype : StructPrototype {
+  public unsafe partial class GamemodeSpecificDataPrototype : UnionPrototype {
+    public string _field_used_;
     public Quantum.Prototypes.StarChasersDataPrototype StarChasers;
     public Quantum.Prototypes.CoinRunnersDataPrototype CoinRunners;
     public Quantum.Prototypes.BalloonBattleDataPrototype BalloonBattle;
     public Quantum.Prototypes.BombChasersDataPrototype BombChasers;
     partial void MaterializeUser(Frame frame, ref Quantum.GamemodeSpecificData result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.GamemodeSpecificData result, in PrototypeMaterializationContext context = default) {
-        this.StarChasers.Materialize(frame, ref result.StarChasers, in context);
-        this.CoinRunners.Materialize(frame, ref result.CoinRunners, in context);
-        this.BalloonBattle.Materialize(frame, ref result.BalloonBattle, in context);
-        this.BombChasers.Materialize(frame, ref result.BombChasers, in context);
+        switch (_field_used_) {
+          case "STARCHASERS": this.StarChasers.Materialize(frame, ref *result.StarChasers, in context); break;
+          case "COINRUNNERS": this.CoinRunners.Materialize(frame, ref *result.CoinRunners, in context); break;
+          case "BALLOONBATTLE": this.BalloonBattle.Materialize(frame, ref *result.BalloonBattle, in context); break;
+          case "BOMBCHASERS": this.BombChasers.Materialize(frame, ref *result.BombChasers, in context); break;
+          case "": case null: break;
+          default: PrototypeValidator.UnknownUnionField(_field_used_, in context); break;
+        }
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -1353,6 +1354,44 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.Projectile result, in PrototypeMaterializationContext context = default) {
         result.Asset = this.Asset;
         result.Speed = this.Speed;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.QuestionSwitch))]
+  public unsafe partial class QuestionSwitchPrototype : ComponentPrototype<Quantum.QuestionSwitch> {
+    public Quantum.QEnum8<SwitchFlag> SignalSent;
+    public FPVector2 UnpressedSize;
+    public FPVector2 PressedSize;
+    partial void MaterializeUser(Frame frame, ref Quantum.QuestionSwitch result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.QuestionSwitch component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.QuestionSwitch result, in PrototypeMaterializationContext context = default) {
+        result.SignalSent = this.SignalSent;
+        result.UnpressedSize = this.UnpressedSize;
+        result.PressedSize = this.PressedSize;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.QuestionSwitchReceiver))]
+  public unsafe partial class QuestionSwitchReceiverPrototype : ComponentPrototype<Quantum.QuestionSwitchReceiver> {
+    public Quantum.QEnum8<SwitchFlag> ListenFor;
+    public QBoolean TicksTimer;
+    public FP Timer;
+    partial void MaterializeUser(Frame frame, ref Quantum.QuestionSwitchReceiver result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.QuestionSwitchReceiver component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.QuestionSwitchReceiver result, in PrototypeMaterializationContext context = default) {
+        result.ListenFor = this.ListenFor;
+        result.TicksTimer = this.TicksTimer;
+        result.Timer = this.Timer;
         MaterializeUser(frame, ref result, in context);
     }
   }

@@ -20,7 +20,6 @@ namespace Quantum {
 
         /* TODO:
          * Make teamable, teamates ignore the voidwall
-         * fix loop point bug (fix with whatever solution is found for the bellow thing)
          * fix the "fake collision" bug, so mario's velocity stops when he makes contact (this happens cuz the hitbox is too big, use compouned colliders like water)
         */
         
@@ -39,9 +38,26 @@ namespace Quantum {
             if (voidwall->increment < 50) {
                 voidwall->increment += f.DeltaTime * 10;
                 if (voidwall->increment >= 50) {
-                    collider->Shape.Box.Extents = new FPVector2(FP._0_20, 50);
-                } else {
-                    collider->Shape.Box.Extents = new FPVector2(FP._0_20, voidwall->increment);
+                    voidwall->increment = 50;
+                }
+
+                //this code ain't perfect but still achieves the goal very well
+
+                FP Quarter = voidwall->increment;
+                int i = 0;
+                collider->Shape.Compound.GetShapes(f, out var shape, out int count);
+                //place old shape positions
+                while (i < count) {
+                    shape[i].Centroid.Y = (Quarter - (voidwall->increment/2))*2;
+                    shape[i].Box.Extents = new FPVector2(FP._0_20, FPMath.Min(Quarter, 2));
+                    i++;
+                    Quarter -= 2;
+                }
+                //create new shapes
+                while (Quarter > 0) {
+                    Shape2D newShape = Shape2D.CreateBox(new FPVector2(FP._0_20, FPMath.Min(Quarter, 2)), new FPVector2(0, ((Quarter - (voidwall->increment/2)) - (2 - FPMath.Min(Quarter, 2))) * 2));
+                    collider->Shape.Compound.AddShape(f, ref newShape);
+                    Quarter -= 2;
                 }
             }
             if (voidwall->DamageCooldown > 0) {
@@ -103,9 +119,6 @@ namespace Quantum {
                 || !f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject)) {
                 return;
             }
-
-            var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
-            //collider->Shape.Compound.
         }
         #endregion
     }

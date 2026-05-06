@@ -1,11 +1,24 @@
-component CloudBillPlatform {
-	bitset[64] Clouds;
+#define _0_365 0.365
 
-	[ExcludeFromPrototype] byte Length;
-	[ExcludeFromPrototype] FPVector2 StartingLocation;
+component CloudBillPlatform {
+    AssetRef<EntityPrototype> CloudBillPrototype;
+    [ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] list<bool> ActiveClouds;
+
+	//byte Length;
+	[ExcludeFromPrototype] bool CreatedBill;
+	[ExcludeFromPrototype] bool FacingRight;
+
 	[ExcludeFromPrototype] EntityRef CloudBill;
+	[ExcludeFromPrototype] FP CloudbillGoneTimer;
 }
 
-event PoofCloud {
-	EntityRef Entity;
+event CloudBillCloudAnimation {
+	Frame f;
+    EntityRef Entity;
+	bool Create;
+}
+
+event CloudBillCloudBreak {
+    EntityRef Entity;
+	byte id;
 }

@@ -142,7 +142,7 @@ namespace NSMB {
                     };
 
                     long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                    if (f.Global->Rules.IsTimerEnabled) {
+                    if (f.Global->Rules.ModifierTimerEnabled) {
                         activity.Timestamps = new() { End = now + (long) (f.Global->Timer.AsFloat * 1000) };
                     } else {
                         activity.Timestamps = new() { Start = now - ((long) ((f.Number + game.InterpolationFactor) - f.Global->StartFrame) * (1000 / f.UpdateRate)) };

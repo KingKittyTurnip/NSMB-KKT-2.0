@@ -45,7 +45,7 @@ namespace Quantum {
                         } else {
                             //spawn gamemode objectives
                             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
-                            var gamemode = f.FindAsset(f.SimulationConfig.StarChasers) as StarChasersGamemode;
+                            var gamemode = f.FindAsset(f.Global->Rules.Gamemode) as StarChasersGamemode;
                             EntityRef newStarEntity = f.Create(gamemode.BigStarPrototype);
                             var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
                             f.Unsafe.GetPointer<Transform2D>(newStarEntity)->Position = f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position;

@@ -12,7 +12,7 @@ namespace Quantum {
             public EntityRef Entity;
             public Transform2D* Transform;
             public GenericMover* GenericMover;
-            public MovingPlatform* Platform;
+            //public MovingPlatform* Platform; //KKT Mod Removal
         }
 
 #if MULTITHREADED
@@ -26,7 +26,7 @@ namespace Quantum {
                 return;
             }
 
-            var platform = filter.Platform;
+            //var platform = filter.Platform; //KKT Mod Removal
             var genericMover = filter.GenericMover;
             var transform = filter.Transform;
             var asset = f.FindAsset(genericMover->MoverAsset);
@@ -44,7 +44,8 @@ namespace Quantum {
                 velocity = FPVector2.Zero;
             }
 
-            platform->Velocity = velocity * f.UpdateRate;
+            if (f.Unsafe.TryGetPointer<MovingPlatform>(filter.Entity, out var platform)) //KKT Mod
+                platform->Velocity = velocity * f.UpdateRate;
         }
 
         private static FPVector2 SamplePosition(GenericMoverAsset.PathNode[] positions, FP sample, GenericMoverAsset.LoopingMode loopMode) {

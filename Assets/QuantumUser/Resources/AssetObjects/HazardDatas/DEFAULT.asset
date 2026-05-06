@@ -30,18 +30,10 @@ MonoBehaviour:
         Gamemode:
           Id:
             Value: 326486899682662279
-        GamemodeStarChasersEnabled:
-          Value: 1
         StarsToWin: 15
         StarFrequency: 10
-        GamemodeCoinRunnersEnabled:
-          Value: 0
-        StarcoinFrequency: 10
-        GamemodeBalloonBattleEnabled:
-          Value: 0
-        MaxBalloons: 10
-        GamemodeBombchasersEnabled:
-          Value: 0
+        ModifierCoinsEnabled:
+          Value: 1
         CoinsForPowerup: 5
         RouletteBlocksEnabled:
           Value: 0
@@ -130,6 +122,8 @@ MonoBehaviour:
         - Chance:
             Value: 7
           Items: []
+        ModifierHazardsEnabled:
+          Value: 1
         MaxHazards: 10
         HazardFrequency: 10
         HeftyPercentage:
@@ -280,6 +274,18 @@ MonoBehaviour:
           SpawnFridge:
             Value: 1
           Extra: 
+        - Name: Cloud Bill
+          HazardPrototype:
+            Id:
+              Value: 1406808205652346148
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra: 0200
         - Name: Tanoomba
           HazardPrototype:
             Id:
@@ -387,13 +393,21 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 0000
-        Lives: 0
-        TimerMinutes: 0
-        TeamsEnabled:
+          Extra: 
+        ModifierLivesEnabled:
           Value: 0
-        BulbAbilityCount: 0
+        Lives: 3
+        ModifierTimerEnabled:
+          Value: 0
+        TimerMinutes: 8
+        ModifierTeamsEnabled:
+          Value: 0
+        ModifierBulbEnabled:
+          Value: 0
+        BulbAbilityCount: 3
         HostControl:
+          Value: 0
+        ModifierExtrasEnabled:
           Value: 0
         DisableStageRestrictions:
           Value: 0
@@ -412,18 +426,10 @@ MonoBehaviour:
         Gamemode:
           Id:
             Value: 326486899682662279
-        GamemodeStarChasersEnabled:
-          Value: 1
         StarsToWin: 30
         StarFrequency: 0
-        GamemodeCoinRunnersEnabled:
-          Value: 0
-        StarcoinFrequency: 0
-        GamemodeBalloonBattleEnabled:
-          Value: 0
-        MaxBalloons: 0
-        GamemodeBombchasersEnabled:
-          Value: 0
+        ModifierCoinsEnabled:
+          Value: 1
         CoinsForPowerup: 3
         RouletteBlocksEnabled:
           Value: 0
@@ -512,64 +518,30 @@ MonoBehaviour:
         - Chance:
             Value: 7
           Items: []
-        MaxHazards: 2
+        ModifierHazardsEnabled:
+          Value: 1
+        MaxHazards: 0
         HazardFrequency: 0
         HeftyPercentage:
-          RawValue: 65536
+          RawValue: 196608
         HazardLifetime: 80
         Hazards:
         - Name: Springboard
           HazardPrototype:
             Id:
-              Value: 1425013984214867549
+              Value: 1406808205652346148
           Team: 255
           Hefty:
-            Value: 1
+            Value: 0
           SpawnRandom:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 00
+          Extra: 0200
         - Name: Springboard
           HazardPrototype:
             Id:
-              Value: 1425013984214867549
-          Team: 255
-          Hefty:
-            Value: 1
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra: 01
-        - Name: Springboard
-          HazardPrototype:
-            Id:
-              Value: 1357720639578944744
-          Team: 255
-          Hefty:
-            Value: 1
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra: 01
-        - Name: Springboard
-          HazardPrototype:
-            Id:
-              Value: 1417407889661057047
-          Team: 255
-          Hefty:
-            Value: 1
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra: 01
-        - Name: Springboard
-          HazardPrototype:
-            Id:
-              Value: 1516621902257113064
+              Value: 1394417262128408316
           Team: 255
           Hefty:
             Value: 1
@@ -578,12 +550,20 @@ MonoBehaviour:
           SpawnFridge:
             Value: 1
           Extra: 0000
+        ModifierLivesEnabled:
+          Value: 0
         Lives: 0
+        ModifierTimerEnabled:
+          Value: 0
         TimerMinutes: 0
-        TeamsEnabled:
+        ModifierTeamsEnabled:
+          Value: 0
+        ModifierBulbEnabled:
           Value: 0
         BulbAbilityCount: 0
         HostControl:
+          Value: 0
+        ModifierExtrasEnabled:
           Value: 0
         DisableStageRestrictions:
           Value: 0
@@ -602,17 +582,9 @@ MonoBehaviour:
         Gamemode:
           Id:
             Value: 326486899682662279
-        GamemodeStarChasersEnabled:
-          Value: 1
         StarsToWin: 30
         StarFrequency: 0
-        GamemodeCoinRunnersEnabled:
-          Value: 0
-        StarcoinFrequency: 0
-        GamemodeBalloonBattleEnabled:
-          Value: 0
-        MaxBalloons: 0
-        GamemodeBombchasersEnabled:
+        ModifierCoinsEnabled:
           Value: 0
         CoinsForPowerup: 1
         RouletteBlocksEnabled:
@@ -924,6 +896,8 @@ MonoBehaviour:
         - Chance:
             Value: 7
           Items: []
+        ModifierHazardsEnabled:
+          Value: 0
         MaxHazards: 0
         HazardFrequency: 0
         HeftyPercentage:
@@ -1074,12 +1048,20 @@ MonoBehaviour:
           SpawnFridge:
             Value: 1
           Extra: 0106
+        ModifierLivesEnabled:
+          Value: 0
         Lives: 0
+        ModifierTimerEnabled:
+          Value: 0
         TimerMinutes: 0
-        TeamsEnabled:
+        ModifierTeamsEnabled:
+          Value: 0
+        ModifierBulbEnabled:
           Value: 0
         BulbAbilityCount: 0
         HostControl:
+          Value: 0
+        ModifierExtrasEnabled:
           Value: 0
         DisableStageRestrictions:
           Value: 0
@@ -1098,17 +1080,9 @@ MonoBehaviour:
         Gamemode:
           Id:
             Value: 326486899682662279
-        GamemodeStarChasersEnabled:
-          Value: 1
         StarsToWin: 15
         StarFrequency: 10
-        GamemodeCoinRunnersEnabled:
-          Value: 0
-        StarcoinFrequency: 10
-        GamemodeBalloonBattleEnabled:
-          Value: 0
-        MaxBalloons: 10
-        GamemodeBombchasersEnabled:
+        ModifierCoinsEnabled:
           Value: 0
         CoinsForPowerup: 8
         RouletteBlocksEnabled:
@@ -1174,18 +1148,28 @@ MonoBehaviour:
         - Chance:
             Value: 7
           Items: []
+        ModifierHazardsEnabled:
+          Value: 0
         MaxHazards: 0
         HazardFrequency: 0
         HeftyPercentage:
           RawValue: 7864
         HazardLifetime: 80
         Hazards: []
+        ModifierLivesEnabled:
+          Value: 0
         Lives: 0
+        ModifierTimerEnabled:
+          Value: 0
         TimerMinutes: 0
-        TeamsEnabled:
+        ModifierTeamsEnabled:
+          Value: 0
+        ModifierBulbEnabled:
           Value: 0
         BulbAbilityCount: 0
         HostControl:
+          Value: 0
+        ModifierExtrasEnabled:
           Value: 0
         DisableStageRestrictions:
           Value: 0
@@ -1204,17 +1188,9 @@ MonoBehaviour:
         Gamemode:
           Id:
             Value: 326486899682662279
-        GamemodeStarChasersEnabled:
-          Value: 1
         StarsToWin: 30
         StarFrequency: 0
-        GamemodeCoinRunnersEnabled:
-          Value: 0
-        StarcoinFrequency: 0
-        GamemodeBalloonBattleEnabled:
-          Value: 0
-        MaxBalloons: 0
-        GamemodeBombchasersEnabled:
+        ModifierCoinsEnabled:
           Value: 0
         CoinsForPowerup: 1
         RouletteBlocksEnabled:
@@ -1259,6 +1235,8 @@ MonoBehaviour:
         - Chance:
             Value: 10
           Items: []
+        ModifierHazardsEnabled:
+          Value: 0
         MaxHazards: 30
         HazardFrequency: 1
         HeftyPercentage:
@@ -1409,12 +1387,20 @@ MonoBehaviour:
           SpawnFridge:
             Value: 1
           Extra: 0106
+        ModifierLivesEnabled:
+          Value: 0
         Lives: 0
+        ModifierTimerEnabled:
+          Value: 0
         TimerMinutes: 0
-        TeamsEnabled:
+        ModifierTeamsEnabled:
+          Value: 0
+        ModifierBulbEnabled:
           Value: 0
         BulbAbilityCount: 0
         HostControl:
+          Value: 0
+        ModifierExtrasEnabled:
           Value: 0
         DisableStageRestrictions:
           Value: 0
@@ -2085,7 +2071,7 @@ MonoBehaviour:
     - Name: Cloud bill
       entityPrototype:
         Id:
-          Value: 1492502967219584567
+          Value: 1406808205652346148
       Icon: {fileID: 0}
       type: 2
       categorey: 4096
@@ -2095,7 +2081,36 @@ MonoBehaviour:
       SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 3
-      SpecialValues: []
+      SpecialValues:
+      - ButtonName: Cloud Trail Length
+        ButtonType: 1
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 4
+        valuenames:
+        - Very Short (3)
+        - Short (7)
+        - Normal (12)
+        - Long (18)
+        - Very Long (28)
+      - ButtonName: Direction
+        ButtonType: 1
+        BaseValue: 1
+        ValueRange:
+          X: 0
+          Y: 2
+        valuenames:
+        - Random
+        - Left
+        - Right
+      - ButtonName: Clouds Stay After Death
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Tanoomba
       entityPrototype:
         Id:

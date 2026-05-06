@@ -97,7 +97,7 @@ namespace Quantum {
         public readonly bool IsInKnockback => CurrentKnockback != KnockbackStrength.None;
         public readonly bool CanCollectOwnTeamsObjectiveCoins => !IsInKnockback && DamageInvincibilityFrames == 0;
 
-        public readonly bool IsValid(Frame f) => !Disconnected && !(f.Global->Rules.IsLivesEnabled && Lives == 0);
+        public readonly bool IsValid(Frame f) => !Disconnected && !(f.Global->Rules.ModifierLivesEnabled && Lives == 0);
 
         public readonly byte? GetTeam(Frame f) {
             var data = QuantumUtils.GetPlayerData(f, PlayerRef);

@@ -1,0 +1,38 @@
+global {
+	ushort QSwitchATimer;
+    ushort QSwitchBTimer;
+    ushort QSwitchCTimer;
+}
+
+component QuestionSwitch {
+    SwitchFlag SignalSent;
+
+    [ExcludeFromPrototype] bool Pressed;
+
+    FPVector2 UnpressedSize;
+    FPVector2 PressedSize;
+}
+
+component QuestionSwitchReceiver {
+    SwitchFlag ListenFor;
+    bool TicksTimer;
+    FP Timer;
+
+    [ExcludeFromPrototype] bool EndedMusic;
+}
+
+enum SwitchFlag : Byte {
+    QSwitchA,
+    QSwitchB,
+    QSwitchC,
+}
+
+signal OnQuestionSwitchSignal(SwitchFlag flag, bool Activated);
+
+event QuestionSwitchAnimation {
+    EntityRef Entity;
+    bool Activate;
+}
+
+event QuestionSwitchEndMusic {
+}

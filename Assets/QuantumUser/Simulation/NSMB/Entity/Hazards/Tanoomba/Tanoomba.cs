@@ -144,9 +144,9 @@ namespace Quantum {
 
             FPVector2 center = transform->Position + collider->Shape.Centroid;
 
-            if (f.Global->Rules.IsStageCoinsEnabled) {
+            if (f.Global->Rules.ModifierCoinsEnabled) {
                 // Spawn coin
-                var gamemode = f.FindAsset(f.SimulationConfig.StarChasers);
+                var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
                 gamemode.SpawnLooseCoin(f, center);
             }
 

@@ -92,7 +92,7 @@ namespace NSMB.UI.Game.Results {
             if (playerInfo is PlayerInformation info) {
                 if (Settings.Instance.GraphicsColorblind) {
                     Frame f = QuantumRunner.DefaultGame.Frames.Predicted;
-                    if (f.Global->Rules.TeamsEnabled) {
+                    if (f.Global->Rules.ModifierTeamsEnabled) {
                         var teams = f.Context.GetAllAssets<TeamAsset>();
                         if (info.Team < teams.Count) {
                             var team = teams[info.Team];

@@ -91,7 +91,7 @@ namespace NSMB.UI.Game.Scoreboard {
             background.color = backgroundColor;
 
             if (Settings.Instance.GraphicsColorblind) {
-                if (f.Global->Rules.TeamsEnabled) {
+                if (f.Global->Rules.ModifierTeamsEnabled) {
                     var teams = f.Context.GetAllAssets<TeamAsset>();
                     if (info.Team < teams.Count) {
                         var team = teams[info.Team];
@@ -121,7 +121,7 @@ namespace NSMB.UI.Game.Scoreboard {
             }
 
             StringBuilder scoreBuilder = new();
-            if (f.Global->Rules.IsLivesEnabled) {
+            if (f.Global->Rules.ModifierLivesEnabled) {
                 scoreBuilder.Append(character.UiString).Append(Utils.GetSymbolString(lives.ToString()));
             }
             scoreBuilder.Append(Utils.GetSymbolString(gamemode.ObjectiveSymbolPrefix + objective.ToString()));

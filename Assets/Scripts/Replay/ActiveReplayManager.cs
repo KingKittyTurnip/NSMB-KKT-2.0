@@ -157,6 +157,7 @@ namespace NSMB.Replay {
                     ReplayLengthInFrames = jsonReplay.LastTick - jsonReplay.InitialTick,
 
                     Rules = new GameRulesPrototype {
+                        AdvancedLobby = rules.AdvancedLobby,
                         Stage = rules.Stage,
                         Gamemode = rules.Gamemode,
                         StarsToWin = rules.StarsToWin,
@@ -166,16 +167,28 @@ namespace NSMB.Replay {
                         /*
                         CustomPowerupsEnabled = rules.CustomPowerupsEnabled,
                         */
-                        TeamsEnabled = rules.TeamsEnabled,
+                        ModifierTeamsEnabled = rules.ModifierTeamsEnabled,
                         //KKT Mod
-                        GamemodeStarChasersEnabled = rules.GamemodeStarChasersEnabled,
                         StarFrequency = rules.StarFrequency,
-                        GamemodeCoinRunnersEnabled = rules.GamemodeCoinRunnersEnabled,
-                        StarcoinFrequency = rules.StarcoinFrequency,
-                        GamemodeBalloonBattleEnabled = rules.GamemodeBalloonBattleEnabled,
-                        MaxBalloons = rules.MaxBalloons,
-                        GamemodeBombchasersEnabled = rules.GamemodeBombchasersEnabled,
-                        //MaxHazards = rules.IsHazardsEnabled,
+                        //KKT Mod
+                        ModifierCoinsEnabled = rules.ModifierCoinsEnabled,
+                        RouletteBlocksEnabled = rules.RouletteBlocksEnabled,
+                        //Items = rules.Items,//bruh
+                        ModifierHazardsEnabled = rules.ModifierHazardsEnabled,
+                        MaxHazards = rules.MaxHazards,
+                        HazardFrequency = rules.HazardFrequency,
+                        HeftyPercentage = rules.HeftyPercentage,
+                        HazardLifetime = rules.HazardLifetime,
+                        //Hazards = rules.Hazards,//bruh
+                        ModifierLivesEnabled = rules.ModifierLivesEnabled,
+                        ModifierTimerEnabled = rules.ModifierTimerEnabled,
+                        ModifierBulbEnabled = rules.ModifierBulbEnabled,
+                        BulbAbilityCount = rules.BulbAbilityCount,
+                        HostControl = rules.HostControl,
+                        ModifierExtrasEnabled = rules.ModifierExtrasEnabled,
+                        DisableComplexStageRestrictions = rules.DisableComplexStageRestrictions,
+                        DisableStageRestrictions = rules.DisableStageRestrictions,
+                        EveryItemHasTheSameChance = rules.EveryItemHasTheSameChance,
                     },
                     PlayerInformation = playerInformation,
                     WinningTeam = winner,

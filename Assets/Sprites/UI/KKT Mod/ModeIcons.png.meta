@@ -241,7 +241,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -263,7 +263,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -285,7 +285,7 @@ TextureImporter:
         width: 15
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -307,7 +307,7 @@ TextureImporter:
         width: 17
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -316,6 +316,28 @@ TextureImporter:
       bones: []
       spriteID: 3ca15d5335ce70b4586d8995ff563c6b
       internalID: -1566318382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ModeIcon_Rulemode_Extras
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a6d5b97e20725b43926c2893ab9d0f8
+      internalID: 2108252025
       vertices: []
       indices: 
       edges: []
@@ -339,6 +361,7 @@ TextureImporter:
       ModeIcon_Gamemode_CoinRunners: 225822345
       ModeIcon_Gamemode_Star: 488905332
       ModeIcon_Rulemode_CoinsForPowerup: -518832288
+      ModeIcon_Rulemode_Extras: 2108252025
       ModeIcon_Rulemode_Hazards: 1820849725
       ModeIcon_Rulemode_Lives: 138840146
       ModeIcon_Rulemode_Teams: -1566318382

@@ -137,14 +137,8 @@ namespace Quantum {
                     foreach (var otherGamemode in f.Context.GetAllAssets<GamemodeAsset>()) {
                         otherGamemode.DisableGamemode(f);
                     }
-                    /*
                     var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
                     gamemode.EnableGamemode(f);
-                    */
-                    if (f.Global->Rules.GamemodeStarChasersEnabled)
-                        f.FindAsset(f.SimulationConfig.StarChasers).EnableGamemode(f);
-                    if (f.Global->Rules.GamemodeCoinRunnersEnabled)
-                        f.FindAsset(f.SimulationConfig.CoinRunners).EnableGamemode(f);
 
                     f.Signals.OnGameStarting();
                     f.Events.GameStarted();
@@ -424,7 +418,7 @@ namespace Quantum {
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(newPlayer);
                 mario->PlayerRef = data->PlayerRef;
                 mario->Lives = (byte) f.Global->Rules.Lives;
-                data->RealTeam = (byte) (f.Global->Rules.TeamsEnabled ? data->RequestedTeam : teamCount++);
+                data->RealTeam = (byte) (f.Global->Rules.ModifierTeamsEnabled ? data->RequestedTeam : teamCount++);
 
                 var newTransform = f.Unsafe.GetPointer<Transform2D>(newPlayer);
                 newTransform->Position = stage.Spawnpoint;

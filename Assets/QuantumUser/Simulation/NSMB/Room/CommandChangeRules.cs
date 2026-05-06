@@ -1,5 +1,6 @@
 using Photon.Deterministic;
 using System;
+using System.Runtime.Remoting.Contexts;
 
 namespace Quantum {
     public class CommandChangeRules : DeterministicCommand, ILobbyCommand {
@@ -17,10 +18,15 @@ namespace Quantum {
         public bool CustomPowerupsEnabled;
         public bool DrawOnTimeUp;
         */
-        public bool StarChasersEnabled;
         public byte StarFrequency;
-        public bool CoinRunnersEnabled;
-        public byte StarcoinFrequency;
+        //TODO: add the rest of the settings (also note the buttons don't seem to work, might be lack of a label)
+
+        public bool CoinsEnabled;
+        public bool HazardEnabled;
+        public bool LivesEnabled;
+        public bool TimerEnabled;
+        public bool BulbEnabled;
+        public bool ExtrasEnabled;
 
         public override void Serialize(BitStream stream) {
             if (stream.Writing) {
@@ -40,10 +46,15 @@ namespace Quantum {
             stream.Serialize(ref CustomPowerupsEnabled);
             stream.Serialize(ref DrawOnTimeUp);
             */
-            stream.Serialize(ref StarChasersEnabled);
+            //KKT Mod
             stream.Serialize(ref StarFrequency);
-            stream.Serialize(ref CoinRunnersEnabled);
-            stream.Serialize(ref StarcoinFrequency);
+
+            stream.Serialize(ref CoinsEnabled);
+            stream.Serialize(ref HazardEnabled);
+            stream.Serialize(ref LivesEnabled);
+            stream.Serialize(ref TimerEnabled);
+            stream.Serialize(ref BulbEnabled);
+            stream.Serialize(ref ExtrasEnabled);
         }
 
         public unsafe void Execute(Frame f, PlayerRef sender, PlayerData* playerData) {
@@ -57,17 +68,30 @@ namespace Quantum {
             bool gamemodeChanged = false;
             bool levelChanged = false;
 
-            /*
+            var DefaultRules = f.FindAsset(f.SimulationConfig.BaseRules).Rules.BaseRulesList[0].DefaultRules;
+
+            
             if (rulesChanges.HasFlag(Rules.Gamemode)) {
                 gamemodeChanged = rules.Gamemode != Gamemode;
 
                 GameRules tempRules = default;
-                f.FindAsset(Gamemode).DefaultRules.Materialize(f, ref tempRules);
+                //f.FindAsset(Gamemode).DefaultRules.Materialize(f, ref tempRules);
+                if (f.FindAsset(Gamemode) is StarChasersGamemode) {
+                    rules.StarsToWin = DefaultRules.StarsToWin;
+                    rules.StarFrequency = DefaultRules.StarFrequency;
+                } else if (f.FindAsset(Gamemode) is CoinRunnersGamemode) {
+                    rules.StarsToWin = 0;
+                    rules.StarFrequency = DefaultRules.StarFrequency;
+                } else if (false) {
+                    rules.StarsToWin = DefaultRules.StarsToWin;
+                } else if (false) {
+
+                }
                 tempRules.Stage = rules.Stage;
 
                 rules = tempRules;
             }
-            */
+            
             if (rulesChanges.HasFlag(Rules.Stage)) {
                 levelChanged = rules.Stage != Stage;
                 rules.Stage = Stage;
@@ -85,7 +109,7 @@ namespace Quantum {
                 rules.TimerMinutes = TimerMinutes;
             }
             if (rulesChanges.HasFlag(Rules.TeamsEnabled)) {
-                rules.TeamsEnabled = TeamsEnabled;
+                rules.ModifierTeamsEnabled = TeamsEnabled;
             }
             /*
             if (rulesChanges.HasFlag(Rules.CustomPowerupsEnabled)) {
@@ -95,18 +119,96 @@ namespace Quantum {
                 rules.DrawOnTimeUp = DrawOnTimeUp;
             }
             */
-            //KKT Mod
-            if (rulesChanges.HasFlag(Rules.StarChasers)) {
-                rules.GamemodeStarChasersEnabled = StarChasersEnabled;
+            //KKT Mod Toggle Rules
+            if (rulesChanges.HasFlag(Rules.ToggleCoins)) {
+                UnityEngine.Debug.Log("Toggle coins: " + CoinsEnabled);
+                if (CoinsEnabled) {
+                    rules.ModifierCoinsEnabled = true;
+                    rules.CoinsForPowerup = DefaultRules.CoinsForPowerup;
+                    rules.RouletteBlocksEnabled = DefaultRules.RouletteBlocksEnabled;
+                } else {
+                    rules.ModifierCoinsEnabled = false;
+                    rules.CoinsForPowerup = 0;
+                    rules.RouletteBlocksEnabled = false;
+
+                    //i coppied this from the CodeGen.Prototypes script idk if it works
+                    if (DefaultRules.Items.Length == 0) {
+                        rules.Items = default;
+                    } else {
+                        var list = f.AllocateList(out rules.Items, DefaultRules.Items.Length);
+                        for (int i = 0; i < DefaultRules.Items.Length; ++i) {
+                            Quantum.ItemList tmp = default;
+                            DefaultRules.Items[i].Materialize(f, ref tmp);
+                            list.Add(tmp);
+                        }
+                    }
+                }
+                UnityEngine.Debug.Log("Toggled!: " + rules.ModifierCoinsEnabled);
             }
+            if (rulesChanges.HasFlag(Rules.ToggleHazards)) {
+                if (HazardEnabled) {
+                    rules.ModifierHazardsEnabled = true;
+                    rules.MaxHazards = DefaultRules.MaxHazards;
+                    rules.HazardFrequency = DefaultRules.HazardFrequency;
+                    rules.HeftyPercentage = DefaultRules.HeftyPercentage;
+                    rules.HazardLifetime = DefaultRules.HazardLifetime;
+                } else {
+                    rules.ModifierHazardsEnabled = false;
+                    rules.MaxHazards = 0;
+                    rules.HazardFrequency = 0;
+                    rules.HeftyPercentage = 0;
+                    rules.HazardLifetime = 3;
+
+                    //i coppied this from the CodeGen.Prototypes script idk if it works
+                    if (DefaultRules.Hazards.Length == 0) {
+                        rules.Hazards = default;
+                    } else {
+                        var list = f.AllocateList(out rules.Hazards, DefaultRules.Hazards.Length);
+                        for (int i = 0; i < DefaultRules.Hazards.Length; ++i) {
+                            Quantum.HazardList tmp = default;
+                            DefaultRules.Hazards[i].Materialize(f, ref tmp);
+                            list.Add(tmp);
+                        }
+                    }
+                }
+            }
+            if (rulesChanges.HasFlag(Rules.ToggleLives)) {
+                if (LivesEnabled) {
+                    rules.ModifierLivesEnabled = true;
+                    rules.Lives = DefaultRules.Lives;
+                } else {
+                    rules.ModifierLivesEnabled = false;
+                    rules.Lives = 0;
+                }
+            }
+            if (rulesChanges.HasFlag(Rules.ToggleTimer)) {
+                if (TimerEnabled) {
+                    rules.ModifierTimerEnabled = true;
+                    rules.TimerMinutes = 8; //Forced Default
+                } else {
+                    rules.ModifierTimerEnabled = false;
+                    rules.TimerMinutes = 0;
+                }
+            }
+            if (rulesChanges.HasFlag(Rules.ToggleBulb)) {
+                if (BulbEnabled) {
+                    rules.ModifierBulbEnabled = true;
+                    rules.BulbAbilityCount = DefaultRules.BulbAbilityCount;
+                } else {
+                    rules.ModifierBulbEnabled = false;
+                    rules.BulbAbilityCount = 0;
+                }
+            }
+            if (rulesChanges.HasFlag(Rules.ToggleTeams)) {
+                if (TeamsEnabled) {
+                    rules.ModifierTeamsEnabled = true;
+                } else {
+                    rules.ModifierTeamsEnabled = false;
+                }
+            }
+            //KKT Mod
             if (rulesChanges.HasFlag(Rules.StarFreq)) {
                 rules.StarFrequency = StarFrequency;
-            }
-            if (rulesChanges.HasFlag(Rules.CoinRunners)) {
-                rules.GamemodeCoinRunnersEnabled = CoinRunnersEnabled;
-            }
-            if (rulesChanges.HasFlag(Rules.StarCoinFreq)) {
-                rules.StarcoinFrequency = StarcoinFrequency;
             }
 
             f.Global->Rules = rules;
@@ -118,10 +220,10 @@ namespace Quantum {
         }
 
         [Flags]
-        public enum Rules : ushort {
+        public enum Rules : int {
             None = 0,
             Stage = 1 << 0,
-            Gamemode = 1 << 1, //deprecated
+            Gamemode = 1 << 1,
             StarsToWin = 1 << 2,
             CoinsForPowerup = 1 << 3,
             Lives = 1 << 4,
@@ -129,12 +231,17 @@ namespace Quantum {
             TeamsEnabled = 1 << 6,
             CustomPowerupsEnabled = 1 << 7, //deprecated
             DrawOnTimeUp = 1 << 8, //deprecated
-            //KKT Mod
-            StarChasers = 1 << 9,
-            StarFreq = 1 << 10,
-            CoinRunners = 1 << 11,
-            StarCoinFreq = 1 << 12,
-            //Hazards = 1 << 13,
+            //KKT Mod enable rules
+            ToggleCoins = 1 << 9,
+            ToggleHazards = 1 << 10,
+            ToggleLives = 1 << 11,
+            ToggleTimer = 1 << 12,
+            ToggleTeams = 1 << 13,
+            ToggleBulb = 1 << 14,
+            ToggleExtras = 1 << 15,
+            //KKT Mod rules
+            StarFreq = 1 << 16,
+            //StarCoinFreq = 1 << 17,
         }
     }
 }

@@ -123,7 +123,7 @@ namespace NSMB.UI.Game.Scoreboard {
                     return starDiff;
                 }
 
-                if (f.Global->Rules.IsLivesEnabled && (marioA->Lives != marioB->Lives)) {
+                if (f.Global->Rules.ModifierLivesEnabled && (marioA->Lives != marioB->Lives)) {
                     return marioB->Lives - marioA->Lives;
                 }
 
@@ -138,7 +138,7 @@ namespace NSMB.UI.Game.Scoreboard {
         }
 
         public unsafe void UpdateTeamHeader(Frame f) {
-            bool teamsEnabled = f.Global->Rules.TeamsEnabled;
+            bool teamsEnabled = f.Global->Rules.ModifierTeamsEnabled;
             teamHeader.SetActive(teamsEnabled);
 
             if (!teamsEnabled) {

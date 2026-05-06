@@ -11,7 +11,7 @@ public unsafe class OneUpPowerupAsset : PowerupAsset {
     }
 
     public override PowerupReserveResult Collect(Frame f, EntityRef entity) {
-        if (f.Global->Rules.IsLivesEnabled && f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)) {
+        if (f.Global->Rules.ModifierLivesEnabled && f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)) {
             if (mario->Lives < byte.MaxValue) {
                 mario->Lives++;
             }

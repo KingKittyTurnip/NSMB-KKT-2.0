@@ -126,7 +126,7 @@ namespace Quantum {
                 stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
             }
 
-            if (QuantumUtils.Decrement(ref hazardspawner->Lifetime)) {
+            if (hazardspawner->Lifetime > 0 && QuantumUtils.Decrement(ref hazardspawner->Lifetime)) {
                 //Sort Hazards
                 List<HazardList> spawnablehazards = new();
                 var position = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
@@ -169,16 +169,16 @@ namespace Quantum {
                 //SpawnHazard
                 EntityRef newEntity = f.Create(spawnablehazards[pick].HazardPrototype); //error out of range?
                 var newhazardspawnerTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
-                var newhazardspawner = f.Unsafe.GetPointer<Hazard>(newEntity);
-
                 f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, spawnablehazards[pick].Extra);
-                if (newhazardspawner->RestrictSpawnPosition) {
+
+                //things without the hazard script can be created, only cloudbill does this to make the platform act independantly
+                if (f.Unsafe.TryGetPointer<Hazard>(newEntity, out var newhazardspawner) && newhazardspawner->RestrictSpawnPosition) {
                     newhazardspawner->index = (byte) hazardspawner->spawnIndex;
                 } else {
                     f.Global->UsedHazardSpawns.Clear(hazardspawner->spawnIndex);
                     f.Global->UsedHazardSpawnCount--;
                 }
-                DestroySpawner:
+            DestroySpawner:
                 f.Events.PlayPuffParticle(position);
                 f.Destroy(entity);
             }

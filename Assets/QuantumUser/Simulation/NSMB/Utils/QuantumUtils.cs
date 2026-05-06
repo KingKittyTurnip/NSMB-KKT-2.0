@@ -422,7 +422,7 @@ public static unsafe class QuantumUtils {
         }
 
         // Check that at least two teams exist
-        if (f.Global->Rules.TeamsEnabled && playerDataCount > 1) {
+        if (f.Global->Rules.ModifierTeamsEnabled && playerDataCount > 1) {
             byte? firstTeam = null;
             foreach ((_, var pd) in f.Unsafe.GetComponentBlockIterator<PlayerData>()) {
                 if (pd->IsSpectator || pd->ManualSpectator) {

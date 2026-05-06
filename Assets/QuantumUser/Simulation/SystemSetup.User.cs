@@ -92,7 +92,10 @@ namespace Quantum {
                       new HazardSystem(),
 
                       //tornado's must overwrite everything before it
-                      new TornadoSystem()
+                      new CloudBillPlatformSystem(),
+                      new TornadoSystem(),
+                      new QuestionSwitchSystem(),
+                      new QuestionSwitchReceiverSystem()
                 )
             );
             systems.Add(new StageSystem());

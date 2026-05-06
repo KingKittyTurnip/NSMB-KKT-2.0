@@ -35,7 +35,7 @@ namespace Quantum {
 
                 if (goldBlock->Timer >= 40) {
                     var mario = f.Unsafe.GetPointer<MarioPlayer>(goldBlock->AttachedTo);
-                    mario->GamemodeData.CoinRunners.ObjectiveCoins++;//kkt mod changed a -> into a dot for the union to struct conversion
+                    mario->GamemodeData.CoinRunners->ObjectiveCoins++;
                     f.Events.GoldBlockGeneratedObjectiveCoin(entity);
                     f.Events.MarioPlayerObjectiveCoinsChanged(goldBlock->AttachedTo);
                     goldBlock->Timer = 0;
@@ -183,12 +183,9 @@ namespace Quantum {
         }
 
         private static int GetCoinsInGoldBlock(Frame f, MarioPlayer* mario) {
-            var gamemode = f.FindAsset(f.SimulationConfig.CoinRunners);
-            /*
             var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
-            */
             _ = gamemode.GetWinningTeam(f, out int firstPlaceCoins);
-            return FPMath.CeilToInt(25 + (firstPlaceCoins - mario->GamemodeData.CoinRunners.ObjectiveCoins) / Constants._2_50);//kkt mod changed a -> into a dot for the union to struct conversion
+            return FPMath.CeilToInt(25 + (firstPlaceCoins - mario->GamemodeData.CoinRunners->ObjectiveCoins) / Constants._2_50);
         }
     }
 }

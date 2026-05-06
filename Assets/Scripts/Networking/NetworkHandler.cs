@@ -244,7 +244,7 @@ namespace NSMB.Networking {
                 /*
                 CustomPowerups = rules.CustomPowerupsEnabled,
                 */
-                Teams = rules.TeamsEnabled,
+                Teams = rules.ModifierTeamsEnabled,
                 /*
                 DrawOnTimeUp = rules.DrawOnTimeUp,
                 */

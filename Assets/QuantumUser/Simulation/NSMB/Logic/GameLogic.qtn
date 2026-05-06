@@ -37,50 +37,45 @@ struct GameRules {
 	//KKT Mod
 	bool AdvancedLobby;
 	AssetRef<Map> Stage;
-	//this is supposed to be unused but way too much things rely on it so i don't want to remove it to make merges easily compatable
 	AssetRef<GamemodeAsset> Gamemode;
+	int StarsToWin; //coinrunner's coins, balloon battle's balloons
+	byte StarFrequency; //coinrunner's starcoin frequency
+	//bool GamemodeBombchasersEnabled;
 
-	//Star Chasers Group
-	bool GamemodeStarChasersEnabled;
-	  int StarsToWin;
-	  byte StarFrequency;
-	//Coin Runners Group
-	bool GamemodeCoinRunnersEnabled;
-	  byte StarcoinFrequency;
-	//Balloon Battle Group
-	bool GamemodeBalloonBattleEnabled;
-	  byte MaxBalloons;
-	//Bombchasers Group
-	bool GamemodeBombchasersEnabled;
-
-	//Stage Coins Group
-	int CoinsForPowerup;
+    //Stage Coins Group
+    bool ModifierCoinsEnabled;
+    int CoinsForPowerup;
 	bool RouletteBlocksEnabled; //the stage might have to commit to one ? block type, perhaps store it in the stage asset, this will also be used for the disabling of coins
 	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<ItemList> Items;
-	
-	//Hazards Group
-	byte MaxHazards; //10 1-30
+
+    //Hazards Group
+    bool ModifierHazardsEnabled;
+    byte MaxHazards; //10 1-30
     byte HazardFrequency;
     FP HeftyPercentage; //0.12
     int HazardLifetime;
 	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<HazardList> Hazards;
 
-	//Lives Group
-	int Lives;
+    //Lives Group
+    bool ModifierLivesEnabled;
+    int Lives;
 
-	//Timer Group
-	int TimerMinutes;
+    //Timer Group
+    bool ModifierTimerEnabled;
+    int TimerMinutes;
 	//TODO: time up behavior
 
 	//Teams Group
-	bool TeamsEnabled;
-	//TODO: Spawn Teams Together Separate from foes
+	bool ModifierTeamsEnabled;
+    //TODO: Spawn Teams Together Separate from foes
 
-	//Bulb
-	byte BulbAbilityCount; //The Amount Of Options Bulb Has, 0-3
+    //Bulb
+    bool ModifierBulbEnabled;
+    byte BulbAbilityCount; //The Amount Of Options Bulb Has, 0-3
 	bool HostControl; //only the host can choose what the bulb does
 
     //Extras/Experimental Group
+    bool ModifierExtrasEnabled;
     bool DisableStageRestrictions; //disables restrictions stages have (banned hazards, forced character) 
     bool DisableComplexStageRestrictions; //disables restrictions in the complex stage category, this comes with a warning
     bool EveryItemHasTheSameChance; //every item is labeled under middling, insanity occurs

@@ -6,6 +6,7 @@ namespace Quantum {
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<MarioPlayer, BreakableObject>(f, OnMarioBreakableObjectInteract);
             f.Context.Interactions.Register<Starball, BreakableObject>(f, OnStarballBreakableObjectInteract);
+            f.Context.Interactions.Register<ThrowingObject, BreakableObject>(f, OnThrowingObjectBreakableObjectInteract);
             f.Context.Interactions.Register<Boss, BreakableObject>(f, OnBossBreakableObjectInteract);
             f.Context.RegisterPreContactCallback(f, OnMarioBreakableObjectPreContact);
         }
@@ -144,10 +145,17 @@ namespace Quantum {
         private void OnBossBreakableObjectInteract(Frame f, EntityRef bossEntity, EntityRef breakableEntity) {
             TryGenericInteraction(f, bossEntity, breakableEntity);
         }
+        private bool OnThrowingObjectBreakableObjectInteract(Frame f, EntityRef ThrowableEntity, EntityRef breakableEntity, PhysicsContact contact) {
+            return TryGenericInteraction(f, ThrowableEntity, breakableEntity);
+        }
 
         private void OnMarioBreakableObjectPreContact(Frame f, VersusStageData stage, EntityRef entity, PhysicsContact contact, ref bool keepContacts) {
-            if (f.Has<MarioPlayer>(entity) && f.Has<BreakableObject>(contact.Entity)) {
-                keepContacts = TryInteraction(f, entity, contact.Entity, contact);
+            if (f.Has<BreakableObject>(contact.Entity)) { 
+                if (f.Has<MarioPlayer>(entity)) {
+                    keepContacts = TryInteraction(f, entity, contact.Entity, contact);
+                } else {
+                    keepContacts = TryGenericInteraction(f, entity, contact.Entity, contact);
+                }
             }
         }
         #endregion

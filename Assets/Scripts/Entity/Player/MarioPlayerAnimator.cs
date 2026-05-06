@@ -688,7 +688,7 @@ namespace NSMB.Entities.Player {
             if (materialBlock == null) {
                 return;
             }
-            bool teams = PredictedFrame.Global->Rules.TeamsEnabled;
+            bool teams = PredictedFrame.Global->Rules.ModifierTeamsEnabled;
             materialBlock.SetColor(ParamGlowColor, teams || !IsCameraFocus(camera) ? GlowColor : Color.clear);
         }
 

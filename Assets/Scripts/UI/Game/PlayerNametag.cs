@@ -120,7 +120,7 @@ namespace NSMB.UI.Game {
             stringBuilder.Clear();
 
             if (Settings.Instance.GraphicsColorblind) {
-                if (f.Global->Rules.TeamsEnabled && mario->GetTeam(f) is byte teamIndex) {
+                if (f.Global->Rules.ModifierTeamsEnabled && mario->GetTeam(f) is byte teamIndex) {
                     var teams = f.Context.GetAllAssets<TeamAsset>();
                     TeamAsset team = teams[teamIndex % teams.Count];
                     stringBuilder.Append(team.textSpriteColorblindBig);
@@ -130,7 +130,7 @@ namespace NSMB.UI.Game {
             }
             stringBuilder.AppendLine(cachedNickname);
 
-            if (f.Global->Rules.IsLivesEnabled) {
+            if (f.Global->Rules.ModifierLivesEnabled) {
                 stringBuilder.Append(character.UiString).Append(Utils.GetSymbolString("x" + mario->Lives)).Append(' ');
             }
 

@@ -16,6 +16,7 @@ public unsafe class BowserShellAnimator : QuantumEntityViewComponent {
 
     public void Start() {
         QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
+        QuantumEvent.Subscribe<EventThrowObjSimple>(this, OnPlayBump);
     }
     public override unsafe void OnUpdateView() {
         Frame f = PredictedFrame;
@@ -48,5 +49,12 @@ public unsafe class BowserShellAnimator : QuantumEntityViewComponent {
         }
 
         sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(e.Combo));
+    }
+    private void OnPlayBump(EventThrowObjSimple e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+
+        sfx.PlayOneShot(SoundEffect.World_Block_Bump);
     }
 }

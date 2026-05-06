@@ -126,6 +126,7 @@ namespace Quantum {
             case LiquidType.FreezingWater: {
                 //push out of the liquid, we don't want mario in here
                 filter.PhysicsObject->Velocity.Y = 10;
+                mario->DoEntityBounce = true;
                 break;
             }
             case LiquidType.Fence: {
@@ -774,7 +775,7 @@ namespace Quantum {
                 return;
             }
 
-            if (mario->IsWallsliding) {
+            if (mario->IsWallsliding || (mario->JumpBufferFrames > 0 && mario->WalljumpFrames == 0 && (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall))) {
                 // Walljump check
                 if (mario->MetalSlowdownDelay <= 0)//KKT Mod, this messes with our boost preservation
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -FP._0_25, FP._0_25);
@@ -795,8 +796,8 @@ namespace Quantum {
                     mario->JumpBufferFrames = 0;
                 }
             } else if (physicsObject->IsTouchingLeftWall || physicsObject->IsTouchingRightWall) {
-                // Walljump starting check --- KKT Mod, removed the check that stops you from going up and not walljumping
-                bool canWallslide = !mario->IsInShell /*&& physicsObject->Velocity.Y < -FP._0_10*/ && !mario->IsGroundpounding && !physicsObject->IsTouchingGround && !mario->HeldEntity.IsValid && mario->CurrentPowerupState != PowerupState.MegaMushroom && !mario->IsSpinnerFlying && !mario->IsDrilling && !mario->IsCrouching && !mario->IsSliding && !mario->IsInKnockback && mario->PropellerLaunchFrames == 0;
+                // Walljump starting check
+                bool canWallslide = !mario->IsInShell && physicsObject->Velocity.Y < -FP._0_10 && !mario->IsGroundpounding && !physicsObject->IsTouchingGround && !mario->HeldEntity.IsValid && mario->CurrentPowerupState != PowerupState.MegaMushroom && !mario->IsSpinnerFlying && !mario->IsDrilling && !mario->IsCrouching && !mario->IsSliding && !mario->IsInKnockback && mario->PropellerLaunchFrames == 0;
                 if (!canWallslide) {
                     return;
                 }
@@ -2212,7 +2213,7 @@ namespace Quantum {
             // Death up
             if (mario->DeathAnimationFrames > 0 && QuantumUtils.Decrement(ref mario->DeathAnimationFrames)) {
                 bool doRespawn = mario->IsValid(f);
-                if (!doRespawn && f.FindAsset(f.Global->Rules.Gamemode) is StarChasersGamemode && mario->GamemodeData.StarChasers.Stars > 0) {//kkt mod changed a -> into a dot for the union to struct conversion
+                if (!doRespawn && f.FindAsset(f.Global->Rules.Gamemode) is StarChasersGamemode && mario->GamemodeData.StarChasers->Stars > 0) {
                     // Try to drop more stars
                     f.Signals.OnMarioPlayerDropObjective(entity, 1, filter.Entity);
                     mario->DeathAnimationFrames = 36;
@@ -2238,7 +2239,7 @@ namespace Quantum {
 
         public static EntityRef SpawnItem(Frame f, EntityRef marioEntity, MarioPlayer* mario, AssetRef<EntityPrototype> prefab, bool fromBlock) {
             /*
-            var gamemode = f.FindAsset(f.SimulationConfig.StarChasers);
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             if (!prefab.IsValid) {
                 prefab = gamemode.GetRandomItem(f, mario, fromBlock).Prefab;
             }
@@ -2250,7 +2251,7 @@ namespace Quantum {
             */
 
             #region KKT Mod
-            var gamemode = f.FindAsset(f.SimulationConfig.StarChasers);
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
             PowerupData powerupdata = new PowerupData();
             if (!prefab.IsValid) {
                 powerupdata = gamemode.NEWGetRandomItem(f, mario, fromBlock);

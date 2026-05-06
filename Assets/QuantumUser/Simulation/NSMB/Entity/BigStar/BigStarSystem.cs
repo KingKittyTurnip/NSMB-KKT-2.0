@@ -57,7 +57,7 @@ namespace Quantum {
 
                 if (hits.Count == 0) {
                     // Hit no players
-                    var gamemode = (StarChasersGamemode) f.FindAsset(f.SimulationConfig.StarChasers);//KKT Mod changed this to always be starchasers
+                    var gamemode = (StarChasersGamemode) f.FindAsset(f.Global->Rules.Gamemode);
                     EntityRef newEntity = f.Create(gamemode.BigStarPrototype);
                     f.Global->MainBigStar = newEntity;
                     var newStarTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
@@ -173,7 +173,7 @@ namespace Quantum {
                 return;
             }
 
-            mario->GamemodeData.StarChasers.Stars++;//kkt mod changed a -> into a dot for the union to struct conversion
+            mario->GamemodeData.StarChasers->Stars++;
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
 
             if (starEntity == f.Global->MainBigStar) { //bigStar->IsStationary ?? might break something
@@ -220,10 +220,10 @@ namespace Quantum {
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
             var transform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
 
-            bool fastStars = amount > 2 && mario->GamemodeData.StarChasers.Stars > 2;//kkt mod changed a -> into a dot for the union to struct conversion
+            bool fastStars = amount > 2 && mario->GamemodeData.StarChasers->Stars > 2;
             int starDirection = mario->FacingRight ? 1 : 2;
 
-            if (f.Global->Rules.IsLivesEnabled && mario->Lives == 0) {
+            if (f.Global->Rules.ModifierLivesEnabled && mario->Lives == 0) {
                 fastStars = true;
                 mario->NoLivesStarDirection = (byte) ((mario->NoLivesStarDirection + 1) % 4);
                 starDirection = mario->NoLivesStarDirection;
@@ -237,7 +237,7 @@ namespace Quantum {
 
             int droppedStars = 0;
             while (amount > 0) {
-                if (mario->GamemodeData.StarChasers.Stars <= 0) {//kkt mod changed a -> into a dot for the union to struct conversion
+                if (mario->GamemodeData.StarChasers->Stars <= 0) {
                     break;
                 }
 
@@ -250,16 +250,14 @@ namespace Quantum {
                     };
                 }
 
-                var gamemode = f.FindAsset(f.SimulationConfig.StarChasers) as StarChasersGamemode;//KKT Mod changed this to always be starchasers
+                var gamemode = f.FindAsset(f.Global->Rules.Gamemode) as StarChasersGamemode;
                 EntityRef newStarEntity = f.Create(gamemode.BigStarPrototype);
                 var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
                 var newStarTransform = f.Unsafe.GetPointer<Transform2D>(newStarEntity);
                 newStarTransform->Position = transform->Position;
                 newStar->InitializeMovingStar(f, stage, newStarEntity, actualStarDirection);
 
-                UnityEngine.Debug.Log("before: " + mario->GamemodeData.StarChasers.Stars);
-                mario->GamemodeData.StarChasers.Stars--;//kkt mod changed a -> into a dot for the union to struct conversion
-                UnityEngine.Debug.Log("after: " + mario->GamemodeData.StarChasers.Stars);
+                mario->GamemodeData.StarChasers->Stars--;
                 amount--;
                 droppedStars++;
                 starDirection++;

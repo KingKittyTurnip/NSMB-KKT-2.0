@@ -557,17 +557,22 @@ namespace Quantum {
                         QList<PhysicsContact> contacts = f.ResolveList(physicsObject->Contacts);
                         foreach (var contact in contacts) {
                             FP dot = FPVector2.Dot(contact.Normal, FPVector2.Down);
-                            if (dot < -FP._0_75 && !physicsObject->BreakMegaObjects) {
+                            if (dot < -FP._0_75) {
                                 continue;
                             }
+                            /*if (contact.Entity != EntityRef.None && f.Has<BreakableObject>(contact.Entity)) { //This might be better to have than precontact if we wana avoid precontact
+                                BumpOnWall = false;
+                                break;
+                            }*/
 
                             // Floor tiles.
                             var tileInstance = stage.GetTileRelative(f, contact.Tile);
                             StageTile tile = f.FindAsset(tileInstance.Tile);
                             if (tile is IInteractableTile it) {
                                 if (it.Interact(f, filter.Entity, InteractionDirection.Up,
-                                    contact.Tile, tileInstance, out bool tempPlayBumpSound))
+                                    contact.Tile, tileInstance, out bool tempPlayBumpSound)) {
                                     BumpOnWall = false;
+                                }
                             }
                         }
                     }
@@ -576,10 +581,12 @@ namespace Quantum {
                         if (!PhysicsObjectSystem.Raycast(f, stage, checkPosition, FPVector2.Down, FP._0_33, out var hit)) {
                             //jump up 1 tile ledges
                             transform->Position.Y = ((FP)FPMath.RoundToInt((transform->Position.Y + FP._0_50) * 2))/2;
+                            physicsObject->Velocity.Y = 0;
                         } else {
                             //bump wall
                             Dis->Facing = !Dis->Facing;
-                            f.Events.PlayBumpSound(entity);
+                            physicsObject->Velocity.Y = 4;
+                            f.Events.ThrowObjSimple(entity, transform->Position);
                         }
                     }
                 }
@@ -726,7 +733,8 @@ namespace Quantum {
                         Dis->HitSomething = true;
                         return false;
                     case ThrowingObjectType.BowserShell:
-                        //explode this
+                        //kick this
+                        physicsObject->BreakMegaObjects = true;
                         Dis->Facing = damageDirection.X <= 0;
                         f.Events.PlayComboSound(thisEntity, 0);
                         return false;
@@ -848,7 +856,7 @@ namespace Quantum {
                     return false;
                 } else if (Dis->Type == ThrowingObjectType.BowserShell) {
                     //Kick Bowser Shell
-                    Dis->Thrown = true;
+                    Dis->Thrown = physicsObject->BreakMegaObjects = true;
                     Dis->Facing = damageDirection.X <= 0;
                     holdable->PreviousHolder = marioEntity;
                     holdable->IgnoreOwnerFrames = 20;
@@ -1137,9 +1145,7 @@ namespace Quantum {
 
             // Disable Carryabilites
             switch (Dis->Type) {
-            case ThrowingObjectType.Stone:
-            case ThrowingObjectType.BowserShell: {
-                Dis->Thrown |= Dis->Type == ThrowingObjectType.BowserShell;
+            case ThrowingObjectType.Stone: {
                 marioPhysicsObject->Velocity.X = FPMath.Clamp(marioPhysicsObject->Velocity.X, -1, 1);
                 mario->StoneBux = false;
                 break;
@@ -1169,6 +1175,12 @@ namespace Quantum {
                 Dis->Varient = 0;
                 Dis->ReusableTimer = CannonBoxChargeLimit;
                 break;
+            case ThrowingObjectType.BowserShell: {
+                Dis->Thrown = physicsObject->BreakMegaObjects = true;
+                marioPhysicsObject->Velocity.X = FPMath.Clamp(marioPhysicsObject->Velocity.X, -1, 1);
+                mario->StoneBux = false;
+                break;
+            }
             }
 
             if (Dis->Thrown) {

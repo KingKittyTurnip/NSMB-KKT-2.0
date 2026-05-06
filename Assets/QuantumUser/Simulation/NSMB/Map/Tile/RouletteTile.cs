@@ -34,7 +34,7 @@ public unsafe class RouletteTile : BreakableBrickTile {
             return false;
         }
 
-        var gamemode = f.FindAsset(f.SimulationConfig.StarChasers);
+        var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
         Bump(f, null, tilePosition, resultTile, direction, entity, allowSelfDamage, gamemode.NEWGetRandomItem(f, mario, true).PowerupPrototype);
         playBumpSound = false;
         return false;

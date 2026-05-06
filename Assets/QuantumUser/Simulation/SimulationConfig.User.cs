@@ -26,8 +26,6 @@ namespace Quantum {
         public AssetRef<LoopingMusicData>[] BossMusic;
 
         [Header("Gamemode Shenanigans")]
-        public AssetRef<GamemodeAsset> StarChasers;
-        public AssetRef<GamemodeAsset> CoinRunners, BalloonBattle, BombChasers;
         public AssetRef<RulesBaser> BaseRules;
     }
 }

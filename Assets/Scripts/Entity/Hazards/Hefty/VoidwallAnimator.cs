@@ -53,13 +53,12 @@ namespace NSMB.Entities.Player {
             }
 
             var voidwall = f.Unsafe.GetPointer<Voidwall>(EntityRef);
-            var Collider = f.Unsafe.GetPointer<PhysicsCollider2D>(EntityRef);
             UnwrapWorldLocations(f.FindAsset<VersusStageData>(f.Map.UserAsset), transform.position, Camera.main.transform.position, out var OurPos, out var CameraPos);
 
             bool WallIsSeeThrough = false; //team/freecam render code goes here
             if (WallIsSeeThrough) {
                 //Set size
-                float Y = Collider->Shape.Box.Extents.Y.AsFloat;
+                float Y = voidwall->increment.AsFloat;
                 sRenderer.size = new Vector2(0.87f, Y * 4);
                 sRenderer.transform.localPosition = new Vector3(-0.22f, 0, -9f);
 
@@ -78,7 +77,7 @@ namespace NSMB.Entities.Player {
                 ExpandTimer = Mathf.Clamp01(ExpandTimer + ((voidwall->DamageCooldown > 0 ? -1 : 1) * Time.deltaTime * 10));
 
                 //Set size
-                float Y = Collider->Shape.Box.Extents.Y.AsFloat;
+                float Y = voidwall->increment.AsFloat;
                 float Xsize = Y < 5 ? 0.87f : 0.87f + (Mathf.Min(Y - 5, 1) * distancefromcameraedge * ExpandTimer);
                 sRenderer.size = new Vector2(Xsize, Y * 4);
 

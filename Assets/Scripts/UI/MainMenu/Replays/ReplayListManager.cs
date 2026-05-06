@@ -190,7 +190,7 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
 
                 // Color and width
                 builder.Append("<width=85%>");
-                if (header.Rules.TeamsEnabled) {
+                if (header.Rules.ModifierTeamsEnabled) {
                     var allTeams = AssetRepository<TeamAsset>.AllAssets;
                     TeamAsset team = allTeams[info.Team % allTeams.Count];
                     builder.Append("<nobr>");
@@ -229,7 +229,7 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
                 /*
                 builder.Append("<sprite name=room_powerups>").Append(rules.CustomPowerupsEnabled ? on : off).Append("    ");
                 */
-                builder.Append("<sprite name=room_teams>").AppendLine(rules.TeamsEnabled ? on : off);
+                builder.Append("<sprite name=room_teams>").AppendLine(rules.ModifierTeamsEnabled ? on : off);
             } else {
                 // Default to star chasers
                 builder.Append("<sprite name=room_stars> ").Append(rules.StarsToWin).Append("    ");
@@ -239,7 +239,7 @@ namespace NSMB.UI.MainMenu.Submenus.Replays {
                 /*
                 builder.Append("<sprite name=room_powerups>").Append(rules.CustomPowerupsEnabled ? on : off).Append("    ");
                 */
-                builder.Append("<sprite name=room_teams>").AppendLine(rules.TeamsEnabled ? on : off);
+                builder.Append("<sprite name=room_teams>").AppendLine(rules.ModifierTeamsEnabled ? on : off);
             } 
             builder.Append("<color=#aaa>").Append(DateTimeToLocalizedString(DateTime.UnixEpoch.AddSeconds(header.UnixTimestamp), false, false)).Append(" - ");
             builder.Append(Utils.SecondsToMinuteSeconds(header.ReplayLengthInFrames / 60)).Append(" - ").Append(Utils.BytesToString(replay.ReplayFile.FileSize));

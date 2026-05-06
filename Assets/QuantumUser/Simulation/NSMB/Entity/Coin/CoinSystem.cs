@@ -80,7 +80,7 @@ namespace Quantum {
         public void OnStageReset(Frame f, QBoolean full) {
             var allCoins = f.Filter<Coin, Interactable>();
             while (allCoins.NextUnsafe(out EntityRef entity, out Coin* coin, out Interactable* interactable)) {
-                if (!f.Global->Rules.IsStageCoinsEnabled) {//Disable If Disabled
+                if (!f.Global->Rules.ModifierCoinsEnabled) {//Disable If Disabled
                     if (full) {
                         coin->IsCollected = true;
                         interactable->ColliderDisabled = true;

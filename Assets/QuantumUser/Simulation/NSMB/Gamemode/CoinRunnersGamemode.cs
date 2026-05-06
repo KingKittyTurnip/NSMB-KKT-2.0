@@ -44,7 +44,7 @@ namespace Quantum {
             }
 
             // End Condition: timer expires
-            if (f.Global->Rules.IsTimerEnabled && f.Global->Timer <= 0) {
+            if (f.Global->Rules.ModifierTimerEnabled && f.Global->Timer <= 0) {
                 /* TODO: add end timer functionalities
                 if (f.Global->Rules.DrawOnTimeUp) {
                     // It's a draw
@@ -83,7 +83,7 @@ namespace Quantum {
             // Make a copy to not modify the `type` variable
             // Which can cause desyncs.
             GamemodeSpecificData gamemodeDataCopy = mario->GamemodeData;
-            return gamemodeDataCopy.CoinRunners.ObjectiveCoins;//kkt mod changed a -> into a dot for the union to struct conversion
+            return gamemodeDataCopy.CoinRunners->ObjectiveCoins;
         }
 
         public override FP GetItemSpawnWeight(Frame f, CoinItemAsset item, int ourCoins) {

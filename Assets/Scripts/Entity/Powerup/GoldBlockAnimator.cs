@@ -149,7 +149,7 @@ namespace NSMB.Entities.CoinItems {
         }
 
         private unsafe void URPOnPreRender(ScriptableRenderContext context, Camera camera) {
-            Color glowColor = marioPlayerAnimator && (PredictedFrame.Global->Rules.TeamsEnabled || !IsCameraFocus(camera)) ? marioPlayerAnimator.GlowColor : Color.clear;
+            Color glowColor = marioPlayerAnimator && (PredictedFrame.Global->Rules.ModifierTeamsEnabled || !IsCameraFocus(camera)) ? marioPlayerAnimator.GlowColor : Color.clear;
             foreach (var renderer in glowRenderers) {
                 MaterialPropertyBlock mpb = new();
                 renderer.GetPropertyBlock(mpb);

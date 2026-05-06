@@ -29,7 +29,8 @@ namespace Quantum {
                 }
 
                 if (QuantumUtils.Decrement(ref bulletBill->DespawnFrames)) {
-                    f.Destroy(filter.Entity);
+                    //f.Destroy(filter.Entity);
+                    HazardSystem.DestroyHazard(f, filter.Entity);
                 }
                 return;
             }
@@ -57,7 +58,8 @@ namespace Quantum {
             }
 
             // Do despawn
-            f.Destroy(filter.Entity);
+            //f.Destroy(filter.Entity);
+            HazardSystem.DestroyHazard(f, filter.Entity);
         }
 
         #region Interactions
@@ -147,6 +149,7 @@ namespace Quantum {
                 return;
             }
 
+            bill->Owner = owner;
             enemy->IsActive = true;
             enemy->FacingRight = f.RNG->Next((FP) 0, 1) > FP._0_50;
         }

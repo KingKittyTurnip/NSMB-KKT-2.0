@@ -25,7 +25,7 @@ namespace NSMB.UI.Game.Track {
 
             var mario = f.Unsafe.GetPointer<MarioPlayer>(targetEntity);
             image.color = Utils.GetPlayerColor(f, mario->PlayerRef);
-            if (f.Global->Rules.TeamsEnabled && mario->GetTeam(f) is byte teamIndex) {
+            if (f.Global->Rules.ModifierTeamsEnabled && mario->GetTeam(f) is byte teamIndex) {
                 var teams = f.Context.GetAllAssets<TeamAsset>();
                 teamIcon.sprite = teams[teamIndex % teams.Count].spriteColorblind;
             } else {

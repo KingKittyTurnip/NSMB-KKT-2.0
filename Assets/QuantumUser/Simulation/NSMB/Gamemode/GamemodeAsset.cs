@@ -34,12 +34,12 @@ namespace Quantum {
         public virtual bool IsFastMusicEnabled(Frame f) {
             ref var rules = ref f.Global->Rules;
 
-            if (rules.IsTimerEnabled && f.Global->Timer <= 60) {
+            if (rules.ModifierTimerEnabled && f.Global->Timer <= 60) {
                 // Timer expiring, panic music
                 return true;
             }
 
-            if (rules.IsLivesEnabled) {
+            if (rules.ModifierLivesEnabled) {
                 // Low on lives. Two cases:
                 // A: two players left, at least one has one life
                 // B: three+ players left, all have one life

@@ -268,11 +268,11 @@ namespace NSMB.UI.Game {
         }
 
         private void UpdateElementVisibility(Frame f, bool marioExists) {
-            teamsParent.SetActive(marioExists && f.Global->Rules.TeamsEnabled);
+            teamsParent.SetActive(marioExists && f.Global->Rules.ModifierTeamsEnabled);
             starsParent.SetActive(marioExists);
-            livesParent.SetActive(marioExists && f.Global->Rules.IsLivesEnabled);
+            livesParent.SetActive(marioExists && f.Global->Rules.ModifierLivesEnabled);
             coinsParent.SetActive(marioExists);
-            timerParent.SetActive(f.Global->Rules.IsTimerEnabled);
+            timerParent.SetActive(f.Global->Rules.ModifierTimerEnabled);
             reserveItemBox.SetActive(marioExists);
         }
 
@@ -302,8 +302,8 @@ namespace NSMB.UI.Game {
 
             //int starRequirement = rules.StarsToWin;
             int coinRequirement = rules.CoinsForPowerup;
-            bool teamsEnabled = rules.TeamsEnabled;
-            bool livesEnabled = rules.IsLivesEnabled;
+            bool teamsEnabled = rules.ModifierTeamsEnabled;
+            bool livesEnabled = rules.ModifierLivesEnabled;
             bool timerEnabled = rules.TimerMinutes > 0;
 
             // TIMER
@@ -459,7 +459,7 @@ namespace NSMB.UI.Game {
         }
 
         private unsafe void ApplyUIColor(Frame f, MarioPlayer* mario) {
-            Color color = (f.Global->Rules.TeamsEnabled && mario != null && mario->GetTeam(f) is byte team) ? Utils.GetTeamColor(f, team, 0.8f, 1f) : ViewContext.Stage.UIColor.AsColor;
+            Color color = (f.Global->Rules.ModifierTeamsEnabled && mario != null && mario->GetTeam(f) is byte team) ? Utils.GetTeamColor(f, team, 0.8f, 1f) : ViewContext.Stage.UIColor.AsColor;
 
             foreach (Image bg in backgrounds) {
                 bg.color = color;
@@ -492,7 +492,7 @@ namespace NSMB.UI.Game {
 
             Frame f = e.Game.Frames.Predicted;
             Color timerColor = Color.white;
-            if (f.Global->Timer <= 0 && f.Global->Rules.IsTimerEnabled) {
+            if (f.Global->Timer <= 0 && f.Global->Rules.ModifierTimerEnabled) {
                 timerColor = Color.red;
             }
             timerMaterial.SetColor("_Color", timerColor);
@@ -512,7 +512,7 @@ namespace NSMB.UI.Game {
 
         private void OnGameEnded(EventGameEnded e) {
             Frame f = e.Game.Frames.Verified;
-            bool teamMode = f.Global->Rules.TeamsEnabled;
+            bool teamMode = f.Global->Rules.ModifierTeamsEnabled;
             bool hasWinner = e.HasWinner;
 
             TranslationManager tm = GlobalController.Instance.translationManager;

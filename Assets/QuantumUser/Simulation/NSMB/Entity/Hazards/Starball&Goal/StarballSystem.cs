@@ -208,7 +208,7 @@ namespace Quantum {
             }
 
             //TODO: customise contents
-            var gamemode = f.FindAsset(f.SimulationConfig.StarChasers) as StarChasersGamemode;
+            var gamemode = f.FindAsset(f.Global->Rules.Gamemode) as StarChasersGamemode;
             EntityRef newStarEntity = f.Create(starball->Contains);
             var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
             var newStarTransform = f.Unsafe.GetPointer<Transform2D>(newStarEntity);

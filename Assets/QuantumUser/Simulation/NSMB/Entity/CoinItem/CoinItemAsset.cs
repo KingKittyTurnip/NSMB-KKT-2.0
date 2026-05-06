@@ -101,7 +101,7 @@ public unsafe class CoinItemAsset : AssetObject {
             return false;
         }
         */
-        if (Flags.HasFlag(TypeFlags.LivesEnabledOnly) && !f.Global->Rules.IsLivesEnabled) {
+        if (Flags.HasFlag(TypeFlags.LivesEnabledOnly) && !f.Global->Rules.ModifierLivesEnabled) {
             return false;
         }
         if (MaxNumberOfItems > 0 && CountItemsExisting(f) >= MaxNumberOfItems) {

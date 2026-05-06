@@ -1490,6 +1490,10 @@ namespace Quantum {
                 if (underwater) {
                     if (physicsObject->UnderwaterCounter++ == 0) {
                         f.Signals.OnEntityChangeUnderwaterState(entity, liquid, true);
+                        if (f.Unsafe.TryGetPointer(entity, out Freezable* freeze) && !freeze->IsFrozen(f) && liquidy->LiquidType == LiquidType.FreezingWater) {
+                            var newIceblock = IceBlockSystem.Freeze(f, entity, false);
+                            f.Unsafe.GetPointer<IceBlock>(newIceblock)->AutoBreakFrames = 150;
+                        }
                     }
                 } else {
                     if (QuantumUtils.Decrement(ref physicsObject->UnderwaterCounter)) {
