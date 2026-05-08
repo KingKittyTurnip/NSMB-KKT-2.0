@@ -191,6 +191,7 @@ namespace Quantum {
 
         /// <summary>
         /// creates a hazard with an id for the hazards list, returns the entityref and spawndata but doesn't signal to them
+        /// This Code Is Deprecated
         /// </summary>
         public static void CreateHazardFromReference(Frame f, byte HazardId, out EntityRef newEntity, out HazardList newSpawndata) {
             var hazarddata = f.ResolveList(f.Global->Rules.Hazards);

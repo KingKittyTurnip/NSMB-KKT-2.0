@@ -267,7 +267,7 @@ namespace Quantum {
                 return;
             }
             var specialValues = f.ResolveList(spawnData);
-
+            UnityEngine.Debug.Log(specialValues[0]);
             //Set Varient
             duckman->Varient = (CataquackVarient) specialValues[0];
 

@@ -2655,7 +2655,7 @@ namespace Quantum {
     [FieldOffset(24)]
     public FP Hitboxheight;
     [FieldOffset(8)]
-    public AssetRef<CauldronBossesAsset> BossData;
+    public AssetRef<SpecificHazardContainerAsset> BossData;
     [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public EntityRef TransformingEntity;
@@ -3375,6 +3375,24 @@ namespace Quantum {
         QBoolean.Serialize(&p->JustSpawned, serializer);
         QBoolean.Serialize(&p->RestrictSpawnPosition, serializer);
         FPVector2.Serialize(&p->SpawningVelocityRange, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct HazardContainer : Quantum.IComponent {
+    public const Int32 SIZE = 8;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(0)]
+    public AssetRef<SpecificHazardContainerAsset> OptionData;
+    public override readonly Int32 GetHashCode() {
+      unchecked { 
+        var hash = 1297;
+        hash = hash * 31 + OptionData.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (HazardContainer*)ptr;
+        AssetRef.Serialize(&p->OptionData, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -4195,19 +4213,24 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct MovingPlatform : Quantum.IComponent {
-    public const Int32 SIZE = 32;
+    public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(16)]
+    [FieldOffset(24)]
     public FPVector2 Velocity;
     [FieldOffset(4)]
     public QBoolean IgnoreMovement;
     [FieldOffset(0)]
     public QBoolean CanCrushEntities;
-    [FieldOffset(8)]
+    [FieldOffset(12)]
     [ExcludeFromPrototype()]
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
     public QListPtr<PhysicsQueryRef> Queries;
+    [FieldOffset(8)]
+    public QBoolean RotatingPlatform;
+    [FieldOffset(16)]
+    [ExcludeFromPrototype()]
+    public FP PreRotation;
     public override readonly Int32 GetHashCode() {
       unchecked { 
         var hash = 19727;
@@ -4215,6 +4238,8 @@ namespace Quantum {
         hash = hash * 31 + IgnoreMovement.GetHashCode();
         hash = hash * 31 + CanCrushEntities.GetHashCode();
         hash = hash * 31 + Queries.GetHashCode();
+        hash = hash * 31 + RotatingPlatform.GetHashCode();
+        hash = hash * 31 + PreRotation.GetHashCode();
         return hash;
       }
     }
@@ -4236,7 +4261,9 @@ namespace Quantum {
         var p = (MovingPlatform*)ptr;
         QBoolean.Serialize(&p->CanCrushEntities, serializer);
         QBoolean.Serialize(&p->IgnoreMovement, serializer);
+        QBoolean.Serialize(&p->RotatingPlatform, serializer);
         QList.Serialize(&p->Queries, serializer, Statics.SerializePhysicsQueryRef);
+        FP.Serialize(&p->PreRotation, serializer);
         FPVector2.Serialize(&p->Velocity, serializer);
     }
   }
@@ -6043,6 +6070,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Goomba>();
       BuildSignalsArrayOnComponentAdded<Quantum.Hazard>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Hazard>();
+      BuildSignalsArrayOnComponentAdded<Quantum.HazardContainer>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.HazardContainer>();
       BuildSignalsArrayOnComponentAdded<Quantum.HazardManager>();
       BuildSignalsArrayOnComponentRemoved<Quantum.HazardManager>();
       BuildSignalsArrayOnComponentAdded<Quantum.Holdable>();
@@ -6661,6 +6690,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.GoldBlock), Quantum.GoldBlock.SIZE);
       typeRegistry.Register(typeof(Quantum.Goomba), Quantum.Goomba.SIZE);
       typeRegistry.Register(typeof(Quantum.Hazard), Quantum.Hazard.SIZE);
+      typeRegistry.Register(typeof(Quantum.HazardContainer), Quantum.HazardContainer.SIZE);
       typeRegistry.Register(typeof(Quantum.HazardList), Quantum.HazardList.SIZE);
       typeRegistry.Register(typeof(Quantum.HazardManager), Quantum.HazardManager.SIZE);
       typeRegistry.Register(typeof(HingeJoint), HingeJoint.SIZE);
@@ -6786,7 +6816,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.bossMarioContactResult), 4);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 68)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 69)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -6818,6 +6848,7 @@ namespace Quantum {
         .Add<Quantum.GoldBlock>(Quantum.GoldBlock.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Goomba>(Quantum.Goomba.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Hazard>(Quantum.Hazard.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.HazardContainer>(Quantum.HazardContainer.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.HazardManager>(Quantum.HazardManager.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Holdable>(Quantum.Holdable.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.IceBlock>(Quantum.IceBlock.Serialize, null, null, ComponentFlags.None)

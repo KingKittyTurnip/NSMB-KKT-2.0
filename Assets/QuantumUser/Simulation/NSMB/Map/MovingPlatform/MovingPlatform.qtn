@@ -3,4 +3,7 @@ component MovingPlatform {
 	bool IgnoreMovement;
 	bool CanCrushEntities;
 	[ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] list<PhysicsQueryRef> Queries;
+	
+	bool RotatingPlatform;
+    [ExcludeFromPrototype] FP PreRotation;
 }

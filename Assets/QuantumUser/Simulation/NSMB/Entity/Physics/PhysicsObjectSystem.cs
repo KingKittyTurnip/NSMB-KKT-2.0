@@ -1,7 +1,9 @@
 using Photon.Deterministic;
 using Quantum.Collections;
+using Quantum.Physics2D;
 using Quantum.Profiling;
 using System;
+using UnityEditor.SceneManagement;
 
 namespace Quantum {
 #if MULTITHREADED
@@ -273,6 +275,31 @@ namespace Quantum {
                     }
 
                     FPVector2 vel = platform->Velocity;
+                    //KKT Mod
+                    if (platform->RotatingPlatform) {
+                        var thisTransform = filter.Transform;
+                        var thisCollider = filter.Collider;
+                        var platformTransform = f.Unsafe.GetPointer<Transform2D>(contact.Entity);
+                        VersusStageData stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+
+                        var J = platformTransform->Rotation - platform->PreRotation;
+                        var Sin = FPMath.Sin(J);
+                        var Cos = FPMath.Cos(J);
+                        var R = (thisTransform->Position - platformTransform->Position);
+                        thisTransform->Position = new FPVector2((R.X*Cos)-(R.Y*Sin)+platformTransform->Position.X, (R.X*Sin)+(R.Y*Cos)+platformTransform->Position.Y);
+
+                        //latch to platform better
+                        //vel.Y -= (R.X*Sin)+(R.Y*Cos);
+                        FPVector2 Center = thisCollider->Shape.Centroid + (FPVector2.Up * FP._0_05);
+                        bool hit1hit = PhysicsObjectSystem.Raycast(f, stage, Center + (FPVector2.Right * thisCollider->Shape.Box.Extents.X), FPVector2.Down, FP._0_33, out var hit1);
+                        bool hit2hit = PhysicsObjectSystem.Raycast(f, stage, Center + (FPVector2.Left * thisCollider->Shape.Box.Extents.X), FPVector2.Down, FP._0_33, out var hit2);
+                        if (hit1hit || hit2hit) {
+                            if ((hit2.Position.Y > hit1.Position.Y && hit2hit) || (hit2hit && !hit1hit))
+                                hit1 = hit2;
+
+                            thisTransform->Position.Y = hit1.Position.Y;
+                        }
+                    }
                     FP dot = FPVector2.Dot(vel.Normalized, up);
                     if (dot > maxDot || (dot == maxDot && maxVelocity.Value.SqrMagnitude > vel.SqrMagnitude)) {
                         maxDot = dot;
@@ -821,6 +848,9 @@ namespace Quantum {
                         FP angle = FPVector2.RadiansSignedSkipNormalize(contact.Normal, FPVector2.Up) * FP.Rad2Deg;
                         if (FPMath.Abs(physicsObject->FloorAngle) < FPMath.Abs(angle)) {
                             physicsObject->FloorAngle = angle;
+                            if (f.Unsafe.TryGetPointer<MovingPlatform>(contact.Entity, out var platform)) {
+                                physicsObject->IsOnSlideableGround |= platform->RotatingPlatform;
+                            }
                         }
 
                         if (!f.Exists(contact.Entity)
@@ -838,6 +868,9 @@ namespace Quantum {
                         FP angle = FPVector2.RadiansSignedSkipNormalize(contact.Normal, FPVector2.Down) * FP.Rad2Deg;
                         if (FPMath.Abs(physicsObject->FloorAngle) < FPMath.Abs(angle)) {
                             physicsObject->FloorAngle = angle;
+                            if (f.Unsafe.TryGetPointer<MovingPlatform>(contact.Entity, out var platform)) {
+                                physicsObject->IsOnSlideableGround |= platform->RotatingPlatform;
+                            }
                         }
 
                         if (!f.Exists(contact.Entity)

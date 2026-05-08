@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 6774445834162848449}
   - component: {fileID: 128866428235369491}
   - component: {fileID: 2578765157171453840}
+  - component: {fileID: 2743079419291230183}
+  - component: {fileID: 7295431408502385456}
   m_Layer: 20
   m_Name: Seesaw
   m_TagString: platform
@@ -318,6 +320,43 @@ MonoBehaviour:
       RawValue: 655
     TerminalVelocity:
       RawValue: 65536
+--- !u!114 &2743079419291230183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8010249587145537848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8b4489d4860b2429b2badcd175e5ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeMovingPlatform
+  Prototype:
+    Velocity:
+      X:
+        RawValue: 0
+      Y:
+        RawValue: 0
+    IgnoreMovement:
+      Value: 0
+    CanCrushEntities:
+      Value: 0
+    RotatingPlatform:
+      Value: 1
+--- !u!114 &7295431408502385456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8010249587145537848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9c12284429c3fb49babbb6182e250cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.Entities.World.SeesawAnimator
+  graphic: {fileID: 7656118341111651148}
 --- !u!1 &8373614054783457923
 GameObject:
   m_ObjectHideFlags: 0

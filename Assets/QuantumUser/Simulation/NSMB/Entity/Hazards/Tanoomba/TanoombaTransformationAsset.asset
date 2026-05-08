@@ -959,6 +959,48 @@ MonoBehaviour:
       - {fileID: 971353550, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
       UsesWavey: 0
       soundType: 0
+  - Name: Nup Mushroom
+    SpawnType: 0
+    comparePrototype:
+      Id:
+        Value: 1365421339623582075
+    ChanceWeight:
+      RawValue: 32768
+    MoveData:
+      MovementType: 1
+      Gravity:
+        X:
+          RawValue: 0
+        Y:
+          RawValue: -1414398
+      TerminalVelocity:
+        RawValue: -524288
+      RequiresGroundToAffectVelocity: 1
+      MaxSpeed:
+        RawValue: 131072
+      Acceleration:
+        RawValue: 655360
+      Deceleration:
+        RawValue: 655360
+      BounceIsThrust: 1
+      Bounciness:
+        RawValue: 0
+      FollowPlayer: 0
+      HopsUpBlocks: 0
+      MoveThroughTerrain: 0
+    ModelData:
+      FlipType: 0
+      UsesLeaf: 1
+      LeafLocation: {x: 0, y: 0.25, z: 0}
+      UsesTail: 0
+      TailLocation: {x: 0, y: 0, z: 0}
+      ModelId: -1
+      Offset: {x: 0, y: -0.25, z: 0}
+      FPS: 0
+      sprites:
+      - {fileID: -1825984328, guid: 794bc215dd02bf34ab2cfae7702bfdfd, type: 3}
+      UsesWavey: 1
+      soundType: 0
   - Name: Bubble Flower
     SpawnType: 0
     comparePrototype:
@@ -1047,7 +1089,7 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1268531089014898302
+        Value: 0
     ChanceWeight:
       RawValue: 32768
     MoveData:
@@ -1100,7 +1142,7 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1268531089014898302
+        Value: 0
     ChanceWeight:
       RawValue: 32768
     MoveData:
@@ -1162,7 +1204,7 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1268531089014898302
+        Value: 0
     ChanceWeight:
       RawValue: 32768
     MoveData:
@@ -1204,7 +1246,7 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1268531089014898302
+        Value: 1313060240537942267
     ChanceWeight:
       RawValue: 32768
     MoveData:
@@ -1245,7 +1287,7 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1268531089014898302
+        Value: 1490579344614088993
     ChanceWeight:
       RawValue: 32768
     MoveData:
@@ -1287,7 +1329,7 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1268531089014898302
+        Value: 0
     ChanceWeight:
       RawValue: 32768
     MoveData:
@@ -1329,7 +1371,7 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1268531089014898302
+        Value: 1360720116195219965
     ChanceWeight:
       RawValue: 32768
     MoveData:
@@ -1371,9 +1413,9 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1268531089014898302
+        Value: 0
     ChanceWeight:
-      RawValue: 0
+      RawValue: 32768
     MoveData:
       MovementType: 1
       Gravity:
@@ -1413,9 +1455,9 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1472665878288241371
+        Value: 0
     ChanceWeight:
-      RawValue: 0
+      RawValue: 32768
     MoveData:
       MovementType: 1
       Gravity:
@@ -1455,7 +1497,7 @@ MonoBehaviour:
     SpawnType: 0
     comparePrototype:
       Id:
-        Value: 1268531089014898302
+        Value: 0
     ChanceWeight:
       RawValue: 32768
     MoveData:
@@ -1827,61 +1869,5 @@ MonoBehaviour:
       Offset: {x: 0, y: -0.25, z: 0}
       FPS: 0
       sprites: []
-      UsesWavey: 0
-      soundType: 0
-  - Name: Lemmyball
-    SpawnType: 0
-    comparePrototype:
-      Id:
-        Value: 1519453281481461233
-    ChanceWeight:
-      RawValue: 0
-    MoveData:
-      MovementType: 1
-      Gravity:
-        X:
-          RawValue: 0
-        Y:
-          RawValue: -655360
-      TerminalVelocity:
-        RawValue: -786432
-      RequiresGroundToAffectVelocity: 1
-      MaxSpeed:
-        RawValue: 72090
-      Acceleration:
-        RawValue: 655360
-      Deceleration:
-        RawValue: 655360
-      BounceIsThrust: 1
-      Bounciness:
-        RawValue: 524288
-      FollowPlayer: 0
-      HopsUpBlocks: 0
-      MoveThroughTerrain: 0
-    ModelData:
-      FlipType: 2
-      UsesLeaf: 0
-      LeafLocation: {x: 0, y: 0.25, z: 0}
-      UsesTail: 1
-      TailLocation: {x: 0.65, y: 0.1, z: 0}
-      ModelId: 3
-      Offset: {x: 0, y: -0.25, z: 0}
-      FPS: 0
-      sprites:
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: -330342055, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1839761188, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 835418070, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1839761188, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: -330342055, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
-      - {fileID: 1130182511, guid: ac2bb62c18b2375439c16abe7c1c29bc, type: 3}
       UsesWavey: 0
       soundType: 0

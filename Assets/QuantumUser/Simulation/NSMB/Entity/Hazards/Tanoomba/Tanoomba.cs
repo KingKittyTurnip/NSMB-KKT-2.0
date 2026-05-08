@@ -153,7 +153,7 @@ namespace Quantum {
             // Fall off screen
             if (f.Unsafe.TryGetPointer(killerEntity, out Transform2D* killerTransform)) {
                 QuantumUtils.UnwrapWorldLocations(f, transform->Position, killerTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
-                enemy->ChangeFacingRight(f, tanoombaEntity, ourPos.X < theirPos.X);
+                enemy->ChangeFacingRight(f, tanoombaEntity, ourPos.X > theirPos.X);
             } else {
                 enemy->ChangeFacingRight(f, tanoombaEntity, false);
             }

@@ -51,7 +51,7 @@ namespace Quantum {
             //add more weight if farther away
             //add a weight variable for specific objects to contribute moooore to the swaying?
             seesaw->WeightOnLift += theirPos.X - ourPos.X;
-            return false;
+            return true;
         }
     }
 }

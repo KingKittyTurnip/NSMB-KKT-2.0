@@ -4,6 +4,8 @@ using System;
 using System.Drawing.Drawing2D;
 using UnityEngine;
 using static IInteractableTile;
+using static Quantum.CommandChangeRules;
+using static Quantum.RulesBaser;
 using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
@@ -1273,18 +1275,24 @@ namespace Quantum {
                     Debug.Log("Halt, Too Much Nested Objects");
                     break;
                 }
+                var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
 
+                //Set Length
                 Dis->Varient = (byte) (specialValues[0] == 1 ? 1 : 0);
-                if (specialValues[1] != 255) {
-                    //spawn from hazard List
-                    HazardManagerSystem.CreateHazardFromReference(f, specialValues[1], out var newEntity, out var newSpawndata);
-                    Dis->ConnectedObject = newEntity;
-                    f.Signals.InitializeHazard(Dis->ConnectedObject, EntityRef.None, spawnpoint, spawnReason == SpawnReason.Forced ? SpawnReason.WasCreatedFromNested : (spawnReason == SpawnReason.Fridge ? SpawnReason.Forced : SpawnReason.Fridge), newSpawndata.Extra);
-                } else {
-                    //Default To Chain Chomp
-                    Dis->ConnectedObject = f.Create(f.SimulationConfig.Chainchomp);
-                    f.Signals.InitializeHazard(Dis->ConnectedObject, thisEntity, spawnpoint, SpawnReason.Forced, spawnData);
-                }
+
+                var options = f.FindAsset(f.Unsafe.GetPointer<HazardContainer>(thisEntity)->OptionData).ListOfOptions[specialValues[1]];
+                //Create Attachment
+                Dis->ConnectedObject = f.Create(options.EntityPrototype);
+
+                var h = new QListPtr<byte>();
+                /*var list = f.AllocateList(h);
+                for (int i = 0; i < options.Extra.Count; ++i) {
+                    byte tmp = default;
+                    //options.Extra[i].Materialize(f, ref tmp);
+                    list.Add(options.Extra[i].);
+                }*/
+                //setupspawndata
+                f.Signals.InitializeHazard(Dis->ConnectedObject, thisEntity, spawnpoint, spawnReason == SpawnReason.Forced ? SpawnReason.WasCreatedFromNested : (spawnReason == SpawnReason.Fridge ? SpawnReason.Forced : SpawnReason.Fridge), h);
                 break;
             }
 

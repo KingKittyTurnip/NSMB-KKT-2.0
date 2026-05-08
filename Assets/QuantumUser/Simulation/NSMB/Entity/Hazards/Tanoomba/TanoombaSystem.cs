@@ -1,11 +1,12 @@
 using Photon.Deterministic;
 using Quantum.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 
 namespace Quantum {
     
     public unsafe class TanoombaSystem : SystemMainThreadFilterStage<TanoombaSystem.Filter>, ISignalOnEntityBumped, //ISignalOnBeforeInteraction,
-        ISignalOnTryLiquidSplash, ISignalInitializeHazard, ISignalOnEnemyRespawned, ISignalOnStageReset {
+        ISignalOnTryLiquidSplash, ISignalInitializeHazard, ISignalOnEnemyRespawned, ISignalOnStageReset, ISignalOnIceBlockBroken {
 
         //magic numbers
         FP playerCloseRange = 4;
@@ -85,8 +86,8 @@ namespace Quantum {
                     FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
                     enemy->FacingRight = damageDirection.X > 0;
-                    MoveAroundState(FP._0_10, 3);
                 }
+                MoveAroundState(FP._0_10, 3);
                 if ((physicsObject->IsTouchingGround || tanoomba->ReusableTimer < attackTimer) && QuantumUtils.Decrement(f, ref tanoomba->ReusableTimer)) {
                     tanoomba->SwitchState(f, entity, TanoombaState.Idling);
                 }
@@ -675,32 +676,57 @@ namespace Quantum {
 
             QuantumUtils.UnwrapWorldLocations(f, DisTransform->Position + ((DisCollider->Shape.Centroid.Y - DisCollider->Shape.Box.Extents.Y) * FPVector2.Up), marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
-            bool attackedFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_25;
+            bool attackedFromAbove = FPVector2.Dot(damageDirection, FPVector2.Up) > (tanoomba->State == TanoombaState.Transformed ? FP._0_75 : tanoomba->State == TanoombaState.Attacking ? FP._0_50 : FP._0_25);
+            bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
+            bool doKnockback = false;
 
             if (mario->InstakillsEnemies(mariophys, false)) {
                 tanoomba->Kill(f, thisEntity, marioEntity, EnemyKillReason.Special);
-            } else if (tanoomba->State == TanoombaState.Transformed) {
-                if (FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_75) {
-                    bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
-                    mario->DoEntityBounce = !groundpounded;
+            } else if (mario->IsCrouchedInShell && !groundpounded) {
+                //blueshell crouch interactions
+                if (doKnockback = tanoomba->State != TanoombaState.KnockedBack)
                     tanoomba->SwitchState(f, thisEntity, TanoombaState.KnockedBack, damageDirection.X > 0);
-                } else {
-                    mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.Normal, thisEntity, false);
-                    tanoomba->SwitchState(f, thisEntity, TanoombaState.Attacking);
-                    tanoomba->TargetedPlayer = marioEntity;
-                }
+            } else if (attackedFromAbove) {
+                //mario stomp
+                mario->DoEntityBounce = !groundpounded;
+                TryKill();
+            } else if (tanoomba->State == TanoombaState.Transformed) {
+                //tanoomba transformation interactions
+                if (mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.Normal, thisEntity, false))
+                    doKnockback = true;
+                tanoomba->SwitchState(f, thisEntity, TanoombaState.Attacking);
+                tanoomba->TargetedPlayer = marioEntity;
             } else if (tanoomba->State == TanoombaState.Attacking && (tanoomba->TargetedPlayer == marioEntity || !attackedFromAbove)) {
+                //attack mario
+                physicsObject->Velocity.X = FPMath.Abs(physicsObject->Velocity.X) * (damageDirection.X > 0 ? -1 : 1);
                 if (mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.CollisionBump, thisEntity, tanoomba->TargetedPlayer == marioEntity && (mario->DamageInvincibilityFrames > 60 || mario->KnockbackGetupFrames > 0 || mario->IsInKnockback))) {
-                    physicsObject->Velocity.X *= -1;
+                    doKnockback = true;
                     tanoomba->SwitchState(f, thisEntity, TanoombaState.Happy);
                 }
-            } else if (attackedFromAbove) {
-                bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
-                mario->DoEntityBounce = !groundpounded;
-                tanoomba->Kill(f, thisEntity, marioEntity, EnemyKillReason.Normal);
             } else {
-                tanoomba->SwitchState(f, thisEntity, TanoombaState.KnockedBack, damageDirection.X > 0);
-                mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 1, KnockbackStrength.CollisionBump, thisEntity, false);
+                //bump both
+                if (mario->DoKnockback(f, marioEntity, damageDirection.X <= 0, 0, KnockbackStrength.CollisionBump, thisEntity, false)) {
+                    TryKill();
+                    doKnockback = true;
+                }
+            }
+
+            void TryKill() {
+                if (tanoomba->State == TanoombaState.KnockedBack) {
+                    tanoomba->Kill(f, thisEntity, marioEntity, groundpounded ? EnemyKillReason.Special : EnemyKillReason.Normal);
+                } else {
+                    doKnockback = true;
+                    tanoomba->SwitchState(f, thisEntity, TanoombaState.KnockedBack, damageDirection.X > 0);
+                    if (groundpounded) {
+                        physicsObject->Velocity.X *= 3;
+                    }
+                }
+            }
+
+            if (doKnockback) {
+                KnockbackStrength strength = groundpounded ? KnockbackStrength.Groundpound : KnockbackStrength.Normal;
+                FPVector2 avgPosition = (ourPos + theirPos) / 2;
+                f.Events.PlayKnockbackEffect(marioEntity, thisEntity, strength, avgPosition);
             }
             return;
         }
@@ -790,6 +816,15 @@ namespace Quantum {
             }
         }
 
+        public void OnIceBlockBroken(Frame f, EntityRef brokenIceBlock, IceBlockBreakReason breakReason, EntityRef attacker) {
+            if (breakReason != IceBlockBreakReason.None && breakReason != IceBlockBreakReason.Timer) {
+                var iceBlock = f.Unsafe.GetPointer<IceBlock>(brokenIceBlock);
+                if (f.Unsafe.TryGetPointer(iceBlock->Entity, out Tanoomba* tanoomba)) {
+                    tanoomba->Kill(f, iceBlock->Entity, brokenIceBlock, EnemyKillReason.Special);
+                }
+            }
+        }
+
         public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Tanoomba* tanoomba)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)
@@ -800,26 +835,12 @@ namespace Quantum {
 
             enemy->IsActive = true;
 
+            //Can turn into anything anytime?
+            tanoomba->TransformIntoAnythingAnytime = specialValues[0] == 1;
+
             //uhh i would put specific hazard spawn data here
             tanoomba->FormId = -1;
 
-            tanoomba->TransformIntoAnythingAnytime = specialValues[0] == 1;
-
-            /*switch (Dis->Type) {
-            case ThrowingObjectType.Basic:
-            case ThrowingObjectType.Stone:
-            case ThrowingObjectType.Spring:
-            case ThrowingObjectType.RedPow:
-            case ThrowingObjectType.BluePow: //Bluepow And Red Pow Are Considerd Varients Of Eachother
-            case ThrowingObjectType.Barrel:
-            case ThrowingObjectType.Freezie:
-            case ThrowingObjectType.CoinBox:
-            case ThrowingObjectType.PropellerBox:
-            case ThrowingObjectType.BillBlock:
-            case ThrowingObjectType.CannonBox:
-            case ThrowingObjectType.Fridge:
-                break;
-            }*/
         }
         #endregion
     }

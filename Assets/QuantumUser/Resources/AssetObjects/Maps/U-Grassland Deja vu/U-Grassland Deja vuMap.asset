@@ -331,6 +331,7 @@ MonoBehaviour:
     - rid: 2365288403869630474
     - rid: 2365288403869630475
     - rid: 2365288403869630476
+    - rid: 2365288403869630477
   - Components:
     - rid: 5067326164566016000
     - rid: 5067326164566016001
@@ -503,6 +504,13 @@ MonoBehaviour:
     - rid: 4336890755244097537
     - rid: 4336890755244097538
     - rid: 4336890755244097539
+    - rid: 4336890755244097540
+  - Components:
+    - rid: 3967444776613052416
+    - rid: 3967444776613052417
+    - rid: 3967444776613052418
+    - rid: 3967444776613052419
+    - rid: 3967444776613052420
   SerializedTriangleDataUncompressedSize: 8
   references:
     version: 2
@@ -625,7 +633,7 @@ MonoBehaviour:
       data:
         Scriptable:
           Id:
-            Value: 330575751736567297
+            Value: 351453161337192497
     - rid: 518428863596855300
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1044,6 +1052,8 @@ MonoBehaviour:
           Value: 1
         CanCrushEntities:
           Value: 0
+        RotatingPlatform:
+          Value: 0
     - rid: 855811747427123204
       type: {class: ScalePlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1190,7 +1200,7 @@ MonoBehaviour:
       data:
         Scriptable:
           Id:
-            Value: 330575751736567297
+            Value: 351453161337192497
     - rid: 2295068314952531972
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1381,22 +1391,28 @@ MonoBehaviour:
           Y:
             RawValue: 65536
     - rid: 2365288403869630470
+      type: {class: HazardContainerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        OptionData:
+          Id:
+            Value: 409087740961266189
+    - rid: 2365288403869630471
       type: {class: HoldablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         HoldAboveHead:
           Value: 1
         IsSolidCarryable:
           Value: 1
-    - rid: 2365288403869630471
+    - rid: 2365288403869630472
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 2365288403869630472
+    - rid: 2365288403869630473
       type: {class: InteractionInitiatorPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
-    - rid: 2365288403869630473
+    - rid: 2365288403869630474
       type: {class: MovingPlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Velocity:
@@ -1408,7 +1424,9 @@ MonoBehaviour:
           Value: 1
         CanCrushEntities:
           Value: 0
-    - rid: 2365288403869630474
+        RotatingPlatform:
+          Value: 0
+    - rid: 2365288403869630475
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Gravity:
@@ -1432,7 +1450,7 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 0
-    - rid: 2365288403869630475
+    - rid: 2365288403869630476
       type: {class: ThrowingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Type:
@@ -1455,7 +1473,7 @@ MonoBehaviour:
         Varient: 255
         ConnectedObject:
           SceneIndexPlusOne: 25
-    - rid: 2365288403869630476
+    - rid: 2365288403869630477
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
@@ -1516,7 +1534,7 @@ MonoBehaviour:
       data:
         Scriptable:
           Id:
-            Value: 330575751736567297
+            Value: 351453161337192497
     - rid: 2457429185526759428
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -1850,7 +1868,7 @@ MonoBehaviour:
       data:
         Scriptable:
           Id:
-            Value: 330575751736567297
+            Value: 351453161337192497
     - rid: 3728103523565436932
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2151,6 +2169,81 @@ MonoBehaviour:
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
+    - rid: 3967444776613052416
+      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        Position:
+          X:
+            RawValue: 491520
+          Y:
+            RawValue: -81920
+        Rotation:
+          RawValue: 0
+    - rid: 3967444776613052417
+      type: {class: PhysicsCollider2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        ShapeConfig:
+          ShapeType: 8
+          PolygonCollider:
+            Id:
+              Value: 0
+          CircleRadius:
+            RawValue: 0
+          CapsuleSize:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          EdgeExtent:
+            RawValue: 262144
+          BoxExtents:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          PositionOffset:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 16384
+          RotationOffset:
+            RawValue: 0
+          UserTag: 0
+          IsPersistent: 1
+          CompoundShapes: []
+        Layer: 0
+        IsTrigger: 0
+        PhysicsMaterial:
+          Id:
+            Value: 0
+    - rid: 3967444776613052418
+      type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        CallbackFlags:
+          Value: 0
+    - rid: 3967444776613052419
+      type: {class: MovingPlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Velocity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        IgnoreMovement:
+          Value: 1
+        CanCrushEntities:
+          Value: 0
+        RotatingPlatform:
+          Value: 1
+    - rid: 3967444776613052420
+      type: {class: SeesawPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        MaxTipping:
+          RawValue: 49152
+        Acceleration:
+          RawValue: 655
+        TerminalVelocity:
+          RawValue: 65536
     - rid: 4057640154980941824
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -2269,7 +2362,7 @@ MonoBehaviour:
       data:
         Scriptable:
           Id:
-            Value: 330575751736567297
+            Value: 351453161337192497
     - rid: 4268008230812123140
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2379,9 +2472,9 @@ MonoBehaviour:
       data:
         Position:
           X:
-            RawValue: 0
+            RawValue: 3833856
           Y:
-            RawValue: -163840
+            RawValue: -212992
         Rotation:
           RawValue: 0
     - rid: 4336890755244097537
@@ -2427,6 +2520,20 @@ MonoBehaviour:
         CallbackFlags:
           Value: 0
     - rid: 4336890755244097539
+      type: {class: MovingPlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        Velocity:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        IgnoreMovement:
+          Value: 1
+        CanCrushEntities:
+          Value: 0
+        RotatingPlatform:
+          Value: 1
+    - rid: 4336890755244097540
       type: {class: SeesawPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         MaxTipping:
@@ -2492,7 +2599,7 @@ MonoBehaviour:
       data:
         Scriptable:
           Id:
-            Value: 330575751736567297
+            Value: 351453161337192497
     - rid: 4651942059698028548
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -2714,6 +2821,8 @@ MonoBehaviour:
         IgnoreMovement:
           Value: 1
         CanCrushEntities:
+          Value: 0
+        RotatingPlatform:
           Value: 0
     - rid: 4966138319915188228
       type: {class: ScalePlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -3093,6 +3202,8 @@ MonoBehaviour:
         IgnoreMovement:
           Value: 1
         CanCrushEntities:
+          Value: 0
+        RotatingPlatform:
           Value: 0
     - rid: 5367176372873592836
       type: {class: ScalePlatformPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
@@ -5117,7 +5228,7 @@ MonoBehaviour:
       data:
         Scriptable:
           Id:
-            Value: 330575751736567297
+            Value: 351453161337192497
     - rid: 7964294533569576964
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
@@ -5279,7 +5390,7 @@ MonoBehaviour:
       data:
         Scriptable:
           Id:
-            Value: 330575751736567297
+            Value: 351453161337192497
     - rid: 8012923553454227460
       type: {class: CullablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:

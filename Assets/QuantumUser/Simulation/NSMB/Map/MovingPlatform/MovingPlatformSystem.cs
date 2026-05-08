@@ -31,6 +31,8 @@ namespace Quantum {
             if (!platform->IgnoreMovement) {
                 filter.Transform->Position += platform->Velocity * f.DeltaTime;
             }
+            //KKT Mod Rotation
+            filter.Platform->PreRotation = filter.Transform->Rotation;
         }
 
         private void TryMoveShape(Frame f, ref Filter filter, VersusStageData stage, QList<PhysicsQueryRef> queries, Shape2D* shape, int index) {
@@ -108,6 +110,16 @@ namespace Quantum {
 
             FP moveDistance = hit.OverlapPenetration;
             FPVector2 moveVector = -hit.Normal * (moveDistance * f.UpdateRate);
+            //KKT Mod
+            if (platform->RotatingPlatform) {
+                UnityEngine.Debug.Log("THIS CODE WAS RAN I NEVER TESTED THIS");
+                var transform = filter.Transform;
+                var J = transform->Rotation - platform->PreRotation;
+                var Sin = FPMath.Sin(J);
+                var Cos = FPMath.Cos(J);
+                var R = (hit.Point - transform->Position);
+                moveVector += new FPVector2((R.X*Cos)-(R.Y*Sin), (R.X*Sin)-(R.Y*Cos));
+            }
 
             var contacts = f.ResolveList(physicsObject->Contacts);
             PhysicsObjectSystem.MoveVertically(f, moveVector, ref physicsSystemFilter, stage, contacts, out bool tempHit1);
@@ -118,7 +130,7 @@ namespace Quantum {
                 if (contacts.Capacity > contacts.Count) { //KKT Mod
                     contacts.Add(newContact);
                 } else { //KKT Mod
-                    UnityEngine.Debug.LogWarning("CONTACT OVERFLOW, i mean stopping the error kind of works but it's still a problem maybe?");
+                    UnityEngine.Debug.LogWarning("CONTACT OVERFLOW, i mean stopping the error kind of works but it's still a problem maybe? Capacity: " + contacts.Capacity);
                 }
             }
 
@@ -127,5 +139,7 @@ namespace Quantum {
                 physicsObject->IsBeingCrushed = true;
             }
         }
+
+
     }
 }

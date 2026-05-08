@@ -29,11 +29,11 @@ MonoBehaviour:
         Gamemode:
           Id:
             Value: 326486899682662279
-        StarsToWin: 30
-        StarFrequency: 0
+        StarsToWin: 15
+        StarFrequency: 10
         ModifierCoinsEnabled:
           Value: 1
-        CoinsForPowerup: 3
+        CoinsForPowerup: 5
         RouletteBlocksEnabled:
           Value: 0
         Items:
@@ -122,9 +122,9 @@ MonoBehaviour:
             Value: 7
           Items: []
         ModifierHazardsEnabled:
-          Value: 1
-        MaxHazards: 30
-        HazardFrequency: 0
+          Value: 0
+        MaxHazards: 0
+        HazardFrequency: 5
         HeftyPercentage:
           RawValue: 196608
         HazardLifetime: 80
@@ -132,7 +132,7 @@ MonoBehaviour:
         - Name: Springboard
           HazardPrototype:
             Id:
-              Value: 1331816873224772261
+              Value: 1266191120316739523
           Team: 255
           Hefty:
             Value: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
             Value: 1
           SpawnFridge:
             Value: 1
-          Extra: 0100
+          Extra: 010d
         ModifierLivesEnabled:
           Value: 0
         Lives: 0
@@ -1959,12 +1959,12 @@ MonoBehaviour:
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 3
+          Y: 2
         valuenames:
         - Basic Blue
         - Ready Red
         - Sturdy Green
-    - Name: Turnip
+    - Name: Lil' Turnip
       entityPrototype:
         Id:
           Value: 0
@@ -2000,12 +2000,16 @@ MonoBehaviour:
       BulbCooldown: 1
       SpecialValues:
       - ButtonName: Contains
-        ButtonType: 2
-        BaseValue: 255
+        ButtonType: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 0
-        valuenames: []
+        valuenames:
+        - SmallCube
+        - TallCube
+        - LargeCube
+        - Goomba
     - Name: Baseball
       entityPrototype:
         Id:
@@ -2192,12 +2196,29 @@ MonoBehaviour:
           Y: 1
         valuenames: []
       - ButtonName: Contains
-        ButtonType: 2
-        BaseValue: 255
+        ButtonType: 1
+        BaseValue: 0
         ValueRange:
           X: 0
-          Y: 0
-        valuenames: []
+          Y: 16
+        valuenames:
+        - Chainchomp
+        - Baseball
+        - Heavystone
+        - Springboard
+        - Lemmyball
+        - Pow (Blue)
+        - Pow (Red)
+        - Freezie
+        - Propeller block
+        - Bill block
+        - Cannonbox
+        - Coinbox
+        - Boo
+        - Cataquack (Sturdy)
+        - Lil' Turnip
+        - Bone
+        - ChainPost (? ? ?)
     - Name: Lemmy's ball
       entityPrototype:
         Id:

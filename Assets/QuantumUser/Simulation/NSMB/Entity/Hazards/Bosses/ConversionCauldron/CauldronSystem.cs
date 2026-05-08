@@ -72,9 +72,11 @@ namespace Quantum {
         public void ConvertToBoss(Frame f, EntityRef thisEntity, bool IsInstantVarient) {
             var cauldron = f.Unsafe.GetPointer<Cauldron>(thisEntity);
             var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
 
             var bossesAsset = f.FindAsset(cauldron->BossData);
-            EntityRef newEntity = f.Create(bossesAsset.ListOfBosses[cauldron->ConvertIntoBossId].BossPrototype);
+            EntityRef newEntity = f.Create(bossesAsset.ListOfOptions[cauldron->ConvertIntoBossId].EntityPrototype);
 
             f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity.Y = 8;
 
@@ -83,7 +85,7 @@ namespace Quantum {
                 f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
             }
             //this code should always be ran, outside of putting it in stages if that's what i want to do
-            var extradata = bossesAsset.ListOfBosses[cauldron->ConvertIntoBossId].Extra;
+            var extradata = bossesAsset.ListOfOptions[cauldron->ConvertIntoBossId].Extra;
             var h = f.ResolveList(new QListPtr<byte>());
             foreach (var item in extradata) {
                 h.Add(item);
@@ -92,11 +94,11 @@ namespace Quantum {
             f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, h);
             f.Events.PlayPuffParticle(transform->Position);
             cauldron->TransformingEntity = EntityRef.None;
-            cauldron->Activated = false;
+            cauldron->Activated = true;
             if (IsInstantVarient) {
-                var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
                 hazard->LifeTime = 3;
                 transform->Position.Y = 1346;//idk
+                physicsObject->DisableCollision = true;
             } else {
                 HazardSystem.DestroyHazard(f, thisEntity);
             }
@@ -165,7 +167,7 @@ namespace Quantum {
             //Set The Value To What It Will ALWAYS convert into
             if (specialValues[0] == 0) {
                 //pick random
-                cauldron->ConvertIntoBossId = (byte)f.RNG->Next(0, f.FindAsset(cauldron->BossData).ListOfBosses.Length);
+                cauldron->ConvertIntoBossId = (byte)f.RNG->Next(0, f.FindAsset(cauldron->BossData).ListOfOptions.Length);
             } else {
                 //pick specific
                 cauldron->ConvertIntoBossId = specialValues[0];

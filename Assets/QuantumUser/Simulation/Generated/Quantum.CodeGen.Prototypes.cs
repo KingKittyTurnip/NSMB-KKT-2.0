@@ -343,7 +343,7 @@ namespace Quantum.Prototypes {
   public unsafe partial class CauldronPrototype : ComponentPrototype<Quantum.Cauldron> {
     public Byte ConvertIntoBossId;
     public FP Hitboxheight;
-    public AssetRef<CauldronBossesAsset> BossData;
+    public AssetRef<SpecificHazardContainerAsset> BossData;
     partial void MaterializeUser(Frame frame, ref Quantum.Cauldron result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Cauldron component = default;
@@ -775,6 +775,21 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.HazardContainer))]
+  public unsafe partial class HazardContainerPrototype : ComponentPrototype<Quantum.HazardContainer> {
+    public AssetRef<SpecificHazardContainerAsset> OptionData;
+    partial void MaterializeUser(Frame frame, ref Quantum.HazardContainer result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.HazardContainer component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.HazardContainer result, in PrototypeMaterializationContext context = default) {
+        result.OptionData = this.OptionData;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.HazardList))]
   public unsafe partial class HazardListPrototype : StructPrototype {
     [MaxStringByteCount(62, "Unicode")]
@@ -1085,6 +1100,7 @@ namespace Quantum.Prototypes {
     public FPVector2 Velocity;
     public QBoolean IgnoreMovement;
     public QBoolean CanCrushEntities;
+    public QBoolean RotatingPlatform;
     partial void MaterializeUser(Frame frame, ref Quantum.MovingPlatform result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.MovingPlatform component = default;
@@ -1095,6 +1111,7 @@ namespace Quantum.Prototypes {
         result.Velocity = this.Velocity;
         result.IgnoreMovement = this.IgnoreMovement;
         result.CanCrushEntities = this.CanCrushEntities;
+        result.RotatingPlatform = this.RotatingPlatform;
         MaterializeUser(frame, ref result, in context);
     }
   }

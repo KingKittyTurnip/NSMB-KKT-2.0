@@ -26,9 +26,12 @@ namespace Quantum {
 
                         //KKT Mod
                         new ScalePlatformSystem(),
-                        new SeesawSystem(),
 
                     new MovingPlatformSystem(),
+
+                        //KKT Mod
+                        new SeesawSystem(),
+
                     new EnemySystem(),
                     new InteractionSystem(),
                     new PhysicsObjectSystem(),

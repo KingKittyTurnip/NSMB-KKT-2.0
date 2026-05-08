@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 7701320042024234219}
   - component: {fileID: 8856946154673337749}
   - component: {fileID: 7653816578803843531}
+  - component: {fileID: 7543750674560177964}
   m_Layer: 19
   m_Name: ChainPost
   m_TagString: Powerup
@@ -711,6 +712,22 @@ MonoBehaviour:
   actualscale: 1
   sfx: {fileID: 4207910641862185911}
   koopaSpawnParticles: {fileID: 0}
+--- !u!114 &7543750674560177964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017215213198693191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f44da1d788a9449a76be4892a1dd4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeHazardContainer
+  Prototype:
+    OptionData:
+      Id:
+        Value: 409087740961266189
 --- !u!1 &2443416780142421615
 GameObject:
   m_ObjectHideFlags: 0

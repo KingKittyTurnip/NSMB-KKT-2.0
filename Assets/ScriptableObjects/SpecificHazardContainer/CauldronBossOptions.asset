@@ -10,35 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 33c961affce647046bba38695ff96f2e, type: 3}
-  m_Name: CauldronBossesAsset
+  m_Name: CauldronBossOptions
   m_EditorClassIdentifier: Quantum.Simulation::Quantum.CauldronBossesAsset
   Identifier:
-    Path: QuantumUser/Simulation/NSMB/Entity/Hazards/Bosses/ConversionCauldron/CauldronBossesAsset
+    Path: ScriptableObjects/SpecificHazardContainer/CauldronBossOptions
     Guid:
       Value: 421821552550649616
-  ListOfBosses:
+  ListOfOptions:
   - Name: Bowser
-    BossPrototype:
+    EntityPrototype:
       Id:
         Value: 1425013984214867549
     Extra: 00
   - Name: King Boo
-    BossPrototype:
+    EntityPrototype:
       Id:
         Value: 1417407889661057047
     Extra: 
-  - Name: Petey
-    BossPrototype:
+  - Name: Petey Piranha
+    EntityPrototype:
       Id:
         Value: 1357720639578944744
     Extra: 
   - Name: King Whomp
-    BossPrototype:
+    EntityPrototype:
       Id:
         Value: 1500840674427279327
     Extra: 
   - Name: Dry Bowser
-    BossPrototype:
+    EntityPrototype:
       Id:
         Value: 1425013984214867549
     Extra: 01

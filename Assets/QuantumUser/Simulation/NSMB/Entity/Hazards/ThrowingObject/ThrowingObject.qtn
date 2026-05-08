@@ -28,19 +28,23 @@ component ThrowingObject {
 component SpringBoard {
 }
 
+component HazardContainer {
+    AssetRef<SpecificHazardContainerAsset> OptionData;
+}
+
 enum ThrowingObjectType : Byte {
     Basic,
 	Stone, // For Particle When Landing
 	Spring, // For Spring Effect
 	Pow, // For Explosion
 	Barrel, // For Damage
-	Freezie, // For Freeze And Split Effect
+	Freezie, // For Freeze
 	CoinBox, // For Coin Giving
 	PropellerBox, // For Flying
 	BillBlock, // For Gliding
 	CannonBox, // For Pewing
 	Fridge, // For pinata
-	Voidwall, //For Voidwall
+	Voidwall, // For Voidwall
 	Potion, // For Creating WarpDoor
 	ChainPost, // For Chainchomp's Post
     KingBooStone, // For KingBoo
