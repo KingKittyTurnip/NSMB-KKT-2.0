@@ -19,6 +19,8 @@ namespace Quantum {
                     new PrePhysicsObjectSystem(),
                     new InteractionPhysicsQuerySystem(),
                     new GenericMoverSystem(),
+                        //KKT Mod
+                        new SeesawSystem(),
                     new SpinnerSystem(),
                     new DonutBlockSystem(),
                     new MovingPlatformPhysicsQuerySystem(),
@@ -28,10 +30,6 @@ namespace Quantum {
                         new ScalePlatformSystem(),
 
                     new MovingPlatformSystem(),
-
-                        //KKT Mod
-                        new SeesawSystem(),
-
                     new EnemySystem(),
                     new InteractionSystem(),
                     new PhysicsObjectSystem(),
@@ -45,6 +43,7 @@ namespace Quantum {
 
                       //KKT Mod
                       new CataquackSystem(),
+                      new DryBonesSystem(),
                       new PodoboSystem(),
                       new ThwompSystem(),
 

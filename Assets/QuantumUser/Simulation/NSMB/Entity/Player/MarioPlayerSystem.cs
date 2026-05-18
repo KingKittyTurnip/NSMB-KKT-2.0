@@ -460,14 +460,14 @@ namespace Quantum {
                 if (mario->MetalMushroomFrames > 0) {
                     FP cap = physics.WalkMaxVelocity[physics.RunSpeedStage] + mario->MetalBoost;
 
-                    if (FPMath.Abs(physicsObject->Velocity.X) >= 3 && (inputs.Left.IsDown || inputs.Right.IsDown)) //start to add boosts if near top speed
-                        mario->MetalBoost = FPMath.Min(mario->MetalBoost + 1, 10);
+                    if (inputs.Left.IsDown || inputs.Right.IsDown) //start to add boosts if near top speed
+                        mario->MetalBoost = FPMath.Min(mario->MetalBoost + FP._0_75, 10);
 
                     if (inputs.Left ^ inputs.Right) {
                         //add a bit extra velocity
                         physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (inputs.Left ? -2 : 2), -cap, cap);
                     }
-                    mario->MetalSlowdownDelay = FP._0_50;
+                    mario->MetalSlowdownDelay = Constants._0_66;
                     f.Events.MetalLanded(filter.Entity, filter.Transform->Position);
                 }
             }
@@ -782,7 +782,7 @@ namespace Quantum {
                 mario->FacingRight = mario->WallslideLeft;
                 if (mario->JumpBufferFrames > 0 && mario->WalljumpFrames == 0 /* && !BounceJump */) {
                     // Perform walljump
-                    physicsObject->Velocity = new(physics.WalljumpHorizontalVelocity * (mario->WallslideLeft ? 1 : -1), mario->CurrentPowerupState == PowerupState.MiniMushroom ? physics.WalljumpMiniVerticalVelocity : physics.WalljumpVerticalVelocity);
+                    physicsObject->Velocity = new((physics.WalljumpHorizontalVelocity + (mario->MetalBoost/2)) * (mario->WallslideLeft ? 1 : -1), mario->CurrentPowerupState == PowerupState.MiniMushroom ? physics.WalljumpMiniVerticalVelocity : physics.WalljumpVerticalVelocity);
                     mario->JumpState = JumpState.SingleJump;
                     physicsObject->IsTouchingGround = false;
                     mario->DoEntityBounce = false;
@@ -2268,7 +2268,7 @@ namespace Quantum {
                 f.Unsafe.GetPointer<Transform2D>(newEntity)->Position = f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + new FPVector2(0, 2);
                 UnityEngine.Debug.Log("MARIO THIS ISN'T A COINITEM");
             }
-            f.Signals.InitializeHazard(newEntity, marioEntity, f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position, SpawnReason.Item, powerupdata.Extra);
+            f.Signals.InitializeHazard(newEntity, marioEntity, f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position, SpawnReason.Item, powerupdata.Extra.Extra);
             #endregion
 
             return newEntity;

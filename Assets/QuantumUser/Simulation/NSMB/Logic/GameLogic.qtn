@@ -119,7 +119,7 @@ struct PowerupData {
     byte Team;
     //FP Scale;
 //Specific Data
-	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<byte> Extra;
+    ExtrasList Extra;
 }
 
 struct HazardList {
@@ -132,7 +132,11 @@ struct HazardList {
     bool SpawnFridge;
     //FP Scale;
 //Specific Data
-	[AllocateOnComponentAdded, FreeOnComponentRemoved] list<byte> Extra;
+	ExtrasList Extra;
+}
+
+struct ExtrasList {
+    [AllocateOnComponentAdded, FreeOnComponentRemoved] list<byte> Extra;
 }
 
 enum ItemChanceType : Byte {

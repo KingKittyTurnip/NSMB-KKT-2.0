@@ -1,6 +1,7 @@
 using Photon.Deterministic;
 using Quantum.Collections;
 using Quantum.Physics2D;
+using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 namespace Quantum {
     public unsafe class MovingPlatformSystem : SystemMainThreadEntityFilter<MovingPlatform, MovingPlatformSystem.Filter> {
@@ -112,13 +113,15 @@ namespace Quantum {
             FPVector2 moveVector = -hit.Normal * (moveDistance * f.UpdateRate);
             //KKT Mod
             if (platform->RotatingPlatform) {
-                UnityEngine.Debug.Log("THIS CODE WAS RAN I NEVER TESTED THIS");
-                var transform = filter.Transform;
-                var J = transform->Rotation - platform->PreRotation;
+                var thisTransform = filter.Transform;
+                var thisCollider = filter.Collider;
+                var platformTransform = f.Unsafe.GetPointer<Transform2D>(entity);
+
+                var J = platformTransform->Rotation - platform->PreRotation;
                 var Sin = FPMath.Sin(J);
                 var Cos = FPMath.Cos(J);
-                var R = (hit.Point - transform->Position);
-                moveVector += new FPVector2((R.X*Cos)-(R.Y*Sin), (R.X*Sin)-(R.Y*Cos));
+                var R = (thisTransform->Position - platformTransform->Position);
+                thisTransform->Position = new FPVector2((R.X*Cos)-(R.Y*Sin)+platformTransform->Position.X, (R.X*Sin)+(R.Y*Cos)+platformTransform->Position.Y);
             }
 
             var contacts = f.ResolveList(physicsObject->Contacts);
@@ -127,7 +130,7 @@ namespace Quantum {
 
             bool addContact = !movingAway || FPVector3.Project(physicsObject->Velocity.XYO, platform->Velocity.Normalized.XYO).Magnitude < platform->Velocity.Magnitude;
             if (addContact) {
-                if (contacts.Capacity > contacts.Count) { //KKT Mod
+                if (contacts.Capacity < 64) { //KKT Mod
                     contacts.Add(newContact);
                 } else { //KKT Mod
                     UnityEngine.Debug.LogWarning("CONTACT OVERFLOW, i mean stopping the error kind of works but it's still a problem maybe? Capacity: " + contacts.Capacity);

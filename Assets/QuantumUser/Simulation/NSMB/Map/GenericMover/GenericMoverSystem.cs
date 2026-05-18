@@ -49,6 +49,8 @@ namespace Quantum {
             } else {
                 transform->Position += velocity;
             }
+            if (!(asset.ObjectRot == null || asset.ObjectRot.Length == 0))
+                transform->Rotation = SampleRotation(asset.ObjectRot, nextTime, asset.LoopMode);
         }
 
         private static FPVector2 SamplePosition(GenericMoverAsset.PathNode[] positions, FP sample, GenericMoverAsset.LoopingMode loopMode) {
@@ -90,5 +92,44 @@ namespace Quantum {
             return default;
         }
 
+        //KKT Mod
+        private static FP SampleRotation(GenericMoverAsset.RotNode[] rotations, FP sample, GenericMoverAsset.LoopingMode loopMode) {
+            FP totalDuration = 0;
+            for (int i = 0; i < rotations.Length; i++) {
+                totalDuration += rotations[i].TravelDuration;
+            }
+
+            if (loopMode == GenericMoverAsset.LoopingMode.Loop) {
+                sample %= totalDuration;
+            } else if (loopMode == GenericMoverAsset.LoopingMode.Clamp) {
+                sample = FPMath.Clamp(sample, 0, totalDuration);
+            } else if (loopMode == GenericMoverAsset.LoopingMode.PingPong) {
+                sample %= (totalDuration * 2);
+                if (sample > totalDuration) {
+                    sample = (totalDuration * 2) - sample;
+                }
+            }
+
+            for (int i = 0; i < rotations.Length; i++) {
+                GenericMoverAsset.RotNode current = rotations[i];
+                GenericMoverAsset.RotNode next = rotations[(i + 1) % rotations.Length];
+
+                if (sample > current.TravelDuration) {
+                    sample -= current.TravelDuration;
+                } else {
+                    FP alpha = sample / current.TravelDuration;
+                    if (next.EaseIn && next.EaseOut) {
+                        alpha = QuantumUtils.EaseInOut(alpha);
+                    } else if (next.EaseIn) {
+                        alpha = QuantumUtils.EaseIn(alpha);
+                    } else if (next.EaseOut) {
+                        alpha = QuantumUtils.EaseOut(alpha);
+                    }
+                    return FPMath.Lerp(current.Rotation, next.Rotation, alpha);
+                }
+            }
+
+            return default;
+        }
     }
 }

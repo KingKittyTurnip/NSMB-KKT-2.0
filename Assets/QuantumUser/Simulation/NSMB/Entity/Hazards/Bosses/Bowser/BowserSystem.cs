@@ -188,6 +188,9 @@ namespace Quantum {
                 if (Fireball) {
                     bowser->State = physicsObject->IsTouchingGround ? BowserState.Attacking : BowserState.AttackingInJump;
                     bowser->ReusableTimer = 0;
+                    if (physicsObject->Velocity.Y < 5) {
+                        physicsObject->Velocity.Y = 5;
+                    }
                     f.Events.BowserAttack(Entity, BowserAttackType.FireBall);
                 }
             }

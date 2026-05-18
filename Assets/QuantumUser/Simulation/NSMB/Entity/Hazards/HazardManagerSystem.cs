@@ -169,7 +169,7 @@ namespace Quantum {
                 //SpawnHazard
                 EntityRef newEntity = f.Create(spawnablehazards[pick].HazardPrototype); //error out of range?
                 var newhazardspawnerTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
-                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, spawnablehazards[pick].Extra);
+                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, spawnablehazards[pick].Extra.Extra);
 
                 //things without the hazard script can be created, only cloudbill does this to make the platform act independantly
                 if (f.Unsafe.TryGetPointer<Hazard>(newEntity, out var newhazardspawner) && newhazardspawner->RestrictSpawnPosition) {

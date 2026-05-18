@@ -1,5 +1,6 @@
 using Photon.Deterministic;
 using Quantum.Collections;
+using Quantum.Prototypes;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,7 @@ namespace Quantum {
             var transform = filter.Transform;
             var physicsObject = filter.PhysicsObject;
             var coinitem = filter.CoinItem;
+            var hazard = filter.hazard;
 
             //Hacky Fix...
             if (coinitem->SpawnAnimationFrames == 1) {
@@ -84,14 +86,11 @@ namespace Quantum {
                 f.Unsafe.GetPointer<Boss>(newEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
                 f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
             }
-            //this code should always be ran, outside of putting it in stages if that's what i want to do
-            var extradata = bossesAsset.ListOfOptions[cauldron->ConvertIntoBossId].Extra;
-            var h = f.ResolveList(new QListPtr<byte>());
-            foreach (var item in extradata) {
-                h.Add(item);
-            }
+            //Setup Extradata
+            ExtrasList j = new ExtrasList();
+            bossesAsset.ListOfOptions[cauldron->ConvertIntoBossId].Extra.Materialize(f, ref j);
 
-            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, h);
+            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, j.Extra);
             f.Events.PlayPuffParticle(transform->Position);
             cauldron->TransformingEntity = EntityRef.None;
             cauldron->Activated = true;
@@ -100,7 +99,11 @@ namespace Quantum {
                 transform->Position.Y = 1346;//idk
                 physicsObject->DisableCollision = true;
             } else {
-                HazardSystem.DestroyHazard(f, thisEntity);
+                if (hazard->IsHazard || hazard->IsCoinItem) {
+                    HazardSystem.DestroyHazard(f, thisEntity);
+                } else {
+                    f.Destroy(thisEntity);
+                }
             }
         }
 

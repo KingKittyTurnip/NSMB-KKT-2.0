@@ -5,10 +5,18 @@ using System;
 public class GenericMoverAsset : AssetObject {
     public PathNode[] ObjectPath;
     public LoopingMode LoopMode;
+    public RotNode[] ObjectRot;
 
     [Serializable]
     public struct PathNode {
         public FPVector2 Position;
+        public FP TravelDuration;
+        public bool EaseIn;
+        public bool EaseOut;
+    }
+    [Serializable]
+    public struct RotNode {
+        public FP Rotation;
         public FP TravelDuration;
         public bool EaseIn;
         public bool EaseOut;

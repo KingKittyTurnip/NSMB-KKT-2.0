@@ -502,6 +502,46 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.DryBones))]
+  public unsafe partial class DryBonesPrototype : ComponentPrototype<Quantum.DryBones> {
+    public Quantum.QEnum8<DryState> State;
+    public FP Speed;
+    public QBoolean IsBig;
+    public FPVector2 HeadSpawnOffset;
+    public AssetRef<EntityPrototype> DryHeadPrototype;
+    partial void MaterializeUser(Frame frame, ref Quantum.DryBones result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.DryBones component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.DryBones result, in PrototypeMaterializationContext context = default) {
+        result.State = this.State;
+        result.Speed = this.Speed;
+        result.IsBig = this.IsBig;
+        result.HeadSpawnOffset = this.HeadSpawnOffset;
+        result.DryHeadPrototype = this.DryHeadPrototype;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.DryHead))]
+  public unsafe partial class DryHeadPrototype : ComponentPrototype<Quantum.DryHead> {
+    public FP Speed;
+    public QBoolean FacingRight;
+    partial void MaterializeUser(Frame frame, ref Quantum.DryHead result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.DryHead component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.DryHead result, in PrototypeMaterializationContext context = default) {
+        result.Speed = this.Speed;
+        result.FacingRight = this.FacingRight;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Enemy))]
   public unsafe partial class EnemyPrototype : ComponentPrototype<Quantum.Enemy> {
     public FPVector2 Spawnpoint;
@@ -541,6 +581,28 @@ namespace Quantum.Prototypes {
         result.IsCeilingPipe = this.IsCeilingPipe;
         result.IsMiniOnly = this.IsMiniOnly;
         result.TransitionOnlyPanning = this.TransitionOnlyPanning;
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.ExtrasList))]
+  public unsafe partial class ExtrasListPrototype : StructPrototype {
+    [AllocateOnComponentAdded()]
+    [FreeOnComponentRemoved()]
+    [DynamicCollectionAttribute()]
+    public Byte[] Extra = {};
+    partial void MaterializeUser(Frame frame, ref Quantum.ExtrasList result, in PrototypeMaterializationContext context);
+    public void Materialize(Frame frame, ref Quantum.ExtrasList result, in PrototypeMaterializationContext context = default) {
+        if (this.Extra.Length == 0) {
+          result.Extra = default;
+        } else {
+          var list = frame.AllocateList(out result.Extra, this.Extra.Length);
+          for (int i = 0; i < this.Extra.Length; ++i) {
+            Byte tmp = default;
+            tmp = this.Extra[i];
+            list.Add(tmp);
+          }
+        }
+        MaterializeUser(frame, ref result, in context);
     }
   }
   [System.SerializableAttribute()]
@@ -799,10 +861,7 @@ namespace Quantum.Prototypes {
     public QBoolean Hefty;
     public QBoolean SpawnRandom;
     public QBoolean SpawnFridge;
-    [AllocateOnComponentAdded()]
-    [FreeOnComponentRemoved()]
-    [DynamicCollectionAttribute()]
-    public Byte[] Extra = {};
+    public Quantum.Prototypes.ExtrasListPrototype Extra;
     partial void MaterializeUser(Frame frame, ref Quantum.HazardList result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.HazardList result, in PrototypeMaterializationContext context = default) {
         PrototypeValidator.AssignQString(this.Name, 64, in context, out result.Name);
@@ -811,16 +870,7 @@ namespace Quantum.Prototypes {
         result.Hefty = this.Hefty;
         result.SpawnRandom = this.SpawnRandom;
         result.SpawnFridge = this.SpawnFridge;
-        if (this.Extra.Length == 0) {
-          result.Extra = default;
-        } else {
-          var list = frame.AllocateList(out result.Extra, this.Extra.Length);
-          for (int i = 0; i < this.Extra.Length; ++i) {
-            Byte tmp = default;
-            tmp = this.Extra[i];
-            list.Add(tmp);
-          }
-        }
+        this.Extra.Materialize(frame, ref result.Extra, in context);
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -1335,25 +1385,13 @@ namespace Quantum.Prototypes {
     public string Name;
     public AssetRef<EntityPrototype> PowerupPrototype;
     public Byte Team;
-    [AllocateOnComponentAdded()]
-    [FreeOnComponentRemoved()]
-    [DynamicCollectionAttribute()]
-    public Byte[] Extra = {};
+    public Quantum.Prototypes.ExtrasListPrototype Extra;
     partial void MaterializeUser(Frame frame, ref Quantum.PowerupData result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.PowerupData result, in PrototypeMaterializationContext context = default) {
         PrototypeValidator.AssignQString(this.Name, 64, in context, out result.Name);
         result.PowerupPrototype = this.PowerupPrototype;
         result.Team = this.Team;
-        if (this.Extra.Length == 0) {
-          result.Extra = default;
-        } else {
-          var list = frame.AllocateList(out result.Extra, this.Extra.Length);
-          for (int i = 0; i < this.Extra.Length; ++i) {
-            Byte tmp = default;
-            tmp = this.Extra[i];
-            list.Add(tmp);
-          }
-        }
+        this.Extra.Materialize(frame, ref result.Extra, in context);
         MaterializeUser(frame, ref result, in context);
     }
   }

@@ -1,7 +1,11 @@
-﻿using Quantum.Collections;
-using Quantum.Core;
+﻿using Microsoft.SqlServer.Server;
+using Photon.Deterministic;
+using Quantum.Collections;
+using Quantum.Prototypes;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace Quantum {
     public partial class SpecificHazardContainerAsset : AssetObject {
@@ -12,7 +16,7 @@ namespace Quantum {
         public class OptionsAvailable {
             public string Name;
             public AssetRef<EntityPrototype> EntityPrototype;
-            public List<byte> Extra;
-        } 
+            public ExtrasListPrototype Extra;
+        }
     }
 }

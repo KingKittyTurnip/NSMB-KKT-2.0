@@ -1,0 +1,38 @@
+#define _0_15 0.15
+
+component DryBones {
+    DryState State;
+    FP Speed;
+    bool IsBig;
+    FPVector2 HeadSpawnOffset;
+    AssetRef<EntityPrototype> DryHeadPrototype;
+
+    [ExcludeFromPrototype] FP ReusableTimer;
+    [ExcludeFromPrototype] EntityRef DryHead;
+}
+
+component DryHead {
+    FP Speed;
+    bool FacingRight;
+    [ExcludeFromPrototype] byte BounceTimes;
+}
+
+enum DryState : Byte
+{
+    Idle, // walkies
+    Broken, // we've broken down
+    Retrieve, // head returns
+}
+
+event DryBreak {
+    EntityRef Entity;
+}
+
+event DryRetrive {
+    Frame f;
+    EntityRef Entity;
+}
+
+event DryGetup {
+    EntityRef Entity;
+}

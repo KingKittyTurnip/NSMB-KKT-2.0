@@ -40,7 +40,7 @@ namespace Quantum {
             var vel = FPMath.Abs(filter.PhysicsObject->Velocity.X); //KKT Mod
 
             FP targetSize;
-            if (mario->IsPropellerFlying || mario->IsSpinnerFlying || vel >= 8) {//KKT Mod
+            if (mario->IsPropellerFlying || mario->IsSpinnerFlying || vel >= 8 || mario->MetalBoost >= 4) {//KKT Mod
                 targetSize = 8;
             } else {
                 targetSize = 7;

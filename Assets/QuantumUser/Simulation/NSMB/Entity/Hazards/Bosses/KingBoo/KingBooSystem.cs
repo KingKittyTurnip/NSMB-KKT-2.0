@@ -202,7 +202,7 @@ namespace Quantum {
                     var projectiles = f.Filter<ThrowingObject, Holdable, PhysicsObject, Hazard>();
                     byte Count = 0;
                     while (projectiles.NextUnsafe(out EntityRef throwableEntity, out ThrowingObject* throwable, out Holdable* throwholdable, out PhysicsObject* throwphys, out Hazard* throwhazard)) {
-                        if (throwholdable->PreviousHolder == disRef2 && f.Exists(throwableEntity)) {
+                        if (throwholdable->PreviousHolder == disRef2 && f.Exists(throwableEntity) && throwable->Type == ThrowingObjectType.KingBooStone) {
                             Count++;
                             QuantumUtils.UnwrapWorldLocations(f, transform->Position + (FPVector2.Up * FP._0_33), f.Unsafe.GetPointer<Transform2D>(throwableEntity)->Position, out FPVector2 ourPos, out FPVector2 theirPos);
                             var Direction = (ourPos - theirPos).Normalized;
