@@ -44,7 +44,7 @@ namespace Quantum {
             FP leftrightinput = 0;
             bool Spinattacking = false;
             bool Groundpounding = false;
-            bool HasTarget = !QuantumUtils.Decrement(ref boss->iframes);
+            bool HasTarget = boss->BossHandleIframes(f);
             if (boss->ControllerPlayer != EntityRef.None) {
                 //Controlled By Player
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer);
@@ -309,7 +309,7 @@ namespace Quantum {
         }
         public void OnProjectilePeteyInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteract())
                 return;
             var petey = f.Unsafe.GetPointer<Petey>(thisEntity);
             var projectile = f.Unsafe.GetPointer<Projectile>(projectileEntity);
@@ -341,14 +341,14 @@ namespace Quantum {
         public void OnBossPeteyInteraction(Frame f, EntityRef bossEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             var otherboss = f.Unsafe.GetPointer<Boss>(bossEntity);
-            if (boss->Dead || otherboss->Dead)
+            if (!boss->BossCanInteract() || !otherboss->BossCanInteract())
                 return;
             f.Signals.BossToBossInteraction(thisEntity, bossEntity);
             f.Signals.BossToBossInteraction(bossEntity, thisEntity);
         }
         public void OnEnemyPeteyInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteract())
                 return;
 
             if (f.Unsafe.TryGetPointer(enemyEntity, out Goomba* goomba)) {

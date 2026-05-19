@@ -2319,6 +2319,9 @@ namespace Quantum {
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte iframes;
+    [FieldOffset(2)]
+    [ExcludeFromPrototype()]
+    public Byte knockbackframes;
     public override readonly Int32 GetHashCode() {
       unchecked { 
         var hash = 19727;
@@ -2327,6 +2330,7 @@ namespace Quantum {
         hash = hash * 31 + Dead.GetHashCode();
         hash = hash * 31 + FacingRight.GetHashCode();
         hash = hash * 31 + iframes.GetHashCode();
+        hash = hash * 31 + knockbackframes.GetHashCode();
         return hash;
       }
     }
@@ -2334,6 +2338,7 @@ namespace Quantum {
         var p = (Boss*)ptr;
         serializer.Stream.Serialize(&p->Health);
         serializer.Stream.Serialize(&p->iframes);
+        serializer.Stream.Serialize(&p->knockbackframes);
         QBoolean.Serialize(&p->Dead, serializer);
         QBoolean.Serialize(&p->FacingRight, serializer);
         EntityRef.Serialize(&p->ControllerPlayer, serializer);
@@ -2410,18 +2415,20 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Bowser : Quantum.IComponent {
-    public const Int32 SIZE = 48;
+    public const Int32 SIZE = 56;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(0)]
     public BowserState State;
     [FieldOffset(16)]
     public QBoolean IsDry;
+    [FieldOffset(48)]
+    public AssetRef<EntityPrototype> Melee;
     [FieldOffset(40)]
     public AssetRef<EntityPrototype> Fireball;
-    [FieldOffset(24)]
-    public AssetRef<EntityPrototype> BlueFire;
     [FieldOffset(32)]
     public AssetRef<EntityPrototype> Bone;
+    [FieldOffset(24)]
+    public AssetRef<EntityPrototype> BlueFire;
     [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public Byte ReusableTimer;
@@ -2451,9 +2458,10 @@ namespace Quantum {
         var hash = 9973;
         hash = hash * 31 + (Byte)State;
         hash = hash * 31 + IsDry.GetHashCode();
+        hash = hash * 31 + Melee.GetHashCode();
         hash = hash * 31 + Fireball.GetHashCode();
-        hash = hash * 31 + BlueFire.GetHashCode();
         hash = hash * 31 + Bone.GetHashCode();
+        hash = hash * 31 + BlueFire.GetHashCode();
         hash = hash * 31 + ReusableTimer.GetHashCode();
         hash = hash * 31 + VolleyCooldown.GetHashCode();
         hash = hash * 31 + AttackCooldown.GetHashCode();
@@ -2480,6 +2488,7 @@ namespace Quantum {
         AssetRef.Serialize(&p->BlueFire, serializer);
         AssetRef.Serialize(&p->Bone, serializer);
         AssetRef.Serialize(&p->Fireball, serializer);
+        AssetRef.Serialize(&p->Melee, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -4750,7 +4759,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Projectile : Quantum.IComponent {
-    public const Int32 SIZE = 48;
+    public const Int32 SIZE = 64;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(24)]
     public AssetRef<ProjectileAsset> Asset;
@@ -4777,6 +4786,9 @@ namespace Quantum {
     [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public QBoolean SpawnedFromPlayer;
+    [FieldOffset(48)]
+    [ExcludeFromPrototype()]
+    public FPVector2 SpawnOffset;
     public override readonly Int32 GetHashCode() {
       unchecked { 
         var hash = 16141;
@@ -4789,6 +4801,7 @@ namespace Quantum {
         hash = hash * 31 + Combo.GetHashCode();
         hash = hash * 31 + Lifetime.GetHashCode();
         hash = hash * 31 + SpawnedFromPlayer.GetHashCode();
+        hash = hash * 31 + SpawnOffset.GetHashCode();
         return hash;
       }
     }
@@ -4803,6 +4816,7 @@ namespace Quantum {
         AssetRef.Serialize(&p->Asset, serializer);
         EntityRef.Serialize(&p->Owner, serializer);
         FP.Serialize(&p->Speed, serializer);
+        FPVector2.Serialize(&p->SpawnOffset, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]

@@ -13,6 +13,7 @@ component Projectile {
 	[ExcludeFromPrototype] byte Lifetime;
 
 	[ExcludeFromPrototype] bool SpawnedFromPlayer;
+    [ExcludeFromPrototype] FPVector2 SpawnOffset;
 }
 
 signal OnProjectileHitEntity(EntityRef projectile, EntityRef hitEntity);

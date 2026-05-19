@@ -58,7 +58,7 @@ namespace Quantum {
             bool Sprint = false;
             bool Groundpounding = false;
             //bool Crouching = false;
-            bool HasTarget = !QuantumUtils.Decrement(ref boss->iframes);
+            bool HasTarget = boss->BossHandleIframes(f);
             if (boss->ControllerPlayer != EntityRef.None) {
                 //Controlled By Player
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer);
@@ -278,8 +278,37 @@ namespace Quantum {
                 bowser->State = physicsObject->IsTouchingGround ? BowserState.Attacking : BowserState.AttackingInJump;
 
                 bowser->ReusableTimer++;
-                if (bowser->ReusableTimer > 20) {
-                    if (!bowser->IsDry) {
+                if (bowser->ReusableTimer > 30) {
+                    if (!Sprint && !bowser->AttackQuery) {
+                        //create base attack
+                        if (bowser->IsDry)
+                            f.Events.BowserShoot(filter.Entity, true);
+                        CreateProjectile(bowser->IsDry ? bowser->Bone : bowser->Melee, FPVector2.Right, bowser->IsDry ? 5 : 0, !bowser->IsDry);
+
+                        if (bowser->VolleyCooldown > 0) {
+                            bowser->AttackCooldown = 50;
+                            bowser->VolleyCooldown = 50;
+                        } else {
+                            bowser->VolleyCooldown = 50;
+                        }
+                        bowser->ReusableTimer = 0;
+                        bowser->State = bowser->State == BowserState.AttackingInJump ? BowserState.Jumping : BowserState.Walking;
+                    } else {
+                        //create fireball
+                        f.Events.BowserAttack(filter.Entity, BowserAttackType.MegaAttack);
+                        CreateProjectile(bowser->IsDry ? bowser->BlueFire : bowser->Fireball, new FPVector2(1, updowninput / 3), 0, false);
+
+                        if (bowser->VolleyCooldown > 0) {
+                            bowser->AttackCooldown = 50;
+                            bowser->VolleyCooldown = 50;
+                        } else {
+                            bowser->VolleyCooldown = 50;
+                        }
+                        bowser->ReusableTimer = 0;
+                        bowser->State = bowser->State == BowserState.AttackingInJump ? BowserState.Jumping : BowserState.Walking;
+                    }
+
+                    /*if (!bowser->IsDry) {
                         if (bowser->ReusableTimer == 21)
                             f.Events.BowserAttack(filter.Entity, BowserAttackType.MegaAttack);
                         bowser->ReusableTimer++;
@@ -299,34 +328,21 @@ namespace Quantum {
                         bowser->State = bowser->State == BowserState.AttackingInJump ? BowserState.Jumping : BowserState.Walking;
                         bowser->AttackCooldown = 80;
                         bowser->VolleyCooldown = 80;
-                    }
-                } else if (!Sprint) {
-                    //create one
-                    f.Events.BowserShoot(filter.Entity, false);
-                    CreateProjectile(bowser->IsDry ? bowser->BlueFire : bowser->Fireball, new FPVector2(1, updowninput / 3), 0);
-
-                    if (bowser->VolleyCooldown > 0) {
-                        bowser->AttackCooldown = 50;
-                        bowser->VolleyCooldown = 50;
-                    } else {
-                        bowser->VolleyCooldown = 50;
-                    }
-                    bowser->ReusableTimer = 0;
-                    bowser->State = bowser->State == BowserState.AttackingInJump ? BowserState.Jumping : BowserState.Walking;
+                    }*/
                 } else if (leftrightinput != 0) {
                     //Allow Turnaround In Startup Phase
                     boss->FacingRight = leftrightinput > 0;
                 }
 
-                void CreateProjectile(AssetRef<EntityPrototype> prototype, FPVector2 Direction, FP VerticalBonus, bool Half = false) {
-                    FPVector2 spawnPos = transform->Position + new FPVector2(boss->FacingRight ? FP._0_50 : -FP._0_50, FP._0_50);
+                void CreateProjectile(AssetRef<EntityPrototype> prototype, FPVector2 Direction, FP VerticalBonus, bool extra) {
                     EntityRef newEntity = f.Create(prototype);
                     var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
-                    projectile->Initialize(f, newEntity, boss->BossGetOwnerResponsible(entity), spawnPos, boss->FacingRight, false);
+                    projectile->SpawnOffset = new FPVector2((boss->FacingRight ? 1 : -1) * (extra ? 1 : FP._0_50), FP._0_50);
+                    projectile->Initialize(f, newEntity, boss->BossGetOwnerResponsible(entity), transform->Position + projectile->SpawnOffset, boss->FacingRight, false);
                     var projPhys = f.Unsafe.GetPointer<PhysicsObject>(newEntity);
                     FP radian = FPMath.Atan2(Direction.Y, Direction.X);
                     Direction = new FPVector2(FPMath.Cos(radian), FPMath.Sin(radian));
-                    projPhys->Velocity = (Direction * projectile->Speed * (Half ? Constants._0_66 : 1)) + (FPVector2.Up * VerticalBonus);
+                    projPhys->Velocity = (Direction * projectile->Speed * 1) + (FPVector2.Up * VerticalBonus);
                     projectile->Speed = projPhys->Velocity.X;
                 }
                 break;
@@ -417,7 +433,7 @@ namespace Quantum {
         }
         public void OnProjectileBowserInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteract())
                 return;
             var bowser = f.Unsafe.GetPointer<Bowser>(thisEntity);
             var projectile = f.Unsafe.GetPointer<Projectile>(projectileEntity);
@@ -446,14 +462,14 @@ namespace Quantum {
         public void OnBossBowserInteraction(Frame f, EntityRef bossEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             var otherboss = f.Unsafe.GetPointer<Boss>(bossEntity);
-            if (boss->Dead || otherboss->Dead)
+            if (!boss->BossCanInteract() || !otherboss->BossCanInteract())
                 return;
             f.Signals.BossToBossInteraction(thisEntity, bossEntity);
             f.Signals.BossToBossInteraction(bossEntity, thisEntity);
         }
         public void OnEnemyBowserInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteract())
                 return;
 
             if (f.Unsafe.TryGetPointer(enemyEntity, out Goomba* goomba)) {

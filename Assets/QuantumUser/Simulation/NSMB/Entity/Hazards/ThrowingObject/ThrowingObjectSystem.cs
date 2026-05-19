@@ -989,7 +989,7 @@ namespace Quantum {
         }
         public static bool OnBossInteraction(Frame f, EntityRef thisEntity, EntityRef bossEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(bossEntity);
-            if (boss->iframes > 0 || boss->Dead)
+            if (!boss->BossCanInteract())
                 return false;
 
             var holdable = f.Unsafe.GetPointer<Holdable>(thisEntity);

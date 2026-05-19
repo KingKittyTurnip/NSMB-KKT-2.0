@@ -18,6 +18,213 @@ MonoBehaviour:
       Value: 425424764972781941
   Rules:
     BaseRulesList:
+    - Name: Test
+      Description: 
+      DefaultRules:
+        AdvancedLobby:
+          Value: 1
+        Stage:
+          Id:
+            Value: 438935048561577377
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        StarsToWin: 30
+        StarFrequency: 0
+        ModifierCoinsEnabled:
+          Value: 1
+        CoinsForPowerup: 3
+        RouletteBlocksEnabled:
+          Value: 0
+        Items:
+        - Chance:
+            Value: 0
+          Items:
+          - Name: Mini Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1414434856952255942
+            Team: 255
+            Extra:
+              Extra: 
+          - Name: Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1268531089014898302
+            Team: 255
+            Extra:
+              Extra: 
+        - Chance:
+            Value: 1
+          Items:
+          - Name: FireFlower
+            PowerupPrototype:
+              Id:
+                Value: 1349070666859566638
+            Team: 255
+            Extra:
+              Extra: 
+          - Name: BlueShell
+            PowerupPrototype:
+              Id:
+                Value: 1466930856010351358
+            Team: 255
+            Extra:
+              Extra: 
+          - Name: IceFlower
+            PowerupPrototype:
+              Id:
+                Value: 1524544283524633813
+            Team: 255
+            Extra:
+              Extra: 
+          - Name: Propeller Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1286010981056643553
+            Team: 255
+            Extra:
+              Extra: 
+          - Name: Hammer
+            PowerupPrototype:
+              Id:
+                Value: 1472665878288241371
+            Team: 255
+            Extra:
+              Extra: 
+        - Chance:
+            Value: 2
+          Items:
+          - Name: Starman
+            PowerupPrototype:
+              Id:
+                Value: 1502268950446962426
+            Team: 255
+            Extra:
+              Extra: 
+        - Chance:
+            Value: 3
+          Items:
+          - Name: Metal Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1313060240537942267
+            Team: 255
+            Extra:
+              Extra: 
+        - Chance:
+            Value: 4
+          Items:
+          - Name: Mega Mushroom
+            PowerupPrototype:
+              Id:
+                Value: 1300211052819551813
+            Team: 255
+            Extra:
+              Extra: 
+        - Chance:
+            Value: 5
+          Items: []
+        - Chance:
+            Value: 6
+          Items: []
+        - Chance:
+            Value: 7
+          Items: []
+        ModifierHazardsEnabled:
+          Value: 1
+        MaxHazards: 2
+        HazardFrequency: 40
+        HeftyPercentage:
+          RawValue: 65536
+        HazardLifetime: 80
+        Hazards:
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1516621902257113064
+          Team: 255
+          Hefty:
+            Value: 1
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra:
+            Extra: 0100
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1425013984214867549
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra:
+            Extra: 0000
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1425013984214867549
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra:
+            Extra: 0100
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1417407889661057047
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra:
+            Extra: 0100
+        - Name: Springboard
+          HazardPrototype:
+            Id:
+              Value: 1357720639578944744
+          Team: 255
+          Hefty:
+            Value: 0
+          SpawnRandom:
+            Value: 1
+          SpawnFridge:
+            Value: 1
+          Extra:
+            Extra: 0100
+        ModifierLivesEnabled:
+          Value: 0
+        Lives: 0
+        ModifierTimerEnabled:
+          Value: 0
+        TimerMinutes: 0
+        ModifierTeamsEnabled:
+          Value: 0
+        ModifierBulbEnabled:
+          Value: 0
+        BulbAbilityCount: 0
+        HostControl:
+          Value: 0
+        ModifierExtrasEnabled:
+          Value: 0
+        DisableStageRestrictions:
+          Value: 0
+        DisableComplexStageRestrictions:
+          Value: 0
+        EveryItemHasTheSameChance:
+          Value: 0
     - Name: Default
       Description: Collect The Stars, Use powerups ya get and hazards you find to
         your advantage!
@@ -512,174 +719,6 @@ MonoBehaviour:
           Team: 255
           Hefty:
             Value: 0
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        ModifierLivesEnabled:
-          Value: 0
-        Lives: 0
-        ModifierTimerEnabled:
-          Value: 0
-        TimerMinutes: 0
-        ModifierTeamsEnabled:
-          Value: 0
-        ModifierBulbEnabled:
-          Value: 0
-        BulbAbilityCount: 0
-        HostControl:
-          Value: 0
-        ModifierExtrasEnabled:
-          Value: 0
-        DisableStageRestrictions:
-          Value: 0
-        DisableComplexStageRestrictions:
-          Value: 0
-        EveryItemHasTheSameChance:
-          Value: 0
-    - Name: Test
-      Description: 
-      DefaultRules:
-        AdvancedLobby:
-          Value: 1
-        Stage:
-          Id:
-            Value: 438935048561577377
-        Gamemode:
-          Id:
-            Value: 326486899682662279
-        StarsToWin: 30
-        StarFrequency: 0
-        ModifierCoinsEnabled:
-          Value: 1
-        CoinsForPowerup: 3
-        RouletteBlocksEnabled:
-          Value: 0
-        Items:
-        - Chance:
-            Value: 0
-          Items:
-          - Name: Mini Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1414434856952255942
-            Team: 255
-            Extra:
-              Extra: 
-          - Name: Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1268531089014898302
-            Team: 255
-            Extra:
-              Extra: 
-        - Chance:
-            Value: 1
-          Items:
-          - Name: FireFlower
-            PowerupPrototype:
-              Id:
-                Value: 1349070666859566638
-            Team: 255
-            Extra:
-              Extra: 
-          - Name: BlueShell
-            PowerupPrototype:
-              Id:
-                Value: 1466930856010351358
-            Team: 255
-            Extra:
-              Extra: 
-          - Name: IceFlower
-            PowerupPrototype:
-              Id:
-                Value: 1524544283524633813
-            Team: 255
-            Extra:
-              Extra: 
-          - Name: Propeller Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1286010981056643553
-            Team: 255
-            Extra:
-              Extra: 
-          - Name: Hammer
-            PowerupPrototype:
-              Id:
-                Value: 1472665878288241371
-            Team: 255
-            Extra:
-              Extra: 
-        - Chance:
-            Value: 2
-          Items:
-          - Name: Starman
-            PowerupPrototype:
-              Id:
-                Value: 1502268950446962426
-            Team: 255
-            Extra:
-              Extra: 
-        - Chance:
-            Value: 3
-          Items:
-          - Name: Metal Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1313060240537942267
-            Team: 255
-            Extra:
-              Extra: 
-        - Chance:
-            Value: 4
-          Items:
-          - Name: Mega Mushroom
-            PowerupPrototype:
-              Id:
-                Value: 1300211052819551813
-            Team: 255
-            Extra:
-              Extra: 
-        - Chance:
-            Value: 5
-          Items: []
-        - Chance:
-            Value: 6
-          Items: []
-        - Chance:
-            Value: 7
-          Items: []
-        ModifierHazardsEnabled:
-          Value: 1
-        MaxHazards: 0
-        HazardFrequency: 0
-        HeftyPercentage:
-          RawValue: 196608
-        HazardLifetime: 80
-        Hazards:
-        - Name: Springboard
-          HazardPrototype:
-            Id:
-              Value: 1406808205652346148
-          Team: 255
-          Hefty:
-            Value: 0
-          SpawnRandom:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        - Name: Springboard
-          HazardPrototype:
-            Id:
-              Value: 1394417262128408316
-          Team: 255
-          Hefty:
-            Value: 1
           SpawnRandom:
             Value: 1
           SpawnFridge:

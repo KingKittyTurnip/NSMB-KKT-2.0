@@ -227,9 +227,10 @@ namespace Quantum.Prototypes {
   public unsafe partial class BowserPrototype : ComponentPrototype<Quantum.Bowser> {
     public Quantum.QEnum8<BowserState> State;
     public QBoolean IsDry;
+    public AssetRef<EntityPrototype> Melee;
     public AssetRef<EntityPrototype> Fireball;
-    public AssetRef<EntityPrototype> BlueFire;
     public AssetRef<EntityPrototype> Bone;
+    public AssetRef<EntityPrototype> BlueFire;
     partial void MaterializeUser(Frame frame, ref Quantum.Bowser result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Bowser component = default;
@@ -239,9 +240,10 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.Bowser result, in PrototypeMaterializationContext context = default) {
         result.State = this.State;
         result.IsDry = this.IsDry;
+        result.Melee = this.Melee;
         result.Fireball = this.Fireball;
-        result.BlueFire = this.BlueFire;
         result.Bone = this.Bone;
+        result.BlueFire = this.BlueFire;
         MaterializeUser(frame, ref result, in context);
     }
   }

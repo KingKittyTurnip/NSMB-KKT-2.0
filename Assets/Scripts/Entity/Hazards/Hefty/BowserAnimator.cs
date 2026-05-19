@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
 using System.Collections.Generic;
+using UnityEngine.InputSystem.XR;
 
 public unsafe class BowserAnimator : QuantumEntityViewComponent {
 
@@ -154,13 +155,14 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
 
         Animator.SetTrigger(e.AttackType switch {
             BowserAttackType.FireBall => "Fireball",
-            BowserAttackType.JumpFireBall => "JumpFire",
             BowserAttackType.MegaAttack => "MegaFire",
-            BowserAttackType.BoneThrow => "Bone",
+            BowserAttackType.BoneThrow => "Fireball",
             _ => "Fireball",
         });
         if (e.AttackType == BowserAttackType.MegaAttack) {
-            //sfx.Play();
+            sfx.PlayOneShot(Fireball);
+        } else if (e.AttackType == BowserAttackType.MegaAttack) {
+            sfx.PlayOneShot(Throw);
         }
     }
     private unsafe void OnShoot(EventBowserShoot e) {

@@ -7,13 +7,12 @@ namespace Quantum {
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            if (boss->iframes != 0 || boss->Dead)
+            if ((boss->iframes != 0 && boss->knockbackframes == 0) || boss->Dead)
                 return;
 
             if (boss->ControllerPlayer != EntityRef.None) {
                 //Controlled By Player, Just Drop
                 f.Signals.OnMarioPlayerDropObjective(boss->ControllerPlayer, Damage == KnockbackStrength.Groundpound ? 2 : 1, EntityRef.None);
-                boss->iframes = 120;
             } else {
                 byte total = Damage switch {
                     KnockbackStrength.Groundpound => 6,
@@ -54,8 +53,13 @@ namespace Quantum {
                         return;
                     }
                 }
-                boss->iframes = (byte)(longiframes ? 25 : 10);
             }
+            boss->iframes = (byte) (longiframes ? 25 : 10);
+            if (boss->knockbackframes == 0) {
+                boss->knockbackframes = 45;
+            }
+
+
             BossBump(f, thisEntity, FromRight, Damage);
             physicsObject->IsTouchingGround = false;
             if (physicsObject->Velocity.Y < 0)
@@ -63,7 +67,12 @@ namespace Quantum {
 
             f.Events.PlayBossHitSound(thisEntity);
         }
-
+        public bool BossHandleIframes(Frame f) {
+            if (knockbackframes > 0 && QuantumUtils.Decrement(ref knockbackframes)) {
+                iframes = 121; //3 seconds
+            }
+            return !QuantumUtils.Decrement(ref iframes);
+        }
         public FP BossBump(Frame f, EntityRef thisEntity, bool FromRight, KnockbackStrength Damage) {
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             FP total = Damage switch {
@@ -86,7 +95,10 @@ namespace Quantum {
         public bool BossCanInteractWithPlayer(Frame f, EntityRef marioEntity) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
             //only interact if neither are dead, if this is a normal boss go ahead, if it's player controlled, wait til iframes are out on both
-            return !mario->IsDead && !Dead && (ControllerPlayer == EntityRef.None || (iframes == 0 && mario->DamageInvincibilityFrames == 0));
+            return !mario->IsDead && !Dead && (iframes == 0 && mario->DamageInvincibilityFrames == 0);
+        }
+        public bool BossCanInteract() {
+            return !Dead && iframes == 0;
         }
 
         public static void GetClosestPlayer(Frame f, FPVector2 OurPosition, EntityRef IgnoreThisPlayer, out EntityRef TargetEntity, out FP distance) {
@@ -150,10 +162,10 @@ namespace Quantum {
 
         //USED FOR ANIMATORS, DON'T USE FOR SCRIPTS
         public bool BossAnimator_ShowModel(Frame f) {
-            return f.Global->GameState >= GameState.Playing && (ControllerPlayer == EntityRef.None || (!(iframes > 0 && (f.Number * f.DeltaTime.AsFloat) * (iframes <= 0.75f ? 5 : 2) % 0.2f < 0.1f)));
+            return f.Global->GameState >= GameState.Playing && (!(iframes > 0 && knockbackframes == 0 && (f.Number * f.DeltaTime.AsFloat) * (iframes <= 0.75f ? 5 : 2) % 0.2f < 0.1f));
         }
         public float BossAnimator_GetRedness() {
-            return ControllerPlayer == EntityRef.None ? Mathf.Min(iframes/10f, 0.85f) : 0f;
+            return knockbackframes > 0 ? Mathf.Min(iframes/10f, 0.85f) : 0;
         }
     }
 }

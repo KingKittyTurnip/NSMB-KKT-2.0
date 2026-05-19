@@ -6,8 +6,9 @@ component Boss {
 
 	[ExcludeFromPrototype] bool Dead;
 	[ExcludeFromPrototype] bool FacingRight;
-	
-	[ExcludeFromPrototype] byte iframes;
+
+    [ExcludeFromPrototype] byte iframes;
+    [ExcludeFromPrototype] byte knockbackframes;
 }
 
 signal BossDeath(EntityRef thisEntity);

@@ -1,11 +1,12 @@
 component Bowser {
 	BowserState State;
 	bool IsDry;
-	AssetRef<EntityPrototype> Fireball;
-	AssetRef<EntityPrototype> BlueFire;
+    AssetRef<EntityPrototype> Melee;
+    AssetRef<EntityPrototype> Fireball;
 	AssetRef<EntityPrototype> Bone;
+    AssetRef<EntityPrototype> BlueFire;
 
-	[ExcludeFromPrototype] byte ReusableTimer;
+    [ExcludeFromPrototype] byte ReusableTimer;
 	[ExcludeFromPrototype] byte VolleyCooldown;
 	[ExcludeFromPrototype] byte AttackCooldown;
 	[ExcludeFromPrototype] bool ActualFacing;

@@ -28,7 +28,7 @@ namespace Quantum {
 
             if (asset.IsMelee) {
                 //place to owner location
-                transform->Position = f.Unsafe.GetPointer<Transform2D>(projectile->Owner)->Position + f.Unsafe.GetPointer<PhysicsCollider2D>(projectile->Owner)->Shape.Centroid;
+                transform->Position = f.Unsafe.GetPointer<Transform2D>(projectile->Owner)->Position + projectile->SpawnOffset;
             }
 
             if (projectile->Lifetime > 0 && QuantumUtils.Decrement(ref projectile->Lifetime)) {

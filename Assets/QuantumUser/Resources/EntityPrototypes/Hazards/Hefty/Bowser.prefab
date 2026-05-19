@@ -482,15 +482,18 @@ MonoBehaviour:
       Value: 0
     IsDry:
       Value: 0
+    Melee:
+      Id:
+        Value: 1374884187470127391
     Fireball:
       Id:
         Value: 1278047839637325835
-    BlueFire:
-      Id:
-        Value: 1480640122765002630
     Bone:
       Id:
         Value: 1487940040230365660
+    BlueFire:
+      Id:
+        Value: 1480640122765002630
 --- !u!114 &6594219812404515847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -518,6 +521,8 @@ MonoBehaviour:
     SlowInLiquids:
       Value: 0
     IsWaterSolid:
+      Value: 0
+    SinksInQuickSandAndGoo:
       Value: 0
     BreakMegaObjects:
       Value: 0

@@ -173,7 +173,7 @@ namespace Quantum {
                 cauldron->ConvertIntoBossId = (byte)f.RNG->Next(0, f.FindAsset(cauldron->BossData).ListOfOptions.Length);
             } else {
                 //pick specific
-                cauldron->ConvertIntoBossId = specialValues[0];
+                cauldron->ConvertIntoBossId = specialValues[0]--;
             }
 
             if (specialValues[1] == 1) {

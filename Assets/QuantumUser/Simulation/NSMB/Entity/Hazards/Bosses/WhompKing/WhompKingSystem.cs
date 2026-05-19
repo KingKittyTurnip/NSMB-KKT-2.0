@@ -47,7 +47,7 @@ namespace Quantum {
             bool Jumpheld = false;
             bool Slamming = false;
             bool Pounding = false;
-            bool HasTarget = !QuantumUtils.Decrement(ref boss->iframes);
+            bool HasTarget = boss->BossHandleIframes(f);
             if (boss->ControllerPlayer != EntityRef.None) {
                 //Controlled By Player
                 var mario = f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer);
@@ -346,7 +346,7 @@ namespace Quantum {
         }
         public void OnProjectileWhompKingInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteract())
                 return;
             var whompking = f.Unsafe.GetPointer<WhompKing>(thisEntity);
             var projectile = f.Unsafe.GetPointer<Projectile>(projectileEntity);
@@ -382,14 +382,14 @@ namespace Quantum {
         public void OnBossWhompKingInteraction(Frame f, EntityRef bossEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             var otherboss = f.Unsafe.GetPointer<Boss>(bossEntity);
-            if (boss->Dead || otherboss->Dead)
+            if (!boss->BossCanInteract() || !otherboss->BossCanInteract())
                 return;
             f.Signals.BossToBossInteraction(thisEntity, bossEntity);
             f.Signals.BossToBossInteraction(bossEntity, thisEntity);
         }
         public void OnEnemyWhompKingInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (boss->Dead)
+            if (!boss->BossCanInteract())
                 return;
             var whompking = f.Unsafe.GetPointer<WhompKing>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
