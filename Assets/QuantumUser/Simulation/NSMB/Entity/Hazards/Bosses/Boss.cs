@@ -144,7 +144,7 @@ namespace Quantum {
             } else if (BossAttackingSpecial) {
                 //boss is doing some sort of special attack (like a groundpound), lets check it first
                 return bossMarioContactResult.Special;
-            } else if(attackedFromAbove) {
+            } else if (attackedFromAbove) {
                 //mario stomped us
                 mario->DoEntityBounce = mario->CurrentPowerupState == PowerupState.MiniMushroom || !mario->IsGroundpounding;
                 mario->IsDrilling = false;

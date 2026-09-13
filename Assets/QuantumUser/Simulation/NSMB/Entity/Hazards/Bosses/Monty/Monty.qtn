@@ -1,0 +1,59 @@
+#define _0_005 0.005
+#define _0_44 0.44
+
+component Tank {
+    MontyState State;
+    AssetRef<EntityPrototype> MolePrototype;
+    AssetRef<EntityPrototype> SegmentPrototype;
+    AssetRef<EntityPrototype> BulletBillPrototype;
+    AssetRef<EntityPrototype> BombudPrototype;
+
+    [ExcludeFromPrototype] byte ReusableTimer;
+    [ExcludeFromPrototype] byte SegmentNumber;
+
+    [ExcludeFromPrototype] EntityRef MoleEntity;
+    [ExcludeFromPrototype] EntityRef SegmentEntity;
+
+    //cannon vars
+    [ExcludeFromPrototype] byte CannonActionCooldown;
+    [ExcludeFromPrototype] byte ActionId;
+    [ExcludeFromPrototype] CannonDecision Decision;
+    [ExcludeFromPrototype] byte SegmentCreationTimer;
+    
+    //cannon segment vars
+	[ExcludeFromPrototype] array<FP>[3] FacingDirection;
+    array<FP>[3] Offset;
+    FP HeightScale;
+    //FP Offset;
+
+    //monty vars
+    [ExcludeFromPrototype] bool MontyOut;
+    [ExcludeFromPrototype] byte AttackCooldown;
+    [ExcludeFromPrototype] FP LastMontyPos;
+    [ExcludeFromPrototype] EntityRef Bombud;
+
+    //ai vars
+    [ExcludeFromPrototype] byte waitTime;
+    [ExcludeFromPrototype] int decideSegmentTimer;
+}
+
+component Monty {
+    //used for interactions
+    [ExcludeFromPrototype] EntityRef OwnerEntity;
+}
+
+enum MontyState : Byte {
+    ReadyUp,
+    Walking,
+    ChargeJump,
+    Jumping,
+	Knockbacked,
+}
+
+enum CannonDecision : Byte {
+    None,
+    TryAction,
+    Fire,
+    TurnLeft,
+    TurnRight,
+}

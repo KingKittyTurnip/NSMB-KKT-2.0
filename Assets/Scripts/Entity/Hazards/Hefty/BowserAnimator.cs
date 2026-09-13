@@ -155,8 +155,8 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
 
         Animator.SetTrigger(e.AttackType switch {
             BowserAttackType.FireBall => "Fireball",
-            BowserAttackType.MegaAttack => "MegaFire",
-            BowserAttackType.BoneThrow => "Fireball",
+            BowserAttackType.MegaAttack => "Fireball",
+            BowserAttackType.BoneThrow => "Bone",
             _ => "Fireball",
         });
         if (e.AttackType == BowserAttackType.MegaAttack) {

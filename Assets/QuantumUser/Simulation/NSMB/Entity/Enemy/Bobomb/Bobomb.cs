@@ -1,4 +1,5 @@
 using Photon.Deterministic;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Quantum {
     public unsafe partial struct Bobomb {
@@ -85,6 +86,37 @@ namespace Quantum {
             var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(bobombEntity);
             FPVector2 center = position + collider->Shape.Centroid;
             f.Events.EnemyKilled(bobombEntity, killerEntity, reason, center);
+        }
+
+        //KKT Mod
+        public void Initialize(Frame f, EntityRef entity, EntityRef owner, bool right, bool Thrown) {
+            var enemy = f.Unsafe.GetPointer<Enemy>(entity);
+            var hazard = f.Unsafe.GetPointer<Hazard>(entity);
+            var holder = f.Unsafe.GetPointer<Holdable>(entity);
+            var phys = f.Unsafe.GetPointer<PhysicsObject>(entity);
+            var coinitem = f.Unsafe.GetPointer<CoinItem>(entity);
+            enemy->FacingRight = right;
+            enemy->IsActive = true;
+            enemy->IsDead = false;
+
+            enemy->DisableRespawning = true;
+            hazard->IsHazard = false;
+            hazard->IsCoinItem = true;
+            hazard->LifeTime = 15 * 60;
+
+            CurrentDetonationFrames = DetonationFrames;
+            f.Events.BobombLit(entity, false);
+
+            holder->PreviousHolder = owner;
+            if (Thrown) {
+                phys->Velocity = new(
+                    (Constants._4_50 + Speed) * (enemy->FacingRight ? 1 : -1),
+                    Constants._3_50
+                );
+            } else {
+                holder->Holder = owner;
+                f.Unsafe.GetPointer<MarioPlayer>(entity)->HeldEntity = entity;
+            }
         }
     }
 }

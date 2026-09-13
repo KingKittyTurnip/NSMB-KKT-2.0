@@ -10,11 +10,11 @@ component Bowser {
 	[ExcludeFromPrototype] byte VolleyCooldown;
 	[ExcludeFromPrototype] byte AttackCooldown;
 	[ExcludeFromPrototype] bool ActualFacing;
-	
-	[ExcludeFromPrototype] bool AttackQuery;
 
-	//ai vars
-	[ExcludeFromPrototype] byte waitTime;
+    [ExcludeFromPrototype] int AngleAttack;
+
+    //ai vars
+    [ExcludeFromPrototype] byte waitTime;
 	[ExcludeFromPrototype] byte BigAttackCounter;
 	[ExcludeFromPrototype] byte JumpFromAttackCounter;
 }

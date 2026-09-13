@@ -527,11 +527,11 @@ namespace Quantum {
                         }
 
                         if (keepContact) {
-                            if (contacts.Value.Capacity > contacts.Value.Count) { //KKT Mod
+                            //if (contacts.Value.Capacity > contacts.Value.Count) { //KKT Mod
                                 contacts.Value.Add(contact);
-                            } else { //KKT Mod
-                                UnityEngine.Debug.LogWarning("CONTACT OVERFLOW, i mean stopping the error kind of works but it's still a problem maybe?");
-                            }
+                            //} else { //KKT Mod
+                            //    UnityEngine.Debug.LogWarning("CONTACT OVERFLOW, i mean stopping the error kind of works but it's still a problem maybe?");
+                            //}
                             min ??= contact.Distance;
                             avgNormal += contact.Normal;
                             contactCount++;

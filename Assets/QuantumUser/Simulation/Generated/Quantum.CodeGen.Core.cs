@@ -65,6 +65,13 @@ namespace Quantum {
     AttackingInJump,
     Groundpound,
   }
+  public enum CannonDecision : byte {
+    None,
+    TryAction,
+    Fire,
+    TurnLeft,
+    TurnRight,
+  }
   public enum CataquackVarient : byte {
     BasicBlue,
     ReadyRed,
@@ -143,6 +150,13 @@ namespace Quantum {
     CollisionBump,
     Normal,
     Groundpound,
+  }
+  public enum MontyState : byte {
+    ReadyUp,
+    Walking,
+    ChargeJump,
+    Jumping,
+    Knockbacked,
   }
   public enum PeteyState : byte {
     Idling,
@@ -2459,12 +2473,12 @@ namespace Quantum {
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte AttackCooldown;
-    [FieldOffset(8)]
-    [ExcludeFromPrototype()]
-    public QBoolean ActualFacing;
     [FieldOffset(12)]
     [ExcludeFromPrototype()]
-    public QBoolean AttackQuery;
+    public QBoolean ActualFacing;
+    [FieldOffset(8)]
+    [ExcludeFromPrototype()]
+    public Int32 AngleAttack;
     [FieldOffset(6)]
     [ExcludeFromPrototype()]
     public Byte waitTime;
@@ -2487,7 +2501,7 @@ namespace Quantum {
         hash = hash * 31 + VolleyCooldown.GetHashCode();
         hash = hash * 31 + AttackCooldown.GetHashCode();
         hash = hash * 31 + ActualFacing.GetHashCode();
-        hash = hash * 31 + AttackQuery.GetHashCode();
+        hash = hash * 31 + AngleAttack.GetHashCode();
         hash = hash * 31 + waitTime.GetHashCode();
         hash = hash * 31 + BigAttackCounter.GetHashCode();
         hash = hash * 31 + JumpFromAttackCounter.GetHashCode();
@@ -2503,8 +2517,8 @@ namespace Quantum {
         serializer.Stream.Serialize(&p->ReusableTimer);
         serializer.Stream.Serialize(&p->VolleyCooldown);
         serializer.Stream.Serialize(&p->waitTime);
+        serializer.Stream.Serialize(&p->AngleAttack);
         QBoolean.Serialize(&p->ActualFacing, serializer);
-        QBoolean.Serialize(&p->AttackQuery, serializer);
         QBoolean.Serialize(&p->IsDry, serializer);
         AssetRef.Serialize(&p->BlueFire, serializer);
         AssetRef.Serialize(&p->Bone, serializer);
@@ -4538,6 +4552,25 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Monty : Quantum.IComponent {
+    public const Int32 SIZE = 8;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public EntityRef OwnerEntity;
+    public override readonly Int32 GetHashCode() {
+      unchecked { 
+        var hash = 6701;
+        hash = hash * 31 + OwnerEntity.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Monty*)ptr;
+        EntityRef.Serialize(&p->OwnerEntity, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct MovingPlatform : Quantum.IComponent {
     public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 8;
@@ -5437,6 +5470,135 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Tank : Quantum.IComponent {
+    public const Int32 SIZE = 144;
+    public const Int32 ALIGNMENT = 8;
+    [FieldOffset(8)]
+    public MontyState State;
+    [FieldOffset(40)]
+    public AssetRef<EntityPrototype> MolePrototype;
+    [FieldOffset(48)]
+    public AssetRef<EntityPrototype> SegmentPrototype;
+    [FieldOffset(32)]
+    public AssetRef<EntityPrototype> BulletBillPrototype;
+    [FieldOffset(24)]
+    public AssetRef<EntityPrototype> BombudPrototype;
+    [FieldOffset(3)]
+    [ExcludeFromPrototype()]
+    public Byte ReusableTimer;
+    [FieldOffset(5)]
+    [ExcludeFromPrototype()]
+    public Byte SegmentNumber;
+    [FieldOffset(64)]
+    [ExcludeFromPrototype()]
+    public EntityRef MoleEntity;
+    [FieldOffset(72)]
+    [ExcludeFromPrototype()]
+    public EntityRef SegmentEntity;
+    [FieldOffset(2)]
+    [ExcludeFromPrototype()]
+    public Byte CannonActionCooldown;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte ActionId;
+    [FieldOffset(7)]
+    [ExcludeFromPrototype()]
+    public CannonDecision Decision;
+    [FieldOffset(4)]
+    [ExcludeFromPrototype()]
+    public Byte SegmentCreationTimer;
+    [FieldOffset(80)]
+    [ExcludeFromPrototype()]
+    [FramePrinter.FixedArrayAttribute(typeof(FP), 3)]
+    private fixed Byte _FacingDirection_[24];
+    [FieldOffset(120)]
+    [FramePrinter.FixedArrayAttribute(typeof(FP), 3)]
+    private fixed Byte _Offset_[24];
+    [FieldOffset(104)]
+    public FP HeightScale;
+    [FieldOffset(16)]
+    [ExcludeFromPrototype()]
+    public QBoolean MontyOut;
+    [FieldOffset(1)]
+    [ExcludeFromPrototype()]
+    public Byte AttackCooldown;
+    [FieldOffset(112)]
+    [ExcludeFromPrototype()]
+    public FP LastMontyPos;
+    [FieldOffset(56)]
+    [ExcludeFromPrototype()]
+    public EntityRef Bombud;
+    [FieldOffset(6)]
+    [ExcludeFromPrototype()]
+    public Byte waitTime;
+    [FieldOffset(12)]
+    [ExcludeFromPrototype()]
+    public Int32 decideSegmentTimer;
+    public readonly FixedArray<FP> FacingDirection {
+      get {
+        fixed (byte* p = _FacingDirection_) { return new FixedArray<FP>(p, 8, 3); }
+      }
+    }
+    public readonly FixedArray<FP> Offset {
+      get {
+        fixed (byte* p = _Offset_) { return new FixedArray<FP>(p, 8, 3); }
+      }
+    }
+    public override readonly Int32 GetHashCode() {
+      unchecked { 
+        var hash = 16087;
+        hash = hash * 31 + (Byte)State;
+        hash = hash * 31 + MolePrototype.GetHashCode();
+        hash = hash * 31 + SegmentPrototype.GetHashCode();
+        hash = hash * 31 + BulletBillPrototype.GetHashCode();
+        hash = hash * 31 + BombudPrototype.GetHashCode();
+        hash = hash * 31 + ReusableTimer.GetHashCode();
+        hash = hash * 31 + SegmentNumber.GetHashCode();
+        hash = hash * 31 + MoleEntity.GetHashCode();
+        hash = hash * 31 + SegmentEntity.GetHashCode();
+        hash = hash * 31 + CannonActionCooldown.GetHashCode();
+        hash = hash * 31 + ActionId.GetHashCode();
+        hash = hash * 31 + (Byte)Decision;
+        hash = hash * 31 + SegmentCreationTimer.GetHashCode();
+        hash = hash * 31 + HashCodeUtils.GetArrayHashCode(FacingDirection);
+        hash = hash * 31 + HashCodeUtils.GetArrayHashCode(Offset);
+        hash = hash * 31 + HeightScale.GetHashCode();
+        hash = hash * 31 + MontyOut.GetHashCode();
+        hash = hash * 31 + AttackCooldown.GetHashCode();
+        hash = hash * 31 + LastMontyPos.GetHashCode();
+        hash = hash * 31 + Bombud.GetHashCode();
+        hash = hash * 31 + waitTime.GetHashCode();
+        hash = hash * 31 + decideSegmentTimer.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Tank*)ptr;
+        serializer.Stream.Serialize(&p->ActionId);
+        serializer.Stream.Serialize(&p->AttackCooldown);
+        serializer.Stream.Serialize(&p->CannonActionCooldown);
+        serializer.Stream.Serialize(&p->ReusableTimer);
+        serializer.Stream.Serialize(&p->SegmentCreationTimer);
+        serializer.Stream.Serialize(&p->SegmentNumber);
+        serializer.Stream.Serialize(&p->waitTime);
+        serializer.Stream.Serialize((Byte*)&p->Decision);
+        serializer.Stream.Serialize((Byte*)&p->State);
+        serializer.Stream.Serialize(&p->decideSegmentTimer);
+        QBoolean.Serialize(&p->MontyOut, serializer);
+        AssetRef.Serialize(&p->BombudPrototype, serializer);
+        AssetRef.Serialize(&p->BulletBillPrototype, serializer);
+        AssetRef.Serialize(&p->MolePrototype, serializer);
+        AssetRef.Serialize(&p->SegmentPrototype, serializer);
+        EntityRef.Serialize(&p->Bombud, serializer);
+        EntityRef.Serialize(&p->MoleEntity, serializer);
+        EntityRef.Serialize(&p->SegmentEntity, serializer);
+        FixedArray.Serialize(p->FacingDirection, serializer, Statics.SerializeFP);
+        FP.Serialize(&p->HeightScale, serializer);
+        FP.Serialize(&p->LastMontyPos, serializer);
+        FixedArray.Serialize(p->Offset, serializer, Statics.SerializeFP);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Tanoomba : Quantum.IComponent {
     public const Int32 SIZE = 128;
     public const Int32 ALIGNMENT = 8;
@@ -6118,6 +6280,22 @@ namespace Quantum {
         return result;
       }
     }
+    /// <summary>0.005</summary>
+    public static FP _0_005 {
+      [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
+        FP result;
+        result.RawValue = 328;
+        return result;
+      }
+    }
+    /// <summary>0.44</summary>
+    public static FP _0_44 {
+      [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
+        FP result;
+        result.RawValue = 28836;
+        return result;
+      }
+    }
     /// <summary>0.05</summary>
     public static FP PhysicsRaycastSkin {
       [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
@@ -6258,6 +6436,10 @@ namespace Quantum {
       public const Int64 _0_73 = 47841;
       /// <summary>2.75</summary>
       public const Int64 _2_75 = 180224;
+      /// <summary>0.005</summary>
+      public const Int64 _0_005 = 328;
+      /// <summary>0.44</summary>
+      public const Int64 _0_44 = 28836;
       /// <summary>0.05</summary>
       public const Int64 PhysicsRaycastSkin = 3277;
       /// <summary>0.005</summary>
@@ -6480,6 +6662,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.MarioBrosPlatform>();
       BuildSignalsArrayOnComponentAdded<Quantum.MarioPlayer>();
       BuildSignalsArrayOnComponentRemoved<Quantum.MarioPlayer>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Monty>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Monty>();
       BuildSignalsArrayOnComponentAdded<Quantum.MovingPlatform>();
       BuildSignalsArrayOnComponentRemoved<Quantum.MovingPlatform>();
       BuildSignalsArrayOnComponentAdded<NavMeshAvoidanceAgent>();
@@ -6542,6 +6726,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<Quantum.Starball>();
       BuildSignalsArrayOnComponentAdded<Quantum.Starballgoal>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Starballgoal>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Tank>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Tank>();
       BuildSignalsArrayOnComponentAdded<Quantum.Tanoomba>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Tanoomba>();
       BuildSignalsArrayOnComponentAdded<Quantum.ThrowingObject>();
@@ -7029,6 +7215,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Button), Button.SIZE);
       typeRegistry.Register(typeof(CallbackFlags), 4);
       typeRegistry.Register(typeof(Quantum.CameraController), Quantum.CameraController.SIZE);
+      typeRegistry.Register(typeof(Quantum.CannonDecision), 1);
       typeRegistry.Register(typeof(Quantum.Cataquack), Quantum.Cataquack.SIZE);
       typeRegistry.Register(typeof(Quantum.CataquackVarient), 1);
       typeRegistry.Register(typeof(Quantum.Cauldron), Quantum.Cauldron.SIZE);
@@ -7121,6 +7308,8 @@ namespace Quantum {
       typeRegistry.Register(typeof(MapEntityLink), MapEntityLink.SIZE);
       typeRegistry.Register(typeof(Quantum.MarioBrosPlatform), Quantum.MarioBrosPlatform.SIZE);
       typeRegistry.Register(typeof(Quantum.MarioPlayer), Quantum.MarioPlayer.SIZE);
+      typeRegistry.Register(typeof(Quantum.Monty), Quantum.Monty.SIZE);
+      typeRegistry.Register(typeof(Quantum.MontyState), 1);
       typeRegistry.Register(typeof(Quantum.MovingPlatform), Quantum.MovingPlatform.SIZE);
       typeRegistry.Register(typeof(NavMeshAvoidanceAgent), NavMeshAvoidanceAgent.SIZE);
       typeRegistry.Register(typeof(NavMeshAvoidanceObstacle), NavMeshAvoidanceObstacle.SIZE);
@@ -7191,6 +7380,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.Starball), Quantum.Starball.SIZE);
       typeRegistry.Register(typeof(Quantum.Starballgoal), Quantum.Starballgoal.SIZE);
       typeRegistry.Register(typeof(Quantum.SwitchFlag), 1);
+      typeRegistry.Register(typeof(Quantum.Tank), Quantum.Tank.SIZE);
       typeRegistry.Register(typeof(Quantum.Tanoomba), Quantum.Tanoomba.SIZE);
       typeRegistry.Register(typeof(Quantum.TanoombaState), 1);
       typeRegistry.Register(typeof(Quantum.TeamAttackOptions), 1);
@@ -7211,7 +7401,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.bossMarioContactResult), 4);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 74)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 76)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -7261,6 +7451,7 @@ namespace Quantum {
         .Add<Quantum.Liquid>(Quantum.Liquid.Serialize, Quantum.Liquid.OnAdded, Quantum.Liquid.OnRemoved, ComponentFlags.None)
         .Add<Quantum.MarioBrosPlatform>(Quantum.MarioBrosPlatform.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.MarioPlayer>(Quantum.MarioPlayer.Serialize, Quantum.MarioPlayer.OnAdded, Quantum.MarioPlayer.OnRemoved, ComponentFlags.None)
+        .Add<Quantum.Monty>(Quantum.Monty.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.MovingPlatform>(Quantum.MovingPlatform.Serialize, Quantum.MovingPlatform.OnAdded, Quantum.MovingPlatform.OnRemoved, ComponentFlags.None)
         .Add<Quantum.ObjectiveCoin>(Quantum.ObjectiveCoin.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Petey>(Quantum.Petey.Serialize, null, null, ComponentFlags.None)
@@ -7280,6 +7471,7 @@ namespace Quantum {
         .Add<Quantum.StarCoin>(Quantum.StarCoin.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Starball>(Quantum.Starball.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Starballgoal>(Quantum.Starballgoal.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.Tank>(Quantum.Tank.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Tanoomba>(Quantum.Tanoomba.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.ThrowingObject>(Quantum.ThrowingObject.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Thwomp>(Quantum.Thwomp.Serialize, null, null, ComponentFlags.None)
@@ -7295,6 +7487,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.BowserAttackType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.BowserState>();
       FramePrinter.EnsurePrimitiveNotStripped<CallbackFlags>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.CannonDecision>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.CataquackVarient>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.ChainChompState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.CoinType>();
@@ -7310,6 +7503,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.KingBooState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.KnockbackStrength>();
       FramePrinter.EnsurePrimitiveNotStripped<LiquidType>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.MontyState>();
       FramePrinter.EnsurePrimitiveNotStripped<ParticleEffect>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.PeteyState>();
       FramePrinter.EnsurePrimitiveNotStripped<PhysicsFlags>();

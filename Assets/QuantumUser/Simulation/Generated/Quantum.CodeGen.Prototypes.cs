@@ -1239,6 +1239,21 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Monty))]
+  public unsafe partial class MontyPrototype : ComponentPrototype<Quantum.Monty> {
+    [HideInInspector()]
+    public Int32 _empty_prototype_dummy_field_;
+    partial void MaterializeUser(Frame frame, ref Quantum.Monty result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Monty component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Monty result, in PrototypeMaterializationContext context = default) {
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.MovingPlatform))]
   public unsafe partial class MovingPlatformPrototype : ComponentPrototype<Quantum.MovingPlatform> {
     public FPVector2 Velocity;
@@ -1712,6 +1727,36 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Starballgoal result, in PrototypeMaterializationContext context = default) {
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Tank))]
+  public unsafe partial class TankPrototype : ComponentPrototype<Quantum.Tank> {
+    public Quantum.QEnum8<MontyState> State;
+    public AssetRef<EntityPrototype> MolePrototype;
+    public AssetRef<EntityPrototype> SegmentPrototype;
+    public AssetRef<EntityPrototype> BulletBillPrototype;
+    public AssetRef<EntityPrototype> BombudPrototype;
+    [ArrayLengthAttribute(3)]
+    public FP[] Offset = new FP[3];
+    public FP HeightScale;
+    partial void MaterializeUser(Frame frame, ref Quantum.Tank result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Tank component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Tank result, in PrototypeMaterializationContext context = default) {
+        result.State = this.State;
+        result.MolePrototype = this.MolePrototype;
+        result.SegmentPrototype = this.SegmentPrototype;
+        result.BulletBillPrototype = this.BulletBillPrototype;
+        result.BombudPrototype = this.BombudPrototype;
+        for (int i = 0, count = PrototypeValidator.CheckLength(Offset, 3, in context); i < count; ++i) {
+          *result.Offset.GetPointer(i) = this.Offset[i];
+        }
+        result.HeightScale = this.HeightScale;
         MaterializeUser(frame, ref result, in context);
     }
   }

@@ -27,6 +27,7 @@ namespace NSMB.Entities.Enemies {
             QuantumEvent.Subscribe<EventDryGetup>(this, OnRevive, FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventEnemyKilled>(this, OnEnemyKilled, FilterOutReplayFastForward);
             QuantumEvent.Subscribe<EventPlayComboSound>(this, OnPlayComboSound, FilterOutReplayFastForward);
+            QuantumEvent.Subscribe<EventEnemyPreRespawned>(this, OnPreRespawn, FilterOutReplayFastForward);
         }
         public override void OnActivate(Frame f) {
             OnUpdateView();
@@ -89,6 +90,12 @@ namespace NSMB.Entities.Enemies {
             }
             animator.Play("Walk");
             sfx.PlayOneShot(QuantumViewUtils.GetComboSoundEffect(0));
+        }
+        private void OnPreRespawn(EventEnemyPreRespawned e) {
+            if (e.Entity != EntityRef) {
+                return;
+            }
+            animator.Play("Walk");
         }
     }
 }
