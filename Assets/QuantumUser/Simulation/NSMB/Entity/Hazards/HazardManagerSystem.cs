@@ -142,14 +142,12 @@ namespace Quantum {
 
                 TryAgain:
                 for (byte item = 0; item < hazarddata.Count; item++) {
-                    if (hazarddata[item].SpawnHazard) {
-                        //Hazard Can Spawn
-                        //Add special spawn conditions for:
-                        //potion: spawns when the lobby contains at least 6 players, if one doesn't exist the next hazard is guerenteed to be it (this condition is disabled in advanced lobbies)
-                        //cauldron: spawns only if a boss entity is in the ruleset
-                        if (stuff[hazarddata[item].PrototypeRef].Hefty == hefty) { //Hefty Or No...
-                            spawnablehazards.Add(hazarddata[item]);
-                        }
+                    //Hazard Can Spawn
+                    //Add special spawn conditions for:
+                    //potion: spawns when the lobby contains at least 6 players, if one doesn't exist the next hazard is guerenteed to be it (this condition is disabled in advanced lobbies)
+                    //cauldron: spawns only if a boss entity is in the ruleset
+                    if (stuff[hazarddata[item].PrototypeRef].Hefty == hefty) { //Hefty Or No...
+                        spawnablehazards.Add(hazarddata[item]);
                     }
                 }
                 if (spawnablehazards.Count == 0) {
@@ -172,7 +170,7 @@ namespace Quantum {
                 //SpawnHazard
                 EntityRef newEntity = f.Create(stuff[spawnablehazards[pick].PrototypeRef].entityPrototype); //error out of range?
                 var newhazardspawnerTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
-                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, spawnablehazards[pick].Extra.Extra);
+                f.Signals.InitializeHazard(newEntity, EntityRef.None, position, SpawnReason.Normal, spawnablehazards[pick].ExtraSlotA, spawnablehazards[pick].ExtraSlotB, spawnablehazards[pick].ExtraSlotC, spawnablehazards[pick].ExtraSlotD);
 
                 //things without the hazard script can be created, only cloudbill does this to make the platform act independantly
                 if (f.Unsafe.TryGetPointer<Hazard>(newEntity, out var newhazardspawner) && newhazardspawner->RestrictSpawnPosition) {

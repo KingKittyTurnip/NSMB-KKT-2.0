@@ -254,7 +254,7 @@ namespace Quantum {
 
 
         #region KKT Mod
-        public void NEWGetRandomItem(Frame f, MarioPlayer* mario, bool fromBlock, out AssetRef<EntityPrototype> entityPrototype, out ExtrasList extra) {
+        public void NEWGetRandomItem(Frame f, MarioPlayer* mario, bool fromBlock, out AssetRef<EntityPrototype> entityPrototype, out byte extraA, out byte extraB, out byte extraC, out byte extraD) {
             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
             var items = f.ResolveList(f.Global->Rules.Items);
             int ourObjectiveCount = GetTeamObjectiveCount(f, mario->GetTeam(f)) ?? 0;
@@ -265,17 +265,19 @@ namespace Quantum {
                 //ignore all code and just pick anything in the list
                 int item = f.RNG->Next(0, items.Count);
                 entityPrototype = stuff[items[item].PrototypeRef].entityPrototype;
-                extra = items[item].Extra;
+                extraA = items[item].ExtraSlotA;
+                extraB = items[item].ExtraSlotB;
+                extraC = items[item].ExtraSlotC;
+                extraD = items[item].ExtraSlotD;
                 return;
             }
 
-                var marioreserve = f.FindAsset(mario->ReserveItem);
+            var marioreserve = f.FindAsset(mario->ReserveItem);
             bool MarioHasJoke = (mario->CurrentPowerupState == PowerupState.Jumpsuit || mario->CurrentPowerupState == PowerupState.Doneflower || (marioreserve != null && (marioreserve.State == PowerupState.Jumpsuit || marioreserve.State == PowerupState.Doneflower)));
             bool CanSpawnJoke = (mario->TimesWithoutAJoke > FPMath.Max(8-f.Global->Rules.CoinsForPowerup-1, 0) && !MarioHasJoke);
             bool CanSpawnCatchups = !(mario->CurrentPowerupState <= PowerupState.Mushroom || MarioHasJoke);
             bool WontSpawnFirst = mario->CurrentPowerupState == PowerupState.NoPowerup && marioreserve != null && marioreserve.State == PowerupState.NoPowerup;
 
-            FP totalChance = 0;
             Dictionary<ItemChanceType, FP> sortchances = new Dictionary<ItemChanceType, FP>();
             byte MaxTypes = ((int) ItemChanceType.Invalid);
 
@@ -293,37 +295,47 @@ namespace Quantum {
                 }
 
                 var e = NEWGetSpawnWeight(f, (ItemChanceType) i, ourObjectiveCount);
-                totalChance += FPMath.Max(0, e);
                 sortchances.Add((ItemChanceType)i, e);
             }
 
             //pick chance group
             ItemChanceType chancePick = ItemChanceType.First;
-            List<(int, ExtrasList)> possibleItems = new List<(int, ExtrasList)>();
+            List<(int, byte, byte, byte, byte)> possibleItems = new List<(int, byte, byte, byte, byte)>();
             TryPickChance:
+            FP totalChance = 0;
 
             if (sortchances.Count == 0) {
+                UnityEngine.Debug.LogError("where did all the item go~");
                 //ok we checked everything just spawn a mushroom sob
                 entityPrototype = stuff[0].entityPrototype;
-                extra = new ExtrasList();
+                extraA = 0;
+                extraB = 0;
+                extraC = 0;
+                extraD = 0;
                 return;
-            } if (totalChance <= 0) {
-                //no chance for any items...?
-                FP highestChance = FP.MinValue;
-                foreach (var i in sortchances) {
-                    if (i.Value > highestChance) {
-                        highestChance = i.Value;
-                        chancePick = i.Key;
-                    }
-                }
             } else {
                 //randomly pick which chance we want to calculate
-                FP rand = mario->RNG.Next(0, totalChance);
                 foreach (var i in sortchances) {
-                    FP chance = FPMath.Max(0, NEWGetSpawnWeight(f, i.Key, ourObjectiveCount));
-                    if (rand < chance) {
-                        chancePick = i.Key;
-                        break;
+                    totalChance += FPMath.Max(0, i.Value);
+                }
+                if (totalChance <= 0) {
+                    //no chance for any item...? pick highest one then
+                    FP highestChance = FP.MinValue;
+                    foreach (var i in sortchances) {
+                        if (i.Value > highestChance) {
+                            highestChance = i.Value;
+                            chancePick = i.Key;
+                        }
+                    }
+                } else {
+                    //pick randomly for any chances above 0
+                    FP rand = mario->RNG.Next(0, totalChance);
+                    foreach (var i in sortchances) {
+                        FP chance = FPMath.Max(0, i.Value);
+                        if (rand < chance) {
+                            chancePick = i.Key;
+                            break;
+                        }
                     }
                 }
             }
@@ -332,7 +344,7 @@ namespace Quantum {
             //get items of the chance we picked
             foreach (var i in items) {
                 if (stuff[i.PrototypeRef].SpawnChance == chancePick)
-                    possibleItems.Add((i.PrototypeRef, i.Extra));
+                    possibleItems.Add((i.PrototypeRef, i.ExtraSlotA, i.ExtraSlotB, i.ExtraSlotC, i.ExtraSlotC));
             }
 
             //um, there was no items?
@@ -341,16 +353,19 @@ namespace Quantum {
             }
 
             //was this a joke?
-                if (chancePick == ItemChanceType.Joke || MarioHasJoke) {
-                    mario->TimesWithoutAJoke = 0;
-                } else {
-                    mario->TimesWithoutAJoke++;
-                }
+            if (chancePick == ItemChanceType.Joke || MarioHasJoke) {
+                mario->TimesWithoutAJoke = 0;
+            } else {
+                mario->TimesWithoutAJoke++;
+            }
 
             //pick a random object
             int id = f.RNG->Next(0, possibleItems.Count);
             entityPrototype = stuff[possibleItems[id].Item1].entityPrototype;
-            extra = possibleItems[id].Item2;
+            extraA = possibleItems[id].Item2;
+            extraB = possibleItems[id].Item3;
+            extraC = possibleItems[id].Item4;
+            extraD = possibleItems[id].Item5;
         }
         public FP NEWGetSpawnWeight(Frame f, ItemChanceType j, int ourStars) {
 
@@ -391,7 +406,6 @@ namespace Quantum {
                 bonus = SpawmAboveBellowChance.Item3 * FPMath.Log(FPMath.Abs(itemRank) + 1, FP.E) * magni;
             }
             return SpawmAboveBellowChance.Item1 + bonus;
-            return 0;
         }
         #endregion
     }

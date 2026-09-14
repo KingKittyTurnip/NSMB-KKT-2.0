@@ -1,91 +1,89 @@
 using Photon.Deterministic;
-using System.Collections.Generic;
+using UnityEngine.SocialPlatforms;
 
 namespace Quantum {
-    /*public class CommandChangeHazards : DeterministicCommand, ILobbyCommand {
+    public class CommandChangeHazards : DeterministicCommand, ILobbyCommand {
         
+        //general
         public int Index;
+        public bool EditingItems;
         public bool RemoveSingle, RemoveAll;
-        public int TriggerCondition = (int)Quantum.TriggerCondition.GotStar;
-        public int TriggerConditionTarget = (int)TriggerTarget.Any;
-        public string TriggerConditionParameter = "";
-        public int TriggerAction = (int)Quantum.TriggerAction.Kill;
-        public int TriggerActionTarget = (int)TriggerTarget.Conditioner;
-        public string TriggerActionParameter = "";
-        public int TriggerConstraint = (int)Quantum.TriggerConstraint.Always;
-        public int TriggerConstraintTarget = (int)TriggerTarget.Conditioner;
-        public string TriggerConstraintParameter = "";
-        public byte TriggerDelaySeconds = 0, TriggerRepeatCount = 1, TriggerChance = 100;
+        //hazard
+        public int PrototypeRefId;
+        public byte TeamId;
+        //extras list
+        public byte ValueA;
+        public byte ValueB;
+        public byte ValueC;
+        public byte ValueD;
 
         public override void Serialize(BitStream stream) {
             stream.Serialize(ref Index);
+            stream.Serialize(ref EditingItems);
             stream.Serialize(ref RemoveSingle);
             stream.Serialize(ref RemoveAll);
-            stream.Serialize(ref TriggerCondition);
-            stream.Serialize(ref TriggerConditionTarget);
-            stream.Serialize(ref TriggerConditionParameter);
-            stream.Serialize(ref TriggerAction);
-            stream.Serialize(ref TriggerActionTarget);
-            stream.Serialize(ref TriggerActionParameter);
-            stream.Serialize(ref TriggerConstraint);
-            stream.Serialize(ref TriggerConstraintTarget);
-            stream.Serialize(ref TriggerConstraintParameter);
-            stream.Serialize(ref TriggerDelaySeconds);
-            stream.Serialize(ref TriggerRepeatCount);
-            stream.Serialize(ref TriggerChance);
+
+            stream.Serialize(ref PrototypeRefId);
+            stream.Serialize(ref TeamId);
+
+            stream.Serialize(ref ValueA);
+            stream.Serialize(ref ValueB);
+            stream.Serialize(ref ValueC);
+            stream.Serialize(ref ValueD);
         }
 
         public unsafe void Execute(Frame f, PlayerRef sender, PlayerData* playerData) {
-            if (f.Global->GameState != GameState.PreGameRoom || !playerData->IsRoomHost) {
+            if (f.Global->GameState != GameState.PreGameRoom || !playerData->IsRoomHost(f)) {
                 // Only the host can change rules.
                 return;
             }
 
-            var rules = f.ResolveList(f.Global->Rules.Triggers);
+            var rules = f.ResolveList(EditingItems ? f.Global->Rules.Items : f.Global->Rules.Hazards);
 
-            if (RemoveAll) rules.Clear();
-            else if (RemoveSingle) rules.RemoveAt(Index);
-            else {
+            if (RemoveAll) {
+                rules.Clear();
+            } else if (RemoveSingle) {
+                rules.RemoveAt(Index);
+            } else {
                 if (Index >= rules.Count) {
-                    if (rules.Count >= 80) return;
-                    rules.Add(new MatchConditionerTrigger() {
-                        Action = (TriggerAction) TriggerAction,
-                        ActionParameter = TriggerActionParameter,
-                        ActionTarget = (TriggerTarget) TriggerActionTarget,
-                        Condition = (TriggerCondition) TriggerCondition,
-                        ConditionParameter = TriggerConditionParameter,
-                        ConditionTarget = (TriggerTarget) TriggerConditionTarget,
-                        Constraint = (TriggerConstraint) TriggerConstraint,
-                        ConstraintParameter = TriggerConstraintParameter,
-                        ConstraintTarget = (TriggerTarget) TriggerConstraintTarget,
-                        DelaySeconds = TriggerDelaySeconds,
-                        RepeatCount = TriggerRepeatCount,
-                        Chance = TriggerChance,
+                    //add rule
+                    if (rules.Count >= 64)
+                        return;
+                    rules.Add(new HazardList() {
+                        PrototypeRef = PrototypeRefId,
+                        //Sub Data
+                        Team = TeamId,
+                        //Specific Data
+                        ExtraSlotA = ValueA,
+                        ExtraSlotB = ValueB,
+                        ExtraSlotC = ValueC,
+                        ExtraSlotD = ValueD,
                     });
                 } else {
-                    rules[Index] = new MatchConditionerTrigger() {
-                        Action = (TriggerAction) TriggerAction,
-                        ActionParameter = TriggerActionParameter,
-                        ActionTarget = (TriggerTarget) TriggerActionTarget,
-                        Condition = (TriggerCondition) TriggerCondition,
-                        ConditionParameter = TriggerConditionParameter,
-                        ConditionTarget = (TriggerTarget) TriggerConditionTarget,
-                        Constraint = (TriggerConstraint) TriggerConstraint,
-                        ConstraintParameter = TriggerConstraintParameter,
-                        ConstraintTarget = (TriggerTarget) TriggerConstraintTarget,
-                        DelaySeconds = TriggerDelaySeconds,
-                        RepeatCount = TriggerRepeatCount,
-                        Chance = TriggerChance,
+                    //edit rule
+                    rules[Index] = new HazardList() {
+                        PrototypeRef = PrototypeRefId,
+                        //Sub Data
+                        Team = TeamId,
+                        //Specific Data
+                        ExtraSlotA = ValueA,
+                        ExtraSlotB = ValueB,
+                        ExtraSlotC = ValueC,
+                        ExtraSlotD = ValueD,
                     };
                 }
             }
 
-            f.Global->Rules.Triggers = rules;
-            f.Events.TriggersChanged(f);
+            if (EditingItems) {
+                f.Global->Rules.Items = rules;
+            } else {
+                f.Global->Rules.Hazards = rules;
+            }
+            //f.Events.TriggersChanged(f); // h, used for dem buttons ain't it?
 
             if (f.Global->GameStartFrames > 0 && !QuantumUtils.IsGameStartable(f)) {
                 GameLogicSystem.StopCountdown(f);
             }
         }
-    }*/
+    }
 }

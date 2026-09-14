@@ -54,7 +54,7 @@ namespace Quantum {
             }
 
             //Loose Values
-            bool Attack = false, Turnaround = false, AvoidThis = false, AbovePit = false, ATargetBellow = false; //, SnappyBack = false;
+            bool Attack = false, Turnaround = false/*, AvoidThis = false*/, AbovePit = false, ATargetBellow = false; //, SnappyBack = false;
             bool LackingPowerups = mario->CurrentPowerupState <= PowerupState.Mushroom /*|| mario->CurrentPowerupState <= PowerupState.JumpSuit*/ || (Reserve != null && Reserve.StatePriority < 2);
             FPVector2 marioPos = transform->Position;
             FP TargetFoeStars = 0;

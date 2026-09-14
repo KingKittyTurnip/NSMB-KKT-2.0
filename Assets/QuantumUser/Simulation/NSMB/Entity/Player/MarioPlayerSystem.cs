@@ -2370,9 +2370,10 @@ namespace Quantum {
 
             #region KKT Mod
             var gamemode = f.FindAsset(f.Global->Rules.Gamemode);
-            ExtrasList extra = new ExtrasList();
+            byte extraA = 0, extraB = 0, extraC = 0, extraD = 0;
+
             if (!prefab.IsValid) {
-                gamemode.NEWGetRandomItem(f, mario, fromBlock, out prefab, out extra);
+                gamemode.NEWGetRandomItem(f, mario, fromBlock, out prefab, out extraA, out extraB, out extraC, out extraD);
             }
 
             EntityRef newEntity = f.Create(prefab);
@@ -2382,7 +2383,7 @@ namespace Quantum {
                 f.Unsafe.GetPointer<Transform2D>(newEntity)->Position = f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + new FPVector2(0, 2);
                 UnityEngine.Debug.Log("MARIO THIS ISN'T A COINITEM");
             }
-            f.Signals.InitializeHazard(newEntity, marioEntity, f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position, SpawnReason.Item, extra.Extra);
+            f.Signals.InitializeHazard(newEntity, marioEntity, f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position, SpawnReason.Item, extraA, extraB, extraC, extraD);
             #endregion
 
             return newEntity;

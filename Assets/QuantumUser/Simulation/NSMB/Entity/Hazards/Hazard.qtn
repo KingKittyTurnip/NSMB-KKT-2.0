@@ -33,7 +33,7 @@ enum SpawnReason : Byte {
 	Item, //used for items
 }
 
-signal InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, list<byte> spawnData);
+signal InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD);
 
 event PlayPuffParticle {
 	FPVector2 Position;

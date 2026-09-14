@@ -53,7 +53,8 @@ struct GameRules {
     //Stage Coins Group
     int CoinsForPowerup;
 	  bool RouletteBlocksEnabled; //the stage might have to commit to one ? block type, perhaps store it in the stage asset, this will also be used for the disabling of coins
-	  [AllocateOnComponentAdded, FreeOnComponentRemoved] list<ItemList> Items;
+    //[AllocateOnComponentAdded, FreeOnComponentRemoved] list<ItemList> Items;
+    [AllocateOnComponentAdded, FreeOnComponentRemoved] list<HazardList> Items;
 
     //Lives Group
     int Lives;
@@ -129,33 +130,17 @@ enum GameState : Byte {
     Ended
 }
 
-struct ItemList {
-    //Base
-    QString<64> Name;
-    int PrototypeRef;
-    //Sub Data
-    byte Team;
-    //FP Scale;
-    //Specific Data
-    ExtrasList Extra;
-}
-
 struct HazardList {
-    QString<64> Name;
 	int PrototypeRef;
     //AssetRef<EntityPrototype> HazardPrototype;
-//Sub Data
+	//Sub Data
     byte Team;
-    bool SpawnHazard;
-	//bool SpawnCoin;
-    bool SpawnFridge;
     //FP Scale;
-//Specific Data
-	ExtrasList Extra;
-}
-
-struct ExtrasList {
-    [AllocateOnComponentAdded, FreeOnComponentRemoved] list<byte> Extra;
+	//Specific Data
+    byte ExtraSlotA;
+    byte ExtraSlotB;
+    byte ExtraSlotC;
+    byte ExtraSlotD;
 }
 
 enum ItemChanceType : Byte {

@@ -185,6 +185,11 @@ MonoBehaviour:
     - rid: 8114452787875545089
     - rid: 8114452787875545090
     - rid: 8114452787875545091
+  - Components:
+    - rid: 6687588459424514048
+    - rid: 6687588459424514049
+    - rid: 6687588459424514050
+    - rid: 6687588459424514051
   SerializedTriangleDataUncompressedSize: 8
   references:
     version: 2
@@ -927,7 +932,7 @@ MonoBehaviour:
         IsWaterSolid:
           Value: 0
         SinksInQuickSandAndGoo:
-          Value: 0
+          Value: 1
         BreakMegaObjects:
           Value: 0
         WindImmune:
@@ -1159,7 +1164,7 @@ MonoBehaviour:
         IsWaterSolid:
           Value: 0
         SinksInQuickSandAndGoo:
-          Value: 0
+          Value: 1
         BreakMegaObjects:
           Value: 0
         WindImmune:
@@ -1464,6 +1469,67 @@ MonoBehaviour:
       data:
         ColliderDisabled:
           Value: 0
+    - rid: 6687588459424514048
+      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        Position:
+          X:
+            RawValue: -114688
+          Y:
+            RawValue: 212992
+        Rotation:
+          RawValue: 0
+    - rid: 6687588459424514049
+      type: {class: PhysicsCollider2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        ShapeConfig:
+          ShapeType: 8
+          PolygonCollider:
+            Id:
+              Value: 0
+          CircleRadius:
+            RawValue: 0
+          CapsuleSize:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          EdgeExtent:
+            RawValue: 16384
+          BoxExtents:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: 0
+          PositionOffset:
+            X:
+              RawValue: 0
+            Y:
+              RawValue: -16384
+          RotationOffset:
+            RawValue: 11796480
+          UserTag: 0
+          IsPersistent: 1
+          CompoundShapes: []
+        Layer: 0
+        IsTrigger: 0
+        PhysicsMaterial:
+          Id:
+            Value: 0
+    - rid: 6687588459424514050
+      type: {class: PhysicsCallbacks2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        CallbackFlags:
+          Value: 0
+    - rid: 6687588459424514051
+      type: {class: InvisibleBlockPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        BumpTile:
+          Id:
+            Value: 787780346727776477
+        Tile:
+          Id:
+            Value: 2276636638621846876
     - rid: 6993034417413292032
       type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -2216,7 +2282,7 @@ MonoBehaviour:
         IsWaterSolid:
           Value: 0
         SinksInQuickSandAndGoo:
-          Value: 0
+          Value: 1
         BreakMegaObjects:
           Value: 0
         WindImmune:

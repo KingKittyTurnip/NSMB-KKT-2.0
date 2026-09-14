@@ -18,6 +18,433 @@ MonoBehaviour:
       Value: 425424764972781941
   Rules:
     BaseRulesList:
+    - Name: Default
+      Description: Collect The Stars, Use powerups ya get and hazards you find to
+        your advantage!
+      DefaultRules:
+        Stage:
+          Id:
+            Value: 438935048561577377
+        ChooseMode:
+          Value: 0
+        RandomDisabledStages: []
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        StarsToWin: 15
+        StarFrequency: 100
+        CoinsForPowerup: 4
+        RouletteBlocksEnabled:
+          Value: 0
+        Items:
+        - PrototypeRef: 0
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 1
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 2
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 3
+          Team: 253
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 4
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 5
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 6
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 7
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 8
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 9
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 10
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 11
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 12
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 13
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 14
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        Lives: 0
+        TimerMinutes: 0
+        TeamsEnabled:
+          Value: 0
+        TeamAttack:
+          Value: 1
+        StarFountain: 100
+        CoinDeathPenalty: 100
+        CoinItemCustomSpawnWeights: []
+        ModifierHazardsEnabled:
+          Value: 1
+        MaxHazards: 10
+        HazardFrequency: 100
+        HeftyPercentage: 3
+        HazardLifetime: 80
+        Hazards:
+        - PrototypeRef: 32
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 33
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 34
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 35
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 35
+          Team: 255
+          ExtraSlotA: 1
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 36
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 37
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 38
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 39
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 40
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 41
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 42
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 43
+          Team: 255
+          ExtraSlotA: 2
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 44
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 45
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 46
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 47
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 48
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 49
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 50
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 51
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 51
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        ModifierBulbEnabled:
+          Value: 0
+        BulbAbilityCount: 3
+        HostControl:
+          Value: 0
+        DisableStageRestrictions:
+          Value: 0
+        DisableComplexStageRestrictions:
+          Value: 0
+        EveryItemHasTheSameChance:
+          Value: 0
+    - Name: Clock Test
+      Description: 
+      DefaultRules:
+        Stage:
+          Id:
+            Value: 438935048561577377
+        ChooseMode:
+          Value: 0
+        RandomDisabledStages: []
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        StarsToWin: 30
+        StarFrequency: 50
+        CoinsForPowerup: 3
+        RouletteBlocksEnabled:
+          Value: 0
+        Items:
+        - PrototypeRef: 0
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 1
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 2
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 3
+          Team: 253
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 4
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 5
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 6
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 7
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 8
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 9
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 10
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 11
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 12
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 13
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 14
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        Lives: 6
+        TimerMinutes: 3
+        TeamsEnabled:
+          Value: 0
+        TeamAttack:
+          Value: 0
+        StarFountain: 0
+        CoinDeathPenalty: 0
+        CoinItemCustomSpawnWeights: []
+        ModifierHazardsEnabled:
+          Value: 1
+        MaxHazards: 30
+        HazardFrequency: 0
+        HeftyPercentage: 7
+        HazardLifetime: 80
+        Hazards:
+        - PrototypeRef: 59
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 59
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 1
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 59
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 2
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 59
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 3
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        ModifierBulbEnabled:
+          Value: 0
+        BulbAbilityCount: 0
+        HostControl:
+          Value: 0
+        DisableStageRestrictions:
+          Value: 0
+        DisableComplexStageRestrictions:
+          Value: 0
+        EveryItemHasTheSameChance:
+          Value: 0
     - Name: Test
       Description: 
       DefaultRules:
@@ -36,81 +463,96 @@ MonoBehaviour:
         RouletteBlocksEnabled:
           Value: 0
         Items:
-        - Name: Mushroom
-          PrototypeRef: 0
+        - PrototypeRef: 0
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Fire Flower
-          PrototypeRef: 1
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 1
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Blueshell
-          PrototypeRef: 2
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 2
           Team: 255
-          Extra:
-            Extra: 
-        - Name: starman
-          PrototypeRef: 3
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 3
           Team: 253
-          Extra:
-            Extra: 
-        - Name: Mini Mushroom
-          PrototypeRef: 4
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 4
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Mega Mushroom
-          PrototypeRef: 5
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 5
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Ice Flower
-          PrototypeRef: 6
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 6
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Propeller Mushroom
-          PrototypeRef: 7
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 7
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Hammersuit
-          PrototypeRef: 8
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 8
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Bubble Flower
-          PrototypeRef: 9
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 9
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Bombro
-          PrototypeRef: 10
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 10
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Bio Flower
-          PrototypeRef: 11
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 11
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Metal Mushroom
-          PrototypeRef: 12
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 12
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Jumpsuit
-          PrototypeRef: 13
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 13
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Doneflower
-          PrototypeRef: 14
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 14
           Team: 255
-          Extra:
-            Extra: 
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
         Lives: 0
         TimerMinutes: 0
         TeamsEnabled:
@@ -121,361 +563,27 @@ MonoBehaviour:
         CoinDeathPenalty: 0
         CoinItemCustomSpawnWeights: []
         ModifierHazardsEnabled:
-          Value: 0
-        MaxHazards: 0
+          Value: 1
+        MaxHazards: 30
         HazardFrequency: 0
         HeftyPercentage: 7
         HazardLifetime: 80
         Hazards:
-        - Name: Conversion Cauldron
-          PrototypeRef: 51
+        - PrototypeRef: 51
           Team: 255
-          SpawnHazard:
-            Value: 0
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0400
-        - Name: Monty Tank
-          PrototypeRef: 60
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 60
           Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
         ModifierBulbEnabled:
           Value: 0
         BulbAbilityCount: 0
-        HostControl:
-          Value: 0
-        DisableStageRestrictions:
-          Value: 0
-        DisableComplexStageRestrictions:
-          Value: 0
-        EveryItemHasTheSameChance:
-          Value: 0
-    - Name: Default
-      Description: Collect The Stars, Use powerups ya get and hazards you find to
-        your advantage!
-      DefaultRules:
-        Stage:
-          Id:
-            Value: 438935048561577377
-        ChooseMode:
-          Value: 0
-        RandomDisabledStages: []
-        Gamemode:
-          Id:
-            Value: 326486899682662279
-        StarsToWin: 15
-        StarFrequency: 100
-        CoinsForPowerup: 4
-        RouletteBlocksEnabled:
-          Value: 1
-        Items:
-        - Name: Mushroom
-          PrototypeRef: 0
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Fire Flower
-          PrototypeRef: 1
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Blueshell
-          PrototypeRef: 2
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: starman
-          PrototypeRef: 3
-          Team: 253
-          Extra:
-            Extra: 
-        - Name: Mini Mushroom
-          PrototypeRef: 4
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Mega Mushroom
-          PrototypeRef: 5
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Ice Flower
-          PrototypeRef: 6
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Propeller Mushroom
-          PrototypeRef: 7
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Hammersuit
-          PrototypeRef: 8
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Bubble Flower
-          PrototypeRef: 9
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Bombro
-          PrototypeRef: 10
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Bio Flower
-          PrototypeRef: 11
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Metal Mushroom
-          PrototypeRef: 12
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Jumpsuit
-          PrototypeRef: 13
-          Team: 255
-          Extra:
-            Extra: 
-        - Name: Doneflower
-          PrototypeRef: 14
-          Team: 255
-          Extra:
-            Extra: 
-        Lives: 0
-        TimerMinutes: 0
-        TeamsEnabled:
-          Value: 0
-        TeamAttack:
-          Value: 1
-        StarFountain: 100
-        CoinDeathPenalty: 100
-        CoinItemCustomSpawnWeights: []
-        ModifierHazardsEnabled:
-          Value: 1
-        MaxHazards: 10
-        HazardFrequency: 100
-        HeftyPercentage: 3
-        HazardLifetime: 80
-        Hazards:
-        - Name: Baseball
-          PrototypeRef: 32
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        - Name: Heavystone
-          PrototypeRef: 33
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        - Name: Springboard
-          PrototypeRef: 34
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 00
-        - Name: Pow
-          PrototypeRef: 35
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 000000
-        - Name: Pow
-          PrototypeRef: 35
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 010000
-        - Name: Freezie
-          PrototypeRef: 36
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 00
-        - Name: Propeller Block
-          PrototypeRef: 37
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        - Name: Bill Block
-          PrototypeRef: 38
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        - Name: Cannon Box
-          PrototypeRef: 39
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        - Name: Coin Box
-          PrototypeRef: 40
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        - Name: Chain Post
-          PrototypeRef: 41
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000
-        - Name: Lemmy's Ball
-          PrototypeRef: 42
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        - Name: Cloud Bill
-          PrototypeRef: 43
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0200
-        - Name: Tanoomba
-          PrototypeRef: 44
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000
-        - Name: Spinpipe
-          PrototypeRef: 45
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 000000
-        - Name: Fan Thing
-          PrototypeRef: 46
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 00000000
-        - Name: Voidwall
-          PrototypeRef: 47
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000
-        - Name: Tornado
-          PrototypeRef: 48
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 00
-        - Name: Bowser Shell
-          PrototypeRef: 49
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
-        - Name: Starball
-          PrototypeRef: 50
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 00
-        - Name: Conversion Cauldron
-          PrototypeRef: 51
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000
-        - Name: Conversion Cauldron
-          PrototypeRef: 51
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000
-        - Name: Clock
-          PrototypeRef: 59
-          Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000
-        ModifierBulbEnabled:
-          Value: 0
-        BulbAbilityCount: 3
         HostControl:
           Value: 0
         DisableStageRestrictions:
@@ -502,91 +610,108 @@ MonoBehaviour:
         RouletteBlocksEnabled:
           Value: 0
         Items:
-        - Name: Mushroom
-          PrototypeRef: 0
+        - PrototypeRef: 0
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Fire Flower
-          PrototypeRef: 1
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 1
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Blueshell
-          PrototypeRef: 2
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 2
           Team: 255
-          Extra:
-            Extra: 
-        - Name: starman
-          PrototypeRef: 3
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 3
           Team: 253
-          Extra:
-            Extra: 
-        - Name: Mini Mushroom
-          PrototypeRef: 4
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 4
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Mega Mushroom
-          PrototypeRef: 5
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 5
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Ice Flower
-          PrototypeRef: 6
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 6
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Propeller Mushroom
-          PrototypeRef: 7
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 7
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Hammersuit
-          PrototypeRef: 8
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 8
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Bubble Flower
-          PrototypeRef: 9
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 9
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Bombro
-          PrototypeRef: 10
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 10
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Bio Flower
-          PrototypeRef: 11
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 11
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Metal Mushroom
-          PrototypeRef: 12
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 12
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Jumpsuit
-          PrototypeRef: 13
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 13
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Doneflower
-          PrototypeRef: 14
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 14
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Pow
-          PrototypeRef: 35
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 35
           Team: 255
-          Extra:
-            Extra: 0000
-        - Name: Pow
-          PrototypeRef: 35
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 35
           Team: 255
-          Extra:
-            Extra: 0100
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
         Lives: 0
         TimerMinutes: 0
         TeamsEnabled:
@@ -603,24 +728,18 @@ MonoBehaviour:
         HeftyPercentage: 0
         HazardLifetime: 80
         Hazards:
-        - Name: Pow
-          PrototypeRef: 35
+        - PrototypeRef: 35
           Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0100
-        - Name: Pow
-          PrototypeRef: 35
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 35
           Team: 255
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
         ModifierBulbEnabled:
           Value: 0
         BulbAbilityCount: 0
@@ -650,36 +769,42 @@ MonoBehaviour:
         RouletteBlocksEnabled:
           Value: 0
         Items:
-        - Name: Mushroom
-          PrototypeRef: 0
+        - PrototypeRef: 0
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Fire Flower
-          PrototypeRef: 1
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 1
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Blueshell
-          PrototypeRef: 2
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 2
           Team: 255
-          Extra:
-            Extra: 
-        - Name: starman
-          PrototypeRef: 3
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 3
           Team: 253
-          Extra:
-            Extra: 
-        - Name: Mini Mushroom
-          PrototypeRef: 4
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 4
           Team: 255
-          Extra:
-            Extra: 
-        - Name: Mega Mushroom
-          PrototypeRef: 5
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 5
           Team: 255
-          Extra:
-            Extra: 
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
         Lives: 5
         TimerMinutes: 0
         TeamsEnabled:
@@ -725,301 +850,360 @@ MonoBehaviour:
         RouletteBlocksEnabled:
           Value: 1
         Items:
-        - Name: 
-          PrototypeRef: 0
+        - PrototypeRef: 0
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 1
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 1
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 2
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 2
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 3
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 3
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 4
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 4
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 5
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 5
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 6
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 6
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 7
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 7
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 8
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 8
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 9
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 9
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 10
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 10
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 11
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 11
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 12
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 12
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 13
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 13
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 14
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 14
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 15
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 15
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 16
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 16
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 17
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 17
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 18
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 18
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 19
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 19
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 20
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 20
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 21
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 21
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 22
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 22
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 23
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 23
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 24
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 24
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 25
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 25
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 26
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 26
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 27
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 27
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 28
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 28
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 29
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 29
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 30
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 30
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 31
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 31
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 32
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 32
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 33
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 33
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 34
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 34
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 35
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 35
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 36
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 36
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 37
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 37
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 38
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 38
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 39
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 39
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 40
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 40
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 41
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 41
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 42
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 42
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 43
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 43
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 44
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 44
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 45
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 45
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 46
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 46
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 47
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 47
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 48
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 48
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 49
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 49
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 50
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 50
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 51
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 51
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 52
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 52
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 53
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 53
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 54
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 54
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 55
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 55
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 56
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 56
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 57
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 57
           Team: 0
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 58
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 58
           Team: 0
-          Extra:
-            Extra: 0000000000
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
         Lives: 0
         TimerMinutes: 10
         TeamsEnabled:
@@ -1036,537 +1220,360 @@ MonoBehaviour:
         HeftyPercentage: 250
         HazardLifetime: 40
         Hazards:
-        - Name: 
-          PrototypeRef: 0
+        - PrototypeRef: 0
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 1
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 1
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 2
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 2
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 3
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 3
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 4
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 4
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 5
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 5
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 6
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 6
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 7
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 7
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 8
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 8
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 9
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 9
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 10
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 10
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 11
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 11
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 12
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 12
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 13
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 13
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 14
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 14
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 15
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 15
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 16
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 16
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 17
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 17
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 18
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 18
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 19
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 19
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 20
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 20
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 21
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 21
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 22
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 22
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 23
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 23
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 24
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 24
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 25
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 25
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 26
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 26
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 27
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 27
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 28
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 28
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 29
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 29
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 30
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 30
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 31
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 31
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 32
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 32
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 33
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 33
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 34
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 34
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 35
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 35
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 36
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 36
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 37
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 37
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 38
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 38
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 39
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 39
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 40
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 40
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 41
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 41
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 42
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 42
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 43
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 43
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 44
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 44
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 45
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 45
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 46
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 46
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 47
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 47
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 48
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 48
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 49
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 49
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 50
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 50
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 51
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 51
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 52
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 52
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 53
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 53
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 54
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 54
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 55
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 55
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 56
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 56
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 57
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 57
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
-        - Name: 
-          PrototypeRef: 58
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 58
           Team: 0
-          SpawnHazard:
-            Value: 1
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 0000000000
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
         ModifierBulbEnabled:
           Value: 0
         BulbAbilityCount: 0
@@ -1596,46 +1603,54 @@ MonoBehaviour:
         RouletteBlocksEnabled:
           Value: 0
         Items:
-        - Name: 
-          PrototypeRef: 0
+        - PrototypeRef: 0
           Team: 0
-          Extra:
-            Extra: 
-        - Name: 
-          PrototypeRef: 0
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 0
           Team: 0
-          Extra:
-            Extra: 
-        - Name: 
-          PrototypeRef: 0
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 0
           Team: 0
-          Extra:
-            Extra: 
-        - Name: 
-          PrototypeRef: 0
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 0
           Team: 0
-          Extra:
-            Extra: 
-        - Name: 
-          PrototypeRef: 0
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 0
           Team: 0
-          Extra:
-            Extra: 
-        - Name: 
-          PrototypeRef: 0
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 0
           Team: 0
-          Extra:
-            Extra: 
-        - Name: 
-          PrototypeRef: 0
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 0
           Team: 0
-          Extra:
-            Extra: 
-        - Name: 
-          PrototypeRef: 0
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 0
           Team: 0
-          Extra:
-            Extra: 
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
         Lives: 0
         TimerMinutes: 0
         TeamsEnabled:
@@ -1652,15 +1667,12 @@ MonoBehaviour:
         HeftyPercentage: 0
         HazardLifetime: 80
         Hazards:
-        - Name: Springboard
-          PrototypeRef: 0
+        - PrototypeRef: 0
           Team: 255
-          SpawnHazard:
-            Value: 0
-          SpawnFridge:
-            Value: 1
-          Extra:
-            Extra: 
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
         ModifierBulbEnabled:
           Value: 0
         BulbAbilityCount: 0
@@ -1674,244 +1686,785 @@ MonoBehaviour:
           Value: 0
     ListOfAvalibleObjects:
     - Name: Mushroom
+      Description: Makes you big!
+      Icon: {fileID: -1064656529, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1268531089014898302
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Fire Flower
+      Description: Makes you be able to shoot fireballs that hit foes
+      Icon: {fileID: 1631863258, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1349070666859566638
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Blueshell
+      Description: Running will put you in the shell, protecting you from enemies
+        & projectiles!
+      Icon: {fileID: -1772333140, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1466930856010351358
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Starman
+      Description: Invincible
+      Icon: {fileID: 1829795885, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1502268950446962426
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 2
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Mini Mushroom
+      Description: Turns you into a baby
+      Icon: {fileID: 958854673, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1414434856952255942
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Mega Mushroom
+      Description: Makes you Mega!
+      Icon: {fileID: 1415952408, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1300211052819551813
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 3
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Ice Flower
+      Description: Makes you be able to shoot iceballs which freezes your foes
+      Icon: {fileID: -598144007, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1524544283524633813
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Propeller Mushroom
+      Description: Makes you be able to fly very high!
+      Icon: {fileID: 1452558362, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1286010981056643553
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Hammer Suit
+      Description: makes you be able to throw hammers, hold up to aim them higher!
+      Icon: {fileID: 1428678238, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1472665878288241371
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Bubble Flower
+      Description: Makes you be able to shoot bubbles which can be jumped on or hit
+        foes
+      Icon: {fileID: 874627451, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 2
       entityPrototype:
         Id:
           Value: 1437294020411531186
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 2
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Bombro
+      Description: Makes you be able to create a bobomb which can be exploded manually!
+      Icon: {fileID: 1974856877, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 2
       entityPrototype:
         Id:
           Value: 1355472840853239745
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 2
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Bio Flower
+      Description: Makes you be able to unleash a grapple vine to hit foes or move
+        to places
+      Icon: {fileID: -1733928045, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 2
       entityPrototype:
         Id:
           Value: 1460778516708280298
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 2
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Metal Mushroom
+      Description: Makes you heavy! That force after landing must go somewhere tho...
+      Icon: {fileID: -315702726, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 2
       entityPrototype:
         Id:
           Value: 1313060240537942267
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 2
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 3
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Jumpsuit
+      Description: Makes you really good at jumping!
+      Icon: {fileID: -1079322238, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 4
       entityPrototype:
         Id:
           Value: 1490579344614088993
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 4
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 4
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Doneflower
+      Description: Makes you so done and lose doubled stars, hit somebody with it
+        to give it to them.
+      Icon: {fileID: -1128872890, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 1
+      categorey: 4
       entityPrototype:
         Id:
           Value: 1360720116195219965
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 4
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 4
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Goomba
+      Description: He is very good at getting you when you forget about him
+      Icon: {fileID: 1193760086, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 1487534197368722732
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 0
       BulbCooldown: 0
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Green Koopa
+      Description: Can be picked up and thrown at foes to deal damage
+      Icon: {fileID: -2077183158, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1049600
       entityPrototype:
         Id:
           Value: 1379843889611026990
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1049600
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues:
-      - ButtonName: Spawns in shell
+      ValueA:
+        ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -1919,20 +2472,46 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Red Koopa
+      Description: Can be picked up and thrown at foes to deal damage! as bonus dlc
+        when they are not thrown they won't walk off ledges woag
+      Icon: {fileID: 316577724, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1049600
       entityPrototype:
         Id:
           Value: 1379843889611026990
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1049600
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues:
-      - ButtonName: Spawns in shell
+      ValueA:
+        ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -1940,20 +2519,45 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Blue Koopa
+      Description: Drops a blueshell when stomped
+      Icon: {fileID: -259547799, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1049601
       entityPrototype:
         Id:
           Value: 1379843889611026990
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1049601
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 2
       BulbCooldown: 2
-      SpecialValues:
-      - ButtonName: Spawns in shell
+      ValueA:
+        ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -1961,20 +2565,45 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Spiny
+      Description: owie
+      Icon: {fileID: 1967589071, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1049600
       entityPrototype:
         Id:
           Value: 1365566619514412880
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1049600
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues:
-      - ButtonName: Spawns in shell
+      ValueA:
+        ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -1982,34 +2611,68 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Bullet Bill
+      Description: Flies forward forever!-or at least until nobody is looking
+      Icon: {fileID: 2047675821, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 1440373003412769203
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 0
       BulbCooldown: 1
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Bobomb
+      Description: It's a bomb. A time bomb. It explodes. Just like this description.
+        wait what
+      Icon: {fileID: 1348533366, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1049600
       entityPrototype:
         Id:
           Value: 1416226096290300185
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1049600
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues:
-      - ButtonName: Spawn Type
+      ValueA:
+        ButtonName: Spawn Type
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -2019,7 +2682,8 @@ MonoBehaviour:
         - Spawns walking
         - Spawns lit
         - Spawns & Explodes on contact
-      - ButtonName: Is Nuke Bobomb
+      ValueB:
+        ButtonName: Is Nuke Bobomb
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -2029,56 +2693,155 @@ MonoBehaviour:
         - Spawns walking
         - Spawns lit
         - Spawns & Explodes on contact
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Boo
+      Description: Spooky ghost AHHH
+      Icon: {fileID: 1258789605, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 1304675416483732058
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 1
       BulbCooldown: 3
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Firesnake
+      Description: Officially ipod's baby! (why the firesnake specifically?... idk,
+        who is ipod? WHAT DO YOU MEAN)
+      Icon: {fileID: 915211014, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 1453526262079163515
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 1
       BulbCooldown: 3
-      SpecialValues:
-      - ButtonName: Segment Count
+      ValueA:
+        ButtonName: Segment Count
         ButtonType: 1
         BaseValue: 5
         ValueRange:
           X: 0
           Y: 20
         valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Thwomp
+      Description: too cool for a description
+      Icon: {fileID: -1055030326, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 1508147813115421691
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 1
-      SpecialValues:
-      - ButtonName: Is Big
+      ValueA:
+        ButtonName: Is Big
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2086,20 +2849,46 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Buzzy Beetle
+      Description: 'Can be picked up and thrown at foes to deal damage. As a bonus
+        it Resists things like a salamence. '
+      Icon: {fileID: -228251080, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1049600
       entityPrototype:
         Id:
           Value: 1278307627880243838
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1049600
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues:
-      - ButtonName: Spawns in shell
+      ValueA:
+        ButtonName: Spawns in shell
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2107,20 +2896,21 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Podobo
+      Description: Jumps and goes weee!
+      Icon: {fileID: 144096083, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 1490928927700818155
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 1
       BulbCooldown: 1
-      SpecialValues:
-      - ButtonName: Varient
+      ValueA:
+        ButtonName: Varient
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -2130,21 +2920,70 @@ MonoBehaviour:
         - Lava
         - Posion
         - Ice
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Dry Bones
+      Description: He always comes back... to drop more gold! *greedy noises*
+      Icon: {fileID: 178282722, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 1490928927700818155
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues:
-      - ButtonName: IsBig
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2152,34 +2991,68 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Wubba
+      Description: what is a wubba made of anyway, slime? what if it was jello. oooo
+        lime jello. sounds good right now...
+      Icon: {fileID: 1069796779, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 1386060608069232861
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 0
       BulbCooldown: 0
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Cataquack
+      Description: Flings anything that gets in it's way!
+      Icon: {fileID: 270221566, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 1509128645920081087
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 1
-      SpecialValues:
-      - ButtonName: Varient
+      ValueA:
+        ButtonName: Varient
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -2189,21 +3062,70 @@ MonoBehaviour:
         - Basic Blue
         - Ready Red
         - Sturdy Green
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Lil' Turnip
+      Description: who dat
+      Icon: {fileID: 1020636350, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 4
+      categorey: 1048576
       entityPrototype:
         Id:
           Value: 0
-      Icon: {fileID: 0}
-      type: 4
-      categorey: 1048576
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 2
       BulbSpawnType: 1
       BulbCooldown: 2
-      SpecialValues:
-      - ButtonName: Spawns while spinning
+      ValueA:
+        ButtonName: Spawns while spinning
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2211,59 +3133,137 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Iceblock
+      Description: The block of the ice flower, but as an object!
+      Icon: {fileID: -1818119218, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
       entityPrototype:
         Id:
           Value: 1386525317044462577
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 0
       BulbSpawnType: 0
       BulbCooldown: 1
-      SpecialValues:
-      - ButtonName: Contains
-        ButtonType: 1
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 0
-        valuenames:
-        - SmallCube
-        - TallCube
-        - LargeCube
-        - Goomba
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Baseball
+      Description: A Simple baseball, when thrown bumps your opponent.
+      Icon: {fileID: -1952437967, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
       entityPrototype:
         Id:
           Value: 1405620265549088569
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 1
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Heavy Stone
+      Description: A Really heavy stone, takes 4 stars when it lands.
+      Icon: {fileID: 845569496, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
       entityPrototype:
         Id:
           Value: 1531969226459579775
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 2
       BulbSpawnType: 1
       BulbCooldown: 4
-      SpecialValues:
-      - ButtonName: Is Bluestone
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2271,20 +3271,45 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Springboard
+      Description: Launches anything than lands on it up high
+      Icon: {fileID: -1565339580, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 8
       entityPrototype:
         Id:
           Value: 1278623128394802359
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 8
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 1
-      SpecialValues:
-      - ButtonName: Is Squished
+      ValueA:
+        ButtonName: Is Squished
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2292,27 +3317,31 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Pow
+      Description: When it makes contact with something it explodes. Blue ones have
+        long range & hit grounded foes while flinging them. Red ones hit them & destroy
+        blocks
+      Icon: {fileID: -1705836093, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
       entityPrototype:
         Id:
           Value: 1337602123896873055
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 3
-      SpecialValues:
-      - ButtonName: Is Red Pow
+      ValueA:
+        ButtonName: Is Red Pow
         ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
         valuenames: []
-      - ButtonName: Spawn Type
+      ValueB:
+        ButtonName: Spawn Type
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2322,21 +3351,62 @@ MonoBehaviour:
         - Spawns Pickupable
         - Spawns & Explodes on contact
         - Flung into the air, and then explodes on contact
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Freezie
+      Description: When it makes contact with something, it freezes it. brrrr
+      Icon: {fileID: -1133792017, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
       entityPrototype:
         Id:
           Value: 1349535369867306075
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 1
       BulbCooldown: 3
-      SpecialValues:
-      - ButtonName: Does PermaFrost
+      ValueA:
+        ButtonName: Does PermaFrost
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2344,83 +3414,215 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Propeller block
+      Description: When held makes you be able to fly very high!
+      Icon: {fileID: -717712244, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
       entityPrototype:
         Id:
           Value: 1519453281481461233
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 3
-      SpecialValues: []
-    - Name: Bill block
-      entityPrototype:
-        Id:
-          Value: 1523487431609673123
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 1
-      BulbSpawnType: 1
-      BulbCooldown: 3
-      SpecialValues: []
-    - Name: Cannonbox
-      entityPrototype:
-        Id:
-          Value: 1358951826669536181
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 1
-      BulbSpawnType: 1
-      BulbCooldown: 3
-      SpecialValues: []
-    - Name: Coinbox
-      entityPrototype:
-        Id:
-          Value: 1407489288256842837
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 2
-      BulbSpawnType: 1
-      BulbCooldown: 3
-      SpecialValues: []
-    - Name: Chainpost
-      entityPrototype:
-        Id:
-          Value: 1266191120316739523
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 2
-      BulbSpawnType: 2
-      BulbCooldown: 4
-      SpecialValues:
-      - ButtonName: Chain Is Long
+      ValueA:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
         valuenames: []
-      - ButtonName: Contains
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: Bill block
+      Description: When held it will allow you to fly far!
+      Icon: {fileID: 2047675821, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
+      entityPrototype:
+        Id:
+          Value: 1523487431609673123
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 1
+      BulbSpawnType: 1
+      BulbCooldown: 3
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: Cannonbox
+      Description: Shoots cannonballs periodically. When held it can be charged to
+        shoot faster!
+      Icon: {fileID: -1154016735, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
+      entityPrototype:
+        Id:
+          Value: 1358951826669536181
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 1
+      BulbSpawnType: 1
+      BulbCooldown: 3
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: Coinbox
+      Description: When held it will create coins based on how much you move horizontally
+      Icon: {fileID: 970155034, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
+      entityPrototype:
+        Id:
+          Value: 1407489288256842837
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 2
+      BulbSpawnType: 1
+      BulbCooldown: 3
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: Chainpost
+      Description: Makes sure that whatever it's chained too sticks to it. Can be
+        held
+      Icon: {fileID: -1022898970, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
+      entityPrototype:
+        Id:
+          Value: 1266191120316739523
+      Teamable: 1
+      CanSpawnAsHazard: 1
+      Hefty: 0
+      SpawnChance: 2
+      BulbSpawnType: 2
+      BulbCooldown: 4
+      ValueA:
+        ButtonName: Chain Is Long
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: Contains
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -2444,35 +3646,86 @@ MonoBehaviour:
         - Lil' Turnip
         - Bone
         - ChainPost (? ? ?)
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Lemmy's ball
+      Description: Bounces around at the speed of sound~ at least after hit by an
+        "unstopableforce". Otherwise bounces around slowly
+      Icon: {fileID: 564833591, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 8
       entityPrototype:
         Id:
           Value: 1381489562479131125
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 8
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Cloud bill
+      Description: A Bulletbill with a trail of clouds behind it. you can stand on
+        it for a positional advantage!
+      Icon: {fileID: 1704976633, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 4096
       entityPrototype:
         Id:
           Value: 1406808205652346148
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 4096
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 1
       BulbSpawnType: 1
       BulbCooldown: 3
-      SpecialValues:
-      - ButtonName: Cloud Trail Length
+      ValueA:
+        ButtonName: Cloud Trail Length
         ButtonType: 1
         BaseValue: 1
         ValueRange:
@@ -2484,7 +3737,8 @@ MonoBehaviour:
         - Normal (12)
         - Long (18)
         - Very Long (28)
-      - ButtonName: Direction
+      ValueB:
+        ButtonName: Direction
         ButtonType: 1
         BaseValue: 1
         ValueRange:
@@ -2494,7 +3748,16 @@ MonoBehaviour:
         - Random
         - Left
         - Right
-      - ButtonName: Clouds Stay After Death
+      ValueC:
+        ButtonName: Clouds Stay After Death
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2502,30 +3765,48 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Tanoomba
+      Description: A shneaky species that tries to transform into things to trick
+        you! He's smart enough to go for combos on players.
+      Icon: {fileID: 2002107028, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 4096
       entityPrototype:
         Id:
           Value: 1331816873224772261
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 4096
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 4
       BulbSpawnType: 0
       BulbCooldown: 2
-      SpecialValues:
-      - ButtonName: Transform Type
+      ValueA:
+        ButtonName: Transform Type
         ButtonType: 1
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 2
+          Y: 1
         valuenames:
         - Anything that's in the current match
         - Anything it possibly could
-        - '[3rd option] somthing in particular'
-      - ButtonName: Transform When Spawned
+      ValueB:
+        ButtonName: Transform When Spawned
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2533,20 +3814,22 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Spinpipe
+      Description: Sticks into the world and tilts it sideways, making everything
+        a slope! Certain objects roll on slopes...
+      Icon: {fileID: -721652018, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 4096
       entityPrototype:
         Id:
           Value: 1341125926870955329
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 4096
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues:
-      - ButtonName: Type
+      ValueA:
+        ButtonName: Type
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2556,7 +3839,8 @@ MonoBehaviour:
         - Normal - shifts side to side
         - Broken - stays on one side
         - Sturdy - shifts side to side, unbreakable
-      - ButtonName: Start Facing
+      ValueB:
+        ButtonName: Start Facing
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -2566,33 +3850,38 @@ MonoBehaviour:
         - Random
         - Left
         - Right
-      - ButtonName: Turn Time
+      ValueC:
+        ButtonName: 
         ButtonType: 1
-        BaseValue: 3
+        BaseValue: 0
         ValueRange:
           X: 0
-          Y: 4
-        valuenames:
-        - 1 second
-        - 3 seconds
-        - 5 seconds
-        - 10 seconds
-        - 30 seconds
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Fan thing
+      Description: 'blows Strong winds perodically. '
+      Icon: {fileID: 947576269, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 4096
       entityPrototype:
         Id:
           Value: 1368433557836402488
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 4096
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues:
-      - ButtonName: Type
+      ValueA:
+        ButtonName: Type
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2604,7 +3893,8 @@ MonoBehaviour:
         - Flipped Over - blows upwards
         - Sturdy - blows side to side, unbreakable
         - Sturdy & Broken - blows in one direction, unbreakable
-      - ButtonName: Start Facing
+      ValueB:
+        ButtonName: Start Facing
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -2614,33 +3904,62 @@ MonoBehaviour:
         - Random
         - Left
         - Right
-      - ButtonName: Turn Time
+      ValueC:
+        ButtonName: 
         ButtonType: 1
-        BaseValue: 3
+        BaseValue: 0
         ValueRange:
           X: 0
-          Y: 4
-        valuenames:
-        - 1 second
-        - 3 seconds
-        - 5 seconds
-        - 10 seconds
-        - 30 seconds
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Voidwall
+      Description: When thrown, a wall is created that stops the stage from looping.
+      Icon: {fileID: -964076274, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 5120
       entityPrototype:
         Id:
           Value: 1528374188268676239
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 5120
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues:
-      - ButtonName: 'Spawn Wall Immediately '
+      ValueA:
+        ButtonName: 'Spawn Wall Immediately '
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -2648,70 +3967,162 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Tornado
+      Description: A vortex of wind that forceably pulls things into it, ultimately
+        throwing it upwards.
+      Icon: {fileID: -1192693959, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 4096
       entityPrototype:
         Id:
           Value: 1360934193958261155
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 4096
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 4
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Bowsershell
+      Description: A Large shell that when kicked travels the entire stage, breaking
+        many objects and harming anything in its path
+      Icon: {fileID: -1322021667, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 1024
       entityPrototype:
         Id:
           Value: 1394417262128408316
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 1024
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 2
       BulbSpawnType: 2
       BulbCooldown: 3
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Starball
+      Description: Move the starball to the starball goal that appears shortly afterwards
+        to get a star. At least it's not controlled by motion controls! (or is it)
+      Icon: {fileID: 69580611, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 8192
       entityPrototype:
         Id:
           Value: 1301824237093034110
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 8192
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 6
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues:
-      - ButtonName: Contains
-        ButtonType: 1
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 0
-        valuenames:
-        - Bigstar
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Conversion Cauldron
+      Description: Converts whatever is thrown in it into a boss. How curious...
+      Icon: {fileID: 658834626, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 10240
       entityPrototype:
         Id:
           Value: 1516621902257113064
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 10240
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 1
       BulbSpawnType: 2
       BulbCooldown: 4
-      SpecialValues:
-      - ButtonName: Create Boss
+      ValueA:
+        ButtonName: Create Boss
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -2720,275 +4131,470 @@ MonoBehaviour:
         valuenames:
         - Random
         - Bowser - King of koopas
-        - King Boo - king of boos
-        - Petey Piranha - that one guy with pants
-        - King Whomp - king of rocks
-        - Monty Tank - that one guy with a tank
-        - Dry Bowser - king of dry
+        - King Boo - King of boos
+        - Petey Piranha - That one guy with pants
+        - King Whomp - King of rocks
+        - Monty Tank - That one guy with a tank
+        - Dry Bowser - King of dry (what)
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Bowser
+      Description: King of koopas. Breaths fire, he can aim it upwards or downwards.
+        He also knows how to groundpound players, he prefers to start fights with
+        groundpounds, then stay back as long as he can.
+      Icon: {fileID: -887166856, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 10240
       entityPrototype:
         Id:
           Value: 1425013984214867549
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 10240
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 6
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: Is Dry
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: King Boo
+      Description: King of boos. He barfs flameing blocks, which then he tries to
+        inhale afterwards. Mario can pickup these blocks once extinguished and throw
+        it at him for big damage! He likes to fly around making it hard for his opponents
+        to land hits.
+      Icon: {fileID: -1487032855, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 10240
       entityPrototype:
         Id:
           Value: 1417407889661057047
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 10240
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 6
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Petey Piranha
+      Description: That one guy with pants. Has a spin attack for folks that get
+        too close. He constantly jumps, but can fly. He likes to jump around followed
+        by flying up in hopes to snipe ya with a dive attack.
+      Icon: {fileID: 2025133126, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 10240
       entityPrototype:
         Id:
           Value: 1357720639578944744
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 10240
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 6
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Whomp King
+      Description: King of rocks. I never finished this guy so i'm not giving a description
+        for him teehee
+      Icon: {fileID: 1501973055, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 2
+      categorey: 10240
       entityPrototype:
         Id:
           Value: 1500840674427279327
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 10240
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 6
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Bigstar
+      Description: oooo shiny
+      Icon: {fileID: -1681770492, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 8
+      categorey: 2097152
       entityPrototype:
         Id:
           Value: 1295981493910502871
-      Icon: {fileID: 0}
-      type: 8
-      categorey: 2097152
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 1
       SpawnChance: 6
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues:
-      - ButtonName: IsStationary
+      ValueA:
+        ButtonName: IsStationary
         ButtonType: 0
         BaseValue: 1
         ValueRange:
           X: 0
           Y: 0
         valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Loose coin
+      Description: Imagine... having a chance to get a coin after collecting 8 coins...
+        wild stuff
+      Icon: {fileID: 785392716, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 8
+      categorey: 33554432
       entityPrototype:
         Id:
           Value: 1464681621458001613
-      Icon: {fileID: 0}
-      type: 8
-      categorey: 4194304
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 4
       BulbSpawnType: 0
       BulbCooldown: 0
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: 1up Mushroom
+      Description: Grants you an extra life! Often makes games finicky.
+      Icon: {fileID: 4643973, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 8
+      categorey: 1
       entityPrototype:
         Id:
           Value: 1365421339623582075
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 2
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Clock
+      Description: Manipulates the timer rule. Does nothing if it hits 0 or the timer
+        rule is disabled.
+      Icon: {fileID: 1582020030, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
+      type: 8
+      categorey: 268435456
       entityPrototype:
         Id:
           Value: 1459869503240347747
-      Icon: {fileID: 0}
-      type: 8
-      categorey: 268435456
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 0
       BulbSpawnType: 2
       BulbCooldown: 0
-      SpecialValues:
-      - ButtonName: Clock Type
+      ValueA:
+        ButtonName: Amount
+        ButtonType: 1
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 5
+        valuenames:
+        - 0:10
+        - 0:20
+        - 0:30
+        - 0:40
+        - 0:50
+        - 1:00
+      ValueB:
+        ButtonName: Clock Type
         ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
           Y: 3
         valuenames:
-        - Add 10 Time
-        - Reset Time
-        - Trigger Timeup
-        - Subtract 10 Time
+        - 'Add [Amount]'
+        - 'Subtract [Amount]'
+        - 'Trigger Timeup [Set to Amount]'
+        - 'Reset Timer [Does Not Use Amount]'
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
     - Name: Monty Tank
+      Description: That one guy with a tank. When he's out of the tank he can throw
+        bombs (which he explodes himself) and can add more segments to the tank.
+        Randomly shoots bullet bills. He likes to be a constant force in the way
+        creating lots of projectiles.
+      Icon: {fileID: -1238084574743955201, guid: 5f97a3adca3c1c04e9b3eb9c5bc49eae,
+        type: 3}
+      type: 2
+      categorey: 10240
       entityPrototype:
         Id:
           Value: 1411534234583441148
-      Icon: {fileID: 0}
-      type: 2
-      categorey: 10240
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
       SpawnChance: 6
       BulbSpawnType: 3
       BulbCooldown: 4
-      SpecialValues: []
-    bigstarBase:
-      Name: Bigstar
-      entityPrototype:
-        Id:
-          Value: 1295981493910502871
-      Icon: {fileID: 0}
-      type: 8
-      categorey: 2097152
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 1
-      SpawnChance: 8
-      BulbSpawnType: 3
-      BulbCooldown: 4
-      SpecialValues:
-      - ButtonName: IsStationary
-        ButtonType: 0
-        BaseValue: 1
-        ValueRange:
-          X: 0
-          Y: 0
-        valuenames: []
-    purplecoinBase:
-      Name: Purple Coin
-      entityPrototype:
-        Id:
-          Value: 1441489962698596482
-      Icon: {fileID: 0}
-      type: 8
-      categorey: 4194304
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 5
-      BulbSpawnType: 0
-      BulbCooldown: 2
-      SpecialValues: []
-    starcoinBase:
-      Name: Starcoin
-      entityPrototype:
-        Id:
-          Value: 1349860830661540207
-      Icon: {fileID: 0}
-      type: 8
-      categorey: 4194304
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 1
-      SpawnChance: 8
-      BulbSpawnType: 3
-      BulbCooldown: 4
-      SpecialValues: []
-    kingbobombBase:
-      Name: King Bobomb
-      entityPrototype:
-        Id:
-          Value: 0
-      Icon: {fileID: 0}
-      type: 8
-      categorey: 16777216
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 8
-      BulbSpawnType: 3
-      BulbCooldown: 4
-      SpecialValues: []
-    loosecoinBase:
-      Name: Loose coin
-      entityPrototype:
-        Id:
-          Value: 1464681621458001613
-      Icon: {fileID: 0}
-      type: 8
-      categorey: 4194304
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 5
-      BulbSpawnType: 0
-      BulbCooldown: 0
-      SpecialValues: []
-    oneupBase:
-      Name: 1up Mushroom
-      entityPrototype:
-        Id:
-          Value: 1365421339623582075
-      Icon: {fileID: 0}
-      type: 1
-      categorey: 1
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 2
-      BulbSpawnType: 3
-      BulbCooldown: 4
-      SpecialValues: []
-    clockBase:
-      Name: Clock
-      entityPrototype:
-        Id:
-          Value: 1459869503240347747
-      Icon: {fileID: 0}
-      type: 8
-      categorey: 268435456
-      Teamable: 1
-      CanSpawnAsHazard: 1
-      Hefty: 0
-      SpawnChance: 0
-      BulbSpawnType: 2
-      BulbCooldown: 0
-      SpecialValues:
-      - ButtonName: Clock Type
+      ValueA:
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 3
-        valuenames:
-        - Add 10 Time
-        - Reset Time
-        - Trigger Timeup
-        - Subtract 10 Time
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []

@@ -226,14 +226,14 @@ namespace Quantum {
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
             //TODO: Magic numbers galore, make door hit thwomp like this
-            if (false) {
+            /*if (false) {
                 //thwomp gets launched
                 thwomp->State = ThwompState.Fall;
                 PhysicsObject->Velocity.X = damageDirection.X > 0 ? -3 : 3;
                 PhysicsObject->Velocity.Y = 10;
                 PhysicsObject->Gravity.Y = -18;
                 PhysicsObject->IsTouchingGround = false;
-            }
+            }*/
 
             f.Signals.OnProjectileHitEntity(projEntity, disEntity);
         }
@@ -266,18 +266,17 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Thwomp* thwomp)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out PhysicsCollider2D* collider)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
             enemy->IsActive = true;
 
-            if (specialValues[0] == 1) {
+            if (ExtraA == 1) {
                 //Big thwomp
                 thwomp->Big = true;
                 collider->Shape.Centroid.Y += collider->Shape.Box.Extents.Y;

@@ -381,17 +381,16 @@ namespace Quantum {
                 bobomb->Kill(f, mario->HeldEntity, entity, EnemyKillReason.Special);
             }
         }
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Bobomb* bobomb)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
             //Set Varient
-            if (specialValues[0] > 0) {
-                if (specialValues[0] > 0) {
+            if (ExtraA > 0) {
+                if (ExtraA == 1) {
                     Light(f, thisEntity, bobomb, false);
                 } else {
                     //make bobomb explode on contact with ground

@@ -86,11 +86,8 @@ namespace Quantum {
                 f.Unsafe.GetPointer<Boss>(newEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
                 f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
             }
-            //Setup Extradata
-            ExtrasList j = new ExtrasList();
-            bossesAsset.ListOfOptions[cauldron->ConvertIntoBossId].Extra.Materialize(f, ref j);
 
-            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, j.Extra);
+            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, bossesAsset.ListOfOptions[cauldron->ConvertIntoBossId].ExtraA, 0, 0, 0);
             f.Events.PlayPuffParticle(transform->Position);
             cauldron->TransformingEntity = EntityRef.None;
             cauldron->Activated = true;
@@ -160,23 +157,22 @@ namespace Quantum {
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Cauldron* cauldron)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
             //Set The Value To What It Will ALWAYS convert into
-            if (specialValues[0] == 0) {
+            if (ExtraA == 0) {
                 //pick random
                 cauldron->ConvertIntoBossId = (byte)f.RNG->Next(0, f.FindAsset(cauldron->BossData).ListOfOptions.Length);
             } else {
                 //pick specific
-                cauldron->ConvertIntoBossId = specialValues[0]--;
+                cauldron->ConvertIntoBossId = (byte) (ExtraA - 1);
             }
 
-            if (specialValues[1] == 1) {
+            if (ExtraB == 1) {
                 ConvertToBoss(f, thisEntity, true);
             }
         }

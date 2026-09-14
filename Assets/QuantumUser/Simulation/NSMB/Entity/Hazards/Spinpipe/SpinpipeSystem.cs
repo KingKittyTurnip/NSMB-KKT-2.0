@@ -148,23 +148,22 @@ namespace Quantum {
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Spinpipe* spinpipe)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
-            spinpipe->Sturdy = specialValues[0] == 2;
+            spinpipe->Sturdy = ExtraA == 2;
             //Set Constant Direction
-            spinpipe->Broken = specialValues[0] == 1;
+            spinpipe->Broken = ExtraA == 1;
             if (spinpipe->Broken) {
                 var DisCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
                 DisCollider->Shape.Box.Extents = new FPVector2(DisCollider->Shape.Box.Extents.X, FP._0_50);
             }
 
             //Starting Direction
-            spinpipe->Right = specialValues[1] == 0 ? (f.RNG->Next() >= FP._0_50) : specialValues[1] == 2;
+            spinpipe->Right = ExtraB == 0 ? (f.RNG->Next() >= FP._0_50) : ExtraB == 2;
 
             //Set FanTime
             spinpipe->TipTime = 10 * 59; // set to Basically 10 seconds

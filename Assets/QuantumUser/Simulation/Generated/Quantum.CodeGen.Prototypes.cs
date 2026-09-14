@@ -385,8 +385,7 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.Clock))]
   public unsafe partial class ClockPrototype : ComponentPrototype<Quantum.Clock> {
     public Int32 Time;
-    public QBoolean TickTimeup;
-    public QBoolean ResetTime;
+    public Quantum.QEnum8<ClockType> type;
     partial void MaterializeUser(Frame frame, ref Quantum.Clock result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Clock component = default;
@@ -395,8 +394,7 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Clock result, in PrototypeMaterializationContext context = default) {
         result.Time = this.Time;
-        result.TickTimeup = this.TickTimeup;
-        result.ResetTime = this.ResetTime;
+        result.type = this.type;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -595,28 +593,6 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.ExtrasList))]
-  public unsafe partial class ExtrasListPrototype : StructPrototype {
-    [AllocateOnComponentAdded()]
-    [FreeOnComponentRemoved()]
-    [DynamicCollectionAttribute()]
-    public Byte[] Extra = {};
-    partial void MaterializeUser(Frame frame, ref Quantum.ExtrasList result, in PrototypeMaterializationContext context);
-    public void Materialize(Frame frame, ref Quantum.ExtrasList result, in PrototypeMaterializationContext context = default) {
-        if (this.Extra.Length == 0) {
-          result.Extra = default;
-        } else {
-          var list = frame.AllocateList(out result.Extra, this.Extra.Length);
-          for (int i = 0; i < this.Extra.Length; ++i) {
-            Byte tmp = default;
-            tmp = this.Extra[i];
-            list.Add(tmp);
-          }
-        }
-        MaterializeUser(frame, ref result, in context);
-    }
-  }
-  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Fan))]
   public unsafe partial class FanPrototype : ComponentPrototype<Quantum.Fan> {
     public FP Strength;
@@ -750,7 +726,7 @@ namespace Quantum.Prototypes {
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
     [DynamicCollectionAttribute()]
-    public Quantum.Prototypes.ItemListPrototype[] Items = {};
+    public Quantum.Prototypes.HazardListPrototype[] Items = {};
     public Int32 Lives;
     public Int32 TimerMinutes;
     public QBoolean TeamsEnabled;
@@ -799,7 +775,7 @@ namespace Quantum.Prototypes {
         } else {
           var list = frame.AllocateList(out result.Items, this.Items.Length);
           for (int i = 0; i < this.Items.Length; ++i) {
-            Quantum.ItemList tmp = default;
+            Quantum.HazardList tmp = default;
             this.Items[i].Materialize(frame, ref tmp, in context);
             list.Add(tmp);
           }
@@ -957,21 +933,20 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.HazardList))]
   public unsafe partial class HazardListPrototype : StructPrototype {
-    [MaxStringByteCount(62, "Unicode")]
-    public string Name;
     public Int32 PrototypeRef;
     public Byte Team;
-    public QBoolean SpawnHazard;
-    public QBoolean SpawnFridge;
-    public Quantum.Prototypes.ExtrasListPrototype Extra;
+    public Byte ExtraSlotA;
+    public Byte ExtraSlotB;
+    public Byte ExtraSlotC;
+    public Byte ExtraSlotD;
     partial void MaterializeUser(Frame frame, ref Quantum.HazardList result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.HazardList result, in PrototypeMaterializationContext context = default) {
-        PrototypeValidator.AssignQString(this.Name, 64, in context, out result.Name);
         result.PrototypeRef = this.PrototypeRef;
         result.Team = this.Team;
-        result.SpawnHazard = this.SpawnHazard;
-        result.SpawnFridge = this.SpawnFridge;
-        this.Extra.Materialize(frame, ref result.Extra, in context);
+        result.ExtraSlotA = this.ExtraSlotA;
+        result.ExtraSlotB = this.ExtraSlotB;
+        result.ExtraSlotC = this.ExtraSlotC;
+        result.ExtraSlotD = this.ExtraSlotD;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -1096,23 +1071,6 @@ namespace Quantum.Prototypes {
     public void Materialize(Frame frame, ref Quantum.InvisibleBlock result, in PrototypeMaterializationContext context = default) {
         result.BumpTile = this.BumpTile;
         result.Tile = this.Tile;
-        MaterializeUser(frame, ref result, in context);
-    }
-  }
-  [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.ItemList))]
-  public unsafe partial class ItemListPrototype : StructPrototype {
-    [MaxStringByteCount(62, "Unicode")]
-    public string Name;
-    public Int32 PrototypeRef;
-    public Byte Team;
-    public Quantum.Prototypes.ExtrasListPrototype Extra;
-    partial void MaterializeUser(Frame frame, ref Quantum.ItemList result, in PrototypeMaterializationContext context);
-    public void Materialize(Frame frame, ref Quantum.ItemList result, in PrototypeMaterializationContext context = default) {
-        PrototypeValidator.AssignQString(this.Name, 64, in context, out result.Name);
-        result.PrototypeRef = this.PrototypeRef;
-        result.Team = this.Team;
-        this.Extra.Materialize(frame, ref result.Extra, in context);
         MaterializeUser(frame, ref result, in context);
     }
   }

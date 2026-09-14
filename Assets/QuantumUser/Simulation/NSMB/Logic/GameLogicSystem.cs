@@ -11,7 +11,7 @@ namespace Quantum {
 
         public override void OnInit(Frame f) {
             //var gamemode = f.Context.GetAllAssets<GamemodeAsset>()[0];
-            f.Global->Rules.Items = f.AllocateList<ItemList>(64);
+            f.Global->Rules.Items = f.AllocateList<HazardList>(64);
             f.Global->Rules.Hazards = f.AllocateList<HazardList>(64);
             f.FindAsset(f.SimulationConfig.BaseRules).Rules.BaseRulesList[0].DefaultRules.Materialize(f, ref f.Global->Rules);
 

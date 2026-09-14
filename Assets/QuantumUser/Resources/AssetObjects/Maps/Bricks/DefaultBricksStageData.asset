@@ -20,7 +20,7 @@ MonoBehaviour:
   StageAuthor: Nintendo
   MusicComposer: Nintendo
   TranslationKey: level.default.bricks
-  StageDescription: 
+  StageDescription: Self explanatory
   GroupingTranslationKey: level.header.default
   DiscordStageImage: level-brick
   SortOrder: 1
@@ -100,6 +100,8 @@ MonoBehaviour:
   ForceCharacter:
     Id:
       Value: 0
+  ForceItem: 0
+  StageIsComplex: 0
   OverwriteRules:
     Id:
       Value: 0
@@ -2382,3 +2384,23 @@ MonoBehaviour:
       RawValue: 114688
     Y:
       RawValue: 81920
+  - X:
+      RawValue: 442368
+    Y:
+      RawValue: 49152
+  - X:
+      RawValue: -98304
+    Y:
+      RawValue: 311296
+  - X:
+      RawValue: -212992
+    Y:
+      RawValue: 147456
+  - X:
+      RawValue: -458752
+    Y:
+      RawValue: -16384
+  - X:
+      RawValue: -262144
+    Y:
+      RawValue: -65536

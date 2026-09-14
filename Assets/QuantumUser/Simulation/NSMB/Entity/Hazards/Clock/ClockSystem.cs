@@ -34,16 +34,24 @@ Use The Correct Sound For Collection(?)
             // Change GlobalTime
             if (f.Global->Timer == 0) {
                 //Clocks Can't be Collected During Overtime
-            } else if (clock->TickTimeup) {
-                f.Global->Timer = 10 + FP._0_10;
-            } else if (clock->ResetTime) {
-                f.Global->Timer = clock->Time = f.Global->Rules.TimerMinutes * f.UpdateRate;
             } else {
-                f.Global->Timer += clock->Time;
-                f.Global->Timer = FPMath.Clamp(f.Global->Timer, FP._0_50, f.Global->Rules.TimerMinutes * f.UpdateRate);
+                switch (clock->type) {
+                case ClockType.Add:
+                    f.Global->Timer = FPMath.Min(f.Global->Timer + clock->Time, f.Global->Rules.TimerMinutes * f.UpdateRate);
+                    break;
+                case ClockType.Subtract:
+                    f.Global->Timer = FPMath.Max(f.Global->Timer - clock->Time, FP._0_50);
+                    break;
+                case ClockType.Timeup:
+                    f.Global->Timer = clock->Time;
+                    break;
+                case ClockType.Reset:
+                    f.Global->Timer = clock->Time = f.Global->Rules.TimerMinutes * f.UpdateRate;
+                    break;
+                }
             }
 
-            f.Events.ClockCollect(thisEntity, f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position, clock->Time, clock->ResetTime, clock->TickTimeup, f.Global->Timer == 0);
+            f.Events.ClockCollect(thisEntity, f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position, clock->Time, clock->type, f.Global->Timer == 0);
 
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
             if (hazard->IsHazard && hazard->RestrictSpawnPosition) {
@@ -55,22 +63,16 @@ Use The Correct Sound For Collection(?)
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Clock* clock)) {
                 return;
             }
 
-            var specialValues = f.ResolveList(spawnData);
+            //Set Timer
+            clock->Time = (ExtraA+1) * 10;
 
-            //Set TickTimeup
-            clock->TickTimeup = specialValues[0] == 2;
-
-            //Set ResetTime
-            clock->ResetTime = specialValues[0] == 1;
-
-            //SetTime
-            clock->Time = specialValues[0] == 0 ? 10 : -10;
+            clock->type = (ClockType) ExtraB;
         }
         #endregion
     }

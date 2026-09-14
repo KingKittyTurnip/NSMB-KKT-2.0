@@ -25,6 +25,8 @@ namespace Quantum {
             factories.Add(new CommandUpdatePing());
             factories.Add(new CommandSetInSettings());
             factories.Add(new CommandRandomizeAllTeams());
+            //KKT Mod
+            factories.Add(new CommandChangeHazards());
 
             // Chat
             factories.Add(new CommandSendChatMessage());

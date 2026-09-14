@@ -7901,7 +7901,7 @@ MonoBehaviour:
   label: {fileID: 2018429929}
   labelPrefix: 
   labelSuffix: 
-  ruleType: 65536
+  ruleType: 32768
   clickToEdit: 0
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -10166,7 +10166,7 @@ MonoBehaviour:
   label: {fileID: 1760794205}
   labelPrefix: 
   labelSuffix: 
-  ruleType: 1048576
+  ruleType: 524288
   clickToEdit: 0
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18096,8 +18096,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 893153695}
   m_HandleRect: {fileID: 893153694}
   m_Direction: 2
-  m_Value: 1.0000001
-  m_Size: 0.38141027
+  m_Value: 0.9999998
+  m_Size: 0.3814102
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32499,7 +32499,7 @@ MonoBehaviour:
   label: {fileID: 158058155}
   labelPrefix: 
   labelSuffix: 
-  ruleType: 4194304
+  ruleType: 2097152
   clickToEdit: 0
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -33260,7 +33260,7 @@ MonoBehaviour:
   label: {fileID: 1705792221}
   labelPrefix: 
   labelSuffix: '%'
-  ruleType: 16384
+  ruleType: 8192
   clickToEdit: 0
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -41252,8 +41252,8 @@ MonoBehaviour:
   canvas: {fileID: 2030938839}
   label: {fileID: 1649579867}
   labelPrefix: 
-  labelSuffix: '%'
-  ruleType: 262144
+  labelSuffix: 
+  ruleType: 131072
   clickToEdit: 0
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -41268,29 +41268,29 @@ MonoBehaviour:
   applyPrefixSuffixWhenOff: 0
   translationOverrides:
   - Value: 1
-    Key: 1
+    Key: 1%
   - Value: 2
-    Key: 5
+    Key: 5%
   - Value: 3
-    Key: 12
+    Key: 12%
   - Value: 4
-    Key: 25
+    Key: 25%
   - Value: 5
-    Key: 50
+    Key: 50%
   - Value: 6
-    Key: 75
+    Key: 75%
   - Value: 7
-    Key: 100
+    Key: 100%
   - Value: 8
-    Key: 150
+    Key: 150%
   - Value: 9
-    Key: 200
+    Key: 200%
   - Value: 10
-    Key: 300
+    Key: 300%
   - Value: 11
-    Key: 500
+    Key: 500%
   - Value: 12
-    Key: 1000
+    Key: 1000%
 --- !u!114 &862345005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42598,7 +42598,7 @@ MonoBehaviour:
   header: {fileID: 1123362216}
   root: {fileID: 901415631}
   _backButton: {fileID: 1373133436}
-  _defaultSelection: {fileID: 1785742516}
+  _defaultSelection: {fileID: 187397795}
   tabs:
   - Gamemode:
       Id:
@@ -44338,7 +44338,7 @@ MonoBehaviour:
   label: {fileID: 1449009834}
   labelPrefix: <sprite name=room_powerups>
   labelSuffix: 
-  ruleType: 32768
+  ruleType: 16384
   clickToEdit: 0
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -52471,8 +52471,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 791989381}
   m_HandleRect: {fileID: 791989380}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.8260032
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -58254,7 +58254,7 @@ MonoBehaviour:
   label: {fileID: 1140206215}
   labelPrefix: 
   labelSuffix: 
-  ruleType: 524288
+  ruleType: 262144
   clickToEdit: 0
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -64974,8 +64974,8 @@ MonoBehaviour:
   canvas: {fileID: 2030938839}
   label: {fileID: 1844853836}
   labelPrefix: 
-  labelSuffix: 
-  ruleType: 131072
+  labelSuffix: '%'
+  ruleType: 65536
   clickToEdit: 0
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -68491,7 +68491,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -24.01}
-  m_SizeDelta: {x: 406.3197, y: 0}
+  m_SizeDelta: {x: 406.50867, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1532295032
 MonoBehaviour:
@@ -70023,7 +70023,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1576260155
@@ -80377,7 +80377,7 @@ MonoBehaviour:
   label: {fileID: 1197413021}
   labelPrefix: <sprite name=room_hazards>
   labelSuffix: 
-  ruleType: 4096
+  ruleType: 2048
   clickToEdit: 0
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}

@@ -148,7 +148,7 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Podobo* podobo)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)
@@ -156,7 +156,6 @@ namespace Quantum {
                 || !f.Unsafe.TryGetPointer(thisEntity, out Transform2D* transform)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
             enemy->IsActive = true;
             hazard->DoNotDespawnInPit = false;
@@ -164,7 +163,7 @@ namespace Quantum {
             phys->DisableCollision = true;
             hazard->LifeTime = 60 * 4;
 
-            podobo->Varient = (PodoboType) specialValues[0];
+            podobo->Varient = (PodoboType) ExtraA;
         }
     }
 }

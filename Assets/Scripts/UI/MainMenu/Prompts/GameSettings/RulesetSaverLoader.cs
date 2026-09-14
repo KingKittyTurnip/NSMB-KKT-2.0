@@ -9,10 +9,9 @@ using UnityEngine;
 public class RulesetSaverLoader : MonoBehaviour
 {
     [SerializeField] private MainMenuCanvas Canvas;
-    private const string CODE_SEPARATOR = "-";//-
-    private const string CODE_List_SEPARATOR = ".";//.
-    private const string CODE_List_SEPARATOR2 = ",";//,
-    private const string CODE_List_SEPARATOR3 = "$";//new
+    private const string CODE_SEPARATOR = "-";
+    private const string CODE_List_SEPARATOR = ".";
+    private const string CODE_List_SEPARATOR2 = ",";
     private const string CODE_VERSION = "K0";
 
     private const int MEGALIST_MAX = 64, EXTRALISTMAX = 10;
@@ -74,13 +73,12 @@ public class RulesetSaverLoader : MonoBehaviour
         if (itemCount <= MEGALIST_MAX) {
             foreach (var item in items) {
                 code += item.PrototypeRef + CODE_List_SEPARATOR2;
-                var specialValues = f.ResolveList(item.Extra.Extra);
-                if (specialValues.Count <= EXTRALISTMAX) {
-                    foreach (var extra in specialValues) {
-                        code += extra + CODE_List_SEPARATOR3;
-                    }
-                }
-                //code += item.Team + CODE_List_SEPARATOR2;//unused
+                code += item.ExtraSlotA + CODE_List_SEPARATOR2;
+                code += item.ExtraSlotB + CODE_List_SEPARATOR2;
+                code += item.ExtraSlotC + CODE_List_SEPARATOR2;
+                code += item.ExtraSlotD + CODE_List_SEPARATOR2;
+                //code += item.Team + CODE_List_SEPARATOR2;//unused, when added we much put this after
+
                 itemCount--;
                 if (itemCount > 0) 
                     code += CODE_List_SEPARATOR;
@@ -95,17 +93,13 @@ public class RulesetSaverLoader : MonoBehaviour
         var hazardCount = hazards.Count;
         if (hazardCount <= MEGALIST_MAX) {
             foreach (var hazard in hazards) {
-                //code += hazard.Name + CODE_List_SEPARATOR2;//this isn't needed to save, just makes it more readable
                 code += hazard.PrototypeRef + CODE_List_SEPARATOR2;
-                var specialValues = f.ResolveList(hazard.Extra.Extra);
-                if (specialValues.Count <= EXTRALISTMAX) {
-                    foreach (var extra in specialValues) {
-                        code += extra + CODE_List_SEPARATOR3;
-                    }
-                }
-                code += BTI(hazard.SpawnHazard) + CODE_List_SEPARATOR2;
-                //code += hazard.Team + CODE_List_SEPARATOR2;//unused
-                //code += BTI(hazard.SpawnFridge) + CODE_List_SEPARATOR2;//unused
+                code += hazard.ExtraSlotA + CODE_List_SEPARATOR2;
+                code += hazard.ExtraSlotB + CODE_List_SEPARATOR2;
+                code += hazard.ExtraSlotC + CODE_List_SEPARATOR2;
+                code += hazard.ExtraSlotD + CODE_List_SEPARATOR2;
+                //code += hazard.Team + CODE_List_SEPARATOR2;//unused, when added we much put this after
+
                 hazardCount--;
                 if (hazardCount > 0) 
                     code += CODE_List_SEPARATOR;
@@ -185,9 +179,9 @@ public class RulesetSaverLoader : MonoBehaviour
             HeftyPercentage = int.Parse(parts[13]),
             HazardLifetime = int.Parse(parts[14]),
 
-            DisableStageRestrictions = parts[15] == "1",
-            DisableComplexStageRestrictions = parts[16] == "1", //can only be edited
-            EveryItemHasTheSameChance = parts[17] == "1",
+            DisableStageRestrictions = parts[16] == "1",
+            DisableComplexStageRestrictions = parts[17] == "1", //can't be edited normally
+            EveryItemHasTheSameChance = parts[18] == "1",
 
             //code += rules.CoinDeathPenalty + CODE_SEPARATOR; //coinrunners doesn't exist
             //dictionary<AssetRef<CoinItemAsset>, FP> CoinItemCustomSpawnWeights; //do not save.
@@ -199,53 +193,63 @@ public class RulesetSaverLoader : MonoBehaviour
         };
         game.SendCommand(slot, cmd);
 
-        /*var triggerIndex = 0;
-        game.SendCommand(new CommandChangeTriggers { RemoveAll = true });
-        foreach (var triggerCode in parts[7].Split('.')) {
-            var triggerParts = triggerCode.Split(',');
-            if (triggerParts.Length < 12) continue;
-            var condition = (TriggerCondition)int.Parse(triggerParts[0]);
-            var conditionParameter = "";
-            if (TriggerMappings.ConditionParameters.TryGetValue(condition, out var parameters) &&
-                int.TryParse(triggerParts[1], out var i) && i >= 0 && i < parameters.Count) {
-                conditionParameter = parameters[i];
-            }
-            var conditionTarget = (TriggerTarget)int.Parse(triggerParts[2]);
-            var action = (TriggerAction)int.Parse(triggerParts[3]);
-            var actionParameter = "";
-            if (TriggerMappings.ActionParameters.TryGetValue(action, out parameters) &&
-                int.TryParse(triggerParts[4], out var j) && j >= 0 && j < parameters.Count) {
-                actionParameter = parameters[j];
-            }
-            var actionTarget = (TriggerTarget)int.Parse(triggerParts[5]);
-            var constraint = (TriggerConstraint)int.Parse(triggerParts[6]);
-            var constraintParameter = "";
-            if (int.TryParse(triggerParts[7], out _)) constraintParameter = triggerParts[7];
-            else if (TriggerMappings.ConstraintParameters.TryGetValue(constraint, out parameters) &&
-                int.TryParse(triggerParts[7], out var k) && k >= 0 && k < parameters.Count) {
-                constraintParameter = parameters[k];
-            }
-            var constraintTarget = (TriggerTarget)int.Parse(triggerParts[8]);
-            var delaySeconds = byte.Parse(triggerParts[9]);
-            var repeatCount = byte.Parse(triggerParts[10]);
-            var chance = byte.Parse(triggerParts[11]);
-            game.SendCommand(slot, new CommandChangeTriggers {
-                Index = triggerIndex,
-                TriggerCondition = (int)condition,
-                TriggerConditionParameter = conditionParameter,
-                TriggerConditionTarget = (int)conditionTarget,
-                TriggerAction = (int)action,
-                TriggerActionParameter = actionParameter,
-                TriggerActionTarget = (int)actionTarget,
-                TriggerConstraint = (int)constraint,
-                TriggerConstraintParameter = constraintParameter,
-                TriggerConstraintTarget = (int)constraintTarget,
-                TriggerDelaySeconds = delaySeconds,
-                TriggerRepeatCount = repeatCount,
-                TriggerChance = chance,
+        var hazardIndex = 0;
+        //clear both lists
+        game.SendCommand(new CommandChangeHazards { 
+            RemoveAll = true,
+            EditingItems = false,
+        });
+        game.SendCommand(new CommandChangeHazards {
+            RemoveAll = true,
+            EditingItems = true,
+        });
+
+        //set items
+        foreach (var hazardCode in parts[10].Split(CODE_List_SEPARATOR)) {
+            var hazardParts = hazardCode.Split(CODE_List_SEPARATOR2);
+            if (hazardParts.Length != 6)
+                continue;
+            game.SendCommand(slot, new CommandChangeHazards {
+                //where
+                Index = hazardIndex,
+                EditingItems = true,
+                RemoveSingle = false,
+                RemoveAll = false,
+                //id
+                PrototypeRefId = int.Parse(hazardParts[0]),
+                TeamId = 255, //team code isn't used
+                //Specific Data
+                ValueA = byte.Parse(hazardParts[1]),
+                ValueB = byte.Parse(hazardParts[2]),
+                ValueC = byte.Parse(hazardParts[3]),
+                ValueD = byte.Parse(hazardParts[4]),
             });
-            triggerIndex++;
-        }*/
+            hazardIndex++;
+        }
+
+        //set hazards
+        hazardIndex = 0;
+        foreach (var hazardCode in parts[15].Split(CODE_List_SEPARATOR)) {
+            var hazardParts = hazardCode.Split(CODE_List_SEPARATOR2);
+            if (hazardParts.Length != 6) 
+                continue;
+            game.SendCommand(slot, new CommandChangeHazards {
+                //where
+                Index = hazardIndex,
+                EditingItems = false,
+                RemoveSingle = false,
+                RemoveAll = false,
+                //id
+                PrototypeRefId = int.Parse(hazardParts[0]),
+                TeamId = 255, //team code isn't used
+                //Specific Data
+                ValueA = byte.Parse(hazardParts[1]),
+                ValueB = byte.Parse(hazardParts[2]),
+                ValueC = byte.Parse(hazardParts[3]),
+                ValueD = byte.Parse(hazardParts[4]),
+            });
+            hazardIndex++;
+        }
         
         // c'est fini, everyone clapped.
         // kkt claps in unison

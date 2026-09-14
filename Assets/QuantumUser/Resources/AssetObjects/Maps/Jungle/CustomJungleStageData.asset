@@ -20,7 +20,7 @@ MonoBehaviour:
   StageAuthor: ipodtouch0218
   MusicComposer: Cubby Crazes
   TranslationKey: level.custom.jungle
-  StageDescription: 
+  StageDescription: Did i hear deathmatch 2.0?!?
   GroupingTranslationKey: level.header.custom
   DiscordStageImage: level-jungle
   SortOrder: 0
@@ -80,7 +80,7 @@ MonoBehaviour:
       Value: 1300211052819551813
   - Id:
       Value: 1394417262128408316
-  mainPowerupTile: {fileID: 4693619951757477808, guid: 7833a44a5c5ede241bf057e9e7ecc82f,
+  mainPowerupTile: {fileID: -3061604471713882216, guid: 0ffdd217d1f2ce148930be60c260f209,
     type: 2}
   SfxOverrides: []
   MainMusic:
@@ -102,6 +102,8 @@ MonoBehaviour:
   ForceCharacter:
     Id:
       Value: 0
+  ForceItem: 0
+  StageIsComplex: 0
   OverwriteRules:
     Id:
       Value: 0
@@ -10385,49 +10387,9 @@ MonoBehaviour:
       RawValue: 262144
   HazardSpawnpoints:
   - X:
-      RawValue: 1654784
-    Y:
-      RawValue: 114688
-  - X:
-      RawValue: 1753088
-    Y:
-      RawValue: 229376
-  - X:
       RawValue: 1949696
     Y:
       RawValue: 360448
-  - X:
-      RawValue: 2031616
-    Y:
-      RawValue: 212992
-  - X:
-      RawValue: 1458176
-    Y:
-      RawValue: 245760
-  - X:
-      RawValue: 1212416
-    Y:
-      RawValue: 360448
-  - X:
-      RawValue: 917504
-    Y:
-      RawValue: 278528
-  - X:
-      RawValue: 622592
-    Y:
-      RawValue: 262144
-  - X:
-      RawValue: 393216
-    Y:
-      RawValue: 360448
-  - X:
-      RawValue: 131072
-    Y:
-      RawValue: 212992
-  - X:
-      RawValue: -98304
-    Y:
-      RawValue: 294912
   - X:
       RawValue: -393216
     Y:
@@ -10437,14 +10399,54 @@ MonoBehaviour:
     Y:
       RawValue: 131072
   - X:
-      RawValue: -1015808
+      RawValue: 1753088
     Y:
-      RawValue: 311296
+      RawValue: 229376
   - X:
       RawValue: -1933312
     Y:
       RawValue: 294912
   - X:
+      RawValue: 2031616
+    Y:
+      RawValue: 212992
+  - X:
+      RawValue: 622592
+    Y:
+      RawValue: 262144
+  - X:
+      RawValue: 131072
+    Y:
+      RawValue: 212992
+  - X:
+      RawValue: 1212416
+    Y:
+      RawValue: 360448
+  - X:
+      RawValue: 917504
+    Y:
+      RawValue: 278528
+  - X:
       RawValue: -1359872
     Y:
       RawValue: 163840
+  - X:
+      RawValue: 1458176
+    Y:
+      RawValue: 245760
+  - X:
+      RawValue: -1015808
+    Y:
+      RawValue: 311296
+  - X:
+      RawValue: 393216
+    Y:
+      RawValue: 360448
+  - X:
+      RawValue: -98304
+    Y:
+      RawValue: 294912
+  - X:
+      RawValue: 1654784
+    Y:
+      RawValue: 114688

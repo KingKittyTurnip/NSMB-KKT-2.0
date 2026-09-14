@@ -64,7 +64,7 @@ MonoBehaviour:
   - {fileID: 1145319354374527610}
   childAnimator: {fileID: 0}
   childAnimation: {fileID: 0}
-  blinkingRate: 4
+  blinkinRate: 12
   scaleRate: 0.1333
   scaleSize: 0.3
   actualscale: 1
@@ -609,9 +609,9 @@ MonoBehaviour:
       Y:
         RawValue: 0
     IgnorePlayerWhenRespawning:
-      Value: 1
+      Value: 0
     DisableRespawning:
-      Value: 1
+      Value: 0
     StayAtHomeWhenOffscreen:
       Value: 1
 --- !u!114 &8410956710071586042

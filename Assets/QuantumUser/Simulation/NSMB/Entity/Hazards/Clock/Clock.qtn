@@ -1,14 +1,19 @@
 component Clock {
 	int Time;
-	bool TickTimeup;
-	bool ResetTime;
+    ClockType type;
 }
 
 event ClockCollect {
 	EntityRef Entity;
 	FPVector2 pos;
 	int Time;
-	bool ResetTime;
-	bool TickTimeup;
+    ClockType type;
 	bool Overtime;
+}
+
+enum ClockType : Byte {
+	Add,
+	Subtract,
+	Timeup,
+	Reset,
 }

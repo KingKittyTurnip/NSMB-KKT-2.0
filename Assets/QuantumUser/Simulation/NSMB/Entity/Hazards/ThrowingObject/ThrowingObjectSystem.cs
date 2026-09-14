@@ -452,7 +452,7 @@ namespace Quantum {
                         //create voidwall
                         hazard->LifeTime = 0;
                         var NewObject = f.Create(f.SimulationConfig.VoidWallWall);
-                        f.Signals.InitializeHazard(NewObject, EntityRef.None, transform->Position, SpawnReason.Forced, new QListPtr<byte>());
+                        f.Signals.InitializeHazard(NewObject, EntityRef.None, transform->Position, SpawnReason.Forced, 0, 0, 0, 0);
                         HazardSystem.DestroyHazard(f, filter.Entity);
                     }
                     holdable->Holder = EntityRef.None;
@@ -1256,7 +1256,7 @@ namespace Quantum {
             *doSplash = true;
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out ThrowingObject* Dis)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out PhysicsObject* physicsObject)
@@ -1264,19 +1264,17 @@ namespace Quantum {
                 return;
             }
 
-            var specialValues = f.ResolveList(spawnData);
-
             switch (Dis->Type) {
             case ThrowingObjectType.Basic:
             case ThrowingObjectType.Stone:
             case ThrowingObjectType.Spring:
                 break;
             case ThrowingObjectType.Pow:
-                Dis->Varient = (byte) (specialValues[0] == 1 ? 1 : 0);
-                if (specialValues[1] == 1) {
+                Dis->Varient = (byte) (ExtraA == 1 ? 1 : 0);
+                if (ExtraB == 1) {
                     Dis->Thrown = true;
                     hazard->IPWSTime = 1;
-                } else if (specialValues[1] == 2) {
+                } else if (ExtraB == 2) {
                     physicsObject->Velocity.Y = 20;
                     //idk maybe play a fling sound
                 }
@@ -1292,7 +1290,7 @@ namespace Quantum {
             case ThrowingObjectType.Potion:
                 break;
             case ThrowingObjectType.Voidwall:
-                if (specialValues[0] == 1) {
+                if (ExtraA == 1) {
                     Dis->Thrown = true;
                     Dis->IsFlying = false;
                     hazard->IPWSTime = 1;
@@ -1307,21 +1305,12 @@ namespace Quantum {
                 var transform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
 
                 //Set Length
-                Dis->Varient = (byte) (specialValues[0] == 1 ? 1 : 0);
+                Dis->Varient = (byte) (ExtraA == 1 ? 1 : 0);
 
-                var options = f.FindAsset(f.Unsafe.GetPointer<HazardContainer>(thisEntity)->OptionData).ListOfOptions[specialValues[1]];
+                var options = f.FindAsset(f.Unsafe.GetPointer<HazardContainer>(thisEntity)->OptionData).ListOfOptions[ExtraB];
                 //Create Attachment
                 Dis->ConnectedObject = f.Create(options.EntityPrototype);
-
-                var h = new QListPtr<byte>();
-                /*var list = f.AllocateList(h);
-                for (int i = 0; i < options.Extra.Count; ++i) {
-                    byte tmp = default;
-                    //options.Extra[i].Materialize(f, ref tmp);
-                    list.Add(options.Extra[i].);
-                }*/
-                //setupspawndata
-                f.Signals.InitializeHazard(Dis->ConnectedObject, thisEntity, spawnpoint, spawnReason == SpawnReason.Forced ? SpawnReason.WasCreatedFromNested : (spawnReason == SpawnReason.Fridge ? SpawnReason.Forced : SpawnReason.Fridge), h);
+                f.Signals.InitializeHazard(Dis->ConnectedObject, thisEntity, spawnpoint, spawnReason == SpawnReason.Forced ? SpawnReason.WasCreatedFromNested : (spawnReason == SpawnReason.Fridge ? SpawnReason.Forced : SpawnReason.Fridge), 0, 0, 0, 0);
                 break;
             }
 

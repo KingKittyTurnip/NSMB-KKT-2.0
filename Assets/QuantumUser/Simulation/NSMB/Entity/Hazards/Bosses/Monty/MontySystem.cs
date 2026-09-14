@@ -59,7 +59,7 @@ namespace Quantum {
             bool Jump = false;
             bool Jumpheld = true;
             bool BombAttack = false;
-            bool Sprint = false;
+            //bool Sprint = false;
             bool HasTarget = boss->BossHandleIframes(f);
             if (boss->ControllerPlayer != EntityRef.None) {
                 //Controlled By Player
@@ -571,7 +571,7 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Tank* tank)) {
                 return;

@@ -40,9 +40,9 @@ namespace Quantum {
 
         public override void Serialize(BitStream stream) {
             if (stream.Writing) {
-                stream.WriteUShort((ushort) EnabledChanges);
+                stream.WriteUInt((uint) EnabledChanges);
             } else {
-                EnabledChanges = (Rules) stream.ReadUShort();
+                EnabledChanges = (Rules) stream.ReadUInt();
             }
 
             stream.Serialize(ref Stage);
@@ -225,7 +225,7 @@ namespace Quantum {
             f.Events.RulesChanged(gamemodeChanged, levelChanged);
         }
 
-        [Flags]
+        //[Flags]
         public enum Rules : uint {
             None = 0,
             Stage = 1 << 0,
@@ -243,20 +243,20 @@ namespace Quantum {
             TeamAttack = 1 << 10,
 
             //KKT Mod enable rules
-            ToggleHazards = 1 << 12,
-            ToggleBulb = 1 << 13,
+            ToggleHazards = 1 << 11,
+            ToggleBulb = 1 << 12,
             //KKT Mod rules
-            StarFreq = 1 << 14,
-            Roulette = 1 << 15,
+            StarFreq = 1 << 13,
+            Roulette = 1 << 14,
 
-            MaxHazards = 1 << 16,
-            HazardFrequency = 1 << 17,
-            HeftyPercentage = 1 << 18,
-            HazardLifetime = 1 << 19,
+            MaxHazards = 1 << 15,
+            HazardFrequency = 1 << 16,
+            HeftyPercentage = 1 << 17,
+            HazardLifetime = 1 << 18,
 
-            DisableStageRestrictions = 1 << 20,
-            DisableComplexStageRestrictions = 1 << 21,
-            EveryItemHasTheSameChance = 1 << 22,
+            DisableStageRestrictions = 1 << 19,
+            DisableComplexStageRestrictions = 1 << 20,
+            EveryItemHasTheSameChance = 1 << 21,
         }
     }
 }

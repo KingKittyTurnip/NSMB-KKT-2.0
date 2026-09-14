@@ -143,7 +143,7 @@ namespace Quantum {
                 f.Events.PlayComboSound(iceBlock->Entity, 0);
             }
         }
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out BulletBill* bill)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
@@ -152,7 +152,7 @@ namespace Quantum {
 
             bill->Owner = owner;
             enemy->IsActive = true;
-            enemy->FacingRight = f.RNG->Next((FP) 0, 1) > FP._0_50;
+            enemy->FacingRight = ExtraA > 0 ? ExtraA == 2 : f.RNG->Next((FP) 0, 1) > FP._0_50;
         }
         #endregion
     }

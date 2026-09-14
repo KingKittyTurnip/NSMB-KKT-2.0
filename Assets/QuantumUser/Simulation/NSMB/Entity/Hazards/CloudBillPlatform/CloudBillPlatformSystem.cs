@@ -106,26 +106,25 @@ namespace Quantum {
         #endregion
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out CloudBillPlatform* cloudplatform)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Transform2D* transform)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
             //Get Direction
-            cloudplatform->FacingRight = specialValues[1] == 0 ? (f.RNG->Next() < FP._0_50) : specialValues[1] == 2;
+            cloudplatform->FacingRight = ExtraB == 0 ? (f.RNG->Next() < FP._0_50) : ExtraB == 2;
             transform->Position = spawnpoint;
 
             //create cloudbill
             cloudplatform->CloudBill = f.Create(cloudplatform->CloudBillPrototype);
-            f.Signals.InitializeHazard(cloudplatform->CloudBill, EntityRef.None, transform->Position, SpawnReason.Normal, new QListPtr<byte>());
+            f.Signals.InitializeHazard(cloudplatform->CloudBill, EntityRef.None, transform->Position, SpawnReason.Normal, (byte) (cloudplatform->FacingRight ? 2 : 1), 0, 0, 0);
             f.Unsafe.GetPointer<Enemy>(cloudplatform->CloudBill)->FacingRight = cloudplatform->FacingRight;
 
             HazardSystem.ChangeHazardIcon(f, thisEntity, false);
 
             //Set Length
-            int Length = specialValues[0] switch {
+            int Length = ExtraA switch {
                 0 => 3,
                 1 => 7,
                 2 => 12,

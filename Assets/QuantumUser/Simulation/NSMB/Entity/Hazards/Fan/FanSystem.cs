@@ -317,23 +317,22 @@ Gp Interactions are weird
                 3
             );
         }
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Fan* fan)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
             //Set States
-            fan->Sturdy = specialValues[0] > 2;
-            fan->Broken = specialValues[0] == 1 || specialValues[0] == 4 || specialValues[0] == 2;
-            fan->FellOver = specialValues[0] == 2 || specialValues[0] == 5;
+            fan->Sturdy = ExtraA > 2;
+            fan->Broken = ExtraA == 1 || ExtraA == 4 || ExtraA == 2;
+            fan->FellOver = ExtraA == 2 || ExtraA == 5;
 
             //Starting Direction
-            fan->FacingRight = !fan->FellOver && (specialValues[1] == 0 ? (f.RNG->Next() >= FP._0_50) : specialValues[1] == 2);
+            fan->FacingRight = !fan->FellOver && (ExtraB == 0 ? (f.RNG->Next() >= FP._0_50) : ExtraB == 2);
 
             //Set FanTime
-            fan->FanTime = specialValues[2] * 59; // set to Basically 10 seconds, this is WIP i've realized no code properly uses this
+            fan->FanTime = ExtraC * 59; // set to Basically 10 seconds, this is WIP i've realized no code properly uses this
 
             fan->FanTime = 0;
             fan->TurnEffectorDowntime = 45;

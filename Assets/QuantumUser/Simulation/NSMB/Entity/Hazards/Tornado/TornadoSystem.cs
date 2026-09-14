@@ -99,16 +99,14 @@ namespace Quantum {
         }
 
         #region Signals
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Tornado* tornado)) {
                 return;
             }
 
-            var specialValues = f.ResolveList(spawnData);
-
             //decide movement
-            if (specialValues[0] == 0) {
+            if (ExtraA == 0) {
                 int rng = f.RNG->Next(-2, 3);
                 if (rng <= 0) {
                     rng--;

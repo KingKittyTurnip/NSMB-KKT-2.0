@@ -153,16 +153,15 @@ namespace Quantum {
             }
         }
         //KKT mod
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out FireSnake* firesnack)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
             enemy->IsActive = true;
-            firesnack->FireSnakeSegments = specialValues[0];
+            firesnack->FireSnakeSegments = ExtraA;
             SpawnSegments(f, thisEntity, firesnack);
             Debug.Log("AHHHH " + firesnack->FireSnakeSegments);
         }

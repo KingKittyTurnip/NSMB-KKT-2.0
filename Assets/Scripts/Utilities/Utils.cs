@@ -123,6 +123,10 @@ namespace NSMB.Utilities {
             ['7'] = "coinnumber_7",
             ['8'] = "coinnumber_8",
             ['9'] = "coinnumber_9",
+            //kkt mod
+            ['+'] = "coinnumber_plus",
+            ['-'] = "coinnumber_minus",
+            [':'] = "coinnumber_colon",
         };
         public static readonly Dictionary<char, string> smallSymbols = new() {
             ['0'] = "room_smallnumber_0",

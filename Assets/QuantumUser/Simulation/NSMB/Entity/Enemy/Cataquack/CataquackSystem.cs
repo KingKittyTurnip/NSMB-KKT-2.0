@@ -260,16 +260,14 @@ namespace Quantum {
                 duckman->Respawn(f, entity);
             }
         }
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Cataquack* duckman)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
-            UnityEngine.Debug.Log(specialValues[0]);
             //Set Varient
-            duckman->Varient = (CataquackVarient) specialValues[0];
+            duckman->Varient = (CataquackVarient) ExtraA;
 
             enemy->IsActive = true;
             enemy->FacingRight = f.RNG->Next((FP) 0, 1) > FP._0_50;

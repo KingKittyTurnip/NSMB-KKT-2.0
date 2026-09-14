@@ -337,13 +337,15 @@ namespace Quantum {
 
                             powerupTransform->Position = koopaTransform->Position;
                             coinItem->Initialize(f, newPowerup, 15, PowerupSpawnReason.BlueKoopa);
-                            coinItem->IgnorePlayerFrames = 15;
+                            //coinItem->IgnorePlayerFrames = 15;
                             powerupPhysicsObject->DisableCollision = false;
 
                             koopaEnemy->IsActive = false;
                             koopaEnemy->IsDead = true;
                             koopaEnemy->SetDelayedRespawn(10 * f.UpdateRate); // a little longer...
                             koopaPhysicsObject->IsFrozen = true;
+
+                            f.Signals.InitializeHazard(newPowerup, koopaEntity, koopaTransform->Position, SpawnReason.Forced, 0, 0, 0, 0);
                         } else {
                             koopa->EnterShell(f, koopaEntity, marioEntity, false, false);
                             koopaEnemy->IgnoreOffscreen = true; // moving shells also don't return home
@@ -603,19 +605,18 @@ namespace Quantum {
                 koopa->Respawn(f, entity);
             }
         }
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Koopa* koopa)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Holdable* holdable)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
             koopa->CurrentSpeed = koopa->Speed;
 
             //Set Varient
-            if (specialValues[0] > 0) {
+            if (ExtraA > 0) {
                 koopa->EnterShell(f, thisEntity, owner, false, false);
             }
 

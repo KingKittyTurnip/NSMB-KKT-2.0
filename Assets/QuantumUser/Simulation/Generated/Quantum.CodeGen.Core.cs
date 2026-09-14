@@ -84,6 +84,12 @@ namespace Quantum {
     Chomp,
     Return,
   }
+  public enum ClockType : byte {
+    Add,
+    Subtract,
+    Timeup,
+    Reset,
+  }
   [System.Flags()]
   public enum CoinType : byte {
     BakedInStage = 1,
@@ -967,72 +973,6 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   [System.SerializableAttribute()]
-  public unsafe partial struct QString64 : IQString, System.IEquatable<QString64> {
-    public const Int32 SIZE = 64;
-    public const Int32 ALIGNMENT = 4;
-    [FieldOffset(0)]
-    public UInt16 ByteCount;
-    [FieldOffset(2)]
-    [FixedBufferDynamicLength("ByteCount")]
-    public fixed Byte Bytes[62];
-    public const int MaxByteCount = 62;
-    public QString64(String str) {
-      QString.ConstructFrom(str, MaxByteCount, out this);
-    }
-    public readonly System.Int32 Length {
-      get {
-        return QString.GetLength(in this);
-      }
-    }
-    public readonly override System.String ToString() {
-      return QString.GetString(in this);
-    }
-    public static Boolean CanHold(String str) {
-      return QString.CanHold(str, MaxByteCount);
-    }
-    Int32 IQString.CompareOrdinal(byte* bytes, UInt16 byteCount) {
-      return QString.CompareOrdinal(in this, bytes, byteCount);
-    }
-    public readonly Int32 CompareOrdinal(String str) {
-      return QString.CompareOrdinal(in this, str);
-    }
-    public static implicit operator QString64(String str) {
-      return new QString64(str);
-    }
-    public static implicit operator String(QString64 str) {
-      return str.ToString();
-    }
-    public override readonly Boolean Equals(Object obj) {
-      return QString.AreEqual(in this, obj);
-    }
-    public readonly Boolean Equals(QString64 str) {
-      return QString.CompareOrdinal(in this, str.Bytes, str.ByteCount) == 0;
-    }
-    public readonly Boolean Equals<T>(in T str)
-      where T : unmanaged, IQString {
-      return QString.CompareOrdinal(in this, in str) == 0;
-    }
-    public readonly Int32 CompareOrdinal<T>(in T str)
-      where T : unmanaged, IQString {
-      return QString.CompareOrdinal(in this, in str);
-    }
-    public override readonly Int32 GetHashCode() {
-      unchecked { 
-        var hash = 13649;
-        hash = hash * 31 + ByteCount.GetHashCode();
-        fixed (Byte* p = Bytes) hash = hash * 31 + HashCodeUtils.GetArrayHashCode(p, this.ByteCount);
-        return hash;
-      }
-    }
-    public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (QString64*)ptr;
-        serializer.Stream.Serialize(&p->ByteCount);
-        Assert.Always(p->ByteCount <= 62, p->ByteCount);
-        serializer.Stream.SerializeBuffer(&p->Bytes[0], p->ByteCount);
-    }
-  }
-  [StructLayout(LayoutKind.Explicit)]
-  [System.SerializableAttribute()]
   public unsafe partial struct QStringUtf8_40 : IQStringUtf8, System.IEquatable<QStringUtf8_40> {
     public const Int32 SIZE = 40;
     public const Int32 ALIGNMENT = 4;
@@ -1266,32 +1206,6 @@ namespace Quantum {
     }
   }
   [StructLayout(LayoutKind.Explicit)]
-  public unsafe partial struct ExtrasList {
-    public const Int32 SIZE = 4;
-    public const Int32 ALIGNMENT = 4;
-    [FieldOffset(0)]
-    [AllocateOnComponentAdded()]
-    [FreeOnComponentRemoved()]
-    public QListPtr<Byte> Extra;
-    public override readonly Int32 GetHashCode() {
-      unchecked { 
-        var hash = 16361;
-        hash = hash * 31 + Extra.GetHashCode();
-        return hash;
-      }
-    }
-    public void ClearPointers(FrameBase f, EntityRef entity) {
-      if (Extra != default) f.FreeList(ref Extra);
-    }
-    public void AllocatePointers(FrameBase f, EntityRef entity) {
-      f.TryAllocateList(ref Extra);
-    }
-    public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (ExtrasList*)ptr;
-        QList.Serialize(&p->Extra, serializer, Statics.SerializeByte);
-    }
-  }
-  [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct GameRules {
     public const Int32 SIZE = 120;
     public const Int32 ALIGNMENT = 8;
@@ -1314,7 +1228,7 @@ namespace Quantum {
     [FieldOffset(96)]
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
-    public QListPtr<ItemList> Items;
+    public QListPtr<HazardList> Items;
     [FieldOffset(28)]
     public Int32 Lives;
     [FieldOffset(48)]
@@ -1390,18 +1304,6 @@ namespace Quantum {
       }
     }
     public void ClearPointers(FrameBase f, EntityRef entity) {
-      if (Items != default) {
-        var list = f.ResolveList(this.Items);
-        for (int i = 0; i < list.Count; ++i) {
-          list.GetPointer(i)->ClearPointers(f, entity);
-        }
-      }
-      if (Hazards != default) {
-        var list = f.ResolveList(this.Hazards);
-        for (int i = 0; i < list.Count; ++i) {
-          list.GetPointer(i)->ClearPointers(f, entity);
-        }
-      }
       RandomDisabledStages = default;
       if (Items != default) f.FreeList(ref Items);
       CoinItemCustomSpawnWeights = default;
@@ -1410,18 +1312,6 @@ namespace Quantum {
     public void AllocatePointers(FrameBase f, EntityRef entity) {
       f.TryAllocateList(ref Items);
       f.TryAllocateList(ref Hazards);
-      if (Items != default) {
-        var list = f.ResolveList(this.Items);
-        for (int i = 0; i < list.Count; ++i) {
-          list.GetPointer(i)->AllocatePointers(f, entity);
-        }
-      }
-      if (Hazards != default) {
-        var list = f.ResolveList(this.Hazards);
-        for (int i = 0; i < list.Count; ++i) {
-          list.GetPointer(i)->AllocatePointers(f, entity);
-        }
-      }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (GameRules*)ptr;
@@ -1450,53 +1340,47 @@ namespace Quantum {
         QDictionary.Serialize(&p->CoinItemCustomSpawnWeights, serializer, Statics.SerializeAssetRef, Statics.SerializeFP);
         QHashSet.Serialize(&p->RandomDisabledStages, serializer, Statics.SerializeAssetRef);
         QList.Serialize(&p->Hazards, serializer, Statics.SerializeHazardList);
-        QList.Serialize(&p->Items, serializer, Statics.SerializeItemList);
+        QList.Serialize(&p->Items, serializer, Statics.SerializeHazardList);
         AssetRef.Serialize(&p->Gamemode, serializer);
         AssetRef.Serialize(&p->Stage, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct HazardList {
-    public const Int32 SIZE = 84;
+    public const Int32 SIZE = 12;
     public const Int32 ALIGNMENT = 4;
-    [FieldOffset(20)]
-    public QString64 Name;
     [FieldOffset(8)]
     public Int32 PrototypeRef;
-    [FieldOffset(0)]
-    public Byte Team;
-    [FieldOffset(16)]
-    public QBoolean SpawnHazard;
-    [FieldOffset(12)]
-    public QBoolean SpawnFridge;
     [FieldOffset(4)]
-    public ExtrasList Extra;
+    public Byte Team;
+    [FieldOffset(0)]
+    public Byte ExtraSlotA;
+    [FieldOffset(1)]
+    public Byte ExtraSlotB;
+    [FieldOffset(2)]
+    public Byte ExtraSlotC;
+    [FieldOffset(3)]
+    public Byte ExtraSlotD;
     public override readonly Int32 GetHashCode() {
       unchecked { 
         var hash = 8539;
-        hash = hash * 31 + Name.GetHashCode();
         hash = hash * 31 + PrototypeRef.GetHashCode();
         hash = hash * 31 + Team.GetHashCode();
-        hash = hash * 31 + SpawnHazard.GetHashCode();
-        hash = hash * 31 + SpawnFridge.GetHashCode();
-        hash = hash * 31 + Extra.GetHashCode();
+        hash = hash * 31 + ExtraSlotA.GetHashCode();
+        hash = hash * 31 + ExtraSlotB.GetHashCode();
+        hash = hash * 31 + ExtraSlotC.GetHashCode();
+        hash = hash * 31 + ExtraSlotD.GetHashCode();
         return hash;
       }
     }
-    public void ClearPointers(FrameBase f, EntityRef entity) {
-      Extra.ClearPointers(f, entity);
-    }
-    public void AllocatePointers(FrameBase f, EntityRef entity) {
-      Extra.AllocatePointers(f, entity);
-    }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (HazardList*)ptr;
+        serializer.Stream.Serialize(&p->ExtraSlotA);
+        serializer.Stream.Serialize(&p->ExtraSlotB);
+        serializer.Stream.Serialize(&p->ExtraSlotC);
+        serializer.Stream.Serialize(&p->ExtraSlotD);
         serializer.Stream.Serialize(&p->Team);
-        Quantum.ExtrasList.Serialize(&p->Extra, serializer);
         serializer.Stream.Serialize(&p->PrototypeRef);
-        QBoolean.Serialize(&p->SpawnFridge, serializer);
-        QBoolean.Serialize(&p->SpawnHazard, serializer);
-        Quantum.QString64.Serialize(&p->Name, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -1584,42 +1468,6 @@ namespace Quantum {
         Button.Serialize(&p->Right, serializer);
         Button.Serialize(&p->Sprint, serializer);
         Button.Serialize(&p->Up, serializer);
-    }
-  }
-  [StructLayout(LayoutKind.Explicit)]
-  public unsafe partial struct ItemList {
-    public const Int32 SIZE = 76;
-    public const Int32 ALIGNMENT = 4;
-    [FieldOffset(12)]
-    public QString64 Name;
-    [FieldOffset(8)]
-    public Int32 PrototypeRef;
-    [FieldOffset(0)]
-    public Byte Team;
-    [FieldOffset(4)]
-    public ExtrasList Extra;
-    public override readonly Int32 GetHashCode() {
-      unchecked { 
-        var hash = 13249;
-        hash = hash * 31 + Name.GetHashCode();
-        hash = hash * 31 + PrototypeRef.GetHashCode();
-        hash = hash * 31 + Team.GetHashCode();
-        hash = hash * 31 + Extra.GetHashCode();
-        return hash;
-      }
-    }
-    public void ClearPointers(FrameBase f, EntityRef entity) {
-      Extra.ClearPointers(f, entity);
-    }
-    public void AllocatePointers(FrameBase f, EntityRef entity) {
-      Extra.AllocatePointers(f, entity);
-    }
-    public static void Serialize(void* ptr, FrameSerializer serializer) {
-        var p = (ItemList*)ptr;
-        serializer.Stream.Serialize(&p->Team);
-        Quantum.ExtrasList.Serialize(&p->Extra, serializer);
-        serializer.Stream.Serialize(&p->PrototypeRef);
-        Quantum.QString64.Serialize(&p->Name, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -2818,28 +2666,24 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Clock : Quantum.IComponent {
-    public const Int32 SIZE = 12;
+    public const Int32 SIZE = 8;
     public const Int32 ALIGNMENT = 4;
-    [FieldOffset(0)]
-    public Int32 Time;
-    [FieldOffset(8)]
-    public QBoolean TickTimeup;
     [FieldOffset(4)]
-    public QBoolean ResetTime;
+    public Int32 Time;
+    [FieldOffset(0)]
+    public ClockType type;
     public override readonly Int32 GetHashCode() {
       unchecked { 
         var hash = 13649;
         hash = hash * 31 + Time.GetHashCode();
-        hash = hash * 31 + TickTimeup.GetHashCode();
-        hash = hash * 31 + ResetTime.GetHashCode();
+        hash = hash * 31 + (Byte)type;
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Clock*)ptr;
+        serializer.Stream.Serialize((Byte*)&p->type);
         serializer.Stream.Serialize(&p->Time);
-        QBoolean.Serialize(&p->ResetTime, serializer);
-        QBoolean.Serialize(&p->TickTimeup, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -6008,7 +5852,7 @@ namespace Quantum {
     void OnReturnToRoom(Frame f);
   }
   public unsafe partial interface ISignalInitializeHazard : ISignal {
-    void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<Byte> spawnData);
+    void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, Byte ExtraA, Byte ExtraB, Byte ExtraC, Byte ExtraD);
   }
   public unsafe partial interface ISignalOnThrowHoldable : ISignal {
     void OnThrowHoldable(Frame f, EntityRef entity, EntityRef mario, QBoolean crouching, QBoolean dropped);
@@ -6957,12 +6801,12 @@ namespace Quantum {
           }
         }
       }
-      public void InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<Byte> spawnData) {
+      public void InitializeHazard(EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, Byte ExtraA, Byte ExtraB, Byte ExtraC, Byte ExtraD) {
         var array = _f._ISignalInitializeHazardSystems;
         for (Int32 i = 0; i < array.Length; ++i) {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
-            s.InitializeHazard(_f, thisEntity, owner, spawnpoint, spawnReason, spawnData);
+            s.InitializeHazard(_f, thisEntity, owner, spawnpoint, spawnReason, ExtraA, ExtraB, ExtraC, ExtraD);
           }
         }
       }
@@ -7151,13 +6995,11 @@ namespace Quantum {
   public unsafe partial class Statics {
     public static FrameSerializer.Delegate SerializeBetterPhysicsContact;
     public static FrameSerializer.Delegate SerializeQBoolean;
-    public static FrameSerializer.Delegate SerializeByte;
     public static FrameSerializer.Delegate SerializeEntityRef;
     public static FrameSerializer.Delegate SerializeFPVector2;
     public static FrameSerializer.Delegate SerializeAssetRef;
     public static FrameSerializer.Delegate SerializeFP;
     public static FrameSerializer.Delegate SerializeHazardList;
-    public static FrameSerializer.Delegate SerializeItemList;
     public static FrameSerializer.Delegate SerializePowerupTransitionAnimation;
     public static FrameSerializer.Delegate SerializePhysicsQueryRef;
     public static FrameSerializer.Delegate SerializePhysicsContact;
@@ -7168,13 +7010,11 @@ namespace Quantum {
     static partial void InitStaticDelegatesGen() {
       SerializeBetterPhysicsContact = Quantum.BetterPhysicsContact.Serialize;
       SerializeQBoolean = QBoolean.Serialize;
-      SerializeByte = (v, s) => {{ s.Stream.Serialize((Byte*)v); }};
       SerializeEntityRef = EntityRef.Serialize;
       SerializeFPVector2 = FPVector2.Serialize;
       SerializeAssetRef = AssetRef.Serialize;
       SerializeFP = FP.Serialize;
       SerializeHazardList = Quantum.HazardList.Serialize;
-      SerializeItemList = Quantum.ItemList.Serialize;
       SerializePowerupTransitionAnimation = Quantum.PowerupTransitionAnimation.Serialize;
       SerializePhysicsQueryRef = PhysicsQueryRef.Serialize;
       SerializePhysicsContact = Quantum.PhysicsContact.Serialize;
@@ -7224,6 +7064,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(CharacterController2D), CharacterController2D.SIZE);
       typeRegistry.Register(typeof(CharacterController3D), CharacterController3D.SIZE);
       typeRegistry.Register(typeof(Quantum.Clock), Quantum.Clock.SIZE);
+      typeRegistry.Register(typeof(Quantum.ClockType), 1);
       typeRegistry.Register(typeof(Quantum.CloudBillPlatform), Quantum.CloudBillPlatform.SIZE);
       typeRegistry.Register(typeof(Quantum.Coin), Quantum.Coin.SIZE);
       typeRegistry.Register(typeof(Quantum.CoinItem), Quantum.CoinItem.SIZE);
@@ -7246,7 +7087,6 @@ namespace Quantum {
       typeRegistry.Register(typeof(EntityPrototypeRef), EntityPrototypeRef.SIZE);
       typeRegistry.Register(typeof(EntityRef), EntityRef.SIZE);
       typeRegistry.Register(typeof(Quantum.ExplosionType), 1);
-      typeRegistry.Register(typeof(Quantum.ExtrasList), Quantum.ExtrasList.SIZE);
       typeRegistry.Register(typeof(FP), FP.SIZE);
       typeRegistry.Register(typeof(FPBounds2), FPBounds2.SIZE);
       typeRegistry.Register(typeof(FPBounds3), FPBounds3.SIZE);
@@ -7292,7 +7132,6 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.InteractionInitiator), Quantum.InteractionInitiator.SIZE);
       typeRegistry.Register(typeof(Quantum.InvisibleBlock), Quantum.InvisibleBlock.SIZE);
       typeRegistry.Register(typeof(Quantum.ItemChanceType), 1);
-      typeRegistry.Register(typeof(Quantum.ItemList), Quantum.ItemList.SIZE);
       typeRegistry.Register(typeof(Joint), Joint.SIZE);
       typeRegistry.Register(typeof(Joint3D), Joint3D.SIZE);
       typeRegistry.Register(typeof(Quantum.JumpState), 1);
@@ -7354,7 +7193,6 @@ namespace Quantum {
       typeRegistry.Register(typeof(Ptr), Ptr.SIZE);
       typeRegistry.Register(typeof(QBoolean), QBoolean.SIZE);
       typeRegistry.Register(typeof(Quantum.QString48), Quantum.QString48.SIZE);
-      typeRegistry.Register(typeof(Quantum.QString64), Quantum.QString64.SIZE);
       typeRegistry.Register(typeof(Quantum.QStringUtf8_40), Quantum.QStringUtf8_40.SIZE);
       typeRegistry.Register(typeof(Quantum.QStringUtf8_48), Quantum.QStringUtf8_48.SIZE);
       typeRegistry.Register(typeof(Quantum.Ptr), Quantum.Ptr.SIZE);
@@ -7490,6 +7328,7 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.CannonDecision>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.CataquackVarient>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.ChainChompState>();
+      FramePrinter.EnsurePrimitiveNotStripped<Quantum.ClockType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.CoinType>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.DryState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.EnemyKillReason>();
@@ -7512,7 +7351,6 @@ namespace Quantum {
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.PowerupSpawnReason>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.PowerupState>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.QString48>();
-      FramePrinter.EnsurePrimitiveNotStripped<Quantum.QString64>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.QStringUtf8_40>();
       FramePrinter.EnsurePrimitiveNotStripped<Quantum.QStringUtf8_48>();
       FramePrinter.EnsurePrimitiveNotStripped<QueryOptions>();

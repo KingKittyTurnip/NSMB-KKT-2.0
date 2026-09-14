@@ -16,7 +16,7 @@ namespace Quantum {
         public class OptionsAvailable {
             public string Name;
             public AssetRef<EntityPrototype> EntityPrototype;
-            public ExtrasListPrototype Extra;
+            public byte ExtraA;
         }
     }
 }

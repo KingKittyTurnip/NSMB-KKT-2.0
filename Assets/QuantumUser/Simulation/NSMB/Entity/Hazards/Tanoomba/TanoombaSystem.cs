@@ -826,18 +826,17 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Tanoomba* tanoomba)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Enemy* enemy)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)) {
                 return;
             }
-            var specialValues = f.ResolveList(spawnData);
 
             enemy->IsActive = true;
 
             //Can turn into anything anytime?
-            tanoomba->TransformIntoAnythingAnytime = specialValues[0] == 1;
+            tanoomba->TransformIntoAnythingAnytime = ExtraA == 1;
 
             //uhh i would put specific hazard spawn data here
             tanoomba->FormId = -1;

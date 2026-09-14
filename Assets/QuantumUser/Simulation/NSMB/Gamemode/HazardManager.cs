@@ -30,23 +30,16 @@ namespace Quantum {
             }
 
             public HazardDefault[] ListOfAvalibleObjects;
-            [Header("GamemodeSpecific Objects")]
-            public HazardDefault bigstarBase;
-            public HazardDefault purplecoinBase;
-            public HazardDefault starcoinBase;
-            public HazardDefault kingbobombBase;
-            public HazardDefault loosecoinBase;
-            public HazardDefault oneupBase;
-            public HazardDefault clockBase;
 
             [Serializable]
             public class HazardDefault {
                 [Header("---Generic Info---")]
                 public string Name;
-                public AssetRef<EntityPrototype> entityPrototype;
+                public string Description;
                 public Sprite Icon;
                 public ObjectPrimaryType type;
                 public CategoreyObject categorey;
+                public AssetRef<EntityPrototype> entityPrototype;
                 [Header("---Subdata---")]
                 public bool Teamable; //set to 255 to "disable" for the object
                 public bool CanSpawnAsHazard = true; //decides if it works with randomly spawning
@@ -55,7 +48,10 @@ namespace Quantum {
                 public BulbSpawnType BulbSpawnType = BulbSpawnType.basic; //if bulb uses this ability again it will remove the old object
                 public BulbCooldown BulbCooldown = BulbCooldown.normal; //the cooldown for the bulb powerup
                 [Header("---SpecialData---")]
-                public HValue[] SpecialValues;
+                public HValue ValueA;
+                public HValue ValueB;
+                public HValue ValueC;
+                public HValue ValueD;
             }
         }
 

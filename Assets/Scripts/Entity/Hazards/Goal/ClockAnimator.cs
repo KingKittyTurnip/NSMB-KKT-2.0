@@ -1,5 +1,6 @@
 using NSMB.Particles;
 using NSMB.Utilities;
+using Photon.Deterministic;
 using Quantum;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ public unsafe class ClockAnimator : QuantumEntityViewComponent {
             return;
         }
         var clock = f.Unsafe.GetPointer<Clock>(EntityRef);
-        int Type = clock->ResetTime ? 1 : clock->TickTimeup ? 2 : clock->Time >= 0 ? 0 : 3;
+        int Type = (int) clock->type;
         materialBlock = new();
         materialBlock.SetFloat(ParamClockType, Type);
         clockRenderer.SetPropertyBlock(materialBlock);
@@ -36,19 +37,33 @@ public unsafe class ClockAnimator : QuantumEntityViewComponent {
         if (e.Entity != EntityRef) {
             return;
         }
-        string text = e.Time.ToString();
+        string text = "";
         Color32 color = new Color32(51, 133, 255, 255);
-        if (e.Overtime) { text = "-0-";  color = new Color32(255, 0, 0, 255);
-        } else if (e.TickTimeup) { text = "0:10";  color = new Color32(255, 0, 0, 255);
-        } else if (e.ResetTime) { text = Utils.SecondsToMinuteSeconds(e.Time);  color = new Color32(17, 247, 33, 255);
-        } else if (e.Time < 0) { color = new Color32(201, 14, 186, 255);
+        if (e.Overtime) { 
+            text = "-";
+            color = new Color32(255, 0, 0, 255);
+        } else if (e.type == ClockType.Timeup) {
+            text = Utils.SecondsToMinuteSeconds(e.Time);
+            color = new Color32(255, 0, 0, 255);
+        } else if (e.type == ClockType.Reset) { 
+            text = Utils.SecondsToMinuteSeconds(e.Time);
+            color = new Color32(17, 247, 33, 255);
+        } else {
+            text = (e.type == ClockType.Add ? "+" : "-") + Utils.SecondsToMinuteSeconds(e.Time);
+            if (e.type == ClockType.Subtract) {
+                text = "-";
+                color = new Color32(201, 14, 186, 255);
+            } else {
+                text = "+";
+            }
+            text += Utils.SecondsToMinuteSeconds(e.Time);
         }
-        //TODO: Make Timer Text Blink Instead of Bouce
+
         GameObject number = Instantiate(coinNumberParticle, e.pos.ToUnityVector3() + new Vector3(0, 0, -1), Quaternion.identity);
         number.GetComponentInChildren<NumberParticle>().Initialize(
             Utils.GetSymbolString(text, Utils.numberSymbols),
             color,
-            e.TickTimeup && !e.Overtime
+            (e.type == ClockType.Timeup && !e.Overtime)
         );
         Instantiate(
             breakPrefab,

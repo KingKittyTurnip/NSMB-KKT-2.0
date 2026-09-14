@@ -483,7 +483,7 @@ namespace Quantum {
             }
         }
 
-        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, QListPtr<byte> spawnData) {
+        public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Bowser* bowser)) {
                 return;
@@ -492,8 +492,7 @@ namespace Quantum {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             boss->Health = Constants.GeneralBossHealth;
 
-            var specialValues = f.ResolveList(spawnData);
-            bowser->IsDry = specialValues[0] == 1;
+            bowser->IsDry = ExtraA == 1;
         }
         public void BossToBossInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Boss* boss)
