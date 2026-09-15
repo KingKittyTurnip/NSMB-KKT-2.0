@@ -82,12 +82,14 @@ namespace Quantum {
 
             f.Unsafe.GetPointer<PhysicsObject>(newEntity)->Velocity.Y = 8;
 
+            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, bossesAsset.ListOfOptions[cauldron->ConvertIntoBossId].ExtraA, 0, 0, 0);
+
             if (cauldron->TransformingEntity != EntityRef.None) {
-                f.Unsafe.GetPointer<Boss>(newEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
+                var actualEntity = f.Unsafe.TryGetPointer<Tank>(newEntity, out var tank) ? tank->MoleEntity : newEntity;
+                f.Unsafe.GetPointer<Boss>(actualEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
                 f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
             }
 
-            f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, bossesAsset.ListOfOptions[cauldron->ConvertIntoBossId].ExtraA, 0, 0, 0);
             f.Events.PlayPuffParticle(transform->Position);
             cauldron->TransformingEntity = EntityRef.None;
             cauldron->Activated = true;

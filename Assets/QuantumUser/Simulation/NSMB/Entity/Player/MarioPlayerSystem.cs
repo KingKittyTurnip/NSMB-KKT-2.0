@@ -3115,7 +3115,7 @@ namespace Quantum {
         }
 
         public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
-            if (f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario) && !mario->IsDead && mario->DamageInvincibilityFrames == 0) {
+            if (f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario) && !mario->IsDead && mario->DamageInvincibilityFrames == 0 && mario->IsBoss == EntityRef.None) {
                 switch (type) {
                 case ExplosionType.Bomb:
                     mario->Powerdown(f, entity, false, bobomb);

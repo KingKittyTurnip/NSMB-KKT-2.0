@@ -104,6 +104,8 @@ namespace Quantum {
             hazard->IsCoinItem = true;
             hazard->LifeTime = 15 * 60;
 
+            coinitem->BlockSpawn = false;
+
             CurrentDetonationFrames = DetonationFrames;
             f.Events.BobombLit(entity, false);
 
@@ -111,7 +113,7 @@ namespace Quantum {
             if (Thrown) {
                 phys->Velocity = new(
                     (Constants._4_50 + Speed) * (enemy->FacingRight ? 1 : -1),
-                    Constants._3_50
+                    8
                 );
             } else {
                 holder->Holder = owner;

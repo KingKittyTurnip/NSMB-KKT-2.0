@@ -136,6 +136,7 @@ namespace Quantum {
             enemy->SetDelayedRespawn();
             physicsObject->Velocity = FPVector2.Zero;
             physicsObject->IsFrozen = true;
+            f.Unsafe.GetPointer<Hazard>(filter.Entity)->LifeTime = 1;
             f.Events.BobombExploded(filter.Entity);
 
             void ProcessHits(HitCollection hitCollection) {

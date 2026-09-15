@@ -5640,7 +5640,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d72bc5c43dbd9a47bc609a55d77f714, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sfxOverrides: []
+  sfxOverrides:
+  - SoundEffect: 69
+    Mode: 0
+    Priority: 0
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: eb19a8df530de3544a1363521b6393a1, type: 3}
   source: {fileID: 5407584048357268515}
 --- !u!114 &2160972791174678263
 MonoBehaviour:
@@ -5703,7 +5709,7 @@ MonoBehaviour:
   - {fileID: 4540435544182297773}
   childAnimator: {fileID: 0}
   childAnimation: {fileID: 0}
-  blinkingRate: 8
+  blinkinRate: 12
   scaleRate: 0.1333
   scaleSize: 0.3
   actualscale: 1

@@ -1697,8 +1697,9 @@ namespace Quantum.Prototypes {
     public AssetRef<EntityPrototype> BulletBillPrototype;
     public AssetRef<EntityPrototype> BombudPrototype;
     [ArrayLengthAttribute(3)]
-    public FP[] Offset = new FP[3];
-    public FP HeightScale;
+    public FPVector3[] CannonOffset = new FPVector3[3];
+    [ArrayLengthAttribute(3)]
+    public FP[] MoleSeats = new FP[3];
     partial void MaterializeUser(Frame frame, ref Quantum.Tank result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Tank component = default;
@@ -1711,10 +1712,12 @@ namespace Quantum.Prototypes {
         result.SegmentPrototype = this.SegmentPrototype;
         result.BulletBillPrototype = this.BulletBillPrototype;
         result.BombudPrototype = this.BombudPrototype;
-        for (int i = 0, count = PrototypeValidator.CheckLength(Offset, 3, in context); i < count; ++i) {
-          *result.Offset.GetPointer(i) = this.Offset[i];
+        for (int i = 0, count = PrototypeValidator.CheckLength(CannonOffset, 3, in context); i < count; ++i) {
+          *result.CannonOffset.GetPointer(i) = this.CannonOffset[i];
         }
-        result.HeightScale = this.HeightScale;
+        for (int i = 0, count = PrototypeValidator.CheckLength(MoleSeats, 3, in context); i < count; ++i) {
+          *result.MoleSeats.GetPointer(i) = this.MoleSeats[i];
+        }
         MaterializeUser(frame, ref result, in context);
     }
   }

@@ -1,5 +1,5 @@
 #define _0_005 0.005
-#define _0_44 0.44
+#define _7_50 7.50
 
 component Tank {
     MontyState State;
@@ -8,29 +8,28 @@ component Tank {
     AssetRef<EntityPrototype> BulletBillPrototype;
     AssetRef<EntityPrototype> BombudPrototype;
 
+    //jump logic
     [ExcludeFromPrototype] byte ReusableTimer;
-    [ExcludeFromPrototype] byte SegmentNumber;
 
     [ExcludeFromPrototype] EntityRef MoleEntity;
     [ExcludeFromPrototype] EntityRef SegmentEntity;
 
     //cannon vars
+    [ExcludeFromPrototype] byte NextActionId;
     [ExcludeFromPrototype] byte CannonActionCooldown;
-    [ExcludeFromPrototype] byte ActionId;
-    [ExcludeFromPrototype] CannonDecision Decision;
+
+    [ExcludeFromPrototype] byte SegmentNumber;
     [ExcludeFromPrototype] byte SegmentCreationTimer;
     
     //cannon segment vars
 	[ExcludeFromPrototype] array<FP>[3] FacingDirection;
-    array<FP>[3] Offset;
-    FP HeightScale;
-    //FP Offset;
+	[ExcludeFromPrototype] array<CannonDecision>[3] CurrentAction;
+    array<FPVector3>[3] CannonOffset;
+    array<FP>[3] MoleSeats;
 
     //monty vars
-    [ExcludeFromPrototype] bool MontyOut;
     [ExcludeFromPrototype] byte AttackCooldown;
     [ExcludeFromPrototype] FP LastMontyPos;
-    [ExcludeFromPrototype] EntityRef Bombud;
 
     //ai vars
     [ExcludeFromPrototype] byte waitTime;
@@ -53,7 +52,40 @@ enum MontyState : Byte {
 enum CannonDecision : Byte {
     None,
     TryAction,
-    Fire,
     TurnLeft,
     TurnRight,
+    FireA,
+    FireB,
+    FireC,
+    FireD,
+    FireE,
+    FireF,
+    FireG,
+    FireH,
+    FireI,
+    FireFin,
+}
+
+event TankCannonPrepareFire {
+    EntityRef Entity;
+    byte SegmentId;
+}
+
+event TankCannonFire {
+    EntityRef Entity;
+    byte SegmentId;
+}
+
+event TankPrepareJump {
+    EntityRef Entity;
+}
+
+event TankMontyAttack {
+    EntityRef Entity;
+}
+
+event TankAddRemoveSegment {
+    EntityRef Entity;
+    byte SegmentId;
+    bool IsAdding;
 }

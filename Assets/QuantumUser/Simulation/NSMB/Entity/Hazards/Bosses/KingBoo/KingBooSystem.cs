@@ -3,7 +3,7 @@ using Quantum.Collections;
 
 namespace Quantum {
     
-    public unsafe class KingBooSystem : SystemMainThreadEntityFilter<KingBoo, KingBooSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken, ISignalOnBobombExplodeEntity {
+    public unsafe class KingBooSystem : SystemMainThreadEntityFilter<KingBoo, KingBooSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnIceBlockBroken {
         public struct Filter {
             public EntityRef Entity;
             public KingBoo* KingBoo;
@@ -399,11 +399,6 @@ namespace Quantum {
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(brokenIceBlock);
             if (f.Unsafe.TryGetPointer(iceBlock->Entity, out Interactable* inter)) {
                 inter->ColliderDisabled = false;
-            }
-        }
-        public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
-            if (f.Unsafe.TryGetPointer(entity, out Boss* boss)) {
-                boss->BossHarmed(f, entity, boss->FacingRight, KnockbackStrength.Normal, true);
             }
         }
 

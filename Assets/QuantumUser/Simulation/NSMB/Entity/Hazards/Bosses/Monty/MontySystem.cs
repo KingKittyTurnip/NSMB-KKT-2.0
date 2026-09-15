@@ -1,20 +1,13 @@
 using Photon.Deterministic;
 using Quantum.Collections;
-using System.Drawing;
-using UnityEngine;
-using UnityEngine.WSA;
-using static LoopingMusicData.e;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Quantum {
     
     public unsafe class MontyTankSystem : SystemMainThreadEntityFilter<Tank, MontyTankSystem.Filter>, ISignalInitializeHazard, ISignalBossDeath, ISignalBossToBossInteraction, ISignalOnBobombExplodeEntity {
 
-        private static FP MontyBottomSeatPos = FP._0_25;
         public struct Filter {
             public EntityRef Entity;
             public Tank* Tank;
-            public Boss* Boss;
             public Hazard* hazard;
             public Transform2D* Transform;
             public PhysicsObject* PhysicsObject;
@@ -28,37 +21,42 @@ namespace Quantum {
             f.Context.Interactions.Register<MarioPlayer, Monty>(f, OnMarioMontyInteraction);
             f.Context.Interactions.Register<Projectile, Monty>(f, OnProjectileMontyInteraction);
             f.Context.Interactions.Register<Boss, Monty>(f, OnBossMontyInteraction);
+            f.Context.Interactions.Register<Enemy, Monty>(f, OnEnemyMoleInteraction);
         }
+
+        //TODO:
+        //finish animatin
+        //fix the persistent collision
+        //fix wiskers being visually weird
+        //recreate ai
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var entity = filter.Entity;
-            var boss = filter.Boss;
             var hazard = filter.hazard;
             var physicsObject = filter.PhysicsObject;
             var transform = filter.Transform;
             var collider = filter.Collider;
 
             var tank = filter.Tank;
-
-            if (boss->Dead) {
-                physicsObject->IsFrozen = true;
-                if (hazard->LifeTime == 2) {
-                    //make sure we remove these
-                    f.Destroy(tank->SegmentEntity);
-                    f.Destroy(tank->MoleEntity);
-                }
+            if (!f.Exists(tank->SegmentEntity) || !f.Exists(tank->MoleEntity)) {
                 return;
             }
 
-            if (!f.Exists(tank->SegmentEntity) || !f.Exists(tank->MoleEntity))
+            if (!f.Unsafe.TryGetPointer<Boss>(tank->MoleEntity, out var boss)) {
                 return;
+            }
+
+            if (boss->Dead) {
+                physicsObject->IsFrozen = true;
+                return;
+            }
 
             //Decide Action
             int leftrightinput = 0;
             int updowninput = 0;
             bool Jump = false;
             bool Jumpheld = true;
-            bool BombAttack = false;
+            bool AttackHeld = false;
             //bool Sprint = false;
             bool HasTarget = boss->BossHandleIframes(f);
             if (boss->ControllerPlayer != EntityRef.None) {
@@ -77,7 +75,7 @@ namespace Quantum {
                 Jump = inputs.Jump.WasPressed;
                 Jumpheld = inputs.Jump.IsDown;
 
-                BombAttack = inputs.PowerupAction.WasPressed;
+                AttackHeld = inputs.PowerupAction.IsDown;
 
                 mario->FacingRight = boss->FacingRight;
             } else {
@@ -113,7 +111,7 @@ namespace Quantum {
 
                     if (absDif < 1) {
                         //run from mario
-                        //leftrightinput = damageDirection.X > 0 ? -1 : 1;
+                        leftrightinput = damageDirection.X > 0 ? -1 : 1;
                     } else if (absDif > 6) {
                         //turn around he too far
                         leftrightinput = damageDirection.X > 0 ? 1 : -1;
@@ -127,19 +125,12 @@ namespace Quantum {
                     }
                     if (tank->waitTime <= 0) {
                         //try attack
-                        if (!tank->MontyOut) {
-                            tank->decideSegmentTimer = decideSegmentTimerFrames;
-                        } else if (f.Exists(tank->Bombud)) {
-                            //check if it's near a player
-
-                            //failed to get player near it, try again after  roughly 0.25 - 0.75 seconds
-                            tank->waitTime = (byte) (FPMath.RoundToInt(f.RNG->Next(FP._0_25, FP._0_75) * 60));
-                            //tank->decideSegmentTimer = RanomDecideSegment();
-                        } else {
-                            BombAttack = true;
-                            tank->waitTime = (byte) (60 + FPMath.RoundToInt(f.RNG->Next() * 30));
-                            //tank->decideSegmentTimer = RanomDecideSegment();
-                        }
+                        AttackHeld = true;
+                        tank->waitTime = (byte) (60 + FPMath.RoundToInt(f.RNG->Next() * 30));
+                        //tank->decideSegmentTimer = RanomDecideSegment();
+                    }
+                    if (tank->waitTime > 63 && (damageDirection.X > 0 == boss->FacingRight)) {
+                        AttackHeld = true;
                     }
                 }
 
@@ -161,127 +152,130 @@ namespace Quantum {
                 physicsObject->Velocity.Y = 20;
                 tank->State = MontyState.Jumping;
                 physicsObject->IsTouchingGround = false;
-                physicsObject->Velocity.Y = 16;
+                physicsObject->Velocity.Y = 12;
                 physicsObject->Velocity.X = 0;
                 physicsObject->TerminalVelocity = -10;
             }
 
             if (physicsObject->IsTouchingGround && !physicsObject->WasTouchingGround) {
-                //ground puff
+                f.Events.BowserLanded(f, entity, false);
             }
 
             void CannonBehavior(int addingDirection, bool NoAction = false) {
                 var segmentCollider = f.Unsafe.GetPointer<PhysicsCollider2D>(tank->SegmentEntity);
                 var segmentTransform = f.Unsafe.GetPointer<Transform2D>(tank->SegmentEntity);
                 FP tanksegmentMaxRot = 90;
-                FP tankSegmentRotSpeed = 4;
+                FP tankSegmentRotSpeed = Constants._7_50;
                 FP baseVerticalOffset = Constants._0_48;
                 FP bulletCreationOffset = FP._0_25;
                 byte ActionCooldown = 45;
-                int addSegmentThreshold = 30;
+                int addSegmentThreshold = 45;
                 int maxSegments = 2;
                 bool isAddingSegment = addingDirection == 1;
 
                 segmentTransform->Position = transform->Position; //TODO: add the velocity to it?
 
-                if (addingDirection == 0 || tank->CannonActionCooldown != 1 || tank->SegmentCreationTimer == 255 || (!isAddingSegment && tank->SegmentNumber == 0 && !tank->MontyOut) || (isAddingSegment && tank->SegmentNumber >= maxSegments)) {
-                    if (NoAction) {
-                        return;
+                //decide start action for a cannon
+                if (QuantumUtils.Decrement(ref tank->CannonActionCooldown) && !NoAction && tank->AttackCooldown <= 60) {
+                    tank->NextActionId++;
+                    if (tank->NextActionId > tank->SegmentNumber) {
+                        tank->CannonActionCooldown = ActionCooldown;
+                        tank->NextActionId = 0;
+                    } else {
+                        tank->CannonActionCooldown = 45;
                     }
 
-                    //we are not adding cannon, handle shoot behavior
-                    if (QuantumUtils.Decrement(ref tank->CannonActionCooldown)) {
-                        tank->Decision = CannonDecision.TryAction;
-                        tank->SegmentCreationTimer = 0;
-                    }
+                    if (tank->CurrentAction[tank->NextActionId] == CannonDecision.None)
+                        tank->CurrentAction[tank->NextActionId] = CannonDecision.TryAction;
+                }
 
-                    if (tank->CannonActionCooldown == 0) {
-                        tank->ActionId++;
-                        if (tank->ActionId > tank->SegmentNumber) {
-                            tank->CannonActionCooldown = ActionCooldown;
-                            tank->ActionId = 255;
-                            tank->Decision = CannonDecision.None;
-                        } else {
-                            tank->CannonActionCooldown = ActionCooldown;
-                        }
-                    }
-
-                    tank->SegmentCreationTimer = 0;
+                //do actions for each cannon
+                for (byte i = 0; i < tank->SegmentNumber+1; i++) {
                     DoDecision:
-                    switch (tank->Decision) {
+                    switch (tank->CurrentAction[i]) {
                     case CannonDecision.None: {
                         break;
                     }
                     case CannonDecision.TryAction: {
                         //decide action
-                        bool right = tank->FacingDirection[tank->ActionId] > 0;
-                        FP rng = f.RNG->Next();
-
-
-                        if (rng < ((right != boss->FacingRight) ^ (tank->ActionId == 1) ? FP._0_50 : FP._0_25)) {
-                            //prefer turning in the direction we are moving in, unless we are the middle cannon
-                            tank->Decision = right ? CannonDecision.TurnLeft : CannonDecision.TurnRight;
+                        if (boss->FacingRight != (tank->FacingDirection[i] > 0)) {
+                            //turn!
+                            tank->CurrentAction[i] = (tank->FacingDirection[i] > 0) ? CannonDecision.TurnLeft : CannonDecision.TurnRight;
                         } else {
-                            tank->Decision = CannonDecision.Fire;
+                            tank->CurrentAction[i] = CannonDecision.None;
                         }
                         goto DoDecision;
                     }
-                    case CannonDecision.Fire: {
-                        byte CannonCreateBulletFrame = 30;
-                        if (tank->CannonActionCooldown == ActionCooldown) {
-                            //play anim
-                        } else if (tank->CannonActionCooldown == CannonCreateBulletFrame) {
-                            bool isRight = tank->FacingDirection[tank->ActionId] > 0;
-                            segmentCollider->Shape.Compound.GetShapes(f, out var shapes, out int shapecount);
-                            FP Leftward = (shapes[tank->ActionId].Centroid.X > 0 ? -1 : 1);
-                            var spawnpoint = new FPVector2((Leftward * FP._0_25) + shapes[tank->ActionId].Centroid.X + (shapes[tank->ActionId].Box.Extents.X * -Leftward), (tank->HeightScale * (tank->ActionId * 2)) + baseVerticalOffset);
-                            FireBullet(spawnpoint, isRight);
-                        }
-                        break;
-                    }
                     case CannonDecision.TurnLeft:
                     case CannonDecision.TurnRight: {
-                        //turn the cannon all the way within 60 frames
-                        tank->FacingDirection[tank->ActionId] = FPMath.Clamp(tank->FacingDirection[tank->ActionId] + (tank->Decision == CannonDecision.TurnRight ? tankSegmentRotSpeed : -tankSegmentRotSpeed), -tanksegmentMaxRot, tanksegmentMaxRot);
+                        //turn logic
+                        tank->FacingDirection[i] = /*FPMath.Clamp(*/tank->FacingDirection[i] + (tank->CurrentAction[i] == CannonDecision.TurnRight ? tankSegmentRotSpeed : -tankSegmentRotSpeed)/*, -tanksegmentMaxRot, tanksegmentMaxRot)*/;
                         segmentCollider->Shape.Compound.GetShapes(f, out var shapes, out int shapecount);
-                        shapes[tank->ActionId].Centroid.X = (tank->FacingDirection[tank->ActionId] / tanksegmentMaxRot) * tank->Offset[tank->ActionId];
+                        shapes[i].Centroid.X = (tank->FacingDirection[i] / tanksegmentMaxRot) * tank->CannonOffset[i].X;
+                        if (FPMath.Abs(tank->FacingDirection[i]) == 90) {
+                            tank->CurrentAction[i] = CannonDecision.None;
+                        }
+                        break;
+                    }
+                    case CannonDecision.FireFin: {
+                        //Shoot
+                        segmentCollider->Shape.Compound.GetShapes(f, out var shapes, out int shapecount);
+                        bool isRight = tank->FacingDirection[i] > 0;
+                        FP Leftward = (shapes[i].Centroid.X > 0 ? -1 : 1);
+                        FP BillOffset = Constants._0_09;
+
+                        var spawnpoint = new FPVector2((Leftward * FP._0_25) + shapes[i].Centroid.X + (shapes[i].Box.Extents.X * -Leftward), tank->CannonOffset[i].Y - BillOffset);
+                        FireBullet(spawnpoint, isRight);
+                        f.Events.TankCannonFire(entity, i);
+                        tank->CurrentAction[i] = CannonDecision.None;
+                        break;
+                    }
+                    default: {
+                        //increment in any other state
+                        tank->CurrentAction[i]++;
                         break;
                     }
                     }
-                } else if (tank->SegmentNumber == 0 && ((addingDirection == 1 && !tank->MontyOut) || (addingDirection == -1 && tank->MontyOut))) {
-                    //handle monty mole before adding segments
-                    tank->SegmentCreationTimer++;
-                    if (tank->SegmentCreationTimer == addSegmentThreshold) {
-                        tank->SegmentCreationTimer = 255;
-                        tank->MontyOut = addingDirection == 1;
-                        tank->AttackCooldown = 60;
-                    }
-                } else {
-                    //add/subtractsegment
-                    tank->SegmentCreationTimer++;
-                    if (tank->SegmentCreationTimer == addSegmentThreshold) {
-                        tank->SegmentCreationTimer = 255;
-                        segmentCollider->Shape.Compound.GetShapes(f, out var shapes, out int shapecount);
+                }
 
-                        if (isAddingSegment) {
-                            //add hitbox
-                            tank->SegmentNumber++;
-                            tank->FacingDirection[tank->SegmentNumber] = tanksegmentMaxRot * (boss->FacingRight ? 1 : -1);
-                            shapes[tank->SegmentNumber].Centroid = new FPVector2(tank->Offset[tank->SegmentNumber] * (boss->FacingRight ? 1 : -1), tank->HeightScale * (tank->SegmentNumber * 2) + baseVerticalOffset);
-                            SetCollider();
-                        } else {
-                            //remove hitbox
-                            FP arbitraryPitHitboxNumber = -578;
-                            shapes[tank->SegmentNumber].Centroid.Y = arbitraryPitHitboxNumber;
-                            tank->SegmentNumber--;
+                //handle segment control
+                if (addingDirection != 0) {
+                    if (!((!isAddingSegment && tank->SegmentNumber == 0) || (isAddingSegment && tank->SegmentNumber >= maxSegments))) {
+                        //add/subtractsegment
+                        tank->SegmentCreationTimer++;
+                        if (tank->SegmentCreationTimer == addSegmentThreshold) {
+                            tank->SegmentCreationTimer = 0;
+                            segmentCollider->Shape.Compound.GetShapes(f, out var shapes, out int shapecount);
+
+                            if (isAddingSegment) {
+                                //add segment
+                                tank->SegmentNumber++;
+
+                                tank->CurrentAction[tank->SegmentNumber] = CannonDecision.None;
+                                tank->FacingDirection[tank->SegmentNumber] = tanksegmentMaxRot * (boss->FacingRight ? 1 : -1);
+                                shapes[tank->SegmentNumber].Centroid = new FPVector2(tank->CannonOffset[tank->SegmentNumber].X * (boss->FacingRight ? 1 : -1), tank->CannonOffset[tank->SegmentNumber].Y);
+
+                                f.Events.TankAddRemoveSegment(entity, tank->SegmentNumber, true);
+                            } else {
+                                //remove segment
+                                FP arbitraryPitHitboxNumber = -578;
+
+                                shapes[tank->SegmentNumber].Centroid.Y = arbitraryPitHitboxNumber;
+                                tank->CurrentAction[tank->SegmentNumber] = CannonDecision.None;
+
+                                f.Events.TankAddRemoveSegment(entity, tank->SegmentNumber, false);
+                                tank->SegmentNumber--;
+                            }
                             SetCollider();
                         }
+                        void SetCollider() {
+                            var newY = tank->CannonOffset[tank->SegmentNumber].Z;
+                            collider->Shape.Box.Extents = new FPVector2(collider->Shape.Box.Extents.X, newY);
+                            collider->Shape.Centroid.Y = newY;
+                        }
                     }
-                    void SetCollider() {
-                        var newY = Constants._0_44 * (tank->SegmentNumber+1);
-                        collider->Shape.Box.Extents = new FPVector2(collider->Shape.Box.Extents.X, newY);
-                        collider->Shape.Centroid.Y = newY;
-                    }
+                } else {
+                    tank->SegmentCreationTimer = 0;
                 }
 
                 void FireBullet(FPVector2 spawnpoint, bool right) {
@@ -297,27 +291,39 @@ namespace Quantum {
             void HandleMonty(bool CanAttack) {
                 var montyTransform = f.Unsafe.GetPointer<Transform2D>(tank->MoleEntity);
                 FP MontySpeed = FP._0_05;
-                byte AttackCooldownFrames = 60;
-                FP TargetSeat = tank->MontyOut ? ((Constants._0_40 * tank->SegmentNumber) + Constants._0_44) * 2 : MontyBottomSeatPos;
+                byte AttackStrikeFrame = 60;
+                FP TargetSeat = tank->MoleSeats[tank->SegmentNumber];
 
                 //place
                 tank->LastMontyPos += FPMath.Clamp(TargetSeat - tank->LastMontyPos, -MontySpeed, MontySpeed);
                 montyTransform->Position = transform->Position + new FPVector2(0, tank->LastMontyPos);
 
                 //attack
-                if (tank->MontyOut && CanAttack) {
-                    QuantumUtils.Decrement(ref tank->AttackCooldown);
-                    if (BombAttack) {
-                        if (f.Exists(tank->Bombud)) {
-                            //do bombud rules
-                        } else if (tank->AttackCooldown == 0) {
-                            tank->AttackCooldown = AttackCooldownFrames;
-
-                            tank->Bombud = f.Create(tank->BombudPrototype);
-                            var newBomb = f.Unsafe.GetPointer<Bobomb>(tank->Bombud);
-                            var newBombTransform = f.Unsafe.GetPointer<Transform2D>(tank->Bombud);
-                            newBomb->Initialize(f, tank->Bombud, entity, boss->FacingRight, true);
+                if (CanAttack) {
+                    if (QuantumUtils.Decrement(ref tank->AttackCooldown) && AttackHeld) {
+                        tank->AttackCooldown = 72;
+                        f.Events.TankMontyAttack(entity);
+                    }
+                    if (tank->AttackCooldown == AttackStrikeFrame) {
+                        tank->NextActionId = tank->SegmentNumber; //reset after an attack, makes it more pridictable to control cannon direction
+                        tank->CannonActionCooldown = AttackStrikeFrame;
+                        if (!AttackHeld) {
+                            //make all cannons fire a bill, if possible
+                            for (int i = 0; i < tank->SegmentNumber+1; i++) {
+                                if (tank->CurrentAction[i] == CannonDecision.None) {
+                                    tank->CurrentAction[i] = CannonDecision.FireA;
+                                }
+                            }
+                            if (physicsObject->Velocity.Y < 1)
+                                physicsObject->Velocity.Y = 1;
+                        } else {
+                            //make a bobomb
+                            var bombEntity = f.Create(tank->BombudPrototype);
+                            var newBomb = f.Unsafe.GetPointer<Bobomb>(bombEntity);
+                            var newBombTransform = f.Unsafe.GetPointer<Transform2D>(bombEntity);
+                            newBomb->Initialize(f, bombEntity, entity, boss->FacingRight, true);
                             newBombTransform->Position = transform->Position + new FPVector2(boss->FacingRight ? FP._0_25 : -FP._0_25, tank->LastMontyPos);
+                            newBomb->CurrentDetonationFrames = 40;
                         }
                     }
                 }
@@ -330,14 +336,15 @@ namespace Quantum {
                         physicsObject->Velocity.X = physicsObject->PreviousFrameVelocity.X;
                     }
 
-                    boss->FacingRight = direction > 0;
+                    if (tank->AttackCooldown <= 60) {
+                        boss->FacingRight = direction > 0;
+                    }
                     FP accelerate = FP._0_10;
                     FP decelerate = FP._0_05;
-                    FP BaseSpeed = FP._1_50 + ((2-tank->SegmentNumber) * FP._0_50);
+                    FP BaseSpeed = Constants._2_50 + ((2-tank->SegmentNumber) * FP._0_50);
                     FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - decelerate, BaseSpeed);
 
                     physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (direction * accelerate), -clamper, clamper);
-                    boss->FacingRight = physicsObject->Velocity.X > 0;
 
                 } else {
                     physicsObject->Velocity.X *= Constants._0_95;
@@ -381,7 +388,7 @@ namespace Quantum {
                     tank->ReusableTimer = 0;
                     tank->State = MontyState.Jumping;
                     physicsObject->IsTouchingGround = false;
-                    physicsObject->Velocity.Y = 6;
+                    physicsObject->Velocity.Y = 7;
                     physicsObject->TerminalVelocity = -10;
                 }
                 break;
@@ -411,8 +418,8 @@ namespace Quantum {
             }
             BrickInteraction(f, ref filter);
 
-            //set movingplatforms, do we actually want to do this?
-            //var segmentPlatform = f.Unsafe.GetPointer<MovingPlatform>(tank->SegmentEntity);
+            //set movingplatforms
+            f.Unsafe.GetPointer<MovingPlatform>(tank->SegmentEntity)->Velocity.Y = physicsObject->Velocity.Y;
         }
 
         public static void BrickInteraction(Frame f, ref Filter filter) {
@@ -451,10 +458,10 @@ namespace Quantum {
         }
 
         public void OnMarioTankInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
-            var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
+            var tank = f.Unsafe.GetPointer<Tank>(thisEntity);
+            var boss = f.Unsafe.GetPointer<Boss>(tank->MoleEntity);
             if (!boss->BossCanInteractWithPlayer(f, marioEntity))
                 return;
-            var tank = f.Unsafe.GetPointer<Tank>(thisEntity);
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
@@ -475,10 +482,10 @@ namespace Quantum {
             }
         }
         public void OnMarioMontyInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity) {
-            var monty = f.Unsafe.GetPointer<Monty>(thisEntity);
-            var boss = f.Unsafe.GetPointer<Boss>(monty->OwnerEntity);
+            var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             if (!boss->BossCanInteractWithPlayer(f, marioEntity))
                 return;
+            var monty = f.Unsafe.GetPointer<Monty>(thisEntity);
             var tank = f.Unsafe.GetPointer<Tank>(monty->OwnerEntity);
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
@@ -496,7 +503,7 @@ namespace Quantum {
         }
         public void OnProjectileMontyInteraction(Frame f, EntityRef projectileEntity, EntityRef thisEntity) {
             var monty = f.Unsafe.GetPointer<Monty>(thisEntity);
-            var boss = f.Unsafe.GetPointer<Boss>(monty->OwnerEntity);
+            var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             if (!boss->BossCanInteract())
                 return;
             var projectile = f.Unsafe.GetPointer<Projectile>(projectileEntity);
@@ -518,22 +525,19 @@ namespace Quantum {
             f.Signals.OnProjectileHitEntity(projectileEntity, thisEntity);
         }
         public void OnBossMontyInteraction(Frame f, EntityRef bossEntity, EntityRef thisEntity) {
-            var monty = f.Unsafe.GetPointer<Monty>(thisEntity);
-            if (monty->OwnerEntity == bossEntity) {
-                //wuh- that's us!
-                return;
-            }
-            var boss = f.Unsafe.GetPointer<Boss>(monty->OwnerEntity);
+            var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             var otherboss = f.Unsafe.GetPointer<Boss>(bossEntity);
             if (!boss->BossCanInteract() || !otherboss->BossCanInteract())
                 return;
-            f.Signals.BossToBossInteraction(monty->OwnerEntity, bossEntity);
-            f.Signals.BossToBossInteraction(bossEntity, monty->OwnerEntity);
+            f.Signals.BossToBossInteraction(thisEntity, bossEntity);
+            f.Signals.BossToBossInteraction(bossEntity, thisEntity);
         }
-        public void OnEnemyBowserInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
+        public void OnEnemyMoleInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             if (!boss->BossCanInteract())
                 return;
+
+            var monty = f.Unsafe.GetPointer<Monty>(thisEntity);
 
             if (f.Unsafe.TryGetPointer(enemyEntity, out Goomba* goomba)) {
                 goomba->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
@@ -544,7 +548,8 @@ namespace Quantum {
                 koopa->Kill(f, enemyEntity, enemyEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out BulletBill* bill)) {
                 bill->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
-            } else if (f.Unsafe.TryGetPointer(enemyEntity, out Bobomb* bomb)) {
+                boss->BossBump(f, monty->OwnerEntity, f.Unsafe.GetPointer<Enemy>(enemyEntity)->FacingRight, KnockbackStrength.None);
+            } else if (f.Unsafe.TryGetPointer(enemyEntity, out Bobomb* bomb) && f.Unsafe.TryGetPointer<Holdable>(enemyEntity, out var holder) && holder->PreviousHolder != monty->OwnerEntity) {
                 bomb->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
             } else if (f.Unsafe.TryGetPointer(enemyEntity, out PiranhaPlant* plant)) {
                 plant->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
@@ -556,18 +561,24 @@ namespace Quantum {
         public void BossDeath(Frame f, EntityRef thisEntity) {
             if (!f.Unsafe.TryGetPointer(thisEntity, out Boss* boss)
                 || !f.Unsafe.TryGetPointer(thisEntity, out Hazard* hazard)
-                || !f.Unsafe.TryGetPointer(thisEntity, out Tank* tank)) {
+                || !f.Unsafe.TryGetPointer(thisEntity, out Monty* monty)
+                || !f.Unsafe.TryGetPointer(monty->OwnerEntity, out Tank* tank)) {
                 return;
             }
 
             tank->State = MontyState.ReadyUp;
-            f.Destroy(tank->SegmentEntity);
-            f.Destroy(tank->MoleEntity);
+            HazardSystem.DestroyHazard(f, tank->SegmentEntity);
+            HazardSystem.DestroyHazard(f, tank->MoleEntity);
         }
 
         public void OnBobombExplodeEntity(Frame f, EntityRef bobomb, EntityRef entity, ExplosionType type) {
+            //This handles bomb interactions for all bosses
             if (f.Unsafe.TryGetPointer(entity, out Boss* boss)) {
-                boss->BossHarmed(f, entity, boss->FacingRight, KnockbackStrength.Normal, true);
+                if (f.Unsafe.TryGetPointer<Monty>(entity, out var monty)) {
+                    boss->BossHarmed(f, monty->OwnerEntity, boss->FacingRight, KnockbackStrength.Normal, true);
+                } else {
+                    boss->BossHarmed(f, entity, boss->FacingRight, KnockbackStrength.Normal, true);
+                }
             }
         }
 
@@ -577,11 +588,12 @@ namespace Quantum {
                 return;
             }
 
-            var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            boss->Health = Constants.GeneralBossHealth;
-
-            tank->ActionId = 255;
-            tank->LastMontyPos = MontyBottomSeatPos;
+            //pre setup
+            tank->NextActionId = 0;
+            tank->LastMontyPos = tank->MoleSeats[0];
+            for (int i = 0; i < 3; i++) {
+                tank->FacingDirection[i] = -90;
+            }
 
             //create parts
             tank->SegmentEntity = f.Create(tank->SegmentPrototype);
@@ -592,10 +604,30 @@ namespace Quantum {
             f.Unsafe.GetPointer<Monty>(tank->MoleEntity)->OwnerEntity = thisEntity;
             var newMoleTransform = f.Unsafe.GetPointer<Transform2D>(tank->SegmentEntity);
             newMoleTransform->Position = spawnpoint;
+
+            var boss = f.Unsafe.GetPointer<Boss>(tank->MoleEntity);
+            boss->Health = Constants.GeneralBossHealth;
+
+            //setup parts
+            var molehaz = f.Unsafe.GetPointer<Hazard>(tank->MoleEntity);
+            var seghaz = f.Unsafe.GetPointer<Hazard>(tank->SegmentEntity);
+            //UGLY hardcode.
+            switch (spawnReason) {
+            case SpawnReason.Item:
+                molehaz->IsCoinItem = seghaz->IsCoinItem = true;
+                molehaz->LifeTime = seghaz->LifeTime = 600;
+                break;
+            default:
+            case SpawnReason.Normal:
+                molehaz->IsHazard = seghaz->IsHazard = true;
+                molehaz->BaseLifeTime = seghaz->BaseLifeTime = molehaz->LifeTime = seghaz->LifeTime = f.Global->Rules.HazardLifetime * 60;
+                break;
+            }
+            molehaz->Team = seghaz->Team = 255;
         }
         public void BossToBossInteraction(Frame f, EntityRef thisEntity, EntityRef otherEntity) {
             if ( !f.Unsafe.TryGetPointer(thisEntity, out Monty* monty)
-                || !f.Unsafe.TryGetPointer(monty->OwnerEntity, out Boss* boss)
+                || !f.Unsafe.TryGetPointer(thisEntity, out Boss* boss)
                 || !f.Unsafe.TryGetPointer(monty->OwnerEntity, out Tank* tank)) {
                 return;
             }
@@ -607,7 +639,7 @@ namespace Quantum {
             QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
-            boss->BossHarmed(f, thisEntity, damageDirection.X < 0, KnockbackStrength.Groundpound, true);
+            boss->BossHarmed(f, monty->OwnerEntity, damageDirection.X < 0, KnockbackStrength.Groundpound, true);
         }
         #endregion
     }

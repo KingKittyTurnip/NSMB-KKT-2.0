@@ -11,6 +11,7 @@ namespace Quantum {
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<BigStar, MarioPlayer>(f, OnBigStarMarioInteraction);
             f.Context.Interactions.Register<BigStar, Boss>(f, OnBigStarBossInteraction);
+            f.Context.Interactions.Register<BigStar, Monty>(f, OnBigStarMontyInteraction);
         }
 
         public override void Update(Frame f) {
@@ -157,6 +158,23 @@ namespace Quantum {
 
         public void OnBigStarBossInteraction(Frame f, EntityRef starEntity, EntityRef bossEntity) {
             var boss = f.Unsafe.GetPointer<Boss>(bossEntity);
+            if (boss->ControllerPlayer == EntityRef.None)
+                return;
+            /*if (f.Unsafe.TryGetPointer<Tank>(bossEntity, out var tank)) {
+                //do nothing, we are tank.
+                var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
+                var marioTransform = f.Unsafe.GetPointer<Transform2D>(marioEntity);
+
+                QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
+                FPVector2 damageDirection = (theirPos - ourPos).Normalized;
+                f.Unsafe.GetPointer<BigStar>
+                    
+            } else*/
+                OnBigStarMarioInteraction(f, starEntity, boss->ControllerPlayer);
+        }
+        public void OnBigStarMontyInteraction(Frame f, EntityRef starEntity, EntityRef montyEntity) {
+            var monty = f.Unsafe.GetPointer<Monty>(montyEntity);
+            var boss = f.Unsafe.GetPointer<Boss>(monty->OwnerEntity);
             if (boss->ControllerPlayer == EntityRef.None)
                 return;
             OnBigStarMarioInteraction(f, starEntity, boss->ControllerPlayer);

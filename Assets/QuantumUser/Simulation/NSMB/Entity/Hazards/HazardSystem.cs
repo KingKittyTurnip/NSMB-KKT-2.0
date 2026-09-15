@@ -26,7 +26,6 @@ namespace Quantum {
         public struct Filter {
             public EntityRef Entity;
             public Transform2D* Transform;
-            public PhysicsObject* PhysicsObject;
             public PhysicsCollider2D* Collider;
 
             public Hazard* Hazard;
@@ -61,7 +60,7 @@ namespace Quantum {
                 return;
             }
 
-            var physicsObject = filter.PhysicsObject;
+            //var physicsObject = filter.PhysicsObject;
 
             // Countdown To Despawn
             if (QuantumUtils.Decrement(ref hazard->LifeTime)){
@@ -75,7 +74,7 @@ namespace Quantum {
 
             // allow interactions
             if (hazard->JustSpawned) {
-                if (!hazard->IPWSUntilGround || (hazard->IPWSUntilGround && physicsObject->IsTouchingGround)) {
+                if (!hazard->IPWSUntilGround || (hazard->IPWSUntilGround && f.Exists(filter.Entity) && f.Unsafe.GetPointer<PhysicsObject>(filter.Entity)->IsTouchingGround)) {
                     if (hazard->IPWSTime-- <= 0) {
                         hazard->JustSpawned = false;
                         f.Unsafe.GetPointer<Interactable>(filter.Entity)->ColliderDisabled = false;

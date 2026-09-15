@@ -5,18 +5,17 @@ namespace Quantum {
     public unsafe partial struct Boss {
         public void BossHarmed(Frame f, EntityRef thisEntity, bool FromRight, KnockbackStrength Damage, bool longiframes) {
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
-            var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            if ((boss->iframes != 0 && boss->knockbackframes == 0) || boss->Dead || boss->knockbackframes > 40 /*too early*/)
+            if ((iframes != 0 && knockbackframes == 0) || Dead || knockbackframes > 40 /*too early*/)
                 return;
 
-            if (boss->ControllerPlayer != EntityRef.None) {
+            if (ControllerPlayer != EntityRef.None) {
                 //Controlled By Player, Just Drop
-                f.Signals.OnMarioPlayerDropObjective(boss->ControllerPlayer, Damage == KnockbackStrength.Groundpound ? 2 : 1, EntityRef.None);
+                f.Signals.OnMarioPlayerDropObjective(ControllerPlayer, Damage == KnockbackStrength.Groundpound ? 2 : 1, EntityRef.None);
                 if (Damage == KnockbackStrength.Groundpound || longiframes) {
                     //stop combos
-                    boss->knockbackframes = 1;
-                    boss->iframes = 121;
+                    knockbackframes = 1;
+                    iframes = 121;
                 }
             } else {
                 byte total = Damage switch {
@@ -33,19 +32,19 @@ namespace Quantum {
 
                 //Decrease It's Health until We Deplete it Or Lost all power
                 for (var i = 0; i < total; i++) {
-                    if (boss->Health > 0) {
-                        boss->Health--;
+                    if (Health > 0) {
+                        Health--;
                     } else {
-                        boss->Dead = true;
+                        Dead = true;
                         f.Events.BossDeathAnimation(thisEntity);
                         f.Signals.BossDeath(thisEntity);
 
                         hazard->LifeTime = 130;
 
-                        if (boss->ControllerPlayer != EntityRef.None) {
+                        if (ControllerPlayer != EntityRef.None) {
                             //Controlled By Player
-                            var mario = f.Unsafe.GetPointer<MarioPlayer>(boss->ControllerPlayer);
-                            mario->RelieveFromBoss(f, boss->ControllerPlayer);
+                            var mario = f.Unsafe.GetPointer<MarioPlayer>(ControllerPlayer);
+                            mario->RelieveFromBoss(f, ControllerPlayer);
                         } else {
                             //spawn gamemode objectives
                             var stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
@@ -53,15 +52,15 @@ namespace Quantum {
                             EntityRef newStarEntity = f.Create(gamemode.BigStarPrototype);
                             var newStar = f.Unsafe.GetPointer<BigStar>(newStarEntity);
                             f.Unsafe.GetPointer<Transform2D>(newStarEntity)->Position = f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position;
-                            newStar->InitializeMovingStar(f, stage, newStarEntity, boss->FacingRight ? 1 : 2);
+                            newStar->InitializeMovingStar(f, stage, newStarEntity, FacingRight ? 1 : 2);
                         }
                         return;
                     }
                 }
             }
-            boss->iframes = (byte) (longiframes ? 25 : 10);
-            if (boss->knockbackframes == 0) {
-                boss->knockbackframes = 45;
+            iframes = (byte) (longiframes ? 25 : 10);
+            if (knockbackframes == 0) {
+                knockbackframes = 45;
             }
 
 

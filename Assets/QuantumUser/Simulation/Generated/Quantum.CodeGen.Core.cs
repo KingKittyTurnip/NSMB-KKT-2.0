@@ -68,9 +68,18 @@ namespace Quantum {
   public enum CannonDecision : byte {
     None,
     TryAction,
-    Fire,
     TurnLeft,
     TurnRight,
+    FireA,
+    FireB,
+    FireC,
+    FireD,
+    FireE,
+    FireF,
+    FireG,
+    FireH,
+    FireI,
+    FireFin,
   }
   public enum CataquackVarient : byte {
     BasicBlue,
@@ -5315,63 +5324,59 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Tank : Quantum.IComponent {
-    public const Int32 SIZE = 144;
+    public const Int32 SIZE = 192;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(8)]
+    [FieldOffset(10)]
     public MontyState State;
-    [FieldOffset(40)]
-    public AssetRef<EntityPrototype> MolePrototype;
-    [FieldOffset(48)]
-    public AssetRef<EntityPrototype> SegmentPrototype;
     [FieldOffset(32)]
-    public AssetRef<EntityPrototype> BulletBillPrototype;
+    public AssetRef<EntityPrototype> MolePrototype;
+    [FieldOffset(40)]
+    public AssetRef<EntityPrototype> SegmentPrototype;
     [FieldOffset(24)]
+    public AssetRef<EntityPrototype> BulletBillPrototype;
+    [FieldOffset(16)]
     public AssetRef<EntityPrototype> BombudPrototype;
     [FieldOffset(3)]
     [ExcludeFromPrototype()]
     public Byte ReusableTimer;
-    [FieldOffset(5)]
-    [ExcludeFromPrototype()]
-    public Byte SegmentNumber;
-    [FieldOffset(64)]
+    [FieldOffset(48)]
     [ExcludeFromPrototype()]
     public EntityRef MoleEntity;
-    [FieldOffset(72)]
+    [FieldOffset(56)]
     [ExcludeFromPrototype()]
     public EntityRef SegmentEntity;
     [FieldOffset(2)]
     [ExcludeFromPrototype()]
+    public Byte NextActionId;
+    [FieldOffset(1)]
+    [ExcludeFromPrototype()]
     public Byte CannonActionCooldown;
-    [FieldOffset(0)]
+    [FieldOffset(5)]
     [ExcludeFromPrototype()]
-    public Byte ActionId;
-    [FieldOffset(7)]
-    [ExcludeFromPrototype()]
-    public CannonDecision Decision;
+    public Byte SegmentNumber;
     [FieldOffset(4)]
     [ExcludeFromPrototype()]
     public Byte SegmentCreationTimer;
-    [FieldOffset(80)]
+    [FieldOffset(64)]
     [ExcludeFromPrototype()]
     [FramePrinter.FixedArrayAttribute(typeof(FP), 3)]
     private fixed Byte _FacingDirection_[24];
-    [FieldOffset(120)]
-    [FramePrinter.FixedArrayAttribute(typeof(FP), 3)]
-    private fixed Byte _Offset_[24];
-    [FieldOffset(104)]
-    public FP HeightScale;
-    [FieldOffset(16)]
+    [FieldOffset(7)]
     [ExcludeFromPrototype()]
-    public QBoolean MontyOut;
-    [FieldOffset(1)]
+    [FramePrinter.FixedArrayAttribute(typeof(CannonDecision), 3)]
+    private fixed Byte _CurrentAction_[3];
+    [FieldOffset(120)]
+    [FramePrinter.FixedArrayAttribute(typeof(FPVector3), 3)]
+    private fixed Byte _CannonOffset_[72];
+    [FieldOffset(96)]
+    [FramePrinter.FixedArrayAttribute(typeof(FP), 3)]
+    private fixed Byte _MoleSeats_[24];
+    [FieldOffset(0)]
     [ExcludeFromPrototype()]
     public Byte AttackCooldown;
-    [FieldOffset(112)]
+    [FieldOffset(88)]
     [ExcludeFromPrototype()]
     public FP LastMontyPos;
-    [FieldOffset(56)]
-    [ExcludeFromPrototype()]
-    public EntityRef Bombud;
     [FieldOffset(6)]
     [ExcludeFromPrototype()]
     public Byte waitTime;
@@ -5383,9 +5388,19 @@ namespace Quantum {
         fixed (byte* p = _FacingDirection_) { return new FixedArray<FP>(p, 8, 3); }
       }
     }
-    public readonly FixedArray<FP> Offset {
+    public readonly FixedArray<CannonDecision> CurrentAction {
       get {
-        fixed (byte* p = _Offset_) { return new FixedArray<FP>(p, 8, 3); }
+        fixed (byte* p = _CurrentAction_) { return new FixedArray<CannonDecision>(p, 1, 3); }
+      }
+    }
+    public readonly FixedArray<FPVector3> CannonOffset {
+      get {
+        fixed (byte* p = _CannonOffset_) { return new FixedArray<FPVector3>(p, 24, 3); }
+      }
+    }
+    public readonly FixedArray<FP> MoleSeats {
+      get {
+        fixed (byte* p = _MoleSeats_) { return new FixedArray<FP>(p, 8, 3); }
       }
     }
     public override readonly Int32 GetHashCode() {
@@ -5397,20 +5412,18 @@ namespace Quantum {
         hash = hash * 31 + BulletBillPrototype.GetHashCode();
         hash = hash * 31 + BombudPrototype.GetHashCode();
         hash = hash * 31 + ReusableTimer.GetHashCode();
-        hash = hash * 31 + SegmentNumber.GetHashCode();
         hash = hash * 31 + MoleEntity.GetHashCode();
         hash = hash * 31 + SegmentEntity.GetHashCode();
+        hash = hash * 31 + NextActionId.GetHashCode();
         hash = hash * 31 + CannonActionCooldown.GetHashCode();
-        hash = hash * 31 + ActionId.GetHashCode();
-        hash = hash * 31 + (Byte)Decision;
+        hash = hash * 31 + SegmentNumber.GetHashCode();
         hash = hash * 31 + SegmentCreationTimer.GetHashCode();
         hash = hash * 31 + HashCodeUtils.GetArrayHashCode(FacingDirection);
-        hash = hash * 31 + HashCodeUtils.GetArrayHashCode(Offset);
-        hash = hash * 31 + HeightScale.GetHashCode();
-        hash = hash * 31 + MontyOut.GetHashCode();
+        hash = hash * 31 + HashCodeUtils.GetArrayHashCode(CurrentAction);
+        hash = hash * 31 + HashCodeUtils.GetArrayHashCode(CannonOffset);
+        hash = hash * 31 + HashCodeUtils.GetArrayHashCode(MoleSeats);
         hash = hash * 31 + AttackCooldown.GetHashCode();
         hash = hash * 31 + LastMontyPos.GetHashCode();
-        hash = hash * 31 + Bombud.GetHashCode();
         hash = hash * 31 + waitTime.GetHashCode();
         hash = hash * 31 + decideSegmentTimer.GetHashCode();
         return hash;
@@ -5418,28 +5431,26 @@ namespace Quantum {
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (Tank*)ptr;
-        serializer.Stream.Serialize(&p->ActionId);
         serializer.Stream.Serialize(&p->AttackCooldown);
         serializer.Stream.Serialize(&p->CannonActionCooldown);
+        serializer.Stream.Serialize(&p->NextActionId);
         serializer.Stream.Serialize(&p->ReusableTimer);
         serializer.Stream.Serialize(&p->SegmentCreationTimer);
         serializer.Stream.Serialize(&p->SegmentNumber);
         serializer.Stream.Serialize(&p->waitTime);
-        serializer.Stream.Serialize((Byte*)&p->Decision);
+        FixedArray.Serialize(p->CurrentAction, serializer, Statics.SerializeCannonDecision);
         serializer.Stream.Serialize((Byte*)&p->State);
         serializer.Stream.Serialize(&p->decideSegmentTimer);
-        QBoolean.Serialize(&p->MontyOut, serializer);
         AssetRef.Serialize(&p->BombudPrototype, serializer);
         AssetRef.Serialize(&p->BulletBillPrototype, serializer);
         AssetRef.Serialize(&p->MolePrototype, serializer);
         AssetRef.Serialize(&p->SegmentPrototype, serializer);
-        EntityRef.Serialize(&p->Bombud, serializer);
         EntityRef.Serialize(&p->MoleEntity, serializer);
         EntityRef.Serialize(&p->SegmentEntity, serializer);
         FixedArray.Serialize(p->FacingDirection, serializer, Statics.SerializeFP);
-        FP.Serialize(&p->HeightScale, serializer);
         FP.Serialize(&p->LastMontyPos, serializer);
-        FixedArray.Serialize(p->Offset, serializer, Statics.SerializeFP);
+        FixedArray.Serialize(p->MoleSeats, serializer, Statics.SerializeFP);
+        FixedArray.Serialize(p->CannonOffset, serializer, Statics.SerializeFPVector3);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -6132,11 +6143,11 @@ namespace Quantum {
         return result;
       }
     }
-    /// <summary>0.44</summary>
-    public static FP _0_44 {
+    /// <summary>7.5</summary>
+    public static FP _7_50 {
       [MethodImpl(MethodImplOptions.AggressiveInlining)] get { 
         FP result;
-        result.RawValue = 28836;
+        result.RawValue = 491520;
         return result;
       }
     }
@@ -6282,8 +6293,8 @@ namespace Quantum {
       public const Int64 _2_75 = 180224;
       /// <summary>0.005</summary>
       public const Int64 _0_005 = 328;
-      /// <summary>0.44</summary>
-      public const Int64 _0_44 = 28836;
+      /// <summary>7.5</summary>
+      public const Int64 _7_50 = 491520;
       /// <summary>0.05</summary>
       public const Int64 PhysicsRaycastSkin = 3277;
       /// <summary>0.005</summary>
@@ -7003,6 +7014,8 @@ namespace Quantum {
     public static FrameSerializer.Delegate SerializePowerupTransitionAnimation;
     public static FrameSerializer.Delegate SerializePhysicsQueryRef;
     public static FrameSerializer.Delegate SerializePhysicsContact;
+    public static FrameSerializer.Delegate SerializeFPVector3;
+    public static FrameSerializer.Delegate SerializeCannonDecision;
     public static FrameSerializer.Delegate SerializeBannedPlayerInfo;
     public static FrameSerializer.Delegate SerializePlayerRef;
     public static FrameSerializer.Delegate SerializePlayerInformation;
@@ -7018,6 +7031,8 @@ namespace Quantum {
       SerializePowerupTransitionAnimation = Quantum.PowerupTransitionAnimation.Serialize;
       SerializePhysicsQueryRef = PhysicsQueryRef.Serialize;
       SerializePhysicsContact = Quantum.PhysicsContact.Serialize;
+      SerializeFPVector3 = FPVector3.Serialize;
+      SerializeCannonDecision = (v, s) => {{ s.Stream.Serialize((Byte*)v); }};
       SerializeBannedPlayerInfo = Quantum.BannedPlayerInfo.Serialize;
       SerializePlayerRef = PlayerRef.Serialize;
       SerializePlayerInformation = Quantum.PlayerInformation.Serialize;
