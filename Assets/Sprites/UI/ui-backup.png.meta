@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0a017544778b8524c9c8e7a18281a37f
+guid: fa9d200f810055c45aa09c8a17a603f4
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -2705,7 +2705,7 @@ TextureImporter:
         width: 19
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2727,7 +2727,7 @@ TextureImporter:
         width: 20
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2749,7 +2749,7 @@ TextureImporter:
         width: 12
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2771,7 +2771,7 @@ TextureImporter:
         width: 20
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2793,7 +2793,7 @@ TextureImporter:
         width: 20
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2815,7 +2815,7 @@ TextureImporter:
         width: 13
         height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2837,7 +2837,7 @@ TextureImporter:
         width: 13
         height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2846,6 +2846,72 @@ TextureImporter:
       bones: []
       spriteID: 69f7813917a82a3498aa734b20301580
       internalID: -2039471840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: coinnumber_colon
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 33
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd9e2fe9d3ea3f44caded722bd3de68f
+      internalID: 151969705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: coinnumber_plus
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 33
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d51d27e44eafd2b4bb89f2b65d4f0327
+      internalID: -931103537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: coinnumber_minus
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 33
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5351d8566b9f25c42aee8bf0cebe8137
+      internalID: -1665695543
       vertices: []
       indices: 
       edges: []
@@ -2877,6 +2943,9 @@ TextureImporter:
       coinnumber_7: -1247146109
       coinnumber_8: 1239800451
       coinnumber_9: -53618040
+      coinnumber_colon: 151969705
+      coinnumber_minus: -1665695543
+      coinnumber_plus: -931103537
       connection_bad: 116447381
       connection_disconnected: 762531918
       connection_fair: 1021722474

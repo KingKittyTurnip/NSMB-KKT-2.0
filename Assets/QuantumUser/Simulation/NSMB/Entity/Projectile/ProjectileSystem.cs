@@ -152,7 +152,9 @@ namespace Quantum {
 
             if (projectile->BounceOff && f.Has<Enemy>(hitEntity)) {
                 //stop moving but don't break
+                var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(projectileEntity);
                 projectile->Speed = 0;
+                physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X, -FP._1_50, FP._1_50);
             } else if (projectileAsset.DestroyOnHit) {
                 Destroy(f, projectileEntity, projectileAsset.DestroyParticleEffect);
             } else if (projectileAsset.Bounce) {

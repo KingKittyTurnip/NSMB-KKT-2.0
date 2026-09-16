@@ -28,6 +28,8 @@ MonoBehaviour:
   BlockSpawnSoundEffect: 69
   Flags: 27
   MaxNumberOfItems: 0
+  CanSpawnAfterSeconds:
+    RawValue: 0
   TranslationKey: coinitem.1up
   CameraSpawnOffset:
     X:
@@ -40,9 +42,10 @@ MonoBehaviour:
   SoundPlaysEverywhere: 0
   SoundEffect: 78
   ReserveSprite: {fileID: 0}
+  IsSmart: 0
   AvoidPlayers: 0
   Speed:
-    RawValue: 0
+    RawValue: 131072
   BounceStrength:
     RawValue: 0
   TerminalVelocity:

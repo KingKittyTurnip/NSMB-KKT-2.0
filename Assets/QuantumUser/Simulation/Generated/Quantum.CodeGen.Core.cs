@@ -217,7 +217,7 @@ namespace Quantum {
     Doneflower,
     FrostedCake,
     TurnipBasket,
-    e2,
+    light,
   }
   public enum SpawnReason : byte {
     Normal,
@@ -240,12 +240,17 @@ namespace Quantum {
     QSwitch_2,
     QSwitch_3,
     QSwitch_4,
-    QSwitch_5,
-    QSwitch_6,
-    QSwitch_7,
-    QSwitch_8,
-    QSwitch_9,
-    QSwitch_10,
+    MuteMusic,
+    Clean1,
+    Clean2,
+    Clean3,
+    Clean4,
+    Clean5,
+    Clean6,
+    Clean7,
+    Clean8,
+    Clean9,
+    Clean10,
   }
   public enum TanoombaState : byte {
     Idling,
@@ -2671,6 +2676,26 @@ namespace Quantum {
         FP.Serialize(&p->ReusableTimer, serializer);
         FPVector2.Serialize(&p->PreviousPostPosition, serializer);
         FPVector2.Serialize(&p->TargetPosition, serializer);
+    }
+  }
+  [StructLayout(LayoutKind.Explicit)]
+  public unsafe partial struct Clean : Quantum.IComponent {
+    public const Int32 SIZE = 4;
+    public const Int32 ALIGNMENT = 1;
+    [FieldOffset(1)]
+    private fixed Byte _alignment_padding_[3];
+    [FieldOffset(0)]
+    public Byte Counter;
+    public override readonly Int32 GetHashCode() {
+      unchecked { 
+        var hash = 12923;
+        hash = hash * 31 + Counter.GetHashCode();
+        return hash;
+      }
+    }
+    public static void Serialize(void* ptr, FrameSerializer serializer) {
+        var p = (Clean*)ptr;
+        serializer.Stream.Serialize(&p->Counter);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -6449,6 +6474,8 @@ namespace Quantum {
       BuildSignalsArrayOnComponentRemoved<CharacterController2D>();
       BuildSignalsArrayOnComponentAdded<CharacterController3D>();
       BuildSignalsArrayOnComponentRemoved<CharacterController3D>();
+      BuildSignalsArrayOnComponentAdded<Quantum.Clean>();
+      BuildSignalsArrayOnComponentRemoved<Quantum.Clean>();
       BuildSignalsArrayOnComponentAdded<Quantum.Clock>();
       BuildSignalsArrayOnComponentRemoved<Quantum.Clock>();
       BuildSignalsArrayOnComponentAdded<Quantum.CloudBillPlatform>();
@@ -7078,6 +7105,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.ChainChompState), 1);
       typeRegistry.Register(typeof(CharacterController2D), CharacterController2D.SIZE);
       typeRegistry.Register(typeof(CharacterController3D), CharacterController3D.SIZE);
+      typeRegistry.Register(typeof(Quantum.Clean), Quantum.Clean.SIZE);
       typeRegistry.Register(typeof(Quantum.Clock), Quantum.Clock.SIZE);
       typeRegistry.Register(typeof(Quantum.ClockType), 1);
       typeRegistry.Register(typeof(Quantum.CloudBillPlatform), Quantum.CloudBillPlatform.SIZE);
@@ -7254,7 +7282,7 @@ namespace Quantum {
       typeRegistry.Register(typeof(Quantum.bossMarioContactResult), 4);
     }
     static partial void InitComponentTypeIdGen() {
-      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 76)
+      ComponentTypeId.Reset(ComponentTypeId.BuiltInComponentCount + 77)
         .AddBuiltInComponents()
         .Add<Quantum.BetterPhysicsObject>(Quantum.BetterPhysicsObject.Serialize, Quantum.BetterPhysicsObject.OnAdded, Quantum.BetterPhysicsObject.OnRemoved, ComponentFlags.None)
         .Add<Quantum.BigStar>(Quantum.BigStar.Serialize, null, null, ComponentFlags.None)
@@ -7271,6 +7299,7 @@ namespace Quantum {
         .Add<Quantum.Cataquack>(Quantum.Cataquack.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Cauldron>(Quantum.Cauldron.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.ChainChomp>(Quantum.ChainChomp.Serialize, null, null, ComponentFlags.None)
+        .Add<Quantum.Clean>(Quantum.Clean.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.Clock>(Quantum.Clock.Serialize, null, null, ComponentFlags.None)
         .Add<Quantum.CloudBillPlatform>(Quantum.CloudBillPlatform.Serialize, Quantum.CloudBillPlatform.OnAdded, Quantum.CloudBillPlatform.OnRemoved, ComponentFlags.None)
         .Add<Quantum.Coin>(Quantum.Coin.Serialize, null, null, ComponentFlags.None)

@@ -1,0 +1,7 @@
+component Clean {
+    byte Counter;
+}
+
+event CleanCounterUpdate {
+    byte Counter;
+}

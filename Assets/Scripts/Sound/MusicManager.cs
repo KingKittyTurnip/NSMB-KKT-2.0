@@ -7,6 +7,7 @@ using Quantum;
 using UnityEngine;
 using UnityEngine.Audio;
 using static NSMB.Utilities.QuantumViewUtils;
+using System.Collections;
 
 namespace NSMB.Sound {
     public unsafe class MusicManager : QuantumSceneViewComponent<StageContext> {
@@ -152,6 +153,24 @@ namespace NSMB.Sound {
             if (PredictedFrame.Global->GameState == GameState.Playing) {
                 HandleMusic(true);
             }
+        }
+
+        //KKT Mod
+        public void OnMuteMusic() {
+            musicPlayer.AudioSource.volume = 0;
+        }
+        public void OnUnMuteMusicForABit() {
+            StartCoroutine(UnMuteToReMute());
+        }
+        private IEnumerator UnMuteToReMute() {
+            //trigger level loading transition
+            float waitTime = Random.Range(1, 6) * 5f;
+            yield return new WaitForSeconds(waitTime);
+            waitTime = Random.Range(1, 6) * 10f;
+            musicPlayer.AudioSource.time = Random.Range(0f, 10f);
+            musicPlayer.AudioSource.volume = 1;
+            yield return new WaitForSeconds(waitTime);
+            musicPlayer.AudioSource.volume = 0;
         }
     }
 }

@@ -375,11 +375,11 @@ namespace Quantum {
                 ItemChanceType.Middling => new(2, -1, -1),//2nd stage powerups
                 ItemChanceType.LastCommon => new(-FP._0_20, 0, 3), //weaker catchup, not guerenteed
                 ItemChanceType.LastRare => new(-3, -1, 5), //strong catchup, guerenteed if yur very behind
-                ItemChanceType.Joke => new(FP._0_50, -FP._0_50, -1), //jokes
+                ItemChanceType.Joke => new(FP._0_50, 0, -1), //jokes, first place should be able to get them
                 _ => new(0, 0, 0),
             };
 
-            int starsToWin = f.Global->Rules.StarsToWin;
+            int starsToWin = f.Global->Rules.IsStarsEnabled ? f.Global->Rules.StarsToWin : 1;
 
             FP starsAvg = GetAverageObjectiveCount(f);
             int starsFirstPlace = GetFirstPlaceObjectiveCount(f);

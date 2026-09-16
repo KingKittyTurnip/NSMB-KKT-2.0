@@ -1,6 +1,7 @@
 using Quantum;
 using UnityEngine;
 using System.Collections;
+using NSMB.Sound;
 
 public unsafe class QuestionSwitchAnimator : QuantumEntityViewComponent {
 
@@ -18,6 +19,26 @@ public unsafe class QuestionSwitchAnimator : QuantumEntityViewComponent {
 
     private void OnAnimation(EventQuestionSwitchAnimation e) {
         if (e.Entity != EntityRef) {
+            return;
+        }
+
+        if (e.flag >= SwitchFlag.MuteMusic) {
+            MusicManager[] musicManager = Object.FindObjectsByType<MusicManager>(FindObjectsSortMode.None);
+            foreach (var i in musicManager) {
+                switch (e.flag) {
+                case SwitchFlag.MuteMusic:
+                    i.OnMuteMusic();
+                    break;
+                default:
+                    i.OnUnMuteMusicForABit();
+                    break;
+                }
+                Debug.Log("Found Mute Secret");
+            }
+            if (e.Activate) {
+                animator.Play("Hit");
+                sfx.PlayOneShot(ActivateSound);
+            }
             return;
         }
 

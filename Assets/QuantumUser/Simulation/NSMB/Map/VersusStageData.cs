@@ -50,6 +50,7 @@ public unsafe class VersusStageData : AssetObject, ISoundOverrideProvider {
     [Header("-- UI")]
     public ColorRGBA UIColor = new(24, 178, 170);
     public bool HidePlayersOnMinimap;
+    public bool NoMinimap;
     //KKT Mod, in this mode the minimap will only show icons that are inside the area in the list you are in
     public bool MultiAreaMap;
     public List<Vector2> YAreaBounds;
@@ -79,6 +80,7 @@ public unsafe class VersusStageData : AssetObject, ISoundOverrideProvider {
     //We use these in the "complex" maps, since it's mechanics aren't built for the entire mod
     public bool StageIsComplex = false;
     public AssetRef<OverwriteRules> OverwriteRules;
+    public bool DoNotEndUntilAllDead = false;
 
     [HideInInspector] public StageTileInstance[] TileData;
     [HideInInspector] public FPVector2[] BigStarSpawnpoints;

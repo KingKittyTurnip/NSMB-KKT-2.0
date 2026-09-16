@@ -26,7 +26,7 @@ namespace NSMB.UI.Game {
         //---Serialized Variables
         [SerializeField] private PlayerElements playerElements;
         [SerializeField] private CanvasGroup toggler;
-        [SerializeField] private TrackIcon playerTrackTemplate, starTrackTemplate, starCoinTrackTemplate, objectiveCoinTrackTemplate, starballgoalTrackTemplate, heftyHazardTrackTemplate, hazardTrackTemplate;
+        [SerializeField] private TrackIcon playerTrackTemplate, starTrackTemplate, starCoinTrackTemplate, objectiveCoinTrackTemplate;
         [SerializeField] private Sprite storedItemNull;
         [SerializeField] private TMP_Text uiTeamObjective, uiMainObjective, uiCoins, uiDebug, uiLives, uiCountdown;
         [SerializeField] private Image itemReserve, itemColor;
@@ -53,6 +53,10 @@ namespace NSMB.UI.Game {
         private bool justResynced;
 
         private Coroutine endGameSequenceCoroutine, reserveSummonCoroutine;
+
+        //KKT Mod
+        [SerializeField] private TrackIcon starballgoalTrackTemplate, heftyHazardTrackTemplate, hazardTrackTemplate;
+        [SerializeField] private GameObject Track;
 
         public override void OnEnable() {
             base.OnEnable();
@@ -117,6 +121,7 @@ namespace NSMB.UI.Game {
 
             PlayerTrackIcon.HideAllPlayerIcons = stage.HidePlayersOnMinimap;
             boos.SetActive(stage.HidePlayersOnMinimap);
+            Track.SetActive(!stage.NoMinimap);
             StartCoroutine(UpdatePingTextCoroutine());
 
             QuantumCallback.Subscribe<CallbackUpdateView>(this, OnUpdateView);
@@ -269,9 +274,9 @@ namespace NSMB.UI.Game {
 
         private void UpdateElementVisibility(Frame f, bool marioExists) {
             teamsParent.SetActive(marioExists && f.Global->Rules.TeamsEnabled);
-            starsParent.SetActive(marioExists);
+            starsParent.SetActive(marioExists && f.Global->Rules.IsStarsEnabled);
             livesParent.SetActive(marioExists && f.Global->Rules.IsLivesEnabled);
-            coinsParent.SetActive(marioExists);
+            coinsParent.SetActive(marioExists && f.Global->Rules.IsCoinsEnabled);
             timerParent.SetActive(f.Global->Rules.IsTimerEnabled);
             reserveItemBox.SetActive(marioExists);
         }

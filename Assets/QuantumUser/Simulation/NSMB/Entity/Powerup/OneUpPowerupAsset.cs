@@ -17,6 +17,7 @@ public unsafe class OneUpPowerupAsset : PowerupAsset {
             }
         }
 
+        f.Signals.OnMarioPlayerBecameInvincible(entity);
         return PowerupReserveResult.CollectNewIgnoreOld;
     }
 }

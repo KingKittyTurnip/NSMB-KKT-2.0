@@ -7,7 +7,9 @@ namespace Quantum {
         public AssetRef<EntityPrototype> BigStarPrototype;
 
         public override void EnableGamemode(Frame f) {
-            f.SystemEnable<BigStarSystem>();
+            if (f.Global->Rules.StarsToWin > 0) {
+                f.SystemEnable<BigStarSystem>();
+            }
             f.Global->AutomaticStageRefreshTimer = f.Global->AutomaticStageRefreshInterval = 0;
         }
 
@@ -50,7 +52,7 @@ namespace Quantum {
 
             // End Condition: team gets to enough stars
             int? winningTeam = GetWinningTeam(f, out int stars);
-            if (winningTeam != null && stars >= f.Global->Rules.StarsToWin) {
+            if (winningTeam != null && stars >= f.Global->Rules.StarsToWin && f.Global->Rules.IsStarsEnabled) {
                 // <team> wins
                 GameLogicSystem.EndGame(f, false, winningTeam.Value);
                 return;
@@ -78,7 +80,7 @@ namespace Quantum {
         public override bool IsFastMusicEnabled(Frame f) {
             // Additional check- is any one player about to win
             GetWinningTeam(f, out int winningTeamStars);
-            if (winningTeamStars + 1 >= f.Global->Rules.StarsToWin) {
+            if (winningTeamStars + 1 >= f.Global->Rules.StarsToWin && f.Global->Rules.IsStarsEnabled) {
                 return true;
             }
 

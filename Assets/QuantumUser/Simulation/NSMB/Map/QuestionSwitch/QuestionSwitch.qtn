@@ -18,12 +18,17 @@ enum SwitchFlag : Byte {
     QSwitch_2,
     QSwitch_3,
     QSwitch_4,
-    QSwitch_5,
-    QSwitch_6,
-    QSwitch_7,
-    QSwitch_8,
-    QSwitch_9,
-    QSwitch_10,
+    MuteMusic,
+    Clean1,
+    Clean2,
+    Clean3,
+    Clean4,
+    Clean5,
+    Clean6,
+    Clean7,
+    Clean8,
+    Clean9,
+    Clean10,
 }
 
 signal OnQuestionSwitchSignal(SwitchFlag flag, bool Activated);
@@ -32,4 +37,5 @@ event QuestionSwitchAnimation {
     bool ForHitSwitch;
     EntityRef Entity;
     bool Activate;
+    SwitchFlag flag;
 }

@@ -8,6 +8,7 @@ namespace Quantum {
         public readonly bool IsTimerEnabled => TimerMinutes > 0;
 
         //KKT Mod
+        public readonly bool IsStarsEnabled => StarsToWin > 0;
         public readonly bool IsCoinsEnabled => CoinsForPowerup > 0;
         public readonly FP RealHeftyPercent => HeftyPercentage switch {//hardcoded nonsense
             0 => -1,

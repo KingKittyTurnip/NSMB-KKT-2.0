@@ -27,7 +27,7 @@ namespace Quantum {
                         f.Unsafe.GetPointer<PhysicsObject>(marioEntity)->Velocity.X = 0;
                     }
 
-                    f.Events.QuestionSwitchAnimation(true, switchEntity, true);
+                    f.Events.QuestionSwitchAnimation(true, switchEntity, true, QSwitch->SignalSent);
                     f.Signals.OnQuestionSwitchSignal(QSwitch->SignalSent, true);
                 }
             }
@@ -41,7 +41,7 @@ namespace Quantum {
                     QSwitch->Pressed = Activated;
                     collider->Shape.Box.Extents = Activated ? QSwitch->UnpressedSize : QSwitch->PressedSize;
                     collider->Shape.Centroid.Y = collider->Shape.Box.Extents.Y;
-                    f.Events.QuestionSwitchAnimation(false, entity, Activated);
+                    f.Events.QuestionSwitchAnimation(false, entity, Activated, flag);
                 }
             }
         }

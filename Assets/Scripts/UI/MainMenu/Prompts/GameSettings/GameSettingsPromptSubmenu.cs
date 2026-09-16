@@ -10,9 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI.Table;
 using Navigation = UnityEngine.UI.Navigation;
 
 namespace NSMB.UI.MainMenu.Submenus.Prompts {
@@ -52,6 +54,11 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
         private bool _roomIdVisible;
 
         private List<GameObject> allMapListGameObjects = new();
+        private List<GameObject> allhazardListGameObjects = new();
+
+        [Header("KKT Mod")]
+        [SerializeField] private GameObject hazardContent;
+        [SerializeField] private HazardSelectionButton hazardlistButtonTemplate;
 
         public override void Initialize() {
             base.Initialize();
@@ -66,6 +73,8 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
 
             headerTemplate.gameObject.SetActive(false);
             horizontalTemplate.SetActive(false);
+            stageSelectionButtonTemplate.gameObject.SetActive(false);
+            //KKT Mod
             stageSelectionButtonTemplate.gameObject.SetActive(false);
         }
 
@@ -91,6 +100,10 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             List<StageSelectionButton> previousButtonRow = null;
             List<StageSelectionButton> currentButtonRow = null;
             foreach (var grouping in stageGroups) {
+                if (grouping.Key == "Hide") {
+                    //do not show in map list, KKT Mod
+                    continue;
+                }
                 TMP_Text newHeader = Instantiate(headerTemplate, headerTemplate.transform.parent);
                 TMP_Translatable translatable = newHeader.GetComponent<TMP_Translatable>();
                 translatable.key = grouping.Key ?? "level.header.none";
@@ -164,6 +177,40 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             }
         }
 
+        public unsafe void PopulateHazardOrItems(bool Items) {
+            foreach (var go in allhazardListGameObjects) {
+                Destroy(go);
+            }
+            allhazardListGameObjects.Clear();
+
+            QuantumGame game = QuantumRunner.DefaultGame;
+            Frame f = game.Frames.Predicted;
+            var rules = f.ResolveList(f.Global->Rules.Hazards);
+
+            TranslationManager tm = GlobalController.Instance.translationManager;
+            HazardSelectionButton previousButton = null;
+            for (int i = 0; i < rules.Count; i++) {
+                previousButton = null;
+
+                HazardSelectionButton newButton = Instantiate(hazardlistButtonTemplate, hazardContent.transform);
+                newButton.Initialize(rules[i].PrototypeRef, i);
+                newButton.gameObject.SetActive(true);
+                allhazardListGameObjects.Add(newButton.gameObject);
+
+                if (previousButton) {
+                    var prevNav = previousButton.navigation;
+                    prevNav.selectOnDown = newButton;
+                    previousButton.navigation = prevNav;
+
+                    var newNav = newButton.navigation;
+                    newNav.selectOnUp = previousButton;
+                    newButton.navigation = newNav;
+                }
+
+                previousButton = newButton;
+            }
+        }
+
         private int IndexOfNullIsMax<T>(IReadOnlyList<T> arr, T thing) where T : IComparable {
             int ret = arr.IndexOf(x => x.Equals(thing));
             if (ret == -1) {
@@ -201,6 +248,7 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             base.Show(first);
 
             PopulateMaps();
+            PopulateHazardOrItems(false);
 
             Room currentRoom = NetworkHandler.Client.CurrentRoom;
             maxPlayerSlider.value = currentRoom.MaxPlayers;

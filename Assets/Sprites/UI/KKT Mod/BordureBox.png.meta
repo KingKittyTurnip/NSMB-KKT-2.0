@@ -127,7 +127,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 43
+        y: 44
         width: 20
         height: 20
       alignment: 0
@@ -285,7 +285,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -294,6 +294,28 @@ TextureImporter:
       bones: []
       spriteID: 7d3357873abaa404f88a5710c6c616dc
       internalID: -1303071849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Trash
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4de777b9bef30a94c8f6baeff2e3d4db
+      internalID: -501526516
       vertices: []
       indices: 
       edges: []
@@ -319,6 +341,7 @@ TextureImporter:
       GameModeAdded: -1303071849
       GameModeRemove: -599519968
       ToolTip: 225822345
+      Trash: -501526516
       Warning: 636651934
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

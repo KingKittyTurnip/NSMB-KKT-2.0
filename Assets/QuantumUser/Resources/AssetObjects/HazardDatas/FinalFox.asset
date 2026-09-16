@@ -20,76 +20,51 @@ MonoBehaviour:
     Name: Final Destonation
     Description: No Items. Fox Only.
     DefaultRules:
-      AdvancedLobby:
-        Value: 0
       Stage:
         Id:
           Value: 462791273099701333
+      ChooseMode:
+        Value: 0
+      RandomDisabledStages: []
       Gamemode:
         Id:
           Value: 326486899682662279
-      GamemodeStarChasersEnabled:
-        Value: 0
       StarsToWin: 15
-      StarFrequency: 3
-      GamemodeCoinRunnersEnabled:
-        Value: 0
-      StarcoinFrequency: 0
-      GamemodeBalloonBattleEnabled:
-        Value: 0
-      MaxBalloons: 0
-      GamemodeBombchasersEnabled:
-        Value: 0
+      StarFrequency: 30
       CoinsForPowerup: 0
-      Items:
-      - Chance:
-          Value: 0
-        Items: []
-      - Chance:
-          Value: 1
-        Items: []
-      - Chance:
-          Value: 2
-        Items:
-        - Name: Mushroom
-          PowerupPrototype:
-            Id:
-              Value: 1268531089014898302
-          Team: 255
-          Extra: 
-      - Chance:
-          Value: 3
-        Items: []
-      - Chance:
-          Value: 4
-        Items: []
-      - Chance:
-          Value: 5
-        Items: []
-      - Chance:
-          Value: 6
-        Items: []
-      - Chance:
-          Value: 7
-        Items: []
-      - Chance:
-          Value: 8
-        Items: []
-      - Chance:
-          Value: 9
-        Items: []
-      - Chance:
-          Value: 10
-        Items: []
-      HazardsEnabled:
+      RouletteBlocksEnabled:
         Value: 0
-      MaxHazards: 0
-      HazardFrequency: 0
-      HeftyPercentage:
-        RawValue: 0
-      HazardLifetime: 0
-      Hazards: []
+      Items:
+      - PrototypeRef: 0
+        Team: 255
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
       Lives: 5
       TimerMinutes: 10
       TeamsEnabled:
+        Value: 0
+      TeamAttack:
+        Value: 0
+      StarFountain: 0
+      CoinDeathPenalty: 0
+      CoinItemCustomSpawnWeights: []
+      ModifierHazardsEnabled:
+        Value: 0
+      MaxHazards: 0
+      HazardFrequency: 0
+      HeftyPercentage: 0
+      HazardLifetime: 0
+      Hazards: []
+      ModifierBulbEnabled:
+        Value: 0
+      BulbAbilityCount: 0
+      HostControl:
+        Value: 0
+      DisableStageRestrictions:
+        Value: 0
+      DisableComplexStageRestrictions:
+        Value: 0
+      EveryItemHasTheSameChance:
         Value: 0
