@@ -546,6 +546,8 @@ MonoBehaviour:
       Value: 0
     IsWaterSolid:
       Value: 0
+    SinksInQuickSandAndGoo:
+      Value: 0
     BreakMegaObjects:
       Value: 0
     WindImmune:
@@ -672,8 +674,8 @@ MonoBehaviour:
       X:
         RawValue: 65536
       Y:
-        RawValue: 104858
-    AutoBreakFrames: 45
+        RawValue: 65536
+    AutoBreakFrames: 90
     AutoBreakGrabAdditionalFrames: 0
     AutoBreakWhileHeld:
       Value: 0
@@ -710,7 +712,7 @@ MonoBehaviour:
   FireBallA: {fileID: 8300000, guid: 6977f4f10dff8744f857fbf09e4fb54e, type: 3}
   FireballB: {fileID: 8300000, guid: 8bc35170bfe759d40b367adfc17cf0f7, type: 3}
   Hurt: {fileID: 8300000, guid: 71a24f47c087d4842ad1452535a7c9fa, type: 3}
-  Cyote: {fileID: 8300000, guid: fcb1a48d904d0f643a92903a83f317d1, type: 3}
+  Cyote: {fileID: 8300000, guid: e1faed249f9f48448aaa9939810abf19, type: 3}
 --- !u!1001 &515229597465591566
 PrefabInstance:
   m_ObjectHideFlags: 0

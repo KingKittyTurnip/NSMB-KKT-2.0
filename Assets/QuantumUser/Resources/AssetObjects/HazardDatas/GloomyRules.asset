@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31d5cbd9d0a86fd4ab81898eb4718ac1, type: 3}
+  m_Name: GloomyRules
+  m_EditorClassIdentifier: 
+  Identifier:
+    Path: QuantumUser/Resources/AssetObjects/HazardDatas/GloomyRules
+    Guid:
+      Value: 470123457569828506
+  BaseRulesList:
+    Name: Flipsidown Rules
+    Description: Overwrites the current ruleset for this complex map to work well
+    DefaultRules:
+      Stage:
+        Id:
+          Value: 521702095770504271
+      ChooseMode:
+        Value: 0
+      RandomDisabledStages: []
+      Gamemode:
+        Id:
+          Value: 326486899682662279
+      StarsToWin: 15
+      StarFrequency: 100
+      CoinsForPowerup: 5
+      RouletteBlocksEnabled:
+        Value: 0
+      Items:
+      - PrototypeRef: 0
+        Team: 255
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
+      - PrototypeRef: 1
+        Team: 255
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
+      - PrototypeRef: 2
+        Team: 255
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
+      - PrototypeRef: 3
+        Team: 253
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
+      - PrototypeRef: 4
+        Team: 255
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
+      - PrototypeRef: 5
+        Team: 255
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
+      Lives: 0
+      TimerMinutes: 0
+      TeamsEnabled:
+        Value: 0
+      TeamAttack:
+        Value: 0
+      StarFountain: 0
+      CoinDeathPenalty: 0
+      CoinItemCustomSpawnWeights: []
+      ModifierHazardsEnabled:
+        Value: 1
+      MaxHazards: 3
+      HazardFrequency: 60
+      HeftyPercentage: 7
+      HazardLifetime: 40
+      Hazards:
+      - PrototypeRef: 61
+        Team: 255
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
+      - PrototypeRef: 22
+        Team: 255
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
+      - PrototypeRef: 44
+        Team: 255
+        ExtraSlotA: 0
+        ExtraSlotB: 0
+        ExtraSlotC: 0
+        ExtraSlotD: 0
+      ModifierBulbEnabled:
+        Value: 0
+      BulbAbilityCount: 0
+      HostControl:
+        Value: 0
+      DisableStageRestrictions:
+        Value: 0
+      DisableComplexStageRestrictions:
+        Value: 0
+      EveryItemHasTheSameChance:
+        Value: 0

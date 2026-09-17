@@ -86,6 +86,7 @@ namespace Quantum {
                       new WhompKingSystem(),
                       new KingBooSystem(),
                       new MontyTankSystem(),
+                      new CleanSystem(),
 
                       new VoidwallSystem(),
 

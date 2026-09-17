@@ -19,7 +19,6 @@ namespace Quantum {
             f.Context.Interactions.Register<MarioPlayer, Bowser>(f, OnMarioBowserInteraction);
             f.Context.Interactions.Register<Projectile, Bowser>(f, OnProjectileBowserInteraction);
             f.Context.Interactions.Register<Boss, Bowser>(f, OnBossBowserInteraction);
-            f.Context.Interactions.Register<Enemy, Bowser>(f, OnEnemyBowserInteraction);
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -53,7 +52,7 @@ namespace Quantum {
                 f.Unsafe.GetPointer<Transform2D>(boss->ControllerPlayer)->Position = transform->Position;
 
                 //Groundpounding = inputs.Down.WasPressed;
-                Jump = inputs.Jump.WasPressed;
+                Jump = mario->JumpBufferFrames > 0;
                 Jumpheld = inputs.Jump.IsDown;
                 Groundpounding = inputs.Down.WasPressed;
                 Fireball = inputs.PowerupAction.WasPressed && bowser->AttackCooldown == 0;
@@ -70,8 +69,7 @@ namespace Quantum {
             } else {
                 Boss.GetClosestPlayer(f, transform->Position, EntityRef.None, out var TargetEntity, out var distance);
 
-                if ((bowser->waitTime > 90 && bowser->State == BowserState.Attacking) || bowser->waitTime <= 90)
-                    QuantumUtils.Decrement(ref bowser->waitTime);
+                QuantumUtils.Decrement(ref bowser->waitTime);
 
                 if (bowser->JumpFromAttackCounter > 2)
                     Jump = true;
@@ -438,26 +436,6 @@ namespace Quantum {
             f.Signals.BossToBossInteraction(thisEntity, bossEntity);
             f.Signals.BossToBossInteraction(bossEntity, thisEntity);
         }
-        public void OnEnemyBowserInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
-            var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (!boss->BossCanInteract())
-                return;
-
-            if (f.Unsafe.TryGetPointer(enemyEntity, out Goomba* goomba)) {
-                goomba->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
-            } else if (f.Unsafe.TryGetPointer(enemyEntity, out Koopa* koopa)) {
-                if (koopa->IsKicked) {
-                    boss->BossHarmed(f, thisEntity, f.Unsafe.GetPointer<Enemy>(enemyEntity)->FacingRight, KnockbackStrength.FireballBump, false);
-                }
-                koopa->Kill(f, enemyEntity, enemyEntity, EnemyKillReason.Special);
-            } else if (f.Unsafe.TryGetPointer(enemyEntity, out BulletBill* bill)) {
-                bill->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
-            } else if (f.Unsafe.TryGetPointer(enemyEntity, out Bobomb* bomb)) {
-                bomb->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
-            } else if (f.Unsafe.TryGetPointer(enemyEntity, out PiranhaPlant* plant)) {
-                plant->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
-            }
-        }
         #endregion
 
         #region Signals
@@ -499,7 +477,6 @@ namespace Quantum {
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var otherTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity);
             var thisPhys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(otherEntity);
 
             QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;

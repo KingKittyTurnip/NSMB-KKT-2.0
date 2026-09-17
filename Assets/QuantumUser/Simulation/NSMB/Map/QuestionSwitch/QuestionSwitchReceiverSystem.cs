@@ -33,10 +33,10 @@ namespace Quantum {
                 }
 
                 //End Question Switch
-                f.Signals.OnQuestionSwitchSignal(receiver->ListenFor, false);
+                f.Signals.OnQuestionSwitchSignal(receiver->ListenFor, false, EntityRef.None);
             }
         }
-        public void OnQuestionSwitchSignal(Frame f, SwitchFlag flag, QBoolean Activated) {
+        public void OnQuestionSwitchSignal(Frame f, SwitchFlag flag, QBoolean Activated, EntityRef strikerEntity) {
             if (flag == SwitchFlag.MuteMusic && f.RNG->Next() > FP._0_50) {
                 //only sometimes do these special things
                 return;
@@ -59,15 +59,6 @@ namespace Quantum {
                         }
                     }
                 }
-            }
-
-            var allCleans = f.Filter<Clean>();
-            while (allCleans.NextUnsafe(out EntityRef entity, out Clean* clean)) {
-                // Activate/Deactivate all receivers of a type
-                clean->Counter--;
-                f.Events.CleanCounterUpdate(clean->Counter);
-
-                //create new switch
             }
         }
     }

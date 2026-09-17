@@ -28,12 +28,12 @@ namespace Quantum {
                     }
 
                     f.Events.QuestionSwitchAnimation(true, switchEntity, true, QSwitch->SignalSent);
-                    f.Signals.OnQuestionSwitchSignal(QSwitch->SignalSent, true);
+                    f.Signals.OnQuestionSwitchSignal(QSwitch->SignalSent, true, marioEntity);
                 }
             }
             return false;
         }
-        public void OnQuestionSwitchSignal(Frame f, SwitchFlag flag, QBoolean Activated) {
+        public void OnQuestionSwitchSignal(Frame f, SwitchFlag flag, QBoolean Activated, EntityRef strikerEntity) {
             var allSwitches = f.Filter<QuestionSwitch, PhysicsCollider2D>();
             while (allSwitches.NextUnsafe(out EntityRef entity, out QuestionSwitch* QSwitch, out PhysicsCollider2D* collider)) {
                 // Activate/Deactivate all switches of a type

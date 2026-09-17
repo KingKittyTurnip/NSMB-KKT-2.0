@@ -18,6 +18,171 @@ MonoBehaviour:
       Value: 425424764972781941
   Rules:
     BaseRulesList:
+    - Name: Test
+      Description: 
+      DefaultRules:
+        Stage:
+          Id:
+            Value: 438935048561577377
+        ChooseMode:
+          Value: 0
+        RandomDisabledStages: []
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        StarsToWin: 30
+        StarFrequency: 0
+        CoinsForPowerup: 4
+        RouletteBlocksEnabled:
+          Value: 0
+        Items:
+        - PrototypeRef: 0
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 1
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 2
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 3
+          Team: 253
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 4
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 5
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 6
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 7
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 8
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 9
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 10
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 12
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 13
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 14
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        Lives: 0
+        TimerMinutes: 0
+        TeamsEnabled:
+          Value: 0
+        TeamAttack:
+          Value: 0
+        StarFountain: 0
+        CoinDeathPenalty: 0
+        CoinItemCustomSpawnWeights: []
+        ModifierHazardsEnabled:
+          Value: 1
+        MaxHazards: 2
+        HazardFrequency: 0
+        HeftyPercentage: 7
+        HazardLifetime: 80
+        Hazards:
+        - PrototypeRef: 51
+          Team: 255
+          ExtraSlotA: 5
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 52
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 53
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 54
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 55
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 60
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        ModifierBulbEnabled:
+          Value: 0
+        BulbAbilityCount: 0
+        HostControl:
+          Value: 0
+        DisableStageRestrictions:
+          Value: 0
+        DisableComplexStageRestrictions:
+          Value: 0
+        EveryItemHasTheSameChance:
+          Value: 0
     - Name: Default
       Description: Collect The Stars, Use powerups ya get and hazards you find to
         your advantage!
@@ -1033,7 +1198,106 @@ MonoBehaviour:
           Value: 0
         EveryItemHasTheSameChance:
           Value: 0
-    - Name: Test
+    - Name: OG
+      Description: Collect The Stars, Use powerups ya get to your advantage!
+      DefaultRules:
+        Stage:
+          Id:
+            Value: 438935048561577377
+        ChooseMode:
+          Value: 0
+        RandomDisabledStages: []
+        Gamemode:
+          Id:
+            Value: 326486899682662279
+        StarsToWin: 10
+        StarFrequency: 10
+        CoinsForPowerup: 8
+        RouletteBlocksEnabled:
+          Value: 0
+        Items:
+        - PrototypeRef: 0
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 1
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 2
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 3
+          Team: 253
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 4
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 5
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 6
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 7
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        - PrototypeRef: 8
+          Team: 255
+          ExtraSlotA: 0
+          ExtraSlotB: 0
+          ExtraSlotC: 0
+          ExtraSlotD: 0
+        Lives: 5
+        TimerMinutes: 0
+        TeamsEnabled:
+          Value: 0
+        TeamAttack:
+          Value: 1
+        StarFountain: 10
+        CoinDeathPenalty: 0
+        CoinItemCustomSpawnWeights: []
+        ModifierHazardsEnabled:
+          Value: 0
+        MaxHazards: 1
+        HazardFrequency: 0
+        HeftyPercentage: 0
+        HazardLifetime: 80
+        Hazards: []
+        ModifierBulbEnabled:
+          Value: 0
+        BulbAbilityCount: 0
+        HostControl:
+          Value: 0
+        DisableStageRestrictions:
+          Value: 0
+        DisableComplexStageRestrictions:
+          Value: 0
+        EveryItemHasTheSameChance:
+          Value: 0
+    - Name: Tanoomba Ruleset
       Description: 
       DefaultRules:
         Stage:
@@ -1045,9 +1309,9 @@ MonoBehaviour:
         Gamemode:
           Id:
             Value: 326486899682662279
-        StarsToWin: 30
-        StarFrequency: 0
-        CoinsForPowerup: 1
+        StarsToWin: 15
+        StarFrequency: 10
+        CoinsForPowerup: 5
         RouletteBlocksEnabled:
           Value: 0
         Items:
@@ -1117,12 +1381,6 @@ MonoBehaviour:
           ExtraSlotB: 0
           ExtraSlotC: 0
           ExtraSlotD: 0
-        - PrototypeRef: 11
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
         - PrototypeRef: 12
           Team: 255
           ExtraSlotA: 0
@@ -1137,186 +1395,6 @@ MonoBehaviour:
           ExtraSlotD: 0
         - PrototypeRef: 14
           Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        Lives: 0
-        TimerMinutes: 0
-        TeamsEnabled:
-          Value: 0
-        TeamAttack:
-          Value: 0
-        StarFountain: 0
-        CoinDeathPenalty: 0
-        CoinItemCustomSpawnWeights: []
-        ModifierHazardsEnabled:
-          Value: 1
-        MaxHazards: 1
-        HazardFrequency: 0
-        HeftyPercentage: 7
-        HazardLifetime: 80
-        Hazards:
-        - PrototypeRef: 60
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        ModifierBulbEnabled:
-          Value: 0
-        BulbAbilityCount: 0
-        HostControl:
-          Value: 0
-        DisableStageRestrictions:
-          Value: 0
-        DisableComplexStageRestrictions:
-          Value: 0
-        EveryItemHasTheSameChance:
-          Value: 0
-    - Name: OG
-      Description: Collect The Stars, Use powerups ya get to your advantage!
-      DefaultRules:
-        Stage:
-          Id:
-            Value: 438935048561577377
-        ChooseMode:
-          Value: 0
-        RandomDisabledStages: []
-        Gamemode:
-          Id:
-            Value: 326486899682662279
-        StarsToWin: 10
-        StarFrequency: 10
-        CoinsForPowerup: 8
-        RouletteBlocksEnabled:
-          Value: 0
-        Items:
-        - PrototypeRef: 0
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 1
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 2
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 3
-          Team: 253
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 4
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 5
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        Lives: 5
-        TimerMinutes: 0
-        TeamsEnabled:
-          Value: 0
-        TeamAttack:
-          Value: 1
-        StarFountain: 10
-        CoinDeathPenalty: 0
-        CoinItemCustomSpawnWeights: []
-        ModifierHazardsEnabled:
-          Value: 0
-        MaxHazards: 1
-        HazardFrequency: 0
-        HeftyPercentage: 0
-        HazardLifetime: 80
-        Hazards: []
-        ModifierBulbEnabled:
-          Value: 0
-        BulbAbilityCount: 0
-        HostControl:
-          Value: 0
-        DisableStageRestrictions:
-          Value: 0
-        DisableComplexStageRestrictions:
-          Value: 0
-        EveryItemHasTheSameChance:
-          Value: 0
-    - Name: Tanoomba Ruleset
-      Description: 
-      DefaultRules:
-        Stage:
-          Id:
-            Value: 438935048561577377
-        ChooseMode:
-          Value: 0
-        RandomDisabledStages: []
-        Gamemode:
-          Id:
-            Value: 326486899682662279
-        StarsToWin: 15
-        StarFrequency: 10
-        CoinsForPowerup: 5
-        RouletteBlocksEnabled:
-          Value: 0
-        Items:
-        - PrototypeRef: 0
-          Team: 0
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 0
-          Team: 0
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 0
-          Team: 0
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 0
-          Team: 0
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 0
-          Team: 0
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 0
-          Team: 0
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 0
-          Team: 0
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 0
-          Team: 0
           ExtraSlotA: 0
           ExtraSlotB: 0
           ExtraSlotC: 0
@@ -4233,6 +4311,98 @@ MonoBehaviour:
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
+      SpawnChance: 6
+      BulbSpawnType: 3
+      BulbCooldown: 4
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: 
+      Description: 
+      Icon: {fileID: -1770885439, guid: 0f10bbaf6d5f36b46a1999657e9730d0, type: 3}
+      type: 0
+      categorey: 0
+      entityPrototype:
+        Id:
+          Value: 1525268315453771272
+      Teamable: 0
+      CanSpawnAsHazard: 1
+      Hefty: 1
+      SpawnChance: 6
+      BulbSpawnType: 3
+      BulbCooldown: 4
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: 
+      Description: 
+      Icon: {fileID: -1770885439, guid: 0f10bbaf6d5f36b46a1999657e9730d0, type: 3}
+      type: 0
+      categorey: 0
+      entityPrototype:
+        Id:
+          Value: 1411534234583441148
+      Teamable: 0
+      CanSpawnAsHazard: 1
+      Hefty: 1
       SpawnChance: 6
       BulbSpawnType: 3
       BulbCooldown: 4

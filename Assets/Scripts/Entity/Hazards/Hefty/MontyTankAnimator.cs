@@ -6,23 +6,25 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using System.Collections.Generic;
 using UnityEngine.InputSystem.XR;
+using NSMB.Sound;
 
 public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
 
     [SerializeField] private Animator[] CannonSegments;
     [SerializeField] private ParticleSystem[] CannonJustFiredParticles;
+    [SerializeField] private AudioSource[] CannonSfx;
     [Space]
-    //[SerializeField] private Animator Base;
-    //[SerializeField] private GameObject Model;
-    //[SerializeField] private Animator Animator;
     [SerializeField] private Animator MontyAnimator;
-    [SerializeField] private AudioSource sfx;
+    [SerializeField] private GameObject Model;
+    [SerializeField] private Animator TreadsAnimator;
+    [SerializeField] private LoopingSoundPlayer TreadsSound;
+    [SerializeField] private ParticleSystem TreadsParticle;
     [Space]
     [SerializeField] private GameObject jumpDust;
     [SerializeField] private GameObject groundpoundDust, BossKillParticle;
     [Space]
     [SerializeField] private AudioClip Land;
-    [SerializeField] private AudioClip Cyote;
+    [SerializeField] private AudioClip Cyote, CreateSegment, DestroySegment, Throw, CannonTurn, Warn, Shoot;
 
     //---Serialized Variables
     private bool modelRotateInstantly;
@@ -36,6 +38,7 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
         QuantumEvent.Subscribe<EventTankCannonFire>(this, OnCannonFire);
         QuantumEvent.Subscribe<EventTankAddRemoveSegment>(this, OnAddRemove);
         QuantumEvent.Subscribe<EventTankMontyAttack>(this, OnMontyAttack);
+        QuantumEvent.Subscribe<EventTankStartTurn>(this, OnCannonTurn);
         QuantumEvent.Subscribe<EventBowserLanded>(this, OnLanded);
         QuantumEvent.Subscribe<EventBowserFall>(this, OnFall);
 
@@ -58,7 +61,6 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
             return;
         }
 
-
         //Vars
         var tank = f.Unsafe.GetPointer<Tank>(EntityRef);
         if (!f.Exists(tank->MoleEntity)) {
@@ -68,7 +70,7 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
         var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
         var transform = f.Unsafe.GetPointer<Transform2D>(EntityRef);
 
-        MontyAnimator.gameObject.SetActive(Boss->BossAnimator_ShowModel(f) || MontyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Hit"));
+        Model.gameObject.SetActive(Boss->BossAnimator_ShowModel(f) || MontyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Hit"));
         MontyAnimator.gameObject.transform.localPosition = new Vector3(0, tank->LastMontyPos.AsFloat, 0);
 
         materialBlock.SetFloat("Redness", Boss->BossAnimator_GetRedness());
@@ -77,8 +79,7 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
         }
 
         //rotation, monty
-        modelRotationTarget = Quaternion.Euler(0, (/*tank->MontyOut ? */Boss->FacingRight ? -75 : 75/* : physicsObject->Velocity.X > 0 ? -15 : 15*/), 0);
-        //MontyAnimator.SetBool("Riding", !tank->MontyOut);
+        modelRotationTarget = Quaternion.Euler(0, (Boss->FacingRight ? -75 : 75), 0);
         InterpolateFacingDirection(MontyAnimator.gameObject, 500f);
         //rotation, cannons
         for (int i = 0; i < tank->FacingDirection.Length; i++) {
@@ -87,8 +88,19 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
         }
 
         //Animator
-        //Animator.SetFloat("VelX", Mathf.Abs(physicsObject->Velocity.X.AsFloat));
-        //Animator.SetBool("Falling", !physicsObject->IsTouchingGround && !physicsObject->WasTouchingGround && physicsObject->Velocity.Y < 0);
+        float absVel = Mathf.Abs(physicsObject->Velocity.X.AsFloat);
+        bool IsGrounded = tank->State != MontyState.Jumping;
+        bool activetreads = absVel > 0.5f && IsGrounded;
+        TreadsAnimator.SetFloat("VelX", physicsObject->Velocity.X.AsFloat);
+        TreadsAnimator.SetBool("Air", !IsGrounded);
+        if (TreadsSound.IsPlaying != activetreads) {
+            if (activetreads) {
+                TreadsSound.Play();
+            } else {
+                TreadsSound.Stop();
+            }
+        }
+        var bru = TreadsParticle.emission; bru.enabled = activetreads;
     }
 
     private void InterpolateFacingDirection(GameObject Ratater, float speedMultiplier) {
@@ -108,15 +120,18 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
         }
 
         CannonSegments[e.SegmentId].SetTrigger("PreFire");
+        CannonSfx[e.SegmentId].PlayOneShot(Shoot);
     }
+
     private unsafe void OnCannonFire(EventTankCannonFire e) {
         if (e.Entity != EntityRef) {
             return;
         }
 
-        //CannonJustFiredParticles[e.SegmentId].Play();
-        CannonSegments[(int)e.SegmentId].SetTrigger("Fire");
+        CannonJustFiredParticles[e.SegmentId].Play();
+        CannonSegments[e.SegmentId].SetTrigger("Fire");
     }
+
     private unsafe void OnAddRemove(EventTankAddRemoveSegment e) {
         if (e.Entity != EntityRef) {
             return;
@@ -124,13 +139,31 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
         if (e.SegmentId != 255)
             CannonSegments[e.SegmentId].SetTrigger(e.IsAdding ? "Create" : "Decreate");
         MontyAnimator.SetTrigger("Move");
+        CannonSfx[e.SegmentId].PlayOneShot(e.IsAdding ? CreateSegment : DestroySegment);
     }
+
+    private void OnCannonTurn(EventTankStartTurn e) {
+        if (e.Entity != EntityRef) {
+            return;
+        }
+
+        if (e.IsStarting) {
+            CannonSfx[e.SegmentId].PlayOneShot(CannonTurn);
+        } else {
+            CannonSfx[e.SegmentId].Stop();
+        }
+    }
+
     private unsafe void OnMontyAttack(EventTankMontyAttack e) {
         if (e.Entity != EntityRef) {
             return;
         }
 
-        MontyAnimator.SetTrigger("Throw");
+        if (e.Thrown) {
+            CannonSfx[0].PlayOneShot(Throw);
+        } else {
+            MontyAnimator.SetTrigger("Throw");
+        }
     }
 
     private unsafe void OnLanded(EventBowserLanded e) {
@@ -138,10 +171,14 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(Land);
+        CannonSfx[0].PlayOneShot(Land);
         Instantiate(groundpoundDust, transform.position, Quaternion.identity);
         if (!MontyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Throw") && !MontyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             MontyAnimator.SetTrigger("Landed");
+        if (e.Roar) {
+            CannonSfx[0].PlayOneShot(Warn);
+            TreadsAnimator.SetTrigger("Entry");
+        }
     }
 
     private unsafe void OnKnockbacked(EventBowserKnockbacked e) {
@@ -158,8 +195,10 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.Stop();
-        sfx.PlayOneShot(Cyote);
+        foreach (var i in CannonSfx) {
+            i.Stop();
+        }
+        CannonSfx[0].PlayOneShot(Cyote);
     }
 
     private unsafe void OnDeath(EventBossDeathAnimation e) {
@@ -167,8 +206,11 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.Stop();
-        sfx.PlayOneShot(Cyote);
+        foreach (var i in CannonSfx) {
+            i.Stop();
+        }
+        CannonSfx[0].PlayOneShot(Cyote);
+        MontyAnimator.SetTrigger("Dead");
         Instantiate(BossKillParticle, transform.position, Quaternion.identity);
     }
 
@@ -177,6 +219,6 @@ public unsafe class MontyTankAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        sfx.PlayOneShot(SoundEffect.World_Boss_Hit);
+        CannonSfx[0].PlayOneShot(SoundEffect.World_Boss_Hit);
     }
 }

@@ -19,7 +19,6 @@ namespace Quantum {
             f.Context.Interactions.Register<MarioPlayer, Petey>(f, OnMarioPeteyInteraction);
             f.Context.Interactions.Register<Projectile, Petey>(f, OnProjectilePeteyInteraction);
             f.Context.Interactions.Register<Boss, Petey>(f, OnBossPeteyInteraction);
-            f.Context.Interactions.Register<Enemy, Petey>(f, OnEnemyPeteyInteraction);
         }
 
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
@@ -345,26 +344,6 @@ namespace Quantum {
             f.Signals.BossToBossInteraction(thisEntity, bossEntity);
             f.Signals.BossToBossInteraction(bossEntity, thisEntity);
         }
-        public void OnEnemyPeteyInteraction(Frame f, EntityRef enemyEntity, EntityRef thisEntity) {
-            var boss = f.Unsafe.GetPointer<Boss>(thisEntity);
-            if (!boss->BossCanInteract())
-                return;
-
-            if (f.Unsafe.TryGetPointer(enemyEntity, out Goomba* goomba)) {
-                goomba->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
-            } else if (f.Unsafe.TryGetPointer(enemyEntity, out Koopa* koopa)) {
-                if (koopa->IsKicked) {
-                    boss->BossHarmed(f, thisEntity, f.Unsafe.GetPointer<Enemy>(enemyEntity)->FacingRight, KnockbackStrength.FireballBump, false);
-                }
-                koopa->Kill(f, enemyEntity, enemyEntity, EnemyKillReason.Special);
-            } else if (f.Unsafe.TryGetPointer(enemyEntity, out BulletBill* bill)) {
-                bill->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
-            } else if (f.Unsafe.TryGetPointer(enemyEntity, out Bobomb* bomb)) {
-                bomb->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
-            } else if (f.Unsafe.TryGetPointer(enemyEntity, out PiranhaPlant* plant)) {
-                plant->Kill(f, enemyEntity, thisEntity, EnemyKillReason.Special);
-            }
-        }
         #endregion
 
         #region Signals
@@ -405,7 +384,6 @@ namespace Quantum {
             var thisTransform = f.Unsafe.GetPointer<Transform2D>(thisEntity);
             var otherTransform = f.Unsafe.GetPointer<Transform2D>(otherEntity);
             var thisPhys = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
-            var otherPhys = f.Unsafe.GetPointer<PhysicsObject>(otherEntity);
 
             QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, otherTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;

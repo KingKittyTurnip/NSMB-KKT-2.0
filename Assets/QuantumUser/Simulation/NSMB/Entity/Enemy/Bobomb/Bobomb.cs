@@ -103,6 +103,7 @@ namespace Quantum {
             hazard->IsHazard = false;
             hazard->IsCoinItem = true;
             hazard->LifeTime = 15 * 60;
+            hazard->IPWSTime = 0;
 
             coinitem->BlockSpawn = false;
 

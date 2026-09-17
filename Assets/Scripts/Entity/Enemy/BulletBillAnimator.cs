@@ -36,7 +36,7 @@ namespace NSMB.Entities.Enemies {
         }
 
         public override void OnActivate(Frame f) {
-            if (!IsReplayFastForwarding) {
+            if (!IsReplayFastForwarding && f.Has<Boss>(f.Unsafe.GetPointer<BulletBill>(EntityRef)->Owner)) {
                 sfx.PlayOneShot(SoundEffect.Enemy_BulletBill_Shoot);
             }
             legacyAnimation.enabled = true;

@@ -88,6 +88,9 @@ namespace NSMB.Entities.CoinItems {
                 if (!IsReplayFastForwarding) {
                     sfx.PlayOneShot(scriptable.BlockSpawnSoundEffect);
                 }
+            } else if (f.Unsafe.TryGetPointer(EntityRef, out Hazard* hazard) && !hazard->IsCoinItem) {
+                // we are not coin item
+                return;
             } else {
                 // Spawned by any other means (blue koopa, usually.)
                 if (!IsReplayFastForwarding) {

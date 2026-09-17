@@ -2,6 +2,8 @@ using Photon.Deterministic;
 using Quantum.Collections;
 using Quantum.Profiling;
 using System;
+using UnityEngine;
+using UnityEngine.LowLevelPhysics2D;
 
 namespace Quantum {
     public unsafe class MarioPlayerSystem : SystemMainThreadEntityFilter<MarioPlayer, MarioPlayerSystem.Filter>, ISignalOnComponentRemoved<Projectile>,
@@ -57,7 +59,7 @@ namespace Quantum {
             }
 
             var physics = f.FindAsset(filter.MarioPlayer->PhysicsAsset);
-            if (HandleDeathAndRespawning(f, ref filter, stage)) {
+            if (HandleDeathAndRespawning(f, ref filter, physics, stage)) {
                 HandleTerminalVelocity(f, ref filter, physics);
                 return;
             }
@@ -2282,7 +2284,7 @@ namespace Quantum {
             }
         }
 
-        private bool HandleDeathAndRespawning(Frame f, ref Filter filter, VersusStageData stage) {
+        private bool HandleDeathAndRespawning(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, VersusStageData stage) {
             using var profilerScope = HostProfiler.Start("MarioPlayerSystem.HandleDeathAndRespawning");
 
             var mario = filter.MarioPlayer;
@@ -2292,6 +2294,12 @@ namespace Quantum {
 
             if (!mario->IsDead) {
                 if (f.Exists(mario->IsBoss)) {
+                    ref var inputs = ref filter.Inputs;
+                    if (inputs.Jump.WasPressed) {
+                        // Jump buffer
+                        mario->JumpBufferFrames = physics.JumpBufferFrames;
+                    }
+                    QuantumUtils.Decrement(ref mario->JumpBufferFrames);
                     HandleFacingDirection(f, ref filter, f.FindAsset(filter.MarioPlayer->PhysicsAsset));
                     return true;
                 }

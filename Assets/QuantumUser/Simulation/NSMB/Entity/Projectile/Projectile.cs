@@ -80,9 +80,10 @@ namespace Quantum {
             }
 
             FP GetMaxCam = stage.CameraMinPosition.Y + FPMath.Max(stage.CameraMaxPosition.Y - stage.CameraMinPosition.Y, FP._7) - 1;
+            UnityEngine.Debug.Log("bubble " + spawnpoint.Y + GetMaxCam);
             if (spawnpoint.Y > GetMaxCam) {
                 //No bubbles allowed up here
-                physicsObject->TerminalVelocity -= (spawnpoint.Y - GetMaxCam) * FP._0_10;
+                physicsObject->TerminalVelocity -= (spawnpoint.Y - GetMaxCam);
             }
 
             Lifetime = asset.LifeTime;

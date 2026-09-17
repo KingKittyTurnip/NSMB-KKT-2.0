@@ -550,7 +550,7 @@ namespace Quantum {
                             //We Hit Ground, Allow Carryable
                             physicsObject->Gravity.Y = -10;
                             physicsObject->Velocity.X = physicsObject->Velocity.X > 0 ? 1 : -1;
-                            physicsObject->Velocity.Y = 3;
+                            physicsObject->Velocity.Y = 4;
                             physicsObject->TerminalVelocity = -1;
                             Dis->Thrown = false;
                             Dis->Varient = 2;

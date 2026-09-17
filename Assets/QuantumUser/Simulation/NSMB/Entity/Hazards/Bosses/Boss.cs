@@ -5,28 +5,48 @@ namespace Quantum {
     public unsafe partial struct Boss {
         public void BossHarmed(Frame f, EntityRef thisEntity, bool FromRight, KnockbackStrength Damage, bool longiframes) {
             var hazard = f.Unsafe.GetPointer<Hazard>(thisEntity);
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
             if ((iframes != 0 && knockbackframes == 0) || Dead || knockbackframes > 40 /*too early*/)
                 return;
+
+            //setup iframes
+            if (Damage == KnockbackStrength.Groundpound || longiframes) {
+                //stop combos
+                knockbackframes = 0;
+                iframes = 121;
+            } else {
+                iframes = (byte) (longiframes ? 25 : 10);
+                if (knockbackframes == 0) {
+                    knockbackframes = 45;
+                }
+            }
+
+            //git phys
+            if (!f.Unsafe.TryGetPointer<PhysicsObject>(thisEntity, out var physicsObject)) {
+                //hey, this is a monty.
+                var monty = f.Unsafe.GetPointer<Monty>(thisEntity);
+                if (f.Exists(monty->OwnerEntity)) {
+                    var tank = f.Unsafe.GetPointer<Tank>(monty->OwnerEntity);
+                    physicsObject = f.Unsafe.GetPointer<PhysicsObject>(monty->OwnerEntity);
+                    SetAttachmentsLifetime(f, monty->OwnerEntity, tank, hazard);
+                    thisEntity = monty->OwnerEntity;
+                }
+            }
 
             if (ControllerPlayer != EntityRef.None) {
                 //Controlled By Player, Just Drop
                 f.Signals.OnMarioPlayerDropObjective(ControllerPlayer, Damage == KnockbackStrength.Groundpound ? 2 : 1, EntityRef.None);
-                if (Damage == KnockbackStrength.Groundpound || longiframes) {
-                    //stop combos
-                    knockbackframes = 1;
-                    iframes = 121;
-                }
             } else {
+
                 byte total = Damage switch {
                     KnockbackStrength.Groundpound => 6,
                     KnockbackStrength.FireballBump => 1,
                     KnockbackStrength.Normal => 3,
                     _ => 0,
                 };
+
                 //Ai, Wittle Down hp
                 if (hazard->IsHazard) {
-                    //if we fight the boss boost it's lifetime relitive to it's total lifetime (using 6 instead of 12 intentionally)
+                    //if we fight the boss boost it's lifetime relitive to it's total lifetime
                     hazard->LifeTime += (hazard->BaseLifeTime/6)*total;
                 }
 
@@ -37,7 +57,6 @@ namespace Quantum {
                     } else {
                         Dead = true;
                         f.Events.BossDeathAnimation(thisEntity);
-                        f.Signals.BossDeath(thisEntity);
 
                         hazard->LifeTime = 130;
 
@@ -54,15 +73,11 @@ namespace Quantum {
                             f.Unsafe.GetPointer<Transform2D>(newStarEntity)->Position = f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position;
                             newStar->InitializeMovingStar(f, stage, newStarEntity, FacingRight ? 1 : 2);
                         }
+                        f.Signals.BossDeath(thisEntity);
                         return;
                     }
                 }
             }
-            iframes = (byte) (longiframes ? 25 : 10);
-            if (knockbackframes == 0) {
-                knockbackframes = 45;
-            }
-
 
             BossBump(f, thisEntity, FromRight, Damage);
             physicsObject->IsTouchingGround = false;
@@ -78,7 +93,12 @@ namespace Quantum {
             return !QuantumUtils.Decrement(ref iframes);
         }
         public FP BossBump(Frame f, EntityRef thisEntity, bool FromRight, KnockbackStrength Damage) {
-            var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(thisEntity);
+            if (!f.Unsafe.TryGetPointer<PhysicsObject>(thisEntity, out var physicsObject)) {
+                //hey, this is a monty.
+                var monty = f.Unsafe.GetPointer<Monty>(thisEntity);
+                var tank = f.Unsafe.GetPointer<Tank>(monty->OwnerEntity);
+                physicsObject = f.Unsafe.GetPointer<PhysicsObject>(monty->OwnerEntity);
+            }
             FP total = Damage switch {
                 KnockbackStrength.Groundpound => 6,
                 KnockbackStrength.FireballBump => 3,
@@ -170,6 +190,11 @@ namespace Quantum {
         }
         public float BossAnimator_GetRedness() {
             return knockbackframes > 0 ? Mathf.Min(iframes/10f, 0.85f) : 0;
+        }
+
+        public void SetAttachmentsLifetime(Frame f, EntityRef tankEntity, Tank* tank, Hazard* hazard) {
+            //lol this looks funny
+            f.Unsafe.GetPointer<Hazard>(tank->SegmentEntity)->LifeTime = f.Unsafe.GetPointer<Hazard>(tankEntity)->LifeTime = hazard->LifeTime;
         }
     }
 }

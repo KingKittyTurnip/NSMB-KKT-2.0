@@ -159,9 +159,9 @@ namespace Quantum {
                 Destroy(f, projectileEntity, projectileAsset.DestroyParticleEffect);
             } else if (projectileAsset.Bounce) {
                 var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(projectileEntity);
-                projectile->Speed *= Constants._0_85;
+                physicsObject->Velocity.Y = projectile->Speed;//kkt mod go higher
+                projectile->Speed *= FP._0_25;//kkt mod, Decel faster
                 physicsObject->Gravity *= Constants._0_85;
-                physicsObject->Velocity.Y = projectile->Speed;
 
                 f.Events.EnemyKicked(hitEntity, false);
                 if (projectile->Speed < 1) {

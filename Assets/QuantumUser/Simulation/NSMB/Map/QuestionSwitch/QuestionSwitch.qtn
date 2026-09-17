@@ -31,7 +31,7 @@ enum SwitchFlag : Byte {
     Clean10,
 }
 
-signal OnQuestionSwitchSignal(SwitchFlag flag, bool Activated);
+signal OnQuestionSwitchSignal(SwitchFlag flag, bool Activated, EntityRef Striker);
 
 event QuestionSwitchAnimation {
     bool ForHitSwitch;

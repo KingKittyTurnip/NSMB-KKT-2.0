@@ -1,5 +1,26 @@
 component Clean {
+    //switches left data
     byte Counter;
+    [ExcludeFromPrototype] bool HasStarted;
+
+    //player targetchance data
+    [ExcludeFromPrototype] byte Countdown;
+    [ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] list<EntityRef> Marios;
+    [ExcludeFromPrototype] array<byte>[10] TargetChances;
+
+    //head
+    array<FPVector2>[10] WanderLocations;
+
+    //hand attack data
+    array<FPVector2>[10] BlockSpots;
+    array<FPVector2>[10] StartWalkSpots;
+}
+
+component CleanHands {
+    [ExcludeFromPrototype] EntityRef Owner;
+
+    [ExcludeFromPrototype] ushort reusableTimer;
+    [ExcludeFromPrototype] EntityRef Target;
 }
 
 event CleanCounterUpdate {

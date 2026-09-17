@@ -385,6 +385,12 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.Clean))]
   public unsafe partial class CleanPrototype : ComponentPrototype<Quantum.Clean> {
     public Byte Counter;
+    [ArrayLengthAttribute(10)]
+    public FPVector2[] WanderLocations = new FPVector2[10];
+    [ArrayLengthAttribute(10)]
+    public FPVector2[] BlockSpots = new FPVector2[10];
+    [ArrayLengthAttribute(10)]
+    public FPVector2[] StartWalkSpots = new FPVector2[10];
     partial void MaterializeUser(Frame frame, ref Quantum.Clean result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Clean component = default;
@@ -393,6 +399,30 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.Clean result, in PrototypeMaterializationContext context = default) {
         result.Counter = this.Counter;
+        for (int i = 0, count = PrototypeValidator.CheckLength(WanderLocations, 10, in context); i < count; ++i) {
+          *result.WanderLocations.GetPointer(i) = this.WanderLocations[i];
+        }
+        for (int i = 0, count = PrototypeValidator.CheckLength(BlockSpots, 10, in context); i < count; ++i) {
+          *result.BlockSpots.GetPointer(i) = this.BlockSpots[i];
+        }
+        for (int i = 0, count = PrototypeValidator.CheckLength(StartWalkSpots, 10, in context); i < count; ++i) {
+          *result.StartWalkSpots.GetPointer(i) = this.StartWalkSpots[i];
+        }
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.CleanHands))]
+  public unsafe partial class CleanHandsPrototype : ComponentPrototype<Quantum.CleanHands> {
+    [HideInInspector()]
+    public Int32 _empty_prototype_dummy_field_;
+    partial void MaterializeUser(Frame frame, ref Quantum.CleanHands result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.CleanHands component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.CleanHands result, in PrototypeMaterializationContext context = default) {
         MaterializeUser(frame, ref result, in context);
     }
   }

@@ -756,6 +756,11 @@ namespace Quantum {
                 CurrentPowerupState = PowerupState.Mushroom;
             MegaMushroomFrames = 0;
 
+            //make sure we aren't dead.
+            IsDead = false;
+            RespawnFrames = 0;
+            IsRespawning = false;
+
             if (f.Unsafe.TryGetPointer(HeldEntity, out Holdable* holdable)) {
                 holdable->DropWithoutThrowing(f, HeldEntity);
             }

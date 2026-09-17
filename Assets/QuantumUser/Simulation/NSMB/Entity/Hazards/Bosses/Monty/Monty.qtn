@@ -15,7 +15,6 @@ component Tank {
     [ExcludeFromPrototype] EntityRef SegmentEntity;
 
     //cannon vars
-    [ExcludeFromPrototype] byte NextActionId;
     [ExcludeFromPrototype] byte CannonActionCooldown;
 
     [ExcludeFromPrototype] byte SegmentNumber;
@@ -50,9 +49,17 @@ enum MontyState : Byte {
 }
 
 enum CannonDecision : Byte {
+    //this is so stupid LMAO
     None,
-    TryAction,
+    TurnDelayLA,
+    TurnDelayLB,
+    TurnDelayLC,
+    TurnDelayLD,
     TurnLeft,
+    TurnDelayRA,
+    TurnDelayRB,
+    TurnDelayRC,
+    TurnDelayRD,
     TurnRight,
     FireA,
     FireB,
@@ -63,6 +70,9 @@ enum CannonDecision : Byte {
     FireG,
     FireH,
     FireI,
+    FireJ,
+    FireK,
+    FireL,
     FireFin,
 }
 
@@ -82,10 +92,17 @@ event TankPrepareJump {
 
 event TankMontyAttack {
     EntityRef Entity;
+    bool Thrown;
 }
 
 event TankAddRemoveSegment {
     EntityRef Entity;
     byte SegmentId;
     bool IsAdding;
+}
+
+event TankStartTurn {
+    EntityRef Entity;
+    byte SegmentId;
+    bool IsStarting;
 }
