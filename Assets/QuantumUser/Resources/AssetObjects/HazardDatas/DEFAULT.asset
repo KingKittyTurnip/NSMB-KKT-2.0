@@ -131,45 +131,15 @@ MonoBehaviour:
         CoinItemCustomSpawnWeights: []
         ModifierHazardsEnabled:
           Value: 1
-        MaxHazards: 2
-        HazardFrequency: 0
-        HeftyPercentage: 7
+        MaxHazards: 30
+        HazardFrequency: 5
+        HeftyPercentage: 0
         HazardLifetime: 80
         Hazards:
-        - PrototypeRef: 51
-          Team: 255
-          ExtraSlotA: 5
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 52
+        - PrototypeRef: 44
           Team: 255
           ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 53
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 54
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 55
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
-        - PrototypeRef: 60
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
+          ExtraSlotB: 1
           ExtraSlotC: 0
           ExtraSlotD: 0
         ModifierBulbEnabled:
@@ -1941,7 +1911,7 @@ MonoBehaviour:
           X: 0
           Y: 1
         valuenames: []
-    - Name: Bio Flower
+    - Name: 
       Description: Makes you be able to unleash a grapple vine to hit foes or move
         to places
       Icon: {fileID: -1733928045, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
@@ -2420,7 +2390,7 @@ MonoBehaviour:
       BulbSpawnType: 0
       BulbCooldown: 2
       ValueA:
-        ButtonName: Spawn Type
+        ButtonName: 
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -2431,7 +2401,7 @@ MonoBehaviour:
         - Spawns lit
         - Spawns & Explodes on contact
       ValueB:
-        ButtonName: Is Nuke Bobomb
+        ButtonName: 
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -3475,7 +3445,7 @@ MonoBehaviour:
       ValueA:
         ButtonName: Cloud Trail Length
         ButtonType: 1
-        BaseValue: 1
+        BaseValue: 2
         ValueRange:
           X: 0
           Y: 4
@@ -3488,7 +3458,7 @@ MonoBehaviour:
       ValueB:
         ButtonName: Direction
         ButtonType: 1
-        BaseValue: 1
+        BaseValue: 0
         ValueRange:
           X: 0
           Y: 2
@@ -3528,17 +3498,18 @@ MonoBehaviour:
       BulbSpawnType: 0
       BulbCooldown: 2
       ValueA:
-        ButtonName: Transform Type
+        ButtonName: Transforms
         ButtonType: 1
         BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
         valuenames:
-        - Anything that's in the current match
-        - Anything it possibly could
+        - Adapt
+        - Any
+        - Frantic
       ValueB:
-        ButtonName: Transform When Spawned
+        ButtonName: Transform right away
         ButtonType: 0
         BaseValue: 0
         ValueRange:
@@ -4406,6 +4377,98 @@ MonoBehaviour:
       SpawnChance: 6
       BulbSpawnType: 3
       BulbCooldown: 4
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: Poison Mushroom
+      Description: 
+      Icon: {fileID: -1770885439, guid: 0f10bbaf6d5f36b46a1999657e9730d0, type: 3}
+      type: 1
+      categorey: 4
+      entityPrototype:
+        Id:
+          Value: 1320646330750276199
+      Teamable: 0
+      CanSpawnAsHazard: 1
+      Hefty: 1
+      SpawnChance: 0
+      BulbSpawnType: 1
+      BulbCooldown: 2
+      ValueA:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueB:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueC:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+      ValueD:
+        ButtonName: 
+        ButtonType: 0
+        BaseValue: 0
+        ValueRange:
+          X: 0
+          Y: 1
+        valuenames: []
+    - Name: Rotten Mushroom
+      Description: 
+      Icon: {fileID: -1770885439, guid: 0f10bbaf6d5f36b46a1999657e9730d0, type: 3}
+      type: 1
+      categorey: 4
+      entityPrototype:
+        Id:
+          Value: 1320646330750276199
+      Teamable: 0
+      CanSpawnAsHazard: 1
+      Hefty: 1
+      SpawnChance: 0
+      BulbSpawnType: 1
+      BulbCooldown: 2
       ValueA:
         ButtonName: 
         ButtonType: 0

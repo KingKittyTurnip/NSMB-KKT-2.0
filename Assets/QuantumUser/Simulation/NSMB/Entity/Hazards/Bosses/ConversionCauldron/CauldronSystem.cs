@@ -124,7 +124,7 @@ namespace Quantum {
                 //Cauldron Cannot Accept This Object
                 return false;
 
-            if (f.Has<BigStar>(otherEntity) || f.Has<ChainChomp>(otherEntity) || (f.Unsafe.TryGetPointer<ThrowingObject>(otherEntity, out ThrowingObject* throwable) && throwable->Type == ThrowingObjectType.KingBooStone)) {
+            if (f.Has<BigStar>(otherEntity) || f.Has<ChainChomp>(otherEntity) || f.Has<BulletBill>(otherEntity) || (f.Unsafe.TryGetPointer<ThrowingObject>(otherEntity, out ThrowingObject* throwable) && throwable->Type == ThrowingObjectType.KingBooStone)) {
                 //Cauldron ALSO Cannot Accept These more specific edge cases
                 return false;
             }

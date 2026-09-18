@@ -2825,27 +2825,33 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct CloudBillPlatform : Quantum.IComponent {
-    public const Int32 SIZE = 40;
+    public const Int32 SIZE = 48;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(16)]
+    [FieldOffset(24)]
     public AssetRef<EntityPrototype> CloudBillPrototype;
-    [FieldOffset(8)]
+    [FieldOffset(16)]
     [ExcludeFromPrototype()]
     [AllocateOnComponentAdded()]
     [FreeOnComponentRemoved()]
     public QListPtr<QBoolean> ActiveClouds;
-    [FieldOffset(0)]
-    [ExcludeFromPrototype()]
-    public QBoolean CreatedBill;
     [FieldOffset(4)]
     [ExcludeFromPrototype()]
-    public QBoolean FacingRight;
-    [FieldOffset(24)]
+    public QBoolean CreatedBill;
+    [FieldOffset(8)]
     [ExcludeFromPrototype()]
-    public EntityRef CloudBill;
+    public QBoolean FacingRight;
+    [FieldOffset(12)]
+    [ExcludeFromPrototype()]
+    public QBoolean LingerCloud;
     [FieldOffset(32)]
     [ExcludeFromPrototype()]
+    public EntityRef CloudBill;
+    [FieldOffset(40)]
+    [ExcludeFromPrototype()]
     public FP CloudbillGoneTimer;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte CurrentClouds;
     public override readonly Int32 GetHashCode() {
       unchecked { 
         var hash = 11597;
@@ -2853,8 +2859,10 @@ namespace Quantum {
         hash = hash * 31 + ActiveClouds.GetHashCode();
         hash = hash * 31 + CreatedBill.GetHashCode();
         hash = hash * 31 + FacingRight.GetHashCode();
+        hash = hash * 31 + LingerCloud.GetHashCode();
         hash = hash * 31 + CloudBill.GetHashCode();
         hash = hash * 31 + CloudbillGoneTimer.GetHashCode();
+        hash = hash * 31 + CurrentClouds.GetHashCode();
         return hash;
       }
     }
@@ -2874,8 +2882,10 @@ namespace Quantum {
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (CloudBillPlatform*)ptr;
+        serializer.Stream.Serialize(&p->CurrentClouds);
         QBoolean.Serialize(&p->CreatedBill, serializer);
         QBoolean.Serialize(&p->FacingRight, serializer);
+        QBoolean.Serialize(&p->LingerCloud, serializer);
         QList.Serialize(&p->ActiveClouds, serializer, Statics.SerializeQBoolean);
         AssetRef.Serialize(&p->CloudBillPrototype, serializer);
         EntityRef.Serialize(&p->CloudBill, serializer);
@@ -5578,7 +5588,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Tanoomba : Quantum.IComponent {
-    public const Int32 SIZE = 128;
+    public const Int32 SIZE = 136;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(1)]
     [ExcludeFromPrototype()]
@@ -5592,19 +5602,19 @@ namespace Quantum {
     [FieldOffset(16)]
     [ExcludeFromPrototype()]
     public QBoolean TransformIntoAnythingAnytime;
-    [FieldOffset(80)]
-    public FP JumpVelocity;
-    [FieldOffset(112)]
-    public FPVector2 BaseGravity;
-    [FieldOffset(72)]
-    public FP BaseTerminalVelocity;
     [FieldOffset(88)]
+    public FP JumpVelocity;
+    [FieldOffset(120)]
+    public FPVector2 BaseGravity;
+    [FieldOffset(80)]
+    public FP BaseTerminalVelocity;
+    [FieldOffset(96)]
     [ExcludeFromPrototype()]
     public FP ReusableTimer;
-    [FieldOffset(56)]
+    [FieldOffset(64)]
     [ExcludeFromPrototype()]
     public EntityRef TransformedObject;
-    [FieldOffset(48)]
+    [FieldOffset(56)]
     [ExcludeFromPrototype()]
     public EntityRef TargetedPlayer;
     [FieldOffset(12)]
@@ -5615,10 +5625,12 @@ namespace Quantum {
     public QBoolean Invulnrable;
     [FieldOffset(40)]
     public AssetRef<TanoombaTransformationAsset> FormData;
-    [FieldOffset(64)]
+    [FieldOffset(48)]
+    public AssetRef<TanoombaTransformationAsset> FranticData;
+    [FieldOffset(72)]
     [ExcludeFromPrototype()]
     public FP AnimationCurveTimer;
-    [FieldOffset(96)]
+    [FieldOffset(104)]
     [ExcludeFromPrototype()]
     public FPVector2 AnimationCurveOrigin;
     [FieldOffset(32)]
@@ -5641,6 +5653,7 @@ namespace Quantum {
         hash = hash * 31 + PlayerPassedBy.GetHashCode();
         hash = hash * 31 + Invulnrable.GetHashCode();
         hash = hash * 31 + FormData.GetHashCode();
+        hash = hash * 31 + FranticData.GetHashCode();
         hash = hash * 31 + AnimationCurveTimer.GetHashCode();
         hash = hash * 31 + AnimationCurveOrigin.GetHashCode();
         hash = hash * 31 + PropellerAsset.GetHashCode();
@@ -5659,6 +5672,7 @@ namespace Quantum {
         AssetRef.Serialize(&p->BubbleAsset, serializer);
         AssetRef.Serialize(&p->PropellerAsset, serializer);
         AssetRef.Serialize(&p->FormData, serializer);
+        AssetRef.Serialize(&p->FranticData, serializer);
         EntityRef.Serialize(&p->TargetedPlayer, serializer);
         EntityRef.Serialize(&p->TransformedObject, serializer);
         FP.Serialize(&p->AnimationCurveTimer, serializer);

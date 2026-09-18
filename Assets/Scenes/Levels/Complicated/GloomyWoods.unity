@@ -1369,7 +1369,7 @@ PrefabInstance:
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
       propertyPath: MapEntityReferences.Array.size
-      value: 23
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
@@ -1485,7 +1485,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'MapEntityReferences.Array.data[22]'
       value: 
-      objectReference: {fileID: 1329088838}
+      objectReference: {fileID: 0}
     - target: {fileID: 7682502346014357760, guid: dcdc633a29f212843ae9cbdf4be58fb2,
         type: 3}
       propertyPath: 'MapEntityReferences.Array.data[23]'
@@ -2969,7 +2969,7 @@ SpriteRenderer:
   m_SortingOrder: 3
   m_MaskInteraction: 2
   m_Sprite: {fileID: 21300000, guid: 5d5f9ad4948945b4c83685ca4f0933b0, type: 3}
-  m_Color: {r: 0.011095275, g: 0.03505101, b: 0.106918216, a: 1}
+  m_Color: {r: 0.011095275, g: 0.03505101, b: 0.106918216, a: 0.98039216}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -17922,38 +17922,6 @@ MonoBehaviour:
   tilemap: {fileID: 1328772357}
   tileBreakParticleSystem: {fileID: 4829880438140776504, guid: e1e481681ce723d41ba61becae047562,
     type: 3}
---- !u!1 &1329088823 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1616545714016825238, guid: fbc51933e474a8c4b82c99970faa0058,
-    type: 3}
-  m_PrefabInstance: {fileID: 1503402751}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1329088838 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3316921559169369209, guid: fbc51933e474a8c4b82c99970faa0058,
-    type: 3}
-  m_PrefabInstance: {fileID: 1503402751}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329088823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15b14052113b8414abfdb2effb52d984, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1329088842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329088823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcf0597b94bd10f479517dd4ef56677d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Quantum.Unity::Quantum.QPrototypeBot
-  Prototype:
-    _empty_prototype_dummy_field_: 0
 --- !u!1 &1329640371
 GameObject:
   m_ObjectHideFlags: 0
@@ -18341,88 +18309,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15b14052113b8414abfdb2effb52d984, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &1503402751
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -26.953403
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.6061538
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825232, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1616545714016825238, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: m_Name
-      value: Wario
-      objectReference: {fileID: 0}
-    - target: {fileID: 8220411383588218999, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: Prototype.BotTeam
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8220411383588218999, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      propertyPath: Prototype.IsBot.Value
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1616545714016825238, guid: fbc51933e474a8c4b82c99970faa0058,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1329088842}
-  m_SourcePrefab: {fileID: 100100000, guid: fbc51933e474a8c4b82c99970faa0058, type: 3}
 --- !u!1 &1612576601
 GameObject:
   m_ObjectHideFlags: 0
@@ -35604,4 +35490,3 @@ SceneRoots:
   - {fileID: 916614893}
   - {fileID: 2026550924}
   - {fileID: 934097938}
-  - {fileID: 1503402751}

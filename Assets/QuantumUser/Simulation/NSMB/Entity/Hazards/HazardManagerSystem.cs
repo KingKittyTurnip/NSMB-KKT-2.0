@@ -4,24 +4,6 @@ using System.Collections.Generic;
 namespace Quantum {
     public unsafe class HazardManagerSystem : SystemMainThread, ISignalOnReturnToRoom {
 
-        //public override unsafe void OnInit(Frame f) {
-
-            // mock list for test
-            // var triggerMap = f.ResolveList(f.Global->Rules.Triggers);
-            // triggerMap.Add(new MatchConditionerTrigger {
-            //     Condition = TriggerCondition.GotCoin,
-            //     ConditionParameter = "",
-            //     ConditionTarget = TriggerTarget.Any,
-            //     Action = TriggerAction.Kill,
-            //     ActionParameter = "",
-            //     ActionTarget = TriggerTarget.Conditioner,
-            //     Constraint = TriggerConstraint.Always,
-            //     ConstraintParameter = "",
-            //     ConstraintTarget = TriggerTarget.Any,
-            // });
-        //}
-
-
         public override void Update(Frame f) {
             VersusStageData stage = null;
             var hazarddata = f.ResolveList(f.Global->Rules.Hazards);

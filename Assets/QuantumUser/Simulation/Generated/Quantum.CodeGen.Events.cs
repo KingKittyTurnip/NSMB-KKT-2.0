@@ -411,15 +411,17 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventCloudBillCloudAnimation CloudBillCloudAnimation(Frame f, EntityRef Entity, QBoolean Create) {
+      public EventCloudBillCloudAnimation CloudBillCloudAnimation(Frame f, EntityRef Entity, QBoolean ApprearNew) {
+        if (_f.IsPredicted) return null;
         var ev = _f.Context.AcquireEvent<EventCloudBillCloudAnimation>(EventCloudBillCloudAnimation.ID);
         ev.f = f;
         ev.Entity = Entity;
-        ev.Create = Create;
+        ev.ApprearNew = ApprearNew;
         _f.AddEvent(ev);
         return ev;
       }
       public EventCloudBillCloudBreak CloudBillCloudBreak(EntityRef Entity, Byte id) {
+        if (_f.IsPredicted) return null;
         var ev = _f.Context.AcquireEvent<EventCloudBillCloudBreak>(EventCloudBillCloudBreak.ID);
         ev.Entity = Entity;
         ev.id = id;
@@ -1251,13 +1253,15 @@ namespace Quantum {
         _f.AddEvent(ev);
         return ev;
       }
-      public EventTanoombaPoof TanoombaPoof(EntityRef Entity) {
+      public EventTanoombaPoof TanoombaPoof(EntityRef Entity, FPVector2 pos) {
         var ev = _f.Context.AcquireEvent<EventTanoombaPoof>(EventTanoombaPoof.ID);
         ev.Entity = Entity;
+        ev.pos = pos;
         _f.AddEvent(ev);
         return ev;
       }
       public EventTanoombaTransform TanoombaTransform(Frame f, EntityRef Entity, Int32 FormId) {
+        if (_f.IsPredicted) return null;
         var ev = _f.Context.AcquireEvent<EventTanoombaTransform>(EventTanoombaTransform.ID);
         ev.f = f;
         ev.Entity = Entity;
@@ -2071,12 +2075,12 @@ namespace Quantum {
     public new const Int32 ID = 28;
     public Frame f;
     public EntityRef Entity;
-    public QBoolean Create;
+    public QBoolean ApprearNew;
     protected EventCloudBillCloudAnimation(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
     public EventCloudBillCloudAnimation() : 
-        base(28, EventFlags.Server|EventFlags.Client) {
+        base(28, EventFlags.Server|EventFlags.Client|EventFlags.Synced) {
     }
     public new QuantumGame Game {
       get {
@@ -2091,7 +2095,7 @@ namespace Quantum {
         var hash = 173;
         hash = hash * 31 + f.GetHashCode();
         hash = hash * 31 + Entity.GetHashCode();
-        hash = hash * 31 + Create.GetHashCode();
+        hash = hash * 31 + ApprearNew.GetHashCode();
         return hash;
       }
     }
@@ -2104,7 +2108,7 @@ namespace Quantum {
         base(id, flags) {
     }
     public EventCloudBillCloudBreak() : 
-        base(29, EventFlags.Server|EventFlags.Client) {
+        base(29, EventFlags.Server|EventFlags.Client|EventFlags.Synced) {
     }
     public new QuantumGame Game {
       get {
@@ -5199,6 +5203,7 @@ namespace Quantum {
   public unsafe partial class EventTanoombaPoof : EventBase {
     public new const Int32 ID = 146;
     public EntityRef Entity;
+    public FPVector2 pos;
     protected EventTanoombaPoof(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
@@ -5217,6 +5222,7 @@ namespace Quantum {
       unchecked {
         var hash = 929;
         hash = hash * 31 + Entity.GetHashCode();
+        hash = hash * 31 + pos.GetHashCode();
         return hash;
       }
     }
@@ -5230,7 +5236,7 @@ namespace Quantum {
         base(id, flags) {
     }
     public EventTanoombaTransform() : 
-        base(147, EventFlags.Server|EventFlags.Client) {
+        base(147, EventFlags.Server|EventFlags.Client|EventFlags.Synced) {
     }
     public new QuantumGame Game {
       get {

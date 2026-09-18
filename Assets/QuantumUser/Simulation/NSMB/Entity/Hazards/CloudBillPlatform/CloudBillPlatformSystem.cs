@@ -1,5 +1,8 @@
 using Photon.Deterministic;
 using Quantum.Collections;
+using System.Collections.Generic;
+using Unity.VectorGraphics;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Quantum {
@@ -9,7 +12,10 @@ namespace Quantum {
             public EntityRef Entity;
             public CloudBillPlatform* cloudplatform;
             public PhysicsCollider2D* collider;
+            public Transform2D* Transfrom;
         }
+
+        private readonly FP BillGoneTimer = FP._0_25;
 
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<MarioPlayer, CloudBillPlatform>(f, OnCloudBillPlatformMarioInteraction);
@@ -18,16 +24,16 @@ namespace Quantum {
         public override void Update(Frame f, ref Filter filter, VersusStageData stage) {
             var cloudplatform = filter.cloudplatform;
             var entity = filter.Entity;
+            var collider = filter.collider;
+            var thisTransform = filter.Transfrom;
+            FP Offset = cloudplatform->FacingRight ? -FP._0_50 : FP._0_50;
 
-            if (f.Exists(cloudplatform->CloudBill)) {
-                var collider = filter.collider;
-                var thisTransform = f.Unsafe.GetPointer<Transform2D>(entity);
+            if (f.Exists(cloudplatform->CloudBill) && !f.Unsafe.GetPointer<Enemy>(cloudplatform->CloudBill)->IsDead && !f.Unsafe.GetPointer<Freezable>(cloudplatform->CloudBill)->IsFrozen(f)) {
                 var cloudbillTransform = f.Unsafe.GetPointer<Transform2D>(cloudplatform->CloudBill);
                 QuantumUtils.UnwrapWorldLocations(stage, thisTransform->Position, cloudbillTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
 
                 if (FPMath.Abs(theirPos.X - ourPos.X) > FP._0_75) {
                     //Cloudbill has moved 1.5 tiles, shift everything over & create a new cloudtile
-                    FP Offset = cloudplatform->FacingRight ? -FP._0_50 : FP._0_50;
                     var list = f.ResolveList(cloudplatform->ActiveClouds);
                     int listCount = list.Count;
 
@@ -49,16 +55,52 @@ namespace Quantum {
                         collider->Shape.Compound.AddShape(f, ref newShape);//we add an extra platform to fix looping issues
                         //Grab again
                         collider->Shape.Compound.GetShapes(f, out shape, out count);
-                        f.Events.CloudBillCloudAnimation(f, entity, true);
-                    } else {
-                        f.Events.CloudBillCloudAnimation(f,entity, false);
+                        cloudplatform->CurrentClouds++;
                     }
                     cloudplatform->UpdateCollision(stage, thisTransform->Position, Offset, shape, count, list);
+                    f.Events.CloudBillCloudAnimation(f, entity, false);
                 }
             } else {
-                if (true) {
-                    //removed all clouds before destroying
-                    f.Destroy(entity);
+                cloudplatform->CloudBill = EntityRef.None;
+                if (QuantumUtils.Decrement(f, ref cloudplatform->CloudbillGoneTimer)) {
+                    var list = f.ResolveList(cloudplatform->ActiveClouds);
+                    int listCount = list.Count;
+                    collider->Shape.Compound.GetShapes(f, out var shape, out int count);
+
+                    if (cloudplatform->LingerCloud) {
+                        cloudplatform->LingerCloud = false;
+                        cloudplatform->CloudbillGoneTimer = f.Global->Rules.HazardLifetime; //resume destruction code after the hazardlifetime, there are situations where it's impossible to remove, after all
+
+                        list[cloudplatform->CurrentClouds-1] = false; //remove only the last possible cloud, as it plays the disapearing animation
+
+                        thisTransform->Teleport(f, new FPVector2(thisTransform->Position.X - Offset, thisTransform->Position.Y));
+                        cloudplatform->UpdateCollision(stage, thisTransform->Position, Offset, shape, count, list);
+                        f.Events.CloudBillCloudAnimation(f, entity, false);
+                        return;
+                    }
+
+                    int platformExists = -1;
+                    //Scoot Bitset Over
+                    for (int i = listCount-1; i > 0; i--) {
+                        if (i < cloudplatform->CurrentClouds) {
+                            list[i] = list[i-1];
+                            if (list[i]) {
+                                platformExists = i;
+                            }
+                        }
+                    }
+                    list[0] = false;
+
+                    cloudplatform->CloudbillGoneTimer = BillGoneTimer;
+                    if (platformExists == -1) {
+                        //platform is gone, destroy.
+                        f.Destroy(entity);
+                    } else {
+                        //scoot
+                        thisTransform->Teleport(f, new FPVector2(thisTransform->Position.X - Offset, thisTransform->Position.Y));
+                        cloudplatform->UpdateCollision(stage, thisTransform->Position, Offset, shape, count, list);
+                        f.Events.CloudBillCloudAnimation(f, entity, true);
+                    }
                 }
             }
         }
@@ -67,7 +109,7 @@ namespace Quantum {
         public static bool OnCloudBillPlatformMarioInteraction(Frame f, EntityRef marioEntity, EntityRef thisEntity, PhysicsContact contact) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(marioEntity);
 
-            if (mario->IsGroundpoundActive) {
+            if (mario->IsGroundpounding) {
                 //Break Clouds
                 var cloudplatform = f.Unsafe.GetPointer<CloudBillPlatform>(thisEntity);
                 var collider = f.Unsafe.GetPointer<PhysicsCollider2D>(thisEntity);
@@ -83,15 +125,15 @@ namespace Quantum {
                 int Rightward = FPMath.RoundToInt(XDif + marioSize);
                 int Leftward = FPMath.RoundToInt(XDif - marioSize);
 
-                int clampRight = FPMath.Clamp(Rightward, 0, list.Count-1);
-                int clampLeft = FPMath.Clamp(Leftward, 0, list.Count-1);
+                int clampRight = FPMath.Clamp(Rightward, 0, cloudplatform->CurrentClouds-1);
+                int clampLeft = FPMath.Clamp(Leftward, 0, cloudplatform->CurrentClouds-1);
 
 
                 if (Rightward == clampRight) {
                     list[clampRight] = false;
                     f.Events.CloudBillCloudBreak(thisEntity, (byte) clampRight);
                 }
-                if (Leftward == clampLeft) {
+                if (Leftward == clampLeft && Leftward != Rightward) {
                     list[clampLeft] = false;
                     f.Events.CloudBillCloudBreak(thisEntity, (byte) clampLeft);
                 }
@@ -119,9 +161,11 @@ namespace Quantum {
             //create cloudbill
             cloudplatform->CloudBill = f.Create(cloudplatform->CloudBillPrototype);
             f.Signals.InitializeHazard(cloudplatform->CloudBill, EntityRef.None, transform->Position, SpawnReason.Normal, (byte) (cloudplatform->FacingRight ? 2 : 1), 0, 0, 0);
-            f.Unsafe.GetPointer<Enemy>(cloudplatform->CloudBill)->FacingRight = cloudplatform->FacingRight;
 
             HazardSystem.ChangeHazardIcon(f, thisEntity, false);
+
+            cloudplatform->CloudbillGoneTimer = BillGoneTimer;
+            cloudplatform->LingerCloud = ExtraC == 1;
 
             //Set Length
             int Length = ExtraA switch {
@@ -130,7 +174,7 @@ namespace Quantum {
                 2 => 12,
                 3 => 18,
                 4 => 30,
-                5 => 64, //Secret Mode
+                5 => 64, //Unused Mode, primairly cuz maps like bricks would break it like crazy
                 _ => 12,
             };
             var list = f.ResolveList(cloudplatform->ActiveClouds);

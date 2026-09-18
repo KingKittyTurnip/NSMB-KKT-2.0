@@ -70,6 +70,7 @@ MonoBehaviour:
     B: 0
     A: 255
   HidePlayersOnMinimap: 0
+  NoMinimap: 0
   MultiAreaMap: 0
   YAreaBounds: []
   BannedCoinItems: []
@@ -81,9 +82,7 @@ MonoBehaviour:
   SfxOverrides: []
   MainMusic:
   - Id:
-      Value: 369157696319829885
-  - Id:
-      Value: 386427822095829515
+      Value: 290354587024026774
   InvincibleMusic:
     Id:
       Value: 289056355789154037
@@ -105,6 +104,7 @@ MonoBehaviour:
   OverwriteRules:
     Id:
       Value: 0
+  DoNotEndUntilAllDead: 0
   TileData:
   - Tile:
       Id:

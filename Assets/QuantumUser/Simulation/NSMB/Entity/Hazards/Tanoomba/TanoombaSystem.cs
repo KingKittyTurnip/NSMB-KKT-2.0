@@ -105,7 +105,7 @@ namespace Quantum {
                 if (tanoomba->ReusableTimer < FP._0_20) {
                     if (!tanoomba->Invulnrable) {
                         tanoomba->Invulnrable = true;
-                        f.Events.TanoombaPoof(entity);
+                        f.Events.TanoombaPoof(entity, transform->Position);
                     }
                 } else if (physicsObject->Velocity.Y < 0) {
                     tanoomba->Invulnrable = false;
@@ -132,7 +132,7 @@ namespace Quantum {
                     tanoomba->SwitchState(f, entity, TanoombaState.Searching);
                 } else if (!tanoomba->Invulnrable && tanoomba->ReusableTimer < FP._0_20) {
                     tanoomba->Invulnrable = true;
-                    f.Events.TanoombaPoof(entity);
+                    f.Events.TanoombaPoof(entity, transform->Position);
                 }
                 break;
             }
@@ -317,7 +317,7 @@ namespace Quantum {
             List<int> AvailibleForms = new List<int>();
             FP totalChance = 0;
             for (int i = 0; i < formAsset.Length; i++) {
-                if (formAsset[i].comparePrototype == null || tanoomba->TransformIntoAnythingAnytime || ExistsInRules(f, formAsset[i]) || ExistsInStage(f, formAsset[i].comparePrototype)) {
+                if (formAsset[i].compareRef == -1 || tanoomba->TransformIntoAnythingAnytime || ExistsInRules(f, formAsset[i]) || ExistsInStage(f, formAsset[i].compareRef)) {
                     AvailibleForms.Add(i);
                     totalChance += formAsset[i].ChanceWeight;
                 }
@@ -411,173 +411,25 @@ namespace Quantum {
             }
             }
             return false;
-
-            /*
-            switch (TryForm) {
-            #region Level Tranforms
-            case TanoombaFormState.Coin: {
-                //Pick A Random Coin
-                var stuff = f.Filter<Coin>();
-                while (stuff.NextUnsafe(out EntityRef OtherEntity, out var e)) {
-                    if (!e->IsCollected &&
-                        e->CoinType.HasFlag(CoinType.BakedInStage) && !e->CoinType.HasFlag(CoinType.Dotted)
-                        && FarFromPlayers(f, ref filter, f.Unsafe.GetPointer<Transform2D>(OtherEntity)->Position, GeneralDistance))
-                        EntityRefs.Add(OtherEntity);
-                }
-                if (EntityRefs.Count != 0) {
-                    Decided = true;
-                    EntityRef pick = EntityRefs[FPMath.RoundToInt(f.RNG->Next() * (EntityRefs.Count - 1))];
-                    tanoomba->TanoombaStartTransform(f, filter.Entity, pick, true);
-                    f.Unsafe.GetPointer<Coin>(pick)->IsCollected = true;
-                }
-                break;
-            }
-            case TanoombaFormState.Block: {
-                //Find A ? Block Tile, This One Will Be Finicky To Do
-                break;
-            }
-            case TanoombaFormState.Star: {
-                //Be Sure To Create The Starspawn Icon, but without the sounds or animation to not draw attention to it right away
-                //Pick A Random Star Spot
-                if (!IsInHazardList(f, "Bigstar"))
-                    break;
-                int spawnpoints = stage.BigStarSpawnpoints.Length;
-                for (int i = 0; i < spawnpoints; i++) {
-                    int count = f.RNG->Next(0, spawnpoints);
-                    int index = 0;
-                    for (int j = 0; j < spawnpoints; j++) {
-                        if (count-- == 0) {
-                            index = j;
-                            break;
-                        }
-                    }
-                    //Remove This Spawn Location, If possible ofc
-                    //if (!f.Global->UsedStarSpawns.IsSet(index)) {
-                    //    f.Global->UsedStarSpawns.Set(index);
-                    //    f.Global->UsedStarSpawnCount++;
-                    //}
-
-                    if (FarFromPlayers(f, ref filter, stage.BigStarSpawnpoints[index], GeneralDistance)) {
-                        Decided = true;
-                        tanoomba->TanoombaStartTransform(f, filter.Entity, EntityRef.None, true, stage.BigStarSpawnpoints[index]);
-                        break;
-                    }
-                }
-                break;
-            }
-            case TanoombaFormState.Powerup: {
-                //Get A Random Avalible Powerup
-                bool thisExists = true;
-                //eh, add it checks for the existing powerups
-                tanoomba->FormVariant = (byte) f.RNG->Next(0, 16);
-
-                if (thisExists) {
-                    Decided = true;
-                    tanoomba->TanoombaStartTransform(f, filter.Entity, EntityRef.None, false, position);
-                }
-                break;
-            }
-            #endregion
-            #region Enemy Transforms
-            case TanoombaFormState.Goomba: {
-                //See if Goombas Are In The Stage, Become Goomba
-                bool thisExists = false;
-                var stuff = f.Filter<Goomba>();
-                while (stuff.NextUnsafe(out EntityRef OtherEntity, out var e)) {
-                    thisExists = true;
-                    break;
-                }
-                thisExists |= !thisExists && IsInHazardList(f, "Goomba");
-                if (thisExists) {
-                    Decided = true;
-                    tanoomba->TanoombaStartTransform(f, filter.Entity, EntityRef.None, false, position);
-                }
-                break;
-            }
-            case TanoombaFormState.KoopaShell: {
-                //See if Koopas Are In The Stage, Become Koopa
-                bool thisExists = false;
-                List<byte> Variants = new();
-                var stuff = f.Filter<Koopa>();
-                while (stuff.NextUnsafe(out EntityRef OtherEntity, out var e)) {
-                    thisExists = true;
-                    Variants.Add((byte) (e->DontWalkOfLedges ? 1 : e->SpawnPowerupWhenStomped != null ? 2 : e->IsSpiny ? 3 : 0));
-                }
-                thisExists |= !thisExists && (IsInHazardList(f, "Koopa")); // allow other koopas?
-                if (thisExists) {
-                    Decided = true;
-                    tanoomba->FormVariant = Variants == null ? (byte) 0 : Variants[f.RNG->Next(0, Variants.Count)];
-                    tanoomba->TanoombaStartTransform(f, filter.Entity, EntityRef.None, false, position);
-                }
-                break;
-            }
-            #endregion
-            #region Hazard Transforms
-            //Check If Hazards Contains This Object
-            case TanoombaFormState.HeavyStone: {
-                bool thisExists = false;
-                var stuff = f.Filter<ThrowingObject>();
-                while (stuff.NextUnsafe(out EntityRef OtherEntity, out var e)) {
-                    if (e->Type == ThrowingObjectType.Stone) {
-                        thisExists = true;
-                        break;
-                    }
-                }
-                thisExists |= !thisExists && IsInHazardList(f, "Heavystone");
-                if (thisExists) {
-                    Decided = true;
-                    tanoomba->TanoombaStartTransform(f, filter.Entity, EntityRef.None, false, position);
-                }
-                break;
-            }
-            case TanoombaFormState.LemmyBall: {
-                break;
-            }
-            #endregion
-            }*/
-
-            /*if (!Decided) {
-                    Debug.Log("Tried Form: " + TryForm);
-                    AvailibleForms.Remove(TryForm);
-                    if (AvailibleForms.Count <= 0) {
-                        Decided = true;
-                        TryForm = -1;
-                    }
-                }
-                if (emergencycounter++ > 100) {
-                    Debug.LogError("Ran Emergency Counter, List Count: " + AvailibleForms.Count + " Decided?: " + Decided);
-                    foreach (var j in AvailibleForms) {
-                        Debug.LogWarning(j);
-                    }
-                    Debug.Break();
-                    return -1;
-                }
-            Debug.Log("Try This Form: " + TryForm);
-            return TryForm;*/
         }
 
         public bool ExistsInRules(Frame f, TanoombaTransformationAsset.TanoombaFormData thing) { //add the ability to "out" the special values
+            //check hazard list
             var hazarddata = f.ResolveList(f.Global->Rules.Hazards);
-
-            //TODO: redo this code so he checks for the int instead of the ref
-            /*
             foreach (var h in hazarddata) {
-                if (h.PrototypeRef == thing.comparePrototype) {
+                if (h.PrototypeRef == thing.compareRef) {
                     return true;
                 }
             }
-            //redo this list smh smh
+            //check item list
             var powerupdata = f.ResolveList(f.Global->Rules.Items);
-
             foreach (var h in powerupdata) {
-                var j = f.ResolveList(h.Items);
-                foreach (var i in j) {
-                    if (i.PowerupPrototype == thing.comparePrototype) {
-                        return true;
-                    }
+                if (h.PrototypeRef == thing.compareRef) {
+                    return true;
                 }
             }
-            if (f.Global->Rules.StarsToWin > 0 && thing.SpawnType == TanoombaTransformationAsset.TanoombaFormSpawnType.SpawnsAtStarSpawn) {
+
+            if (f.Global->Rules.IsStarsEnabled && thing.SpawnType == TanoombaTransformationAsset.TanoombaFormSpawnType.SpawnsAtStarSpawn) {
                 return true;
             }
             if (thing.SpawnType == TanoombaTransformationAsset.TanoombaFormSpawnType.AwayAndBillBlasters) {
@@ -592,10 +444,10 @@ namespace Quantum {
             if (f.Global->Rules.IsCoinsEnabled && 
                 (thing.SpawnType == TanoombaTransformationAsset.TanoombaFormSpawnType.SpawnsAtCoinAndReplace || thing.SpawnType == TanoombaTransformationAsset.TanoombaFormSpawnType.AwayAndCoinsEnabled)) {
                 return true;
-            }*/
+            }
             return false;
         }
-        public bool ExistsInStage(Frame f, AssetRef<EntityPrototype> compare) {
+        public bool ExistsInStage(Frame f, int compare) {
             return false;
         }
 
@@ -630,7 +482,7 @@ namespace Quantum {
             for (int i = 0; i < 15; i++) {
                 transform->Position = new FPVector2(
                     FPMath.RoundToInt(stage.StageWorldMin.X + ((stage.StageWorldMax.X - stage.StageWorldMin.X) * f.RNG->Next())), 
-                    FPMath.RoundToInt(stage.StageWorldMin.Y + ((stage.StageWorldMax.Y - stage.StageWorldMin.Y) * f.RNG->Next())));
+                    FPMath.RoundToInt(stage.StageWorldMin.Y + (((stage.StageWorldMax.Y-1) - stage.StageWorldMin.Y) * f.RNG->Next())));
 
                 if (PhysicsObjectSystem.BoxInGround(f, transform->Position, filter.PhysicsCollider->Shape, true, stage, filter.Entity, true) && !PhysicsObjectSystem.TryEject(f, filter.Entity, stage)) {
                     //Check if We Are In The Ground, Then Try To Eject, if Can't, Offset Position, if STILL can't, continue
@@ -836,11 +688,18 @@ namespace Quantum {
             enemy->IsActive = true;
 
             //Can turn into anything anytime?
-            tanoomba->TransformIntoAnythingAnytime = ExtraA == 1;
+            tanoomba->TransformIntoAnythingAnytime = ExtraA >= 1;
+            if (ExtraA == 2) {
+                tanoomba->FormData = tanoomba->FranticData;
+            }
 
             //uhh i would put specific hazard spawn data here
             tanoomba->FormId = -1;
 
+            if (ExtraB == 1) {
+                tanoomba->State = TanoombaState.Searching;
+                f.Events.TanoombaPoof(thisEntity, spawnpoint);
+            }
         }
         #endregion
     }

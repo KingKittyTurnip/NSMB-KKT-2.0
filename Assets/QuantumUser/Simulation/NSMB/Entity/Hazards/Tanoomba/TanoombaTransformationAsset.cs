@@ -17,7 +17,7 @@ namespace Quantum {
             [Header("---GenericInfo---")]
             public string Name; //name
             public TanoombaFormSpawnType SpawnType; //how do we spawn
-            public AssetRef<EntityPrototype> comparePrototype; //if none we skip the check, otherwise we check if this matches a object in the hazardlist, poweruplist, or currentstage
+            public int compareRef; //if -1 we skip the check, otherwise we check if this matches a object in the hazardlist, poweruplist, or currentstage
             public FP ChanceWeight = 1;
             public TanoombaFormMoveData MoveData;
             public TanoombaFormModelData ModelData;

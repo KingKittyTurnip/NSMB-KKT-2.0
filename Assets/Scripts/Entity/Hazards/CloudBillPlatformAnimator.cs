@@ -21,10 +21,11 @@ public unsafe class CloudBillPlatformAnimator : QuantumEntityViewComponent {
         }
 
         var cloudplatform = e.f.Unsafe.GetPointer<CloudBillPlatform>(e.Entity);
+        var platformtransform = e.f.Unsafe.GetPointer<Transform2D>(e.Entity);
         var list = e.f.ResolveList(cloudplatform->ActiveClouds);
         int Offset = cloudplatform->FacingRight ? -1 : 1;
 
-        if (e.Create) {
+        if (CloudList.Count < cloudplatform->CurrentClouds && !e.ApprearNew) {
             //create new
             var newCloud = Instantiate(TemplateGraphic, transform.position, Quaternion.identity);
             newCloud.SetActive(true);
@@ -46,9 +47,11 @@ public unsafe class CloudBillPlatformAnimator : QuantumEntityViewComponent {
                 break;
             }
             CloudList[i].SetBool("Destroyed", !list[i]);
-            CloudList[i].transform.localPosition = new Vector3(i * Offset, 0, 0);
+            CloudList[i].transform.position = new Vector3(platformtransform->Position.X.AsFloat + (i * Offset * 0.5f), platformtransform->Position.Y.AsFloat, 0);
         }
-        CloudList[0].SetTrigger("Appear");
+        if (!e.ApprearNew) {
+            CloudList[0].SetTrigger("Appear");
+        }
     }
 
     private void OnBreak(EventCloudBillCloudBreak e) {

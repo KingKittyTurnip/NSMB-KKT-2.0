@@ -56,10 +56,6 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
             return;
         }
 
-        if (!f.Exists(EntityRef)) {
-            return;
-        }
-
         //Vars
         var tanoomba = f.Unsafe.GetPointer<Tanoomba>(EntityRef);
         var enemy = f.Unsafe.GetPointer<Enemy>(EntityRef);
@@ -153,7 +149,7 @@ public unsafe class TanoombaAnimator : QuantumEntityViewComponent {
         if (e.Entity != EntityRef) {
             return;
         }
-        Instantiate(PoofParticle, transform.position, Quaternion.identity);
+        Instantiate(PoofParticle, e.pos.ToUnityVector3(), Quaternion.identity);
     }
     private unsafe void OnTanoombaTransform(EventTanoombaTransform e) {
         if (e.Entity != EntityRef) {

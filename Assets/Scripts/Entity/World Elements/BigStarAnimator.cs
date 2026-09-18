@@ -74,6 +74,8 @@ namespace NSMB.Entities.World {
                 graphicTransform.localScale = Vector3.one + new Vector3(sin, sin, 0);
                 //sRenderer.color = Color.white;
                 //sRenderer.enabled = true;
+                StarModel.SetActive(true);
+                TransparentModel.SetActive(false);
             } else {
                 graphicTransform.localScale = Vector3.one;
                 graphicTransform.Rotate(new(0, 0, rotationSpeed * 30 * (star->FacingRight ? -1 : 1) * (f.Unsafe.GetPointer<PhysicsObject>(EntityRef)->IsUnderwater ? 0.5f : 1f) * Time.deltaTime), Space.Self);

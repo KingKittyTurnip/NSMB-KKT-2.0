@@ -18,9 +18,10 @@ component Tanoomba {
 	[ExcludeFromPrototype] bool PlayerPassedBy;
 	[ExcludeFromPrototype] bool Invulnrable;
 
-	//transform data stuff
-	AssetRef<TanoombaTransformationAsset> FormData;
-	[ExcludeFromPrototype] FP AnimationCurveTimer;
+    //transform data stuff
+    AssetRef<TanoombaTransformationAsset> FormData;
+    AssetRef<TanoombaTransformationAsset> FranticData;
+    [ExcludeFromPrototype] FP AnimationCurveTimer;
 	[ExcludeFromPrototype] FPVector2 AnimationCurveOrigin;
 	AssetRef<PowerupAsset> PropellerAsset;
 	AssetRef<PowerupAsset> BubbleAsset;
@@ -48,9 +49,10 @@ event TanoombaLMAO {
 }
 event TanoombaPoof {
 	EntityRef Entity;
+	FPVector2 pos;
 }
 
-event TanoombaTransform {
+synced event TanoombaTransform {
 	Frame f;
 	EntityRef Entity;
 	int FormId;

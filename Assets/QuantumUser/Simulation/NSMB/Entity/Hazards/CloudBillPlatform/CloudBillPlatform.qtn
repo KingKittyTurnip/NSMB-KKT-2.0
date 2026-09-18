@@ -7,18 +7,20 @@ component CloudBillPlatform {
 	//byte Length;
 	[ExcludeFromPrototype] bool CreatedBill;
 	[ExcludeFromPrototype] bool FacingRight;
+    [ExcludeFromPrototype] bool LingerCloud;
 
-	[ExcludeFromPrototype] EntityRef CloudBill;
-	[ExcludeFromPrototype] FP CloudbillGoneTimer;
+    [ExcludeFromPrototype] EntityRef CloudBill;
+    [ExcludeFromPrototype] FP CloudbillGoneTimer;
+    [ExcludeFromPrototype] byte CurrentClouds;
 }
 
-event CloudBillCloudAnimation {
+synced event CloudBillCloudAnimation {
 	Frame f;
     EntityRef Entity;
-	bool Create;
+	bool ApprearNew;
 }
 
-event CloudBillCloudBreak {
+synced event CloudBillCloudBreak {
     EntityRef Entity;
 	byte id;
 }

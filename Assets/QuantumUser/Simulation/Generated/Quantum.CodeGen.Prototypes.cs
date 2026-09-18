@@ -1773,6 +1773,7 @@ namespace Quantum.Prototypes {
     public FPVector2 BaseGravity;
     public FP BaseTerminalVelocity;
     public AssetRef<TanoombaTransformationAsset> FormData;
+    public AssetRef<TanoombaTransformationAsset> FranticData;
     public AssetRef<PowerupAsset> PropellerAsset;
     public AssetRef<PowerupAsset> BubbleAsset;
     partial void MaterializeUser(Frame frame, ref Quantum.Tanoomba result, in PrototypeMaterializationContext context);
@@ -1786,6 +1787,7 @@ namespace Quantum.Prototypes {
         result.BaseGravity = this.BaseGravity;
         result.BaseTerminalVelocity = this.BaseTerminalVelocity;
         result.FormData = this.FormData;
+        result.FranticData = this.FranticData;
         result.PropellerAsset = this.PropellerAsset;
         result.BubbleAsset = this.BubbleAsset;
         MaterializeUser(frame, ref result, in context);
