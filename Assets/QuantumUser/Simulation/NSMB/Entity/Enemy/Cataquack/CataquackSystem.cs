@@ -53,7 +53,7 @@ namespace Quantum {
             if (physicsObject->IsTouchingGround) {
                 //Turn Around At Ledge
                 if (duckman->Varient > CataquackVarient.BasicBlue) {
-                    FPVector2 checkPosition = transform->Position + filter.Collider->Shape.Centroid /* + (FPVector2.Right * FP._0_05 * (enemy->FacingRight ? 1 : -1))*/;
+                    FPVector2 checkPosition = transform->Position /* + (FPVector2.Right * FP._0_05 * (enemy->FacingRight ? 1 : -1))*/;
                     if (!PhysicsObjectSystem.Raycast(f, stage, checkPosition, FPVector2.Down, FP._0_33, out var hit)) {
                         // Failed to hit a raycast, but check to make sure we don't have a contact point instead.
 

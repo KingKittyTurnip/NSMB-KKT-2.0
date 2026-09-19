@@ -44,7 +44,7 @@ namespace NSMB.UI.Pause {
         private bool isInConfirmationForQuitting;
         private string originalNoText, originalYesText;
 
-
+        public static bool PreventClean = false;
         public void OnValidate() {
             this.SetIfNull(ref playerElements, UnityExtensions.GetComponentType.Parent);
         }
@@ -259,6 +259,10 @@ namespace NSMB.UI.Pause {
         }
         
         public void OpenConfirmationMenu(bool quit) {
+            if (PreventClean) {
+                GlobalController.Instance.PlaySound(SoundEffect.UI_NuhUh);
+                return;
+            }
             if (IsReplay && !quit) {
                 // Toggle replay UI
                 bool replayNowActive = playerElements.ReplayUi.ToggleReplayControls();
@@ -349,6 +353,9 @@ namespace NSMB.UI.Pause {
             if (isPaused) {
                 Unpause(false);
             }
+        }
+
+        private void OnCleanJumpscare() { 
         }
 
         [Serializable]

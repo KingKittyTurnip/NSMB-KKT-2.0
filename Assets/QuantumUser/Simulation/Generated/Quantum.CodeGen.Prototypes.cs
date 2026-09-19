@@ -160,6 +160,7 @@ namespace Quantum.Prototypes {
   [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Bobomb))]
   public unsafe partial class BobombPrototype : ComponentPrototype<Quantum.Bobomb> {
+    public QBoolean Bombud;
     public FP ExplosionRadius;
     public FP Speed;
     public UInt16 DetonationFrames;
@@ -170,6 +171,7 @@ namespace Quantum.Prototypes {
         return f.Set(entity, component) == SetResult.ComponentAdded;
     }
     public void Materialize(Frame frame, ref Quantum.Bobomb result, in PrototypeMaterializationContext context = default) {
+        result.Bombud = this.Bombud;
         result.ExplosionRadius = this.ExplosionRadius;
         result.Speed = this.Speed;
         result.DetonationFrames = this.DetonationFrames;

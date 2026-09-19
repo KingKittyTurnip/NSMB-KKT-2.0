@@ -51,18 +51,12 @@ MonoBehaviour:
       CoinDeathPenalty: 0
       CoinItemCustomSpawnWeights: []
       ModifierHazardsEnabled:
-        Value: 1
-      MaxHazards: 1
+        Value: 0
+      MaxHazards: 0
       HazardFrequency: 200
       HeftyPercentage: 0
       HazardLifetime: 0
-      Hazards:
-      - PrototypeRef: 0
-        Team: 0
-        ExtraSlotA: 0
-        ExtraSlotB: 0
-        ExtraSlotC: 0
-        ExtraSlotD: 0
+      Hazards: []
       ModifierBulbEnabled:
         Value: 0
       BulbAbilityCount: 0

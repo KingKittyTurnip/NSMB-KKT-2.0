@@ -4,7 +4,7 @@ component Clean {
     [ExcludeFromPrototype] bool HasStarted;
 
     //player targetchance data
-    [ExcludeFromPrototype] byte Countdown;
+    [ExcludeFromPrototype] int Countdown;
     [ExcludeFromPrototype, AllocateOnComponentAdded, FreeOnComponentRemoved] list<EntityRef> Marios;
     [ExcludeFromPrototype] array<byte>[10] TargetChances;
 
@@ -12,12 +12,13 @@ component Clean {
     array<FPVector2>[10] WanderLocations;
 
     //hand attack data
+    [ExcludeFromPrototype] EntityRef Hand;
     array<FPVector2>[10] BlockSpots;
     array<FPVector2>[10] StartWalkSpots;
 }
 
 component CleanHands {
-    [ExcludeFromPrototype] EntityRef Owner;
+    //[ExcludeFromPrototype] EntityRef Owner;
 
     [ExcludeFromPrototype] ushort reusableTimer;
     [ExcludeFromPrototype] EntityRef Target;
@@ -25,4 +26,8 @@ component CleanHands {
 
 event CleanCounterUpdate {
     byte Counter;
+}
+
+enum HandAttackType : Byte {
+    None,
 }

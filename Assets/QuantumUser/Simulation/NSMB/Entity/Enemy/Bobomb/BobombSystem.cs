@@ -30,17 +30,17 @@ namespace Quantum {
             var bobomb = filter.Bobomb;
             var enemy = filter.Enemy;
 
-            if (!enemy->IsAlive
-                || filter.Freezable->IsFrozen(f)) {
-                return;
-            }
-
             bool lit = bobomb->CurrentDetonationFrames > 0;
             if (lit) {
-                if (QuantumUtils.Decrement(ref bobomb->CurrentDetonationFrames)) {
+                if (QuantumUtils.Decrement(ref bobomb->CurrentDetonationFrames) || !enemy->IsAlive) { //explode when dead
                     Explode(f, ref filter);
                     return;
                 }
+            }
+
+            if (!enemy->IsAlive
+                || filter.Freezable->IsFrozen(f)) {
+                return;
             }
 
             var holdable = filter.Holdable;
@@ -150,6 +150,14 @@ namespace Quantum {
                 }
             }
         }
+        public static void StartExplode(Frame f, EntityRef bobombEntity) {
+            var bobomb = f.Unsafe.GetPointer<Bobomb>(bobombEntity);
+            var bombphys = f.Unsafe.GetPointer<PhysicsObject>(bobombEntity);
+            //bobomb->ExplodeBud = true;
+            bobomb->CurrentDetonationFrames = 5;
+            bombphys->Velocity = FPVector2.Zero;
+            bombphys->IsFrozen = true;
+        }
 
         #region Interactions
         public void OnBobombBobombInteraction(Frame f, EntityRef bobombAEntity, EntityRef bobombBEntity) {
@@ -166,11 +174,13 @@ namespace Quantum {
 
             bool anyDamaged = false;
             if (kickedA || eitherHeld) {
-                bobombB->Kill(f, bobombBEntity, bobombAEntity, EnemyKillReason.Special);
+                StartExplode(f, bobombBEntity);
+                //bobombB->Kill(f, bobombBEntity, bobombAEntity, EnemyKillReason.Special);
                 anyDamaged = true;
             }
             if (kickedB || eitherHeld) {
-                bobombA->Kill(f, bobombAEntity, bobombBEntity, EnemyKillReason.Special);
+                StartExplode(f, bobombAEntity);
+                //bobombA->Kill(f, bobombAEntity, bobombBEntity, EnemyKillReason.Special);
                 anyDamaged = true;
             }
 
@@ -197,7 +207,8 @@ namespace Quantum {
 
             // Special insta-kill cases
             if (mario->InstakillsEnemies(marioPhysicsObject, true)) {
-                bobomb->Kill(f, bobombEntity, marioEntity, EnemyKillReason.Special);
+                StartExplode(f, bobombEntity);
+                //bobomb->Kill(f, bobombEntity, marioEntity, EnemyKillReason.Special);
                 return;
             }
 
@@ -252,12 +263,14 @@ namespace Quantum {
 
             switch (projectileAsset.Effect) {
             case ProjectileEffectType.KillEnemiesAndSoftKnockbackPlayers: {
-                f.Unsafe.GetPointer<Bobomb>(bobombEntity)->Kill(f, bobombEntity, projectileEntity, EnemyKillReason.Special);
+                //f.Unsafe.GetPointer<Bobomb>(bobombEntity)->Kill(f, bobombEntity, projectileEntity, EnemyKillReason.Special);
+                StartExplode(f, bobombEntity);
                 break;
             }
             case ProjectileEffectType.Fire: {
                 if (bobomb->CurrentDetonationFrames > 0) {
-                    bobomb->Kick(f, bobombEntity, projectileEntity, 0);
+                    //bobomb->Kick(f, bobombEntity, projectileEntity, 0);
+                    StartExplode(f, bobombEntity);
                 } else {
                     Light(f, bobombEntity, bobomb, false);
                 }
@@ -280,7 +293,8 @@ namespace Quantum {
             if (iceBlock->IsSliding
                 && upDot < Constants.PhysicsGroundMaxAngleCos) {
 
-                bobomb->Kill(f, bobombEntity, iceBlockEntity, EnemyKillReason.Special);
+                //bobomb->Kill(f, bobombEntity, iceBlockEntity, EnemyKillReason.Special);
+                StartExplode(f, bobombEntity);
             }
             return false;
         }
@@ -347,15 +361,17 @@ namespace Quantum {
         }
 
         public void OnBobombExplodeEntity(Frame f, EntityRef bobombEntity, EntityRef entity, ExplosionType type) {
-            if (f.Unsafe.TryGetPointer(entity, out Bobomb* bobomb)) {
-                bobomb->Kill(f, entity, bobombEntity, EnemyKillReason.Special);
+            if (f.Unsafe.TryGetPointer(entity, out Bobomb* bobomb) && bobomb->CurrentDetonationFrames > 5) {
+                //bobomb->Kill(f, entity, bobombEntity, EnemyKillReason.Special);
+                StartExplode(f, entity);
             }
         }
 
         public void OnIceBlockBroken(Frame f, EntityRef brokenIceBlock, IceBlockBreakReason breakReason, EntityRef attacker) {
             var iceBlock = f.Unsafe.GetPointer<IceBlock>(brokenIceBlock);
             if (f.Unsafe.TryGetPointer(iceBlock->Entity, out Bobomb* bobomb)) {
-                bobomb->Kill(f, iceBlock->Entity, brokenIceBlock, EnemyKillReason.Special);
+                //bobomb->Kill(f, iceBlock->Entity, brokenIceBlock, EnemyKillReason.Special);
+                StartExplode(f, iceBlock->Entity);
             }
         }
 
@@ -366,20 +382,23 @@ namespace Quantum {
                     // Don't die if being held
                     return;
                 }
-                bobomb->Kill(f, entity, EntityRef.None, EnemyKillReason.InWall);
+                //bobomb->Kill(f, entity, EntityRef.None, EnemyKillReason.InWall);
+                StartExplode(f, entity);
             }
         }
 
         public void OnEntityCrushed(Frame f, EntityRef entity) {
             if (f.Unsafe.TryGetPointer(entity, out Bobomb* bobomb)) {
-                bobomb->Kill(f, entity, EntityRef.None, EnemyKillReason.InWall);
+                //bobomb->Kill(f, entity, EntityRef.None, EnemyKillReason.InWall);
+                StartExplode(f, entity);
             }
         }
 
         public void OnMarioPlayerBecameInvincible(Frame f, EntityRef entity) {
             var mario = f.Unsafe.GetPointer<MarioPlayer>(entity);
             if (f.Unsafe.TryGetPointer(mario->HeldEntity, out Bobomb* bobomb)) {
-                bobomb->Kill(f, mario->HeldEntity, entity, EnemyKillReason.Special);
+                StartExplode(f, entity);
+                //bobomb->Kill(f, mario->HeldEntity, entity, EnemyKillReason.Special);
             }
         }
         public void InitializeHazard(Frame f, EntityRef thisEntity, EntityRef owner, FPVector2 spawnpoint, SpawnReason spawnReason, byte ExtraA, byte ExtraB, byte ExtraC, byte ExtraD) {

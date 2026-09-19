@@ -1,3 +1,4 @@
+using NSMB.UI.Game.Track;
 using NSMB.Utilities;
 using NSMB.Utilities.Extensions;
 using Quantum;
@@ -5,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
+using UnityEditor.Rendering.LookDev;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -54,7 +57,11 @@ namespace NSMB.UI.Game.Scoreboard {
             // Populate the scoreboard if we're a late joiner
             QuantumGame game = QuantumRunner.DefaultGame;
             if (game != null) {
-                PopulateScoreboard(game.Frames.Predicted);
+                Frame f = game.Frames.Predicted;
+                VersusStageData stage = f.FindAsset<VersusStageData>(f.Map.UserAsset);
+                animator.gameObject.SetActive(!stage.NoMinimap); //perma disable scoreboard
+
+                PopulateScoreboard(f);
             }
 
             QuantumCallback.Subscribe<CallbackGameResynced>(this, OnGameResynced);

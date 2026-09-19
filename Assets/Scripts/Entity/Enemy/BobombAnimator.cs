@@ -95,6 +95,13 @@ namespace NSMB.Entities.Enemies {
             } else {
                 transform.rotation = Quaternion.identity;
             }
+
+            //KKT Mod
+            if (bobomb->CurrentDetonationFrames > 0 && bobomb->CurrentDetonationFrames <= 5) {
+                sRenderer.transform.localScale += Time.deltaTime * Vector3.one * 8; //EXPAND
+            } else {
+                sRenderer.transform.localScale = Vector3.one;
+            }
         }
 
         private void OnGameEnded(EventGameEnded e) {

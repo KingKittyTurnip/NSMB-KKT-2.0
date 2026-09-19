@@ -36,4 +36,10 @@ MonoBehaviour:
   DoesntEffectBlueShell: 1
   DestroyParticleEffect: 5
   ShootSound: 44
-  SfxOverrides: []
+  SfxOverrides:
+  - SoundEffect: 43
+    Mode: 0
+    Priority: 0
+    PlayGlobally: 0
+    AudioClips:
+    - {fileID: 8300000, guid: 1fb569ca920d8284686590d7774949df, type: 3}

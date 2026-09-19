@@ -77,7 +77,8 @@ namespace Quantum {
                 if (!hazard->IPWSUntilGround || (hazard->IPWSUntilGround && f.Exists(filter.Entity) && f.Unsafe.GetPointer<PhysicsObject>(filter.Entity)->IsTouchingGround)) {
                     if (hazard->IPWSTime-- <= 0) {
                         hazard->JustSpawned = false;
-                        f.Unsafe.GetPointer<Interactable>(filter.Entity)->ColliderDisabled = false;
+                        if (f.Unsafe.TryGetPointer<Interactable>(filter.Entity, out var inter))
+                            inter->ColliderDisabled = false;
                     }
                 }
             }

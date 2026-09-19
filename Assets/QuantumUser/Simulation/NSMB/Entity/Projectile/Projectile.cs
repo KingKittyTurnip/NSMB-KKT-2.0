@@ -72,11 +72,13 @@ namespace Quantum {
             physicsObject->Gravity = asset.Gravity;
             if (asset.InheritShooterVelocity
                 && f.Unsafe.TryGetPointer(owner, out PhysicsObject* ownerPhysicsObject)
+                &&  f.Unsafe.TryGetPointer(owner, out MarioPlayer* mario)
                 // Moving in same direction
                 && FPMath.Sign(ownerPhysicsObject->Velocity.X) == 1 == FacingRight) {
 
                 Speed += FPMath.Abs(ownerPhysicsObject->Velocity.X * FP._0_75);
-                //physicsObject->TerminalVelocity = ownerPhysicsObject->Velocity.Y / -12;
+                if (mario->WalljumpFrames > 0)
+                    physicsObject->TerminalVelocity -= FP._0_75;
             }
 
             FP GetMaxCam = stage.CameraMinPosition.Y + FPMath.Max(stage.CameraMaxPosition.Y - stage.CameraMinPosition.Y, FP._7) - 1;

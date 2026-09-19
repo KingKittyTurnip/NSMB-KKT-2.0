@@ -89,7 +89,7 @@ namespace Quantum {
         }
 
         //KKT Mod
-        public void Initialize(Frame f, EntityRef entity, EntityRef owner, bool right, bool Thrown) {
+        public void Initialize(Frame f, EntityRef entity, EntityRef owner, bool right, bool ThrownMole = false, bool ThrownMario = false) {
             var enemy = f.Unsafe.GetPointer<Enemy>(entity);
             var hazard = f.Unsafe.GetPointer<Hazard>(entity);
             var holder = f.Unsafe.GetPointer<Holdable>(entity);
@@ -111,14 +111,20 @@ namespace Quantum {
             f.Events.BobombLit(entity, false);
 
             holder->PreviousHolder = owner;
-            if (Thrown) {
+            if (ThrownMario) {
+                //yeah whatever
+                phys->Velocity = new(
+                    (Constants._4_50 + Speed) * (enemy->FacingRight ? 1 : -1),
+                    4
+                );
+            } else if (ThrownMole) {
                 phys->Velocity = new(
                     (Constants._4_50 + Speed) * (enemy->FacingRight ? 1 : -1),
                     8
                 );
             } else {
                 holder->Holder = owner;
-                f.Unsafe.GetPointer<MarioPlayer>(entity)->HeldEntity = entity;
+                f.Unsafe.GetPointer<MarioPlayer>(owner)->HeldEntity = entity;
             }
         }
     }

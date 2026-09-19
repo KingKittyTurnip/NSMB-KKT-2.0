@@ -292,7 +292,7 @@ namespace Quantum {
                 //attack
                 if (CanAttack) {
                     if (QuantumUtils.Decrement(ref tank->AttackCooldown) && AttackHeld) {
-                        tank->AttackCooldown = 72;
+                        tank->AttackCooldown = 73;
                         f.Events.TankMontyAttack(entity, false);
                     }
                     if (tank->AttackCooldown == AttackStrikeFrame) {
@@ -305,8 +305,6 @@ namespace Quantum {
                                     f.Events.TankCannonPrepareFire(entity, i);
                                 }
                             }
-                            if (physicsObject->Velocity.Y < 1)
-                                physicsObject->Velocity.Y = 1;
                         } else {
                             //make a bobomb
                             f.Events.TankMontyAttack(entity, true);
@@ -321,6 +319,8 @@ namespace Quantum {
                             bombHazard->IsHazard = true;
                             bombHazard->LifeTime = 360;//6 seconds
                         }
+                        if (physicsObject->Velocity.Y < 1)
+                            physicsObject->Velocity.Y = 1;
                     }
                 }
             }

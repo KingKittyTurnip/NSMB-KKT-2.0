@@ -117,7 +117,6 @@ namespace Quantum {
                 var position = f.Unsafe.GetPointer<Transform2D>(entity)->Position;
 
                 //spawn a hefty or a normal hazard?
-                //UnityEngine.Debug.LogError("hefty's: " + f.Global->HeftyCount + " percentage: " + f.Global->Rules.HeftyPercentage);
                 FP heftychance =  f.Global->Rules.RealHeftyPercent - ((FP)f.Global->HeftyCount);
                 bool hefty = f.RNG->Next() < heftychance;
                 bool TryAgain = false;
@@ -126,9 +125,8 @@ namespace Quantum {
                 for (byte item = 0; item < hazarddata.Count; item++) {
                     //Hazard Can Spawn
                     //Add special spawn conditions for:
-                    //potion: spawns when the lobby contains at least 6 players, if one doesn't exist the next hazard is guerenteed to be it (this condition is disabled in advanced lobbies)
-                    //cauldron: spawns only if a boss entity is in the ruleset
-                    if (stuff[hazarddata[item].PrototypeRef].Hefty == hefty) { //Hefty Or No...
+                    //potion: spawns when the lobby contains at least 6 players, if one doesn't exist the next hazard is guerenteed to be it
+                    if (stuff[hazarddata[item].PrototypeRef].Hefty == hefty || f.Global->Rules.RealHeftyPercent == -1) { //Hefty Or No... or hefty disabled
                         spawnablehazards.Add(hazarddata[item]);
                     }
                 }
@@ -145,9 +143,6 @@ namespace Quantum {
 
                 //pick a hazard selected
                 int pick = f.RNG->Next(0, spawnablehazards.Count);
-                //UnityEngine.Debug.Log(pick + " " + spawnablehazards.Count);
-                //if (hefty)
-                //    f.Global->HeftyCount++;
 
                 //SpawnHazard
                 EntityRef newEntity = f.Create(stuff[spawnablehazards[pick].PrototypeRef].entityPrototype); //error out of range?

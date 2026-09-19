@@ -8,6 +8,7 @@ using Photon.Realtime;
 using Quantum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using TMPro;
 using UnityEditor.SceneManagement;
@@ -54,11 +55,14 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
         private bool _roomIdVisible;
 
         private List<GameObject> allMapListGameObjects = new();
-        private List<GameObject> allhazardListGameObjects = new();
 
         [Header("KKT Mod")]
         [SerializeField] private GameObject hazardContent;
         [SerializeField] private HazardSelectionButton hazardlistButtonTemplate;
+        [SerializeField] private List<HazardSelectionButton> allhazardListGameObjects = new();
+
+        [NonSerialized] public int CurrentlySelectedObject;
+        [NonSerialized] public bool EditingItems;
 
         public override void Initialize() {
             base.Initialize();
@@ -76,6 +80,10 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             stageSelectionButtonTemplate.gameObject.SetActive(false);
             //KKT Mod
             stageSelectionButtonTemplate.gameObject.SetActive(false);
+        }
+
+        private void Start() {
+            QuantumEvent.Subscribe<EventHazardListChanged>(this, OnHazardListChanged);
         }
 
         public void PopulateMaps() {
@@ -177,9 +185,9 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             }
         }
 
-        public unsafe void PopulateHazardOrItems(bool Items) {
+        public unsafe void PopulateHazardOrItems(bool Items, bool initial) {
             foreach (var go in allhazardListGameObjects) {
-                Destroy(go);
+                Destroy(go.gameObject);
             }
             allhazardListGameObjects.Clear();
 
@@ -193,9 +201,11 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
                 previousButton = null;
 
                 HazardSelectionButton newButton = Instantiate(hazardlistButtonTemplate, hazardContent.transform);
-                newButton.Initialize(rules[i].PrototypeRef, i);
+                newButton.Initialize(i, rules[i].PrototypeRef);
                 newButton.gameObject.SetActive(true);
-                allhazardListGameObjects.Add(newButton.gameObject);
+                allhazardListGameObjects.Add(newButton);
+                if (i == 0 && initial)
+                    newButton.Select();
 
                 if (previousButton) {
                     var prevNav = previousButton.navigation;
@@ -208,6 +218,13 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
                 }
 
                 previousButton = newButton;
+            }
+        }
+
+        public void OnHazardListChanged(EventHazardListChanged e) {
+            PopulateHazardOrItems(e.IsItems, false);
+            if (e.NewHazardId != 255) {
+                (e.IsItems ? allhazardListGameObjects : allhazardListGameObjects)[e.NewHazardId].OnUpdateDescriptionBox();
             }
         }
 
@@ -248,7 +265,7 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             base.Show(first);
 
             PopulateMaps();
-            PopulateHazardOrItems(false);
+            PopulateHazardOrItems(false, true);
 
             Room currentRoom = NetworkHandler.Client.CurrentRoom;
             maxPlayerSlider.value = currentRoom.MaxPlayers;

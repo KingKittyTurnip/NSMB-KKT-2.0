@@ -43,6 +43,8 @@ namespace Quantum {
             if (RemoveAll) {
                 rules.Clear();
             } else if (RemoveSingle) {
+                if (rules.Count <= 1)
+                    return;
                 rules.RemoveAt(Index);
             } else {
                 if (Index >= rules.Count) {
@@ -79,7 +81,7 @@ namespace Quantum {
             } else {
                 f.Global->Rules.Hazards = rules;
             }
-            //f.Events.TriggersChanged(f); // h, used for dem buttons ain't it?
+            f.Events.HazardListChanged(f, (byte) FPMath.Clamp(Index, 0, rules.Count-1), EditingItems);
 
             if (f.Global->GameStartFrames > 0 && !QuantumUtils.IsGameStartable(f)) {
                 GameLogicSystem.StopCountdown(f);

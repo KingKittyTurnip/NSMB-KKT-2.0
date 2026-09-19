@@ -4,11 +4,12 @@
 #define _14_75 14.75
 
 component Bobomb {
+	bool Bombud;
 	FP ExplosionRadius;
 	FP Speed;
 	ushort DetonationFrames;
 
-	[ExcludeFromPrototype] ushort CurrentDetonationFrames;
+    [ExcludeFromPrototype] ushort CurrentDetonationFrames;
 }
 
 signal OnBobombExplodeEntity(EntityRef bobomb, EntityRef entity, ExplosionType type);

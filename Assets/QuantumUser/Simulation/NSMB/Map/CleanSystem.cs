@@ -34,7 +34,22 @@ namespace Quantum {
                             }
                         }
                     }
+
+                    //destroy 2 switches
+                    int rngA = f.RNG->Next(0, clean->Counter-1);
+                    int rngB = f.RNG->Next(0, clean->Counter-2);
+                    int numb = 0;
+                    var allSwitches = f.Filter<QuestionSwitch>();
+                    while (allSwitches.NextUnsafe(out EntityRef switchEntity, out QuestionSwitch* Qswitch)) {
+                        if (numb == rngA || numb == rngB) {
+                            numb--;
+                            f.Destroy(switchEntity);
+                        }
+                        numb++;
+                    }
                     clean->HasStarted = true;
+                    clean->Countdown = f.RNG->Next(10, 15)*60;
+                    return;
                 }
 
                 byte MaxChance = 200;

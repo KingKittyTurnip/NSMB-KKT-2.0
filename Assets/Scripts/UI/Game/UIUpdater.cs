@@ -4,6 +4,7 @@ using NSMB.Entities.World;
 using NSMB.Networking;
 using NSMB.Quantum;
 using NSMB.UI.Game.Track;
+using NSMB.UI.Pause;
 using NSMB.UI.Translation;
 using NSMB.Utilities;
 using NSMB.Utilities.Extensions;
@@ -122,6 +123,7 @@ namespace NSMB.UI.Game {
             PlayerTrackIcon.HideAllPlayerIcons = stage.HidePlayersOnMinimap;
             boos.SetActive(stage.HidePlayersOnMinimap);
             Track.SetActive(!stage.NoMinimap);
+            PauseMenuManager.PreventClean = stage.NoMinimap;
             StartCoroutine(UpdatePingTextCoroutine());
 
             QuantumCallback.Subscribe<CallbackUpdateView>(this, OnUpdateView);

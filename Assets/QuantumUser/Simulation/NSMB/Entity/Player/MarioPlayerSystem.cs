@@ -1658,6 +1658,25 @@ namespace Quantum {
                 return;
             }
 
+            //Check For Bombud
+            if (f.Exists(mario->BombProjectile)) {
+                if (inputs.PowerupAction.WasPressed) {
+                    //Explode Yourself Mr Bomb
+                    if (f.Unsafe.TryGetPointer(mario->BombProjectile, out Bobomb* bobomb) && bobomb->CurrentDetonationFrames > 5) {
+                        mario->ProjectileDelayFrames = 60;
+                        BobombSystem.StartExplode(f, mario->BombProjectile);
+
+                        f.Events.MarioDetonateBombud(filter.Entity, mario->BombProjectile, true, false);
+                    }
+                }
+                return;
+            } else if (mario->BombProjectile != EntityRef.None) {
+                //Wait... My Bomb Is Dead ;C
+                mario->BombProjectile = EntityRef.None;
+                f.Events.MarioDetonateBombud(filter.Entity, EntityRef.None, false, false);
+                return;
+            }
+
             if (!(inputs.PowerupAction.WasPressed
                 || (state == PowerupState.PropellerMushroom && inputs.PropellerPowerupAction.WasPressed && !physicsObject->IsTouchingGround && !mario->IsWallsliding)
                 || ((state == PowerupState.FireFlower || state == PowerupState.IceFlower || state == PowerupState.HammerSuit) && inputs.FireballPowerupAction.WasPressed))) {
@@ -1699,6 +1718,8 @@ namespace Quantum {
                 Projectile* projectile;
                 if (mario->CurrentPowerupState == PowerupState.BubbleFlower) {
                     projectile = ShootBubbleProjectile(f, ref filter, physics, stage);
+                    f.Events.MarioPlayerShotProjectile(filter.Entity, *projectile);
+                    break; //DO NOT stop the walljump frames.
                 } else if (mario->CurrentPowerupState == PowerupState.HammerSuit) {
                     projectile = ShootHammerProjectile(f, ref filter, physics, inputs.Up.IsDown);
                 } else {
@@ -1711,6 +1732,15 @@ namespace Quantum {
                 break;
             }
             case PowerupState.Bombro: {
+                // Creates A Bomb Entity
+                if (mario->ProjectileDelayFrames > 0 || mario->BombProjectile != EntityRef.None) {
+                    return;
+                }
+
+                mario->ProjectileDelayFrames = 90;
+
+                mario->BombProjectile = CreateBombudProjectile(f, ref filter, physics, inputs.Sprint);
+                f.Events.MarioDetonateBombud(filter.Entity, EntityRef.None, false, true);
                 break;
             }
             case PowerupState.Bioflower: {
@@ -1823,6 +1853,38 @@ namespace Quantum {
             var projectile = f.Unsafe.GetPointer<Projectile>(newEntity);
             projectile->InitializeBubble(f, stage, newEntity, filter.Entity, spawnPos, mario->FacingRight, true);
             return projectile;
+        }
+
+        private EntityRef CreateBombudProjectile(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics, bool Carry) {
+            var mario = filter.MarioPlayer;
+            var physicsObject = filter.PhysicsObject;
+
+            FPVector2 spawnPos = filter.Transform->Position + new FPVector2((mario->FacingRight ? 1 : -1) * (Carry ? Constants._0_40 : FP._0_25), Constants._0_35);
+            EntityRef newEntity = f.Create(f.SimulationConfig.BombudPrototype);
+            var newHoldable = f.Unsafe.GetPointer<Holdable>(newEntity);
+            var newPhys = f.Unsafe.GetPointer<PhysicsObject>(newEntity);
+            var newTransform = f.Unsafe.GetPointer<Transform2D>(newEntity);
+            f.Unsafe.TryGetPointer<Bobomb>(newEntity, out Bobomb* bomb);
+            if (bomb != null) {
+                //bomb
+                bomb->Initialize(f, newEntity, filter.Entity, mario->FacingRight, ThrownMario: !tryCarry(ref filter));
+                newTransform->Position = spawnPos;
+            } else {
+                //undefined
+            }
+
+            bool tryCarry(ref Filter filter) {
+                if (Carry) {
+                    newHoldable->Pickup(f, newEntity, filter.Entity);
+                    return true;
+                } else {
+                    newHoldable->IgnoreOwnerFrames = 15;
+                    newPhys->Velocity = new FPVector2(mario->FacingRight ? 4 : -4, 6);
+                    f.Events.MarioPlayerThrewObject(filter.Entity, newEntity); // make this the upwards throwing anim
+                }
+                return false;
+            }
+            return newEntity;
         }
 
         private void HandleSwimming(Frame f, ref Filter filter, MarioPlayerPhysicsInfo physics) {

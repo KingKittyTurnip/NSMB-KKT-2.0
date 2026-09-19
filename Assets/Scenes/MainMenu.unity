@@ -10460,10 +10460,10 @@ RectTransform:
   - {fileID: 1637441218}
   m_Father: {fileID: 1964601033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 98.99999, y: -120.6}
+  m_SizeDelta: {x: 197.99998, y: 26.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &218515103
 MonoBehaviour:
@@ -10773,7 +10773,7 @@ RectTransform:
   m_Father: {fileID: 400640346}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 24, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10974,7 +10974,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.00012207031}
-  m_SizeDelta: {x: -10, y: 0}
+  m_SizeDelta: {x: -10, y: 54.010002}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &238448607
 MonoBehaviour:
@@ -15748,10 +15748,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 238448606}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 366.97232, y: -27.005001}
+  m_SizeDelta: {x: 703.94464, y: 24.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &327174008
 MonoBehaviour:
@@ -16796,11 +16796,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 351041894}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: d776a1e43071eb948aa77d0fbd714f3b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.UI.MainMenu.Submenus.Prompts.RemoveAddHazardButton
   m_Navigation:
-    m_Mode: 4
+    m_Mode: 3
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -16822,7 +16822,7 @@ MonoBehaviour:
       type: 3}
     m_SelectedSprite: {fileID: -1373246301, guid: 91f06c55def493a49b30df830e081e59,
       type: 3}
-    m_DisabledSprite: {fileID: -1373246301, guid: 91f06c55def493a49b30df830e081e59,
+    m_DisabledSprite: {fileID: 7499154508442906066, guid: 91f06c55def493a49b30df830e081e59,
       type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -16831,22 +16831,10 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 1488821006}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1621273785}
-        m_TargetAssemblyTypeName: RulesetSaverLoader, Assembly-CSharp
-        m_MethodName: OnSavePressed
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  m_TargetGraphic: {fileID: 351041898}
+  settingSubmenu: {fileID: 892953789}
+  canvas: {fileID: 2030938839}
+  Adding: 1
 --- !u!1 &353184347
 GameObject:
   m_ObjectHideFlags: 0
@@ -27927,7 +27915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   submenu: {fileID: 892953789}
-  header: {fileID: 1122920697}
+  header: {fileID: 87382950}
   root: {fileID: 562389157}
   _backButton: {fileID: 938455791}
   _defaultSelection: {fileID: 1506813171}
@@ -32659,7 +32647,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.61006284, g: 0.61006284, b: 0.61006284, a: 1}
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0, g: 0.957, b: 1, a: 1}
     m_DisabledColor: {r: 0.10062885, g: 0.10062885, b: 0.10062885, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -32677,10 +32665,11 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 673403965}
   canvas: {fileID: 2030938839}
-  scroll: {fileID: 377016340}
+  settingSubmenu: {fileID: 892953789}
   hazardIcon: {fileID: 2107083520}
   hazardName: {fileID: 284936511}
   hazardIconBg: {fileID: 1684717491}
+  hazardBg: {fileID: 673403965}
   DescriptionName: {fileID: 1523988291}
   DescriptionBox: {fileID: 941563698}
 --- !u!222 &673403967
@@ -39310,10 +39299,10 @@ RectTransform:
   - {fileID: 2024500105}
   m_Father: {fileID: 1964601033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 98.99999, y: -67}
+  m_SizeDelta: {x: 197.99998, y: 26.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &812976534
 GameObject:
@@ -43006,7 +42995,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NSMB.UI.MainMenu.Submenus.Prompts.ChangeTextOnSelect
   text: {fileID: 1080735044}
   translationKey: How often a hefty Hazard can appear. For percents above 100, it
-    will spawn Hefty Hazards until the amount matches the percent.
+    will spawn Hefty Hazards until the amount matches the percent. If turned Off,
+    they will spawn randomly like normal hazards.
 --- !u!1 &862636115
 GameObject:
   m_ObjectHideFlags: 0
@@ -43872,6 +43862,7 @@ MonoBehaviour:
   privateToggle: {fileID: 109884504}
   hazardContent: {fileID: 660501630}
   hazardlistButtonTemplate: {fileID: 673403966}
+  allhazardListGameObjects: []
 --- !u!1 &893153693
 GameObject:
   m_ObjectHideFlags: 0
@@ -46548,7 +46539,7 @@ GameObject:
   - component: {fileID: 961506502}
   - component: {fileID: 961506503}
   m_Layer: 5
-  m_Name: CustomPowerups
+  m_Name: Hazards
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46619,9 +46610,9 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   canvas: {fileID: 2030938839}
   label: {fileID: 1952673749}
-  labelPrefix: <sprite name=room_powerups>
+  labelPrefix: <sprite name=room_hazards>
   labelSuffix: 
-  ruleType: 128
+  ruleType: 2048
   clickToEdit: 1
   dontAutosave: 0
   editingColor: {r: 1, g: 1, b: 1, a: 1}
@@ -53902,7 +53893,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1982709ee1930a4f8172712607593b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: ui.inroom.settings.room.header
+  key: Hazards
   text: {fileID: 1122920697}
 --- !u!114 &1122920697
 MonoBehaviour:
@@ -54795,8 +54786,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 791989381}
   m_HandleRect: {fileID: 791989380}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.825919
+  m_Value: 0
+  m_Size: 0.82579756
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -57012,6 +57003,8 @@ MonoBehaviour:
   root: {fileID: 1167311448}
   _backButton: {fileID: 522924783}
   _defaultSelection: {fileID: 351041894}
+  IsItemsTab: 0
+  settingSubmenu: {fileID: 892953789}
 --- !u!1 &1175046460
 GameObject:
   m_ObjectHideFlags: 0
@@ -57986,7 +57979,7 @@ GameObject:
   - component: {fileID: 1210584277}
   - component: {fileID: 1210584276}
   - component: {fileID: 1210584275}
-  - component: {fileID: 1210584274}
+  - component: {fileID: 1210584279}
   m_Layer: 16
   m_Name: Trash hazard
   m_TagString: Untagged
@@ -58015,66 +58008,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 57.5781}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1210584274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1210584272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 4
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 2
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: -1373246301, guid: 91f06c55def493a49b30df830e081e59,
-      type: 3}
-    m_PressedSprite: {fileID: 7499154508442906066, guid: 91f06c55def493a49b30df830e081e59,
-      type: 3}
-    m_SelectedSprite: {fileID: -1373246301, guid: 91f06c55def493a49b30df830e081e59,
-      type: 3}
-    m_DisabledSprite: {fileID: -1373246301, guid: 91f06c55def493a49b30df830e081e59,
-      type: 3}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 1488821006}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1621273785}
-        m_TargetAssemblyTypeName: RulesetSaverLoader, Assembly-CSharp
-        m_MethodName: OnSavePressed
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1210584275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58160,6 +58093,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1210584272}
   m_CullTransparentMesh: 1
+--- !u!114 &1210584279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210584272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d776a1e43071eb948aa77d0fbd714f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NSMB.UI.MainMenu.Submenus.Prompts.RemoveAddHazardButton
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 2
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: -1373246301, guid: 91f06c55def493a49b30df830e081e59,
+      type: 3}
+    m_PressedSprite: {fileID: 7499154508442906066, guid: 91f06c55def493a49b30df830e081e59,
+      type: 3}
+    m_SelectedSprite: {fileID: -1373246301, guid: 91f06c55def493a49b30df830e081e59,
+      type: 3}
+    m_DisabledSprite: {fileID: 7499154508442906066, guid: 91f06c55def493a49b30df830e081e59,
+      type: 3}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1210584277}
+  settingSubmenu: {fileID: 892953789}
+  canvas: {fileID: 2030938839}
+  Adding: 0
 --- !u!1 &1211351436
 GameObject:
   m_ObjectHideFlags: 0
@@ -58596,10 +58577,10 @@ RectTransform:
   - {fileID: 429465077}
   m_Father: {fileID: 1964601033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 98.99999, y: -40.199997}
+  m_SizeDelta: {x: 197.99998, y: 26.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1214140503
 GameObject:
@@ -60055,10 +60036,10 @@ RectTransform:
   - {fileID: 476871100}
   m_Father: {fileID: 1964601033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 98.99999, y: -93.799995}
+  m_SizeDelta: {x: 197.99998, y: 26.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1263606431
 GameObject:
@@ -68905,18 +68886,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &1488821006 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1800673866673697966, guid: 35179d9b96baaeb41989863a810dfed0,
-    type: 3}
-  m_PrefabInstance: {fileID: 1047196429}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1488989672
 GameObject:
   m_ObjectHideFlags: 0
@@ -71563,7 +71532,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -24.01}
-  m_SizeDelta: {x: 406.39996, y: 0}
+  m_SizeDelta: {x: 406.51523, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1532295032
 MonoBehaviour:
@@ -73095,7 +73064,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1576260155
@@ -73246,10 +73215,10 @@ RectTransform:
   - {fileID: 1280000262}
   m_Father: {fileID: 1964601033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 98.99999, y: -13.4}
+  m_SizeDelta: {x: 197.99998, y: 26.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1578363198
 GameObject:
@@ -74916,18 +74885,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1047196429}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1621273785 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3078986292041425411, guid: 35179d9b96baaeb41989863a810dfed0,
-    type: 3}
-  m_PrefabInstance: {fileID: 1047196429}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8322419491aa4014ab818ed84d66851d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RulesetSaverLoader
 --- !u!1 &1621987997
 GameObject:
   m_ObjectHideFlags: 0
@@ -92525,7 +92482,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1964601033
 RectTransform:
   m_ObjectHideFlags: 0
@@ -98234,7 +98191,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2076278470
 RectTransform:
   m_ObjectHideFlags: 0
@@ -101663,7 +101620,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -21.999756}
+  m_AnchoredPosition: {x: 0, y: -21.999817}
   m_SizeDelta: {x: -40, y: -84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2144613009

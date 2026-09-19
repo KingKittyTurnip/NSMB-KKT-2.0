@@ -397,3 +397,10 @@ event MetalLanded {
     EntityRef Entity;
 	FPVector2 Position;
 }
+
+event MarioDetonateBombud {
+    EntityRef Entity;
+    EntityRef BombEntity;
+	bool Spark;
+	bool Created;
+}

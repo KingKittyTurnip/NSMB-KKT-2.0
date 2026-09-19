@@ -1,5 +1,5 @@
 public enum SoundEffect : byte {
-    //CURRENT HIGHEST NUMBER: 120 (use 121 next)
+    //CURRENT HIGHEST NUMBER: 123 (use 124 next)
     //Enemy
     Enemy_Generic_Freeze = 0,
     Enemy_Generic_FreezeShatter = 1,
@@ -135,5 +135,6 @@ public enum SoundEffect : byte {
 
 
 
-    World_Boss_Hit = 120,
+    World_Boss_Hit = 122,
+    UI_NuhUh = 123,
 }

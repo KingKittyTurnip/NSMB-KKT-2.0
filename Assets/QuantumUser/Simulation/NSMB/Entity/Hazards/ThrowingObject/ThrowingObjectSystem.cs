@@ -808,19 +808,28 @@ namespace Quantum {
                 if (Dis->GroundBounce)
                     Dis->BounceTimes = 1;
                 if (Dis->StarsToDrop != 0) {
+                    bool Playknockback = false;
                     if (Dis->Type == ThrowingObjectType.BowserShell) {
+                        //deal damage
                         if (mario->DoKnockback(f, marioEntity, hitRight, Dis->StarsToDrop - 1, KnockbackStrength.FireballBump, thisEntity)) {
-                            mario->Powerdown(f, marioEntity, false, thisEntity);
-                            f.Unsafe.GetPointer<PhysicsObject>(marioEntity)->Velocity.Y = 5;
-                            f.Events.PlayKnockbackEffect(marioEntity, thisEntity, KnockbackStrength.FireballBump,
-                                (f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position) / 2, true);
+                            if (mario->IsCrouchedInShell || mario->IsInShell) {
+                                mario->Powerdown(f, marioEntity, false, thisEntity);
+                                f.Unsafe.GetPointer<PhysicsObject>(marioEntity)->Velocity.Y = 5;
+                            }
+                            Playknockback = true;
                         }
                     } else if (Dis->Type == ThrowingObjectType.Freezie) {
+                        //freeze
                         Dis->HitSomething = true;
                         f.Unsafe.GetPointer<IceBlock>(IceBlockSystem.Freeze(f, marioEntity))->AutoBreakFrames = 360;
+                    } else if ((mario->IsCrouchedInShell || mario->IsInShell) && Dis->BouceOffPlayer) {
+                        //resist these pitiful hits
+                        mario->FacingRight = !mario->FacingRight;
+                        Playknockback = true;
                     } else if (Dis->Type == ThrowingObjectType.Pow) {
                         //direct hit, get extra value
                         if (mario->DoKnockback(f, marioEntity, hitRight, Dis->StarsToDrop + 1, KnockbackStrength.Normal, thisEntity)) {
+                            Playknockback = true;
                             mario->DamageInvincibilityFrames = 120;
                             if (Dis->Varient != 1) {
                                 mario->JumpHeld = true;
@@ -828,10 +837,12 @@ namespace Quantum {
                             }
                         }
                     } else {
-                        if (mario->DoKnockback(f, marioEntity, hitRight, Dis->StarsToDrop, /*TeamateItem*/ Dis->StarsToDrop == 2 ? KnockbackStrength.Normal : Dis->StarsToDrop > 2 ? KnockbackStrength.Groundpound : KnockbackStrength.FireballBump, thisEntity)) {
-                            f.Events.PlayKnockbackEffect(marioEntity, thisEntity, KnockbackStrength.FireballBump,
+                        //normal hit
+                        Playknockback = mario->DoKnockback(f, marioEntity, hitRight, Dis->StarsToDrop, /*TeamateItem*/ Dis->StarsToDrop == 2 ? KnockbackStrength.Normal : Dis->StarsToDrop > 2 ? KnockbackStrength.Groundpound : KnockbackStrength.FireballBump, thisEntity);
+                    }
+                    if (Playknockback) {
+                        f.Events.PlayKnockbackEffect(marioEntity, thisEntity, KnockbackStrength.FireballBump,
                                 (f.Unsafe.GetPointer<Transform2D>(marioEntity)->Position + f.Unsafe.GetPointer<Transform2D>(thisEntity)->Position) / 2, true);
-                        }
                     }
                 }
                 return false;
@@ -1154,6 +1165,11 @@ namespace Quantum {
 
             //Make Sure We Wern't Thrown into the wall
             PhysicsObjectSystem.TryEject(f, entity);
+
+            if (physicsObject->UnderwaterCounter > 0) {
+                //this fixes throwingobjects from having underwater physics while underwater, but you know what it doesn't fix? them having normal physics when thrown underwater!
+                physicsObject->UnderwaterCounter = 0;
+            }
 
             //TODO: Up key
             Dis->Thrown = !dropped && !crouching;

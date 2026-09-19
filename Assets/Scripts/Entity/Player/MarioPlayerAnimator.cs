@@ -239,6 +239,7 @@ namespace NSMB.Entities.Player {
 
             //KKT Mod
             QuantumEvent.Subscribe<EventMetalLanded>(this, OnMetalLanded, FilterOutReplayFastForward);
+            QuantumEvent.Subscribe<EventMarioDetonateBombud>(this, OnMarioDetonateBombud, FilterOutReplayFastForward);
         }
 
         public override void OnActivate(Frame f) {
@@ -627,7 +628,7 @@ namespace NSMB.Entities.Player {
             */
             // Shader effects
             materialBlock ??= new();
-            materialBlock.SetFloat(ParamEyeState, (int) (mario->IsDead || mario->IsInKnockback ? Enums.PlayerEyeState.Death : eyeState));
+            materialBlock.SetFloat(ParamEyeState, (int) (mario->IsDead || mario->IsInKnockback ? Enums.PlayerEyeState.Death : mario->CurrentPowerupState == PowerupState.Doneflower && eyeState != Enums.PlayerEyeState.FullBlink ? Enums.PlayerEyeState.HalfBlink : eyeState));
             materialBlock.SetFloat(ParamModelScale, modelRoot.transform.lossyScale.x * (mario->CurrentPowerupState >= PowerupState.Mushroom ? 1f : 0.5f));
             materialBlock.SetColor(ParamOverallsColor, skin?.OverallsColor.AsColor ?? Color.clear);
             materialBlock.SetColor(ParamShirtColor, skin?.ShirtColor.AsColor ?? Color.clear);
@@ -1463,6 +1464,16 @@ namespace NSMB.Entities.Player {
             }
 
             SpawnParticle(Enums.PrefabParticle.Player_MetalLand.GetGameObject(), transform.position + (Vector3.back * 5));
+        }
+        private void OnMarioDetonateBombud(EventMarioDetonateBombud e) {
+            if (e.Entity != EntityRef) {
+                return;
+            }
+            if (!e.Created && e.Spark) {
+                //TODO: Make Spark particle
+                animator.SetTrigger(ParamThrow);
+                PlaySound(SoundEffect.Player_Voice_DoubleJump, variant: 2);
+            }
         }
     }
 }
