@@ -17,14 +17,13 @@ namespace Quantum {
                     new PrePhysicsObjectSystem(),
                     new InteractionPhysicsQuerySystem(),
                     new GenericMoverSystem(),
-                        //KKT Mod
-                        new SeesawSystem(),
                     new SpinnerSystem(),
                     new DonutBlockSystem(),
                     new MovingPlatformPhysicsQuerySystem(),
                     //KKT Mod
                         new FerrisWheelSystem(),
                         new ScalePlatformSystem(),
+                        new SeesawSystem(),
                     new PhysicsSystem2D(),
                     new EnemySystem(),
                     new InteractionSystem(),

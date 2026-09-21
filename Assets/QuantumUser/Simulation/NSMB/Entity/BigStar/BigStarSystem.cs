@@ -188,7 +188,7 @@ namespace Quantum {
 
         public void OnMarioPlayerDropObjective(Frame f, EntityRef entity, int amount, EntityRef attacker) {
             if (f.Unsafe.TryGetPointer(entity, out MarioPlayer* mario)) {
-                if (mario->CurrentPowerupState == PowerupState.Doneflower) {//double damage
+                if (mario->CurrentPowerupState == PowerupState.Doneflower && mario->IsBoss == EntityRef.None) { //double damage when doneflower
                     amount = amount * 2;
                     if (amount > 4)
                         amount = 4;

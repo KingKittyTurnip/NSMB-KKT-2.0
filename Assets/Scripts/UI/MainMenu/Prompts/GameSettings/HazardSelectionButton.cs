@@ -1,13 +1,13 @@
-using NSMB.UI.Translation;
-using NSMB.Utilities.Extensions;
-using Photon.Deterministic;
+using NSMB.UI.MainMenu.Submenus.InRoom;
 using Quantum;
 using System;
-using System.Windows.Forms;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static LoopingMusicData;
+using static NSMB.UI.MainMenu.Submenus.InRoom.NumberChangeableRule;
 
 namespace NSMB.UI.MainMenu.Submenus.Prompts {
     public class HazardSelectionButton : Selectable, ISubmitHandler, IPointerClickHandler {
@@ -61,7 +61,7 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
 
             OnUpdateDescriptionBox();
         }
-        public void OnUpdateDescriptionBox() {
+        public unsafe void OnUpdateDescriptionBox() {
             QuantumGame game = QuantumRunner.DefaultGame;
             Frame f = game.Frames.Predicted;
             var stuff = f.FindAsset(f.SimulationConfig.BaseRules).Rules.ListOfAvalibleObjects;
@@ -78,6 +78,28 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             settingSubmenu.CurrentlySelectedObject = HazardId;
 
             //create modifier buttons
+            List<NumberValueTranslationOverride> h = new List<NumberValueTranslationOverride>();
+            SetExtra((settingSubmenu.EditingItems ? settingSubmenu.ItemExtra : settingSubmenu.HazardExtra)[0], stuff[SlotInHazardList].ValueA);
+            h = new List<NumberValueTranslationOverride>();
+            SetExtra((settingSubmenu.EditingItems ? settingSubmenu.ItemExtra : settingSubmenu.HazardExtra)[1], stuff[SlotInHazardList].ValueB);
+            h = new List<NumberValueTranslationOverride>();
+            SetExtra((settingSubmenu.EditingItems ? settingSubmenu.ItemExtra : settingSubmenu.HazardExtra)[2], stuff[SlotInHazardList].ValueC);
+            h = new List<NumberValueTranslationOverride>();
+            SetExtra((settingSubmenu.EditingItems ? settingSubmenu.ItemExtra : settingSubmenu.HazardExtra)[3], stuff[SlotInHazardList].ValueD);
+
+            void SetExtra(NumberChangeableRule Extra, HValue hValue) {
+                Extra.transform.parent.gameObject.SetActive(hValue.ButtonName != "");
+                Extra.ExtraName.text = hValue.ButtonName;
+                Extra.maxValue = hValue.ValueRange.Y;
+                for (int i = 0; i < hValue.valuenames.Length; i++) {
+                    h.Add(new NumberValueTranslationOverride());
+                    h[i] = new NumberValueTranslationOverride();
+                    h[i].Value = i;
+                    h[i].Key = hValue.valuenames[i];
+                }
+                Extra.translationOverrides = h;
+                Extra.FindValue(ref game.Frames.Predicted.Global->Rules);
+            }
 
             canvas.PlayConfirmSound();
         }
@@ -94,7 +116,7 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
             QuantumGame game = QuantumRunner.DefaultGame;
             Frame f = game.Frames.Predicted;
             var stuff = f.FindAsset(f.SimulationConfig.BaseRules).Rules.ListOfAvalibleObjects;
-            var rules = f.ResolveList(f.Global->Rules.Hazards);
+            var rules = f.ResolveList(settingSubmenu.EditingItems ? f.Global->Rules.Items : f.Global->Rules.Hazards);
 
             hazardIcon.sprite = stuff[SlotInHazardList].Icon;
             hazardIconBg.color = stuff[SlotInHazardList].type switch {

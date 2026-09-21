@@ -36,67 +36,37 @@ MonoBehaviour:
         Value: 0
       Items:
       - PrototypeRef: 0
-        Team: 0
+        Team: 255
         ExtraSlotA: 0
         ExtraSlotB: 0
         ExtraSlotC: 0
         ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
+      - PrototypeRef: 1
+        Team: 255
         ExtraSlotA: 0
         ExtraSlotB: 0
         ExtraSlotC: 0
         ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
+      - PrototypeRef: 2
+        Team: 255
         ExtraSlotA: 0
         ExtraSlotB: 0
         ExtraSlotC: 0
         ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
+      - PrototypeRef: 3
+        Team: 253
         ExtraSlotA: 0
         ExtraSlotB: 0
         ExtraSlotC: 0
         ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
+      - PrototypeRef: 4
+        Team: 255
         ExtraSlotA: 0
         ExtraSlotB: 0
         ExtraSlotC: 0
         ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
-        ExtraSlotA: 0
-        ExtraSlotB: 0
-        ExtraSlotC: 0
-        ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
-        ExtraSlotA: 0
-        ExtraSlotB: 0
-        ExtraSlotC: 0
-        ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
-        ExtraSlotA: 0
-        ExtraSlotB: 0
-        ExtraSlotC: 0
-        ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
-        ExtraSlotA: 0
-        ExtraSlotB: 0
-        ExtraSlotC: 0
-        ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
-        ExtraSlotA: 0
-        ExtraSlotB: 0
-        ExtraSlotC: 0
-        ExtraSlotD: 0
-      - PrototypeRef: 0
-        Team: 0
+      - PrototypeRef: 5
+        Team: 255
         ExtraSlotA: 0
         ExtraSlotB: 0
         ExtraSlotC: 0
@@ -112,24 +82,24 @@ MonoBehaviour:
       CoinItemCustomSpawnWeights: []
       ModifierHazardsEnabled:
         Value: 0
-      MaxHazards: 1
-      HazardFrequency: 60
-      HeftyPercentage: 0
-      HazardLifetime: 80
+      MaxHazards: 3
+      HazardFrequency: 200
+      HeftyPercentage: 3
+      HazardLifetime: 40
       Hazards:
-      - PrototypeRef: 0
+      - PrototypeRef: 33
         Team: 255
         ExtraSlotA: 0
         ExtraSlotB: 0
         ExtraSlotC: 0
         ExtraSlotD: 0
-      - PrototypeRef: 0
+      - PrototypeRef: 42
         Team: 255
         ExtraSlotA: 0
         ExtraSlotB: 0
         ExtraSlotC: 0
         ExtraSlotD: 0
-      - PrototypeRef: 0
+      - PrototypeRef: 45
         Team: 255
         ExtraSlotA: 0
         ExtraSlotB: 0

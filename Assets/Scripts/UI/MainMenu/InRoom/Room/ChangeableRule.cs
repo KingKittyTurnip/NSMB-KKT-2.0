@@ -1,4 +1,6 @@
+using NSMB.UI.MainMenu.Submenus.Prompts;
 using NSMB.UI.Translation;
+using Photon.Deterministic;
 using Quantum;
 using TMPro;
 using UnityEngine;
@@ -38,6 +40,12 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
         //---Private Variables
         protected bool _editing;
         protected object value;
+
+
+        //KKT Mod
+        [SerializeField] public TMP_Text ExtraName;
+        [SerializeField] protected GameSettingsPromptSubmenu settingSubmenu;
+        [SerializeField] protected int ExtrasId;
 
         public void Initialize() {
             Editing = false;
@@ -192,11 +200,30 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
             } catch { /* bodge */ }
         }
 
-        protected virtual void UpdateLabel() {
+        public virtual void UpdateLabel() {
             label.text = labelPrefix + value.ToString() + labelSuffix;
         }
 
-        private void FindValue(ref GameRules rules) {
+        public unsafe void FindValue(ref GameRules rules) {
+            if (settingSubmenu != null) {
+                //hazard extras rule, ignore all else
+                QuantumGame game = QuantumRunner.DefaultGame;
+                Frame f = game.Frames.Predicted;
+                var rulesReal = f.ResolveList(settingSubmenu.EditingItems ? rules.Items : rules.Hazards);
+
+                int e = (int)FPMath.Min(settingSubmenu.CurrentlySelectedObject, rulesReal.Count);
+
+                value = ExtrasId switch {
+                    0 => (int) rulesReal[settingSubmenu.CurrentlySelectedObject].ExtraSlotA,
+                    1 => (int) rulesReal[settingSubmenu.CurrentlySelectedObject].ExtraSlotB,
+                    2 => (int) rulesReal[settingSubmenu.CurrentlySelectedObject].ExtraSlotC,
+                    3 => (int) rulesReal[settingSubmenu.CurrentlySelectedObject].ExtraSlotD,
+                    _ => (int) 0,
+                };
+
+                UpdateState();
+                return;
+            }
             value = ruleType switch {
                 CommandChangeRules.Rules.Stage => rules.Stage,
                 CommandChangeRules.Rules.Gamemode => rules.Gamemode,

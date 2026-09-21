@@ -65,8 +65,7 @@ namespace Quantum {
             return true;
         }
         private static bool TryGenericInteraction(Frame f, EntityRef otherEntity, EntityRef breakableObjectEntity, PhysicsContact? contact = null) {
-            var physics = f.Unsafe.GetPointer<PhysicsObject>(otherEntity);
-            if (!physics->BreakMegaObjects) {
+            if (f.Unsafe.TryGetPointer<PhysicsObject>(otherEntity, out var physics) && !physics->BreakMegaObjects) {
                 return true;
             }
 

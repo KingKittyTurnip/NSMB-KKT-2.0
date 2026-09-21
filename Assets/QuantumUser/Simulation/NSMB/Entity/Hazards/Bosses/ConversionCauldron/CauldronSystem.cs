@@ -37,7 +37,7 @@ namespace Quantum {
             }
             collider->Shape.Centroid.Y = physicsObject->DisableCollision ? 1160 : cauldron->Hitboxheight;
 
-            if (cauldron->TransformingEntity != EntityRef.None || cauldron->Activated) {
+            if (f.Exists(cauldron->TransformingEntity) || cauldron->Activated) {
                 cauldron->EnteredFrames++;
                 if (cauldron->EnteredFrames > 15) {
                     if (!cauldron->Activated) {
@@ -46,7 +46,8 @@ namespace Quantum {
                         collider->Shape.Box.Extents = new FPVector2(Constants._0_40, cauldron->Hitboxheight);
                         if (f.Unsafe.TryGetPointer(cauldron->TransformingEntity, out MarioPlayer* mario)) {
                             //keep mario loaded
-                            mario->SetAsBoss(f, cauldron->TransformingEntity, filter.Entity);
+                            if (mario->IsBoss == EntityRef.None)
+                                mario->SetAsBoss(f, cauldron->TransformingEntity, filter.Entity);
                         } else {
                             //destroy this object
                             HazardSystem.DestroyHazard(f, cauldron->TransformingEntity);
@@ -60,7 +61,7 @@ namespace Quantum {
                     } else if (cauldron->EnteredFrames == 100) {
                         f.Events.CauldronExpand(filter.Entity);
                     }
-                } else {
+                } else if (f.Exists(cauldron->TransformingEntity)) {
                     var otherTransform = f.Unsafe.GetPointer<Transform2D>(cauldron->TransformingEntity);
                     f.Unsafe.GetPointer<PhysicsObject>(cauldron->TransformingEntity)->Velocity = FPVector2.Zero;
 
@@ -84,10 +85,15 @@ namespace Quantum {
 
             f.Signals.InitializeHazard(newEntity, EntityRef.None, transform->Position, SpawnReason.Normal, bossesAsset.ListOfOptions[cauldron->ConvertIntoBossId].ExtraA, 0, 0, 0);
 
-            if (cauldron->TransformingEntity != EntityRef.None) {
+            if (f.Exists(cauldron->TransformingEntity)) {
                 var actualEntity = f.Unsafe.TryGetPointer<Tank>(newEntity, out var tank) ? tank->MoleEntity : newEntity;
-                f.Unsafe.GetPointer<Boss>(actualEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
-                f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity)->IsBoss = newEntity;
+
+                var mario = f.Unsafe.GetPointer<MarioPlayer>(cauldron->TransformingEntity);
+                if (mario->IsBoss == thisEntity) {
+                    f.Unsafe.GetPointer<Boss>(actualEntity)->MakeBossControllable(f, cauldron->TransformingEntity);
+                    mario->IsBoss = newEntity;
+                    mario->RidingStarball = false;
+                }
             }
 
             f.Events.PlayPuffParticle(transform->Position);
@@ -124,7 +130,8 @@ namespace Quantum {
                 //Cauldron Cannot Accept This Object
                 return false;
 
-            if (f.Has<BigStar>(otherEntity) || f.Has<ChainChomp>(otherEntity) || f.Has<BulletBill>(otherEntity) || (f.Unsafe.TryGetPointer<ThrowingObject>(otherEntity, out ThrowingObject* throwable) && throwable->Type == ThrowingObjectType.KingBooStone)) {
+            if (f.Has<BigStar>(otherEntity) || f.Has<ChainChomp>(otherEntity) || f.Has<BulletBill>(otherEntity) || 
+                (f.Unsafe.TryGetPointer<ThrowingObject>(otherEntity, out ThrowingObject* throwable) && throwable->Type == ThrowingObjectType.KingBooStone)) {
                 //Cauldron ALSO Cannot Accept These more specific edge cases
                 return false;
             }

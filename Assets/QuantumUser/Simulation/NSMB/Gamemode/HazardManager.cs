@@ -75,7 +75,7 @@ namespace Quantum {
         //Type, // 0-255, ButtonInfo Determins
         Refrence, //0-255, Buttoninfo is for the refrence (Used For Refrencing other hazards, value of 255 would do no changes to an object)
     }
-    [Flags]
+
     public enum ObjectPrimaryType : byte {
         Powerup = 1 << 0, //fireflower, blueshell
         Hazard = 1 << 1, //Heavystone, Petey, Spinpipe

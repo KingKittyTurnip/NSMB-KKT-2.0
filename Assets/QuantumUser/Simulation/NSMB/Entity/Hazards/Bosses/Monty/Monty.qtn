@@ -95,13 +95,13 @@ event TankMontyAttack {
     bool Thrown;
 }
 
-event TankAddRemoveSegment {
+synced event TankAddRemoveSegment {
     EntityRef Entity;
     byte SegmentId;
     bool IsAdding;
 }
 
-event TankStartTurn {
+synced event TankStartTurn {
     EntityRef Entity;
     byte SegmentId;
     bool IsStarting;

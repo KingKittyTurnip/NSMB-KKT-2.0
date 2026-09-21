@@ -15,6 +15,8 @@ namespace Quantum {
             public Freezable* freezable;
         }
 
+        private readonly byte AttackFrame = 12;
+
         public override void OnInit(Frame f) {
             f.Context.Interactions.Register<MarioPlayer, WhompKing>(f, OnMarioWhompKingInteraction);
             f.Context.Interactions.Register<Projectile, WhompKing>(f, OnProjectileWhompKingInteraction);
@@ -109,6 +111,7 @@ namespace Quantum {
                 f.Events.WhompKingpitfall(filter.Entity);
                 boss->BossHarmed(f, entity, !boss->FacingRight, KnockbackStrength.FireballBump, false);
                 physicsObject->Velocity.Y = 16;
+                physicsObject->Gravity.Y = -30;
                 whompking->ReusableTimer = 0;
                 whompking->State = WhompKingState.Jumping;
                 physicsObject->IsTouchingGround = false;
@@ -117,6 +120,52 @@ namespace Quantum {
             }
 
             QuantumUtils.Decrement(ref whompking->SlamCooldown);
+
+            void Move(FP topSpeed, FP accel) {
+                if (leftrightinput != 0) {
+                    boss->FacingRight = leftrightinput > 0;
+                    FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, topSpeed);
+                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * accel), -clamper, clamper);
+                } else if (physicsObject->IsTouchingGround) {
+                    physicsObject->Velocity.X *= Constants._0_90;
+                }
+            }
+
+            void TryStartSlam() {
+                if (!whompking->PrevSlamPounded) {
+                    if ((Pounding || Slamming) && whompking->SlamCooldown == 0) {
+                        whompking->State = WhompKingState.SlamAttacking;
+                        physicsObject->IsTouchingGround = whompking->HitATarget = false;
+                        physicsObject->Velocity.Y = 6;
+                        physicsObject->Gravity.Y = -30;
+                        physicsObject->BreakMegaObjects = true;
+                    }
+                }
+            }
+
+            void DoJump() {
+                physicsObject->IsTouchingGround = false;
+                if (whompking->DoubleJumpDelay > 0 && leftrightinput != 0) {
+                    physicsObject->Velocity.Y = 7;
+                    physicsObject->Gravity.Y = -12;
+                    whompking->State = WhompKingState.SlamHit;
+                    physicsObject->Velocity.X += boss->FacingRight ? 1 : -1;
+                } else {
+                    whompking->State = WhompKingState.Jumping;
+                    physicsObject->Velocity.Y = 12;
+                    physicsObject->Gravity.Y = -30;
+                }
+                physicsObject->TerminalVelocity = -20;
+                f.Events.WhompKingJump(entity);
+            }
+
+            if (physicsObject->IsTouchingGround) {
+                QuantumUtils.Decrement(ref whompking->DoubleJumpDelay);
+                if (!physicsObject->WasTouchingGround) {
+                    whompking->DoubleJumpDelay = 10;
+                    f.Events.WhompKingLand(filter.Entity, whompking->State == WhompKingState.SlamAttacking);
+                }
+            }
 
             //State Calcs
             switch (whompking->State) {
@@ -136,113 +185,81 @@ namespace Quantum {
                 }
                 break;
             case WhompKingState.Idling:
-                if (leftrightinput != 0) {
-                    boss->FacingRight = leftrightinput > 0;
-                    FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, 2 + FP._0_50);
-                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_50), -clamper, clamper);
-                } else {
-                    physicsObject->Velocity.X *= Constants._0_90;
-                }
+                Move(Constants._2_50, FP._0_50);
                 if (Jump || !physicsObject->IsTouchingGround) {
                     whompking->State = WhompKingState.Jumping;
                     if (Jump) {
-                        physicsObject->IsTouchingGround = false;
-                        physicsObject->Velocity.Y = 12;
-                        physicsObject->TerminalVelocity = -20;
-                        f.Events.WhompKingJump(filter.Entity);
-                    }
-                } else if (!whompking->PrevSlamPounded) {
-                    if ((Pounding || Slamming) && whompking->SlamCooldown == 0) {
-                        whompking->State = WhompKingState.SlamAttacking;
-                        physicsObject->IsTouchingGround = whompking->HitATarget = false;
-                        physicsObject->Velocity.X = Pounding ? 0 : boss->FacingRight ? 10 : -10;
-                        physicsObject->Velocity.Y = 6;
-                        whompking->PrevSlamPounded = true;
+                        DoJump();
                     }
                 }
-
-                if (physicsObject->IsTouchingGround && !physicsObject->WasTouchingGround)
-                    f.Events.WhompKingLand(filter.Entity, false);
+                TryStartSlam();
                 break;
             case WhompKingState.Jumping:
-                if (leftrightinput != 0) {
-                    boss->FacingRight = leftrightinput > 0;
-                    FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, 4);
-                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_20), -clamper, clamper);
-                }
+                Move(Constants._2_50, FP._0_50);
                 if (!Jumpheld) {
                     physicsObject->Velocity.Y = FPMath.Min(physicsObject->Velocity.Y, 4);
                 }
-                if (!whompking->PrevSlamPounded) {
-                    if ((Slamming || Pounding) && whompking->SlamCooldown == 0) {
-                        whompking->State = WhompKingState.SlamAttacking;
-                        physicsObject->IsTouchingGround = whompking->HitATarget = false;
-                        physicsObject->Velocity.X = Pounding ? 0 : boss->FacingRight ? 10 : -10;
-                        physicsObject->Velocity.Y = 0;
-                        whompking->PrevSlamPounded = true;
-                    }
-                }
+                TryStartSlam();
 
                 if (physicsObject->IsTouchingGround) {
                     whompking->State = WhompKingState.Idling;
-                    f.Events.WhompKingLand(filter.Entity, false);
+                    physicsObject->BreakMegaObjects = false;
                 }
                 break;
             case WhompKingState.SlamAttacking:
                 physicsObject->BreakMegaObjects = true;
-                if (whompking->HitATarget) {
-                    whompking->HitATarget = false;
-                    if (!physicsObject->IsFrozen) {
-                        whompking->State = WhompKingState.SlamHit;
-                        whompking->ReusableTimer = 0;
-                        physicsObject->Gravity.Y = -8;
-                        physicsObject->Velocity.Y = 6;
-                        physicsObject->BreakMegaObjects = false;
-                        break;
-                    }
-                }
                 whompking->ReusableTimer++;
-                if (whompking->ReusableTimer < 8) {
+                if (whompking->ReusableTimer < AttackFrame) {
                     collider->Shape.Centroid.Y = whompking->HurtingHitbox.Y;
                     collider->Shape.Box.Extents = whompking->HurtingHitbox;
+                    whompking->HitATarget = false;
                 } else {
-                    if (physicsObject->IsFrozen) {
-                        if (whompking->ReusableTimer >= 120 || (whompking->HitATarget && whompking->ReusableTimer > 30)) {
-                            whompking->State = WhompKingState.Idling;
-                            whompking->ReusableTimer = 0;
-                            physicsObject->IsFrozen = false;
-                            collider->Shape.Centroid.Y = whompking->Hitbox.Y;
-                            collider->Shape.Box.Extents = whompking->Hitbox;
-                            whompking->SlamCooldown = 20;
-                            physicsObject->BreakMegaObjects = false;
+                    if (whompking->ReusableTimer >= 150 || whompking->HitATarget) {
+                        whompking->State = WhompKingState.Jumping;
+                        physicsObject->Velocity.Y = 6;
+                        whompking->ReusableTimer = 0;
+                        physicsObject->IsTouchingGround = false;
+                        collider->Shape.Centroid.Y = whompking->Hitbox.Y;
+                        collider->Shape.Box.Extents = whompking->Hitbox;
+                        physicsObject->Gravity.Y = -30;
+                        whompking->SlamCooldown = 20;
+                        physicsObject->BreakMegaObjects = false;
+                    } else if (physicsObject->IsTouchingGround && !whompking->PrevSlamPounded) {
+                        if (!physicsObject->WasTouchingGround) {
+                            whompking->PrevSlamPounded = true;
+                            collider->Shape.Centroid.Y = whompking->FallenBox.Y;
+                            collider->Shape.Box.Extents = whompking->FallenBox;
+                            whompking->ReusableTimer = 30;
+                            physicsObject->Gravity.Y = -8;
+                            physicsObject->Velocity.Y = 0;
                         }
-                    } else if (physicsObject->IsTouchingGround) {
-                        f.Events.WhompKingLand(filter.Entity, true);
-                        physicsObject->Velocity.X = 0;
-                        physicsObject->Velocity.Y = 0;
-                        physicsObject->IsFrozen = true;
-                        whompking->ReusableTimer = 30;
-                        collider->Shape.Centroid.Y = whompking->FallenBox.Y;
-                        collider->Shape.Box.Extents = whompking->FallenBox;
-                    } else {
-                        physicsObject->Velocity.X *= Constants.BallSlowDownMultiplier;
                     }
+                    whompking->HitATarget = false;
+                    physicsObject->Velocity.X *= Constants.BallSlowDownMultiplier;
                 }
                 break;
             case WhompKingState.SlamHit:
-                if (leftrightinput != 0) {
-                    boss->FacingRight = leftrightinput > 0;
-                    FP clamper = FPMath.Max(FPMath.Abs(physicsObject->Velocity.X) - FP._0_25, 8);
-                    physicsObject->Velocity.X = FPMath.Clamp(physicsObject->Velocity.X + (leftrightinput * FP._0_20), -clamper, clamper);
+                Move(7, FP._0_25);
+                if (!Jumpheld) {
+                    physicsObject->Velocity.Y = FPMath.Min(physicsObject->Velocity.Y, 2);
                 }
+                TryStartSlam();
+
                 if (physicsObject->IsTouchingGround) {
                     whompking->State = WhompKingState.Idling;
                     physicsObject->Gravity.Y = -30;
                     whompking->HitATarget = false;
                 }
+                if (physicsObject->IsTouchingRightWall || physicsObject->IsTouchingLeftWall) {
+                    whompking->DoubleJumpDelay = 0;
+                    physicsObject->Gravity.Y = -30;
+                    whompking->HitATarget = false;
+                    DoJump();
+                }
                 break;
             case WhompKingState.Knockbacked:
                 physicsObject->Velocity.X *= Constants._0_95;
+                physicsObject->Gravity.Y = -30;
                 physicsObject->IsFrozen = false;
                 collider->Shape.Centroid.Y = whompking->Hitbox.Y;
                 collider->Shape.Box.Extents = whompking->Hitbox;
@@ -295,38 +312,30 @@ namespace Quantum {
             QuantumUtils.UnwrapWorldLocations(f, thisTransform->Position + FPVector2.Up * FP._0_10, marioTransform->Position, out FPVector2 ourPos, out FPVector2 theirPos);
             FPVector2 damageDirection = (theirPos - ourPos).Normalized;
 
-            bool slamming = whompking->State == WhompKingState.SlamAttacking && !physicsObject->IsFrozen;
+            bool slamming = whompking->State == WhompKingState.SlamAttacking && whompking->ReusableTimer >= AttackFrame && !whompking->PrevSlamPounded;
             bool attackedFromAbove = !slamming && FPVector2.Dot(damageDirection, FPVector2.Up) > FP._0_25 && !mario->IsInKnockback;
             bool groundpounded = attackedFromAbove && mario->IsGroundpoundActive && mario->CurrentPowerupState != PowerupState.MiniMushroom;
             bool vulnrable = whompking->State == WhompKingState.SlamAttacking && physicsObject->IsFrozen;
             bool kingHarmed = false;
 
-            if (mario->InstakillsEnemies(marioPhysicsObject, true) || groundpounded) {
-                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? groundpounded ? KnockbackStrength.Groundpound : KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
-                kingHarmed = true;
-                vulnrable |= groundpounded;
-
-            } else if (attackedFromAbove) {
-                if (mario->CurrentPowerupState == PowerupState.MiniMushroom) {
-                    if (mario->IsGroundpounding) {
-                        mario->IsGroundpounding = false;
-                        boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
-                        kingHarmed = true;
-                    }
-                    mario->DoEntityBounce = true;
-                } else {
-                    boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
-                    kingHarmed = true;
-                    mario->DoEntityBounce = !mario->IsGroundpounding;
-                }
-
-                mario->IsDrilling = false;
-                marioPhysicsObject->Velocity.X = FPMath.Clamp(marioPhysicsObject->Velocity.X + (((theirPos - ourPos) * 10).Normalized.X * 3), -5, 5);
-
-            } else if (mario->IsDamageable(f) && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, slamming ? 2 : 1, slamming ? KnockbackStrength.Groundpound : KnockbackStrength.CollisionBump, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity)) {
-                whompking->HitATarget = true;
+            switch (boss->BossMarioContact(f, thisEntity, marioEntity, damageDirection, slamming && mario->DoKnockback(f, marioEntity, damageDirection.X < 0, 2, KnockbackStrength.Groundpound, boss->ControllerPlayer != EntityRef.None ? boss->ControllerPlayer : thisEntity), vulnrable)) {
+            case bossMarioContactResult.Above:
+                break;
+            case bossMarioContactResult.Harm:
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Normal : KnockbackStrength.FireballBump, true);
+                break;
+            case bossMarioContactResult.SuperHarm:
+                boss->BossHarmed(f, thisEntity, damageDirection.X < 0, vulnrable ? KnockbackStrength.Groundpound : KnockbackStrength.Normal, true);
+                vulnrable = true;
+                break;
+            case bossMarioContactResult.Bump:
+                boss->BossBump(f, thisEntity, damageDirection.X < 0, KnockbackStrength.FireballBump);
+                break;
+            case bossMarioContactResult.Special:
+                whompking->State = WhompKingState.Knockbacked;
                 if (damageDirection.Y < 0)
                     physicsObject->Velocity.Y = 6;
+                break;
             }
 
             if (kingHarmed) {

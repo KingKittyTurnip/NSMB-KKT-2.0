@@ -64,7 +64,7 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
             }
         }
 
-        protected override void UpdateLabel() {
+        public override void UpdateLabel() {
             string stageName;
             if (value is AssetRef<GamemodeAsset> gamemodeAsset
                 && QuantumUnityDB.TryGetGlobalAsset(gamemodeAsset, out GamemodeAsset gamemode)) {

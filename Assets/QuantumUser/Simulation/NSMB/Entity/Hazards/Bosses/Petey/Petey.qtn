@@ -27,20 +27,20 @@ event PeteyWakeup {
 	EntityRef Entity;
 	bool Interupted;
 }
-event PeteyGetUp {
+synced event PeteyGetUp {
 	EntityRef Entity;
 }
-event PeteyJump {
+synced event PeteyJump {
 	EntityRef Entity;
 }
 event PeteyDive {
 	EntityRef Entity;
 }
-event PeteyLanded {
+synced event PeteyLanded {
 	EntityRef Entity;
 	bool Weakened;
 }
-event PeteyStomped {
+synced event PeteyStomped {
 	EntityRef Entity;
 	bool IsDeath;
 }

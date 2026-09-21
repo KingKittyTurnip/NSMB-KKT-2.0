@@ -121,7 +121,7 @@ MonoBehaviour:
           ExtraSlotB: 0
           ExtraSlotC: 0
           ExtraSlotD: 0
-        Lives: 0
+        Lives: 10
         TimerMinutes: 0
         TeamsEnabled:
           Value: 0
@@ -263,12 +263,6 @@ MonoBehaviour:
           ExtraSlotB: 0
           ExtraSlotC: 0
           ExtraSlotD: 0
-        - PrototypeRef: 51
-          Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 0
-          ExtraSlotC: 0
-          ExtraSlotD: 0
         ModifierBulbEnabled:
           Value: 0
         BulbAbilityCount: 3
@@ -393,15 +387,15 @@ MonoBehaviour:
         CoinItemCustomSpawnWeights: []
         ModifierHazardsEnabled:
           Value: 1
-        MaxHazards: 30
-        HazardFrequency: 5
+        MaxHazards: 1
+        HazardFrequency: 10
         HeftyPercentage: 0
         HazardLifetime: 80
         Hazards:
-        - PrototypeRef: 44
+        - PrototypeRef: 51
           Team: 255
-          ExtraSlotA: 0
-          ExtraSlotB: 1
+          ExtraSlotA: 4
+          ExtraSlotB: 0
           ExtraSlotC: 0
           ExtraSlotD: 0
         ModifierBulbEnabled:
@@ -2164,7 +2158,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -2211,7 +2207,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -2257,7 +2255,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -2303,7 +2303,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -2541,7 +2543,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -2588,7 +2592,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -2811,7 +2817,7 @@ MonoBehaviour:
       categorey: 1048576
       entityPrototype:
         Id:
-          Value: 0
+          Value: 1334308035881873411
       Teamable: 1
       CanSpawnAsHazard: 1
       Hefty: 0
@@ -2825,7 +2831,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -2850,7 +2858,7 @@ MonoBehaviour:
           X: 0
           Y: 1
         valuenames: []
-    - Name: Iceblock
+    - Name: 
       Description: The block of the ice flower, but as an object!
       Icon: {fileID: -1818119218, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
       type: 8
@@ -3009,7 +3017,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -3057,7 +3067,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: Spawn Type
         ButtonType: 0
@@ -3101,13 +3113,15 @@ MonoBehaviour:
       BulbSpawnType: 1
       BulbCooldown: 3
       ValueA:
-        ButtonName: Does PermaFrost
+        ButtonName: 
         ButtonType: 0
         BaseValue: 0
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -3339,22 +3353,22 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
-        ButtonName: Contains
+        ButtonName: Chained to
         ButtonType: 1
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 16
+          Y: 14
         valuenames:
         - Chainchomp
         - Baseball
         - Heavystone
         - Springboard
         - Lemmyball
-        - Pow (Blue)
-        - Pow (Red)
         - Freezie
         - Propeller block
         - Bill block
@@ -3474,7 +3488,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueD:
         ButtonName: 
         ButtonType: 0
@@ -3504,7 +3520,7 @@ MonoBehaviour:
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 1
+          Y: 2
         valuenames:
         - Adapt
         - Any
@@ -3516,7 +3532,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueC:
         ButtonName: 
         ButtonType: 0
@@ -3554,7 +3572,7 @@ MonoBehaviour:
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 0
+          Y: 2
         valuenames:
         - Normal - shifts side to side
         - Broken - stays on one side
@@ -3606,7 +3624,7 @@ MonoBehaviour:
         BaseValue: 0
         ValueRange:
           X: 0
-          Y: 5
+          Y: 4
         valuenames:
         - Normal - blows side to side
         - Broken - blows in one direction
@@ -3661,7 +3679,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -3842,7 +3862,7 @@ MonoBehaviour:
       BulbSpawnType: 2
       BulbCooldown: 4
       ValueA:
-        ButtonName: Create Boss
+        ButtonName: Creates Boss
         ButtonType: 1
         BaseValue: 0
         ValueRange:
@@ -3850,12 +3870,12 @@ MonoBehaviour:
           Y: 6
         valuenames:
         - Random
-        - Bowser - King of koopas
-        - King Boo - King of boos
-        - Petey Piranha - That one guy with pants
-        - King Whomp - King of rocks
-        - Monty Tank - That one guy with a tank
-        - Dry Bowser - King of dry (what)
+        - Bowser
+        - King Boo
+        - Petey Piranha
+        - King Whomp
+        - Monty Tank
+        - Dry Bowser
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -3903,7 +3923,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 1
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -4093,7 +4115,9 @@ MonoBehaviour:
         ValueRange:
           X: 0
           Y: 0
-        valuenames: []
+        valuenames:
+        - Off
+        - On
       ValueB:
         ButtonName: 
         ButtonType: 0
@@ -4411,8 +4435,8 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Poison Mushroom
-      Description: 
-      Icon: {fileID: -1770885439, guid: 0f10bbaf6d5f36b46a1999657e9730d0, type: 3}
+      Description: A harmful mushroom
+      Icon: {fileID: 578080683, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
       type: 1
       categorey: 4
       entityPrototype:
@@ -4457,8 +4481,8 @@ MonoBehaviour:
           Y: 1
         valuenames: []
     - Name: Rotten Mushroom
-      Description: 
-      Icon: {fileID: -1770885439, guid: 0f10bbaf6d5f36b46a1999657e9730d0, type: 3}
+      Description: A harmful mushroom that gives chase
+      Icon: {fileID: 806633127, guid: 55d41987d322e2c42ac892f59b7db72a, type: 3}
       type: 1
       categorey: 4
       entityPrototype:

@@ -15,6 +15,11 @@ namespace NSMB.Networking {
         /// Returns if we're up to date, OR newer, compared to the latest GitHub release version number
         /// </summary>
         public async static void CheckIfUpToDate(UpdateCallback callback) {
+
+            //KKT MOD DISABLED
+            return;
+
+
             // Get http results from the GitHub API
             using UnityWebRequest request = UnityWebRequest.Get(ApiURL);
             request.SetRequestHeader("Accept", "application/json");

@@ -43,3 +43,9 @@ event IsNowResistantHit {
 	int ThisFrame;
 	EntityRef Entity;
 }
+
+synced event HazardIconChanged {
+	Frame f;
+	EntityRef hazardEntity;
+	bool Created;
+}

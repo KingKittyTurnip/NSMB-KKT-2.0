@@ -125,7 +125,7 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
     }
 
     private unsafe void OnJump(EventBowserJump e) {
-        if (e.Entity != EntityRef) {
+        if (e.Entity != EntityRef || !e.f.Exists(EntityRef)) {
             return;
         }
         if (e.f.Unsafe.GetPointer<Bowser>(EntityRef)->State == BowserState.Attacking) {
@@ -136,7 +136,7 @@ public unsafe class BowserAnimator : QuantumEntityViewComponent {
         Animator.SetTrigger("Jump");
     }
     private unsafe void OnLanded(EventBowserLanded e) {
-        if (e.Entity != EntityRef) {
+        if (e.Entity != EntityRef || !e.f.Exists(EntityRef)) {
             return;
         }
         var bowser = e.f.Unsafe.GetPointer<Bowser>(EntityRef);

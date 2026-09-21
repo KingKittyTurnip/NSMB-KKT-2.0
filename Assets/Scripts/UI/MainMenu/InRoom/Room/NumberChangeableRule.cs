@@ -1,7 +1,7 @@
 using NSMB.UI.Translation;
-using Photon.Deterministic;
 using Quantum;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -13,9 +13,11 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
         public override bool CanDecreaseValue => (int) value > minValue;
 
         //---Serialized Variables
-        [SerializeField] protected int minValue = 0, maxValue = 20, step = 1;
+        [SerializeField] protected int minValue = 0;
+        [SerializeField] public int maxValue = 20;
+        [SerializeField] protected int step = 1;
         [SerializeField] protected bool minimumValueIsOff, applyPrefixSuffixWhenOff = true;
-        [SerializeField] private NumberValueTranslationOverride[] translationOverrides;
+        [SerializeField] public List<NumberValueTranslationOverride> translationOverrides;
 
         protected override void IncreaseValueInternal() {
             int intValue = (int) value;
@@ -38,6 +40,42 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
         }
 
         private unsafe void SendCommand() {
+            if (settingSubmenu != null) {
+                //hazard extras rule, ignore all else
+                QuantumGame game2 = QuantumRunner.DefaultGame;
+                PlayerRef host2 = game2.Frames.Predicted.Global->Host;
+                //if (!game2.PlayerIsLocal(host2)) {
+                //    return;
+                //}
+                Frame f = game2.Frames.Predicted;
+                //var stuff = f.FindAsset(f.SimulationConfig.BaseRules).Rules.ListOfAvalibleObjects[settingSubmenu.CurrentlySelectedObject];
+                var rules = f.ResolveList(settingSubmenu.EditingItems ? f.Global->Rules.Items : f.Global->Rules.Hazards);
+
+
+                int a = (byte) (ExtrasId == 0 ? (int) value : rules[settingSubmenu.CurrentlySelectedObject].ExtraSlotA);
+                int b = (byte) (ExtrasId == 1 ? (int) value : rules[settingSubmenu.CurrentlySelectedObject].ExtraSlotB);
+                int c = (byte) (ExtrasId == 2 ? (int) value : rules[settingSubmenu.CurrentlySelectedObject].ExtraSlotC);
+                int d = (byte) (ExtrasId == 3 ? (int) value : rules[settingSubmenu.CurrentlySelectedObject].ExtraSlotD);
+
+                CommandChangeHazards cmd2 = new CommandChangeHazards {
+                    EditingItems = settingSubmenu.EditingItems,
+                    Index = settingSubmenu.CurrentlySelectedObject,
+                    RemoveSingle = false,
+                    RemoveAll = false,
+                    //id
+                    PrototypeRefId = rules[settingSubmenu.CurrentlySelectedObject].PrototypeRef,
+                    TeamId = 255, //team code isn't used
+                                  //Specific Data
+                    ValueA = a,
+                    ValueB = b,
+                    ValueC = c,
+                    ValueD = d,
+                    UpdateUi = false,
+                };
+
+                game2.SendCommand(game2.GetLocalPlayerSlots()[game2.GetLocalPlayers().IndexOf(host2)], cmd2);
+                return;
+            }
             CommandChangeRules cmd = new CommandChangeRules {
                 EnabledChanges = ruleType,
             };
@@ -89,7 +127,7 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
             }
         }
 
-        protected override void UpdateLabel() {
+        public override void UpdateLabel() {
             TranslationManager tm = GlobalController.Instance.translationManager;
             if (value is int intValue) {
                 string text;

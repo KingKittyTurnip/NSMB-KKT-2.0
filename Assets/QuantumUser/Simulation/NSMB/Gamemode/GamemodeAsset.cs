@@ -274,7 +274,7 @@ namespace Quantum {
 
             var marioreserve = f.FindAsset(mario->ReserveItem);
             bool MarioHasJoke = (mario->CurrentPowerupState == PowerupState.Jumpsuit || mario->CurrentPowerupState == PowerupState.Doneflower || (marioreserve != null && (marioreserve.State == PowerupState.Jumpsuit || marioreserve.State == PowerupState.Doneflower)));
-            bool CanSpawnJoke = (mario->TimesWithoutAJoke > FPMath.Max(8-f.Global->Rules.CoinsForPowerup-1, 0) && !MarioHasJoke);
+            bool CanSpawnJoke = (mario->TimesWithoutAJoke > FPMath.Max((8-f.Global->Rules.CoinsForPowerup)-1, 0) && !MarioHasJoke);
             bool CanSpawnCatchups = !(mario->CurrentPowerupState <= PowerupState.Mushroom || MarioHasJoke);
             bool WontSpawnFirst = mario->CurrentPowerupState == PowerupState.NoPowerup && marioreserve != null && marioreserve.State == PowerupState.NoPowerup;
 
@@ -291,6 +291,7 @@ namespace Quantum {
                     (i == (int) ItemChanceType.First && WontSpawnFirst)) {
                     //sortchances.Add((ItemChanceType) i, FP.MinValue);
                     //do not add
+                    UnityEngine.Debug.Log((ItemChanceType) i);
                     continue;
                 }
 
@@ -375,7 +376,7 @@ namespace Quantum {
                 ItemChanceType.Middling => new(2, -1, -1),//2nd stage powerups
                 ItemChanceType.LastCommon => new(-FP._0_20, 0, 3), //weaker catchup, not guerenteed
                 ItemChanceType.LastRare => new(-3, -1, 5), //strong catchup, guerenteed if yur very behind
-                ItemChanceType.Joke => new(FP._0_50, 0, -1), //jokes, first place should be able to get them
+                ItemChanceType.Joke => new(FP._0_50, FP._0_50, -1), //jokes, first place should be able to get them
                 _ => new(0, 0, 0),
             };
 

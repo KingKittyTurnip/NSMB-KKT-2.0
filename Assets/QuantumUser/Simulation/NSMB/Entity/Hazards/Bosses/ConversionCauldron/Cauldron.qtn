@@ -9,14 +9,14 @@ component Cauldron {
 	[ExcludeFromPrototype] bool Activated;
 }
 
-event CauldronSplash {
+synced event CauldronSplash {
 	EntityRef Entity;
 }
 
-event CauldronHop {
+synced event CauldronHop {
 	EntityRef Entity;
 }
 
-event CauldronExpand {
+synced event CauldronExpand {
 	EntityRef Entity;
 }

@@ -74,7 +74,7 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
             }
         }
 
-        protected override unsafe void UpdateLabel() {
+        public override unsafe void UpdateLabel() {
             TranslationManager tm = GlobalController.Instance.translationManager;
             if (QuantumRunner.DefaultGame.Frames.Predicted.Global->Rules.ChooseMode == StageChooseMode.Random) {
                 label.text = labelPrefix + tm.GetTranslation(randomChooseModeTranslationKey);

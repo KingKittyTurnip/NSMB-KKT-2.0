@@ -46,7 +46,6 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
                 cmd.HazardEnabled = (bool) value;
                 break;
             case CommandChangeRules.Rules.DisableStageRestrictions:
-                UnityEngine.Debug.Log("e3");
                 cmd.DisableStageRestrictions = (bool) value;
                 break;
             case CommandChangeRules.Rules.EveryItemHasTheSameChance:
@@ -68,7 +67,7 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
             }
         }
 
-        protected override void UpdateLabel() {
+        public override void UpdateLabel() {
             TranslationManager tm = GlobalController.Instance.translationManager;
             if (value is bool boolValue) {
                 label.text = labelPrefix + tm.GetTranslation(boolValue ? "ui.generic.on" : "ui.generic.off");

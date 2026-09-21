@@ -3,7 +3,6 @@ using Quantum.Profiling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static UnityEditor.Progress;
 
 namespace Quantum {
     public unsafe class GameLogicSystem : SystemMainThread, ISignalOnPlayerAdded, ISignalOnPlayerRemoved, ISignalOnMarioPlayerDied,
@@ -552,7 +551,7 @@ namespace Quantum {
 
             if (!f.Global->Rules.CanIgnoreStageRestrictions(f, stage)) {
                 if (stage.OverwriteRules != null) {
-                    UnityEngine.Debug.Log("Overwriting rules");
+                    //UnityEngine.Debug.Log("Overwriting rules");
 
                     //set overwrite rules
                     f.FindAsset(stage.OverwriteRules).BaseRulesList.DefaultRules.Materialize(f, ref f.Global->Rules);

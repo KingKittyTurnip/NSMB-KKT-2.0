@@ -70,14 +70,14 @@ MonoBehaviour:
     B: 255
     A: 255
   HidePlayersOnMinimap: 0
+  NoMinimap: 0
   MultiAreaMap: 0
   YAreaBounds: []
   BannedCoinItems: []
   BannedHazards:
   - Id:
       Value: 1313060240537942267
-  mainPowerupTile: {fileID: -3061604471713882216, guid: 0ffdd217d1f2ce148930be60c260f209,
-    type: 2}
+  mainPowerupTile: {fileID: 0}
   SfxOverrides: []
   MainMusic:
   - Id:
@@ -103,6 +103,7 @@ MonoBehaviour:
   OverwriteRules:
     Id:
       Value: 0
+  DoNotEndUntilAllDead: 0
   TileData:
   - Tile:
       Id:

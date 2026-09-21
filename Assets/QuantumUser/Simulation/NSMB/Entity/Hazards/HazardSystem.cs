@@ -20,7 +20,7 @@ namespace Quantum {
          
          ---------------------------------------
         */
-        public static event Action<Frame, EntityRef, bool> HazardIconChanged;
+        //public static event Action<Frame, EntityRef, bool> HazardIconChanged;
         //public static event Action<Frame, EntityRef> HazardDestroyed;
 
         public struct Filter {
@@ -251,7 +251,8 @@ namespace Quantum {
         }*/
 
         public static void ChangeHazardIcon(Frame f, EntityRef entity, bool Created) {
-            HazardIconChanged?.Invoke(f, entity, Created);
+            //HazardIconChanged?.Invoke(f, entity, Created);
+            f.Events.HazardIconChanged(f, entity, Created);
         }
 
         public static bool IsCanInteractWithTeamHazard(Frame f, EntityRef marioEntity, EntityRef hazardEntity, bool IgnoresTeamates = false) {

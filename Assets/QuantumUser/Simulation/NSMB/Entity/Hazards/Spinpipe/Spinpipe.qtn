@@ -14,12 +14,12 @@ component Spinpipe {
 	[ExcludeFromPrototype] byte groundDelay;
 }
 
-event SpinpipeLand {
+synced event SpinpipeLand {
 	EntityRef Entity;
 	bool Despawn;
 }
 
-event SpinpipeDestroy {
+synced event SpinpipeDestroy {
 	Frame f;
 	EntityRef Entity;
 	bool Right;

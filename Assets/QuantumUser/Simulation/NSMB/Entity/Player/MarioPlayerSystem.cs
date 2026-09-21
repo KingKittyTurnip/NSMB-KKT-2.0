@@ -543,9 +543,9 @@ namespace Quantum {
             QuantumUtils.Decrement(ref mario->JumpBufferFrames);
             QuantumUtils.Decrement(ref mario->CantJumpTimer);
 
-            if (f.Unsafe.TryGetPointer(mario->HeldEntity, out Holdable* holdable) && holdable->HoldAboveHead && f.Number - mario->HoldStartFrame < physics.IceBlockPickupFreezeFrames) {
-                return;
-            }
+            //if (f.Unsafe.TryGetPointer(mario->HeldEntity, out Holdable* holdable) && holdable->HoldAboveHead && f.Number - mario->HoldStartFrame < physics.IceBlockPickupFreezeFrames) {
+            //    return;
+            //}
 
             if (!mario->DoEntityBounce && (physicsObject->IsBeingCrushed || physicsObject->IsUnderwater || !doJump || mario->IsInKnockback || (mario->CurrentPowerupState == PowerupState.MegaMushroom && mario->JumpState == JumpState.SingleJump) || mario->IsWallsliding)) {
                 return;
@@ -3469,9 +3469,9 @@ namespace Quantum {
             }
             //play the starjump anim?
             if (gravinversed) {
-                transform->Position.Y += collider->Shape.Box.Extents.Y*2;
+                transform->Teleport(f, new FPVector2(transform->Position.X, transform->Position.Y + collider->Shape.Box.Extents.Y*2));
             } else {
-                transform->Position.Y -= collider->Shape.Box.Extents.Y*2;
+                transform->Teleport(f, new FPVector2(transform->Position.X, transform->Position.Y - collider->Shape.Box.Extents.Y*2));
             }
         }
 

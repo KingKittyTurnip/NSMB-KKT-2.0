@@ -192,6 +192,7 @@ namespace Quantum {
                         petey->State = PeteyState.Jumping;
                         physicsObject->Velocity.Y = 6;
                         petey->ReusableTimer = 0;
+                        physicsObject->Gravity.Y = -10;
                         petey->Flying = false;
                     } else {
                         physicsObject->Velocity.X = (boss->FacingRight ? 2 : -2) + leftrightinput;

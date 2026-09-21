@@ -38,8 +38,6 @@ namespace Quantum {
                 return;
             }
 
-            Debug.Log(thwomp->State);
-
             switch (thwomp->State) {
             case ThwompState.Idle: {
                 physicsObject->Velocity.X *= FP._0_75;

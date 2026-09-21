@@ -37,11 +37,11 @@ enum BowserAttackType : Byte {
 	BoneThrow,
 }
 
-event BowserJump {
+synced event BowserJump {
 	Frame f;
 	EntityRef Entity;
 }
-event BowserLanded {
+synced event BowserLanded {
 	Frame f;
 	EntityRef Entity;
 	bool Roar;
@@ -49,11 +49,11 @@ event BowserLanded {
 event BowserKnockbacked {
 	EntityRef Entity;
 }
-event BowserAttack {
+synced event BowserAttack {
 	EntityRef Entity;
 	BowserAttackType AttackType;
 }
-event BowserShoot {
+synced event BowserShoot {
 	EntityRef Entity;
 	bool IsBone;
 }

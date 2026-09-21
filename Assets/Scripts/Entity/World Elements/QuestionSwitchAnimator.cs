@@ -33,7 +33,7 @@ public unsafe class QuestionSwitchAnimator : QuantumEntityViewComponent {
                     i.OnUnMuteMusicForABit();
                     break;
                 }
-                Debug.Log("Found Mute Secret");
+                //Debug.Log("Found Mute Secret");
             }
             if (e.Activate) {
                 animator.Play("Hit");

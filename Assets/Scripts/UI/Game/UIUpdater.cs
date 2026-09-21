@@ -71,7 +71,7 @@ namespace NSMB.UI.Game {
             CoinAnimator.ObjectiveCoinDestroyed += OnObjectiveCoinDestroyed;
             StarballgoalAnimator.StarballgoalInitialized += OnStarballgoalInitialized;
             StarballgoalAnimator.StarballgoalDestroyed += OnStarballgoalDestroyed;
-            HazardSystem.HazardIconChanged += OnHazardIconChanged;
+            //HazardSystem.HazardIconChanged += OnHazardIconChanged;
             TranslationManager.OnLanguageChanged += OnLanguageChanged;
             Settings.Controls.Debug.ToggleHUD.performed += OnToggleHUD;
             OnLanguageChanged(GlobalController.Instance.translationManager);
@@ -89,7 +89,7 @@ namespace NSMB.UI.Game {
             CoinAnimator.ObjectiveCoinDestroyed -= OnObjectiveCoinDestroyed;
             StarballgoalAnimator.StarballgoalInitialized -= OnStarballgoalInitialized;
             StarballgoalAnimator.StarballgoalDestroyed -= OnStarballgoalDestroyed;
-            HazardSystem.HazardIconChanged -= OnHazardIconChanged;
+            //HazardSystem.HazardIconChanged -= OnHazardIconChanged;
             TranslationManager.OnLanguageChanged -= OnLanguageChanged;
             Settings.Controls.Debug.ToggleHUD.performed -= OnToggleHUD;
         }
@@ -132,6 +132,8 @@ namespace NSMB.UI.Game {
             QuantumEvent.Subscribe<EventGameEnded>(this, OnGameEnded);
             QuantumEvent.Subscribe<EventTimerExpired>(this, OnTimerExpired);
             QuantumEvent.Subscribe<EventStartCameraFadeOut>(this, OnStartCameraFadeOut);
+
+            QuantumEvent.Subscribe<EventHazardIconChanged>(this, OnHazardIconChanged);
         }
 
         public void OnDestroy() {
@@ -200,19 +202,19 @@ namespace NSMB.UI.Game {
             DestroyTrackIcon(starballgoal);
         }
 
-        private void OnHazardIconChanged(Frame f, EntityRef hazardEntity, bool Created) {
-            if (Created) {
+        private void OnHazardIconChanged(EventHazardIconChanged e) {
+            if (e.Created) {
                 if (Updater == null) {
                     Debug.Log("Couldn't create icon, Updater doesn't exist");
                     return;
                 }
-                if (!f.Exists(hazardEntity)) {
-                    Debug.Log("Couldn't create icon, EntityRef Doesn't Exist: " + hazardEntity);
+                if (!e.f.Exists(e.hazardEntity)) {
+                    Debug.Log("Couldn't create icon, EntityRef Doesn't Exist: " + e.hazardEntity);
                     return;
                 }
-                StartCoroutine(tryAddHazardIcon(f, hazardEntity));
+                StartCoroutine(tryAddHazardIcon(e.f, e.hazardEntity));
             } else {
-                DestroyHazardTrackIcon(f, hazardEntity);
+                DestroyHazardTrackIcon(e.f, e.hazardEntity);
             }
         }
 

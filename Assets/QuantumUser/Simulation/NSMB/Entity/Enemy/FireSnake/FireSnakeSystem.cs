@@ -163,7 +163,6 @@ namespace Quantum {
             enemy->IsActive = true;
             firesnack->FireSnakeSegments = ExtraA;
             SpawnSegments(f, thisEntity, firesnack);
-            Debug.Log("AHHHH " + firesnack->FireSnakeSegments);
         }
     }
 }

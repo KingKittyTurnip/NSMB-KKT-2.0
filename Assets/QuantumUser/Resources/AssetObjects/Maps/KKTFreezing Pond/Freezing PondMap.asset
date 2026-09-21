@@ -220,7 +220,6 @@ MonoBehaviour:
     - rid: 5194687378857394185
     - rid: 5194687378857394186
     - rid: 5194687378857394187
-    - rid: 5194687378857394188
   - Components:
     - rid: 568988490608410624
     - rid: 568988490608410625
@@ -1149,7 +1148,7 @@ MonoBehaviour:
         IsWaterSolid:
           Value: 0
         SinksInQuickSandAndGoo:
-          Value: 0
+          Value: 1
         BreakMegaObjects:
           Value: 0
         WindImmune:
@@ -1533,7 +1532,7 @@ MonoBehaviour:
         IsWaterSolid:
           Value: 0
         SinksInQuickSandAndGoo:
-          Value: 0
+          Value: 1
         BreakMegaObjects:
           Value: 0
         WindImmune:
@@ -1843,7 +1842,7 @@ MonoBehaviour:
         IsWaterSolid:
           Value: 0
         SinksInQuickSandAndGoo:
-          Value: 0
+          Value: 1
         BreakMegaObjects:
           Value: 0
         WindImmune:
@@ -2113,7 +2112,7 @@ MonoBehaviour:
         IsWaterSolid:
           Value: 0
         SinksInQuickSandAndGoo:
-          Value: 0
+          Value: 1
         BreakMegaObjects:
           Value: 0
         WindImmune:
@@ -2414,27 +2413,6 @@ MonoBehaviour:
         StayAtHomeWhenOffscreen:
           Value: 0
     - rid: 5194687378857394182
-      type: {class: FreezablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        IceBlockSize:
-          X:
-            RawValue: 42598
-          Y:
-            RawValue: 42598
-        AutoBreakFrames: 180
-        AutoBreakGrabAdditionalFrames: 0
-        AutoBreakWhileHeld:
-          Value: 0
-        Offset:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-        IsCarryable:
-          Value: 1
-        IsFlying:
-          Value: 0
-    - rid: 5194687378857394183
       type: {class: HazardPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         DoNotDespawnInPit:
@@ -2451,16 +2429,16 @@ MonoBehaviour:
             RawValue: 131072
           Y:
             RawValue: 65536
-    - rid: 5194687378857394184
+    - rid: 5194687378857394183
       type: {class: InteractablePrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         ColliderDisabled:
           Value: 0
-    - rid: 5194687378857394185
+    - rid: 5194687378857394184
       type: {class: InteractionInitiatorPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0
-    - rid: 5194687378857394186
+    - rid: 5194687378857394185
       type: {class: PhysicsObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Gravity:
@@ -2484,7 +2462,7 @@ MonoBehaviour:
           Value: 0
         WindImmune:
           Value: 0
-    - rid: 5194687378857394187
+    - rid: 5194687378857394186
       type: {class: PodoboPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         Varient:
@@ -2493,7 +2471,7 @@ MonoBehaviour:
           RawValue: 851968
         HopBLocation:
           RawValue: 65470464
-    - rid: 5194687378857394188
+    - rid: 5194687378857394187
       type: {class: WrappingObjectPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
       data:
         _empty_prototype_dummy_field_: 0

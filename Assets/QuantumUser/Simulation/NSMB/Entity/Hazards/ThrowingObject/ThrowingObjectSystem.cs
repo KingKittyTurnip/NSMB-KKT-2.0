@@ -510,7 +510,7 @@ namespace Quantum {
                         if (Distance > Threshold * FP._1_75) {
                             //break
                             Dis->ConnectedObject = EntityRef.None;
-                            Debug.Log(Dis->ConnectedObject + " Disconnected From " + filter.Entity);
+                            //Debug.Log(Dis->ConnectedObject + " Disconnected From " + filter.Entity);
                             f.Events.ThrowObjSimple(filter.Entity, transform->Position);
                         }
                     }

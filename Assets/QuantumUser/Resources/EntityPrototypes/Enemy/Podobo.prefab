@@ -5007,7 +5007,6 @@ GameObject:
   - component: {fileID: 4631416819012161390}
   - component: {fileID: 148468707364900969}
   - component: {fileID: 4848679844973023050}
-  - component: {fileID: -2967928457836996957}
   - component: {fileID: 2934046834125206836}
   - component: {fileID: 3527695474151798566}
   - component: {fileID: 6178880729858591457}
@@ -5548,37 +5547,6 @@ MonoBehaviour:
   Prototype:
     ColliderDisabled:
       Value: 0
---- !u!114 &-2967928457836996957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7523289063499453450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f09a56673702987429020c58e2d51615, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Prototype:
-    IceBlockSize:
-      X:
-        RawValue: 42598
-      Y:
-        RawValue: 42598
-    AutoBreakFrames: 180
-    AutoBreakGrabAdditionalFrames: 0
-    AutoBreakWhileHeld:
-      Value: 0
-    Offset:
-      X:
-        RawValue: 0
-      Y:
-        RawValue: 0
-    IsCarryable:
-      Value: 1
-    IsFlying:
-      Value: 0
 --- !u!114 &2934046834125206836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5645,7 +5613,7 @@ MonoBehaviour:
   - {fileID: 7821411591339125535}
   childAnimator: {fileID: 0}
   childAnimation: {fileID: 0}
-  blinkingRate: 4
+  blinkinRate: 12
   scaleRate: 0.1333
   scaleSize: 0.3
   actualscale: 1

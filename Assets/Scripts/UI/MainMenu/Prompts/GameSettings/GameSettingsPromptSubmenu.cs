@@ -8,14 +8,11 @@ using Photon.Realtime;
 using Quantum;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using TMPro;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI.Table;
 using Navigation = UnityEngine.UI.Navigation;
 
 namespace NSMB.UI.MainMenu.Submenus.Prompts {
@@ -57,9 +54,22 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
         private List<GameObject> allMapListGameObjects = new();
 
         [Header("KKT Mod")]
+        [SerializeField] private GameObject hazardPickerContent;
+        [SerializeField] private GameObject hazardPickerHorizontalTemplate;
+        [SerializeField] private TMP_Text hazardPickerheaderTemplate;
+        [SerializeField] private RemoveAddHazardButton hazardPickerButtonTemplate;
+        [SerializeField] private List<GameObject> allhazardPickerGameObjects = new();
+
+        [SerializeField] public NumberChangeableRule[] HazardExtra;
+        [SerializeField] public NumberChangeableRule[] ItemExtra;
+
         [SerializeField] private GameObject hazardContent;
         [SerializeField] private HazardSelectionButton hazardlistButtonTemplate;
         [SerializeField] private List<HazardSelectionButton> allhazardListGameObjects = new();
+
+        [SerializeField] private GameObject itemContent;
+        [SerializeField] private HazardSelectionButton itemlistButtonTemplate;
+        [SerializeField] private List<HazardSelectionButton> allitemListGameObjects = new();
 
         [NonSerialized] public int CurrentlySelectedObject;
         [NonSerialized] public bool EditingItems;
@@ -113,9 +123,6 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
                     continue;
                 }
                 TMP_Text newHeader = Instantiate(headerTemplate, headerTemplate.transform.parent);
-                TMP_Translatable translatable = newHeader.GetComponent<TMP_Translatable>();
-                translatable.key = grouping.Key ?? "level.header.none";
-                translatable.Run();
                 newHeader.gameObject.SetActive(true);
                 allMapListGameObjects.Add(newHeader.gameObject);
 
@@ -186,24 +193,35 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
         }
 
         public unsafe void PopulateHazardOrItems(bool Items, bool initial) {
-            foreach (var go in allhazardListGameObjects) {
-                Destroy(go.gameObject);
+            if (Items) {
+                foreach (var go in allitemListGameObjects) {
+                    Destroy(go.gameObject);
+                }
+                allitemListGameObjects.Clear();
+            } else {
+                foreach (var go in allhazardListGameObjects) {
+                    Destroy(go.gameObject);
+                }
+                allhazardListGameObjects.Clear();
             }
-            allhazardListGameObjects.Clear();
 
             QuantumGame game = QuantumRunner.DefaultGame;
             Frame f = game.Frames.Predicted;
-            var rules = f.ResolveList(f.Global->Rules.Hazards);
+            var rules = f.ResolveList(Items ? f.Global->Rules.Items : f.Global->Rules.Hazards);
 
             TranslationManager tm = GlobalController.Instance.translationManager;
             HazardSelectionButton previousButton = null;
             for (int i = 0; i < rules.Count; i++) {
                 previousButton = null;
 
-                HazardSelectionButton newButton = Instantiate(hazardlistButtonTemplate, hazardContent.transform);
+                HazardSelectionButton newButton = Instantiate(Items ? itemlistButtonTemplate : hazardlistButtonTemplate, (Items ? itemContent : hazardContent).transform);
                 newButton.Initialize(i, rules[i].PrototypeRef);
                 newButton.gameObject.SetActive(true);
-                allhazardListGameObjects.Add(newButton);
+                if (Items) {
+                    allitemListGameObjects.Add(newButton);
+                } else {
+                    allhazardListGameObjects.Add(newButton);
+                }
                 if (i == 0 && initial)
                     newButton.Select();
 
@@ -224,7 +242,111 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
         public void OnHazardListChanged(EventHazardListChanged e) {
             PopulateHazardOrItems(e.IsItems, false);
             if (e.NewHazardId != 255) {
-                (e.IsItems ? allhazardListGameObjects : allhazardListGameObjects)[e.NewHazardId].OnUpdateDescriptionBox();
+                (e.IsItems ? allitemListGameObjects : allhazardListGameObjects)[e.NewHazardId].OnUpdateDescriptionBox();
+            }
+        }
+
+
+        public void PopulateHazardPicker(bool Items) {
+            foreach (var go in allhazardPickerGameObjects) {
+                //list filled, do nothing
+                return;
+            }
+            allhazardPickerGameObjects.Clear();
+
+            QuantumGame game = QuantumRunner.DefaultGame;
+            Frame f = game.Frames.Predicted;
+            var stuff = f.FindAsset(f.SimulationConfig.BaseRules).Rules.ListOfAvalibleObjects;
+
+            List<RemoveAddHazardButton> firstButtonRow = null;
+            List<RemoveAddHazardButton> previousButtonRow = null;
+            List<RemoveAddHazardButton> currentButtonRow = null;
+            for (byte k = 0; k < 10; k++) {
+                string text = (ObjectPrimaryType) k switch {
+                    ObjectPrimaryType.Powerup => "- Powerups -",
+                    ObjectPrimaryType.Hazard => "- Hazards -",
+                    ObjectPrimaryType.Object => "- Objects -",
+                    ObjectPrimaryType.Bonus => "- Bonus -",
+                    _ => "",
+                };
+                if (text == "")
+                    continue;
+
+                //add header
+                TMP_Text newHeader = Instantiate(hazardPickerheaderTemplate, hazardPickerheaderTemplate.transform.parent);
+                TMP_Translatable translatable = newHeader.GetComponent<TMP_Translatable>();
+                translatable.key = text;
+                translatable.Run();
+                newHeader.gameObject.SetActive(true);
+                allhazardPickerGameObjects.Add(newHeader.gameObject);
+
+                GameObject row = null;
+                RemoveAddHazardButton previousButton = null;
+                int reali = 0;
+                for (int i = 0; i < stuff.Length; i++) {
+                    if (stuff[i].Name == "" || stuff[i].type != (ObjectPrimaryType) k) {
+                        //do not show in list
+                        continue;
+                    }
+                    if ((reali++) % 3 == 0) {
+                        LinkButtonsAcrossRows2(previousButtonRow, currentButtonRow);
+                        previousButtonRow = currentButtonRow;
+                        currentButtonRow = new();
+
+                        row = Instantiate(hazardPickerHorizontalTemplate, hazardPickerHorizontalTemplate.transform.parent);
+                        row.SetActive(true);
+                        if (firstButtonRow == null) {
+                            firstButtonRow = currentButtonRow;
+                        }
+                        allhazardPickerGameObjects.Add(row);
+                        previousButton = null;
+                    }
+
+                    RemoveAddHazardButton newButton = Instantiate(hazardPickerButtonTemplate, row.transform);
+                    newButton.Initialize(f, i);
+                    newButton.gameObject.SetActive(true);
+
+                    if (previousButton) {
+                        var prevNav = previousButton.navigation;
+                        prevNav.selectOnRight = newButton;
+                        previousButton.navigation = prevNav;
+
+                        var newNav = newButton.navigation;
+                        newNav.selectOnLeft = previousButton;
+                        newButton.navigation = newNav;
+                    }
+
+                    previousButton = newButton;
+                    currentButtonRow.Add(newButton);
+                }
+            }
+
+            if (currentButtonRow != null) {
+                LinkButtonsAcrossRows2(previousButtonRow, currentButtonRow);
+
+                var backButton = tabs[activeTab].BackButton.GetComponent<Selectable>();
+                foreach (var button in currentButtonRow) {
+                    var nav = button.navigation;
+                    nav.selectOnDown = backButton;
+                    button.navigation = nav;
+                }
+
+                var nav2 = backButton.navigation;
+                nav2.selectOnUp = currentButtonRow[currentButtonRow.Count / 2];
+                backButton.navigation = nav2;
+            }
+
+            if (firstButtonRow != null) {
+                foreach (var button in firstButtonRow) {
+                    Navigation nav = button.navigation;
+                    nav.selectOnUp = mapChooseMode;
+                    button.navigation = nav;
+                }
+
+                Navigation nav2 = mapChooseMode.navigation;
+                nav2.mode = Navigation.Mode.Explicit;
+                nav2.selectOnDown = firstButtonRow[firstButtonRow.Count / 2];
+                mapChooseMode.navigation = nav2;
             }
         }
 
@@ -260,12 +382,38 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
                 bottom[x].navigation = nav;
             }
         }
+        private void LinkButtonsAcrossRows2(List<RemoveAddHazardButton> top, List<RemoveAddHazardButton> bottom) {
+            if (top == null || bottom == null) {
+                return;
+            }
+
+            int row1Count = top.Count;
+            int row2Count = bottom.Count;
+
+            for (int x = 0; x < row1Count; x++) {
+                int targetIndex = MapStageNavIndex(x, row1Count, row2Count);
+
+                var nav = top[x].navigation;
+                nav.selectOnDown = bottom[targetIndex];
+                top[x].navigation = nav;
+            }
+
+            for (int x = 0; x < bottom.Count; x++) {
+                int targetIndex = MapStageNavIndex(x, row2Count, row1Count);
+
+                var nav = bottom[x].navigation;
+                nav.selectOnUp = top[targetIndex];
+                bottom[x].navigation = nav;
+            }
+        }
 
         public override void Show(bool first) {
             base.Show(first);
 
             PopulateMaps();
-            PopulateHazardOrItems(false, true);
+            //PopulateHazardOrItems(false, true);
+            //PopulateHazardOrItems(true, true);
+            //PopulateHazardPicker(false);
 
             Room currentRoom = NetworkHandler.Client.CurrentRoom;
             maxPlayerSlider.value = currentRoom.MaxPlayers;

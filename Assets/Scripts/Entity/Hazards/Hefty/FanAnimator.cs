@@ -71,7 +71,6 @@ public unsafe class FanAnimator : QuantumEntityViewComponent {
         if (fan->Sturdy && !SturdyComplete) {
             renderers.AddRange(GetComponentsInChildren<MeshRenderer>(true));
             renderers.AddRange(GetComponentsInChildren<SkinnedMeshRenderer>(true));
-            Debug.Log("SturdyFan!");
             foreach (Renderer r in renderers) {
                 r.material.SetTexture("_BaseMap", GreenFanTexture);
             }

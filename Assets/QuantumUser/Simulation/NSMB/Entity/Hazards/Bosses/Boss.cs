@@ -96,8 +96,12 @@ namespace Quantum {
             if (!f.Unsafe.TryGetPointer<PhysicsObject>(thisEntity, out var physicsObject)) {
                 //hey, this is a monty.
                 var monty = f.Unsafe.GetPointer<Monty>(thisEntity);
-                var tank = f.Unsafe.GetPointer<Tank>(monty->OwnerEntity);
-                physicsObject = f.Unsafe.GetPointer<PhysicsObject>(monty->OwnerEntity);
+                if (f.Exists(monty->OwnerEntity)) {
+                    var tank = f.Unsafe.GetPointer<Tank>(monty->OwnerEntity);
+                    physicsObject = f.Unsafe.GetPointer<PhysicsObject>(monty->OwnerEntity);
+                } else {
+                    return 0;
+                }
             }
             FP total = Damage switch {
                 KnockbackStrength.Groundpound => 6,

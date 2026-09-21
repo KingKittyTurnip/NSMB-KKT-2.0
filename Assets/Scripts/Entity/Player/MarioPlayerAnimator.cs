@@ -309,7 +309,7 @@ namespace NSMB.Entities.Player {
             var freezable = f.Unsafe.GetPointer<Freezable>(EntityRef);
             var physicsObject = f.Unsafe.GetPointer<PhysicsObject>(EntityRef);
 
-            UpdatePowerupVisuals(f, mario);
+            UpdatePowerupVisuals(f, mario, physicsObject);
 
             HandleMiscStates(f, mario, physicsObject, freezable);
             HandleAnimations(f, mario, physicsObject, freezable);
@@ -721,7 +721,7 @@ namespace NSMB.Entities.Player {
             transform.position = new(transform.position.x, transform.position.y, newZ);
         }
 
-        private void UpdatePowerupVisuals(Frame f, MarioPlayer* mario) {
+        private void UpdatePowerupVisuals(Frame f, MarioPlayer* mario, PhysicsObject* physicsObject) {
             PowerupVisuals currentPowerupVisuals;
             PowerupVisuals displayPowerupVisuals = FindPowerupVisuals(DisplayPowerupState(mario, f));
 
@@ -788,6 +788,9 @@ namespace NSMB.Entities.Player {
             if (teammateStompTimer > 0) {
                 targetScale.y -= Mathf.Sin(teammateStompTimer * Mathf.PI / 0.15f) * 0.2f;
                 teammateStompTimer -= Time.deltaTime;
+            }
+            if (physicsObject->IsGravityInversed) {
+                targetScale.y *= -1;
             }
             modelRoot.transform.SetLossyScale(targetScale);
         }

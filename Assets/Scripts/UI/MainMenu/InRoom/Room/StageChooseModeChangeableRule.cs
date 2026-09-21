@@ -47,7 +47,7 @@ namespace NSMB.UI.MainMenu.Submenus.InRoom {
             }
         }
 
-        protected override void UpdateLabel() {
+        public override void UpdateLabel() {
             TranslationManager tm = GlobalController.Instance.translationManager;
             StageChooseMode enumValue = (StageChooseMode) (byte) value;
             label.text = labelPrefix + tm.GetTranslation(translationKeys.First(tk => tk.ChooseMode == enumValue).Key);

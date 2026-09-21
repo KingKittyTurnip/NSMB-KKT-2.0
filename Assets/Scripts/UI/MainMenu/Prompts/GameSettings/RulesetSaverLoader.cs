@@ -1,9 +1,6 @@
 using NSMB.Networking;
 using NSMB.UI.MainMenu;
-using NSMB.UI.MainMenu.Submenus.Prompts;
-using NUnit.Framework;
 using Quantum;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class RulesetSaverLoader : MonoBehaviour
@@ -223,6 +220,7 @@ public class RulesetSaverLoader : MonoBehaviour
                 ValueB = byte.Parse(hazardParts[2]),
                 ValueC = byte.Parse(hazardParts[3]),
                 ValueD = byte.Parse(hazardParts[4]),
+                UpdateUi = false,
             });
             hazardIndex++;
         }
@@ -247,10 +245,21 @@ public class RulesetSaverLoader : MonoBehaviour
                 ValueB = byte.Parse(hazardParts[2]),
                 ValueC = byte.Parse(hazardParts[3]),
                 ValueD = byte.Parse(hazardParts[4]),
+                UpdateUi = false,
             });
             hazardIndex++;
         }
-        
+
+        //update ui list
+        game.SendCommand(slot, new CommandChangeHazards {
+            EditingItems = false,
+            UpdateUi = true,
+        });
+        game.SendCommand(slot, new CommandChangeHazards {
+            EditingItems = true,
+            UpdateUi = true,
+        });
+
         // c'est fini, everyone clapped.
         // kkt claps in unison
         return true;

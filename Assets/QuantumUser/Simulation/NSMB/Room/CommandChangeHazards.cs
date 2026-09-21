@@ -5,17 +5,18 @@ namespace Quantum {
     public class CommandChangeHazards : DeterministicCommand, ILobbyCommand {
         
         //general
-        public int Index;
+        public int Index = 255;
         public bool EditingItems;
         public bool RemoveSingle, RemoveAll;
         //hazard
         public int PrototypeRefId;
         public byte TeamId;
         //extras list
-        public byte ValueA;
-        public byte ValueB;
-        public byte ValueC;
-        public byte ValueD;
+        public int ValueA;
+        public int ValueB;
+        public int ValueC;
+        public int ValueD;
+        public bool UpdateUi = true;
 
         public override void Serialize(BitStream stream) {
             stream.Serialize(ref Index);
@@ -30,6 +31,8 @@ namespace Quantum {
             stream.Serialize(ref ValueB);
             stream.Serialize(ref ValueC);
             stream.Serialize(ref ValueD);
+
+            stream.Serialize(ref UpdateUi);
         }
 
         public unsafe void Execute(Frame f, PlayerRef sender, PlayerData* playerData) {
@@ -56,10 +59,10 @@ namespace Quantum {
                         //Sub Data
                         Team = TeamId,
                         //Specific Data
-                        ExtraSlotA = ValueA,
-                        ExtraSlotB = ValueB,
-                        ExtraSlotC = ValueC,
-                        ExtraSlotD = ValueD,
+                        ExtraSlotA = (byte) ValueA,
+                        ExtraSlotB = (byte) ValueB,
+                        ExtraSlotC = (byte) ValueC,
+                        ExtraSlotD = (byte) ValueD,
                     });
                 } else {
                     //edit rule
@@ -68,10 +71,10 @@ namespace Quantum {
                         //Sub Data
                         Team = TeamId,
                         //Specific Data
-                        ExtraSlotA = ValueA,
-                        ExtraSlotB = ValueB,
-                        ExtraSlotC = ValueC,
-                        ExtraSlotD = ValueD,
+                        ExtraSlotA = (byte) ValueA,
+                        ExtraSlotB = (byte) ValueB,
+                        ExtraSlotC = (byte) ValueC,
+                        ExtraSlotD = (byte) ValueD,
                     };
                 }
             }
@@ -81,7 +84,8 @@ namespace Quantum {
             } else {
                 f.Global->Rules.Hazards = rules;
             }
-            f.Events.HazardListChanged(f, (byte) FPMath.Clamp(Index, 0, rules.Count-1), EditingItems);
+            if (UpdateUi)
+                f.Events.HazardListChanged(f, (byte) FPMath.Clamp(Index, 0, rules.Count-1), EditingItems);
 
             if (f.Global->GameStartFrames > 0 && !QuantumUtils.IsGameStartable(f)) {
                 GameLogicSystem.StopCountdown(f);

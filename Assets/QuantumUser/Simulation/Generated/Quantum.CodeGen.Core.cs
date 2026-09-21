@@ -5888,9 +5888,9 @@ namespace Quantum {
   public unsafe partial struct WhompKing : Quantum.IComponent {
     public const Int32 SIZE = 64;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(2)]
+    [FieldOffset(3)]
     public WhompKingState State;
-    [FieldOffset(0)]
+    [FieldOffset(1)]
     [ExcludeFromPrototype()]
     public Byte ReusableTimer;
     [FieldOffset(4)]
@@ -5902,9 +5902,12 @@ namespace Quantum {
     public FPVector2 HurtingHitbox;
     [FieldOffset(16)]
     public FPVector2 FallenBox;
-    [FieldOffset(1)]
+    [FieldOffset(2)]
     [ExcludeFromPrototype()]
     public Byte SlamCooldown;
+    [FieldOffset(0)]
+    [ExcludeFromPrototype()]
+    public Byte DoubleJumpDelay;
     [FieldOffset(8)]
     [ExcludeFromPrototype()]
     public QBoolean PrevSlamPounded;
@@ -5918,12 +5921,14 @@ namespace Quantum {
         hash = hash * 31 + HurtingHitbox.GetHashCode();
         hash = hash * 31 + FallenBox.GetHashCode();
         hash = hash * 31 + SlamCooldown.GetHashCode();
+        hash = hash * 31 + DoubleJumpDelay.GetHashCode();
         hash = hash * 31 + PrevSlamPounded.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (WhompKing*)ptr;
+        serializer.Stream.Serialize(&p->DoubleJumpDelay);
         serializer.Stream.Serialize(&p->ReusableTimer);
         serializer.Stream.Serialize(&p->SlamCooldown);
         serializer.Stream.Serialize((Byte*)&p->State);

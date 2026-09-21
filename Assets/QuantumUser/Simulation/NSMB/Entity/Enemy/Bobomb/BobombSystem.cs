@@ -154,9 +154,11 @@ namespace Quantum {
             var bobomb = f.Unsafe.GetPointer<Bobomb>(bobombEntity);
             var bombphys = f.Unsafe.GetPointer<PhysicsObject>(bobombEntity);
             //bobomb->ExplodeBud = true;
-            bobomb->CurrentDetonationFrames = 5;
-            bombphys->Velocity = FPVector2.Zero;
-            bombphys->IsFrozen = true;
+            if (bobomb->CurrentDetonationFrames > 5) {
+                bobomb->CurrentDetonationFrames = 5;
+                bombphys->Velocity = FPVector2.Zero;
+                bombphys->IsFrozen = true;
+            }
         }
 
         #region Interactions
