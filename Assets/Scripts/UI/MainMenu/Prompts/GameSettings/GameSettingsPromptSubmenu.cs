@@ -123,6 +123,9 @@ namespace NSMB.UI.MainMenu.Submenus.Prompts {
                     continue;
                 }
                 TMP_Text newHeader = Instantiate(headerTemplate, headerTemplate.transform.parent);
+                TMP_Translatable translatable = newHeader.GetComponent<TMP_Translatable>();
+                translatable.key = grouping.Key ?? "level.header.none";
+                translatable.Run();
                 newHeader.gameObject.SetActive(true);
                 allMapListGameObjects.Add(newHeader.gameObject);
 

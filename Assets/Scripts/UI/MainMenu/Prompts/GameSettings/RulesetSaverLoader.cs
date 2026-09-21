@@ -254,10 +254,12 @@ public class RulesetSaverLoader : MonoBehaviour
         game.SendCommand(slot, new CommandChangeHazards {
             EditingItems = false,
             UpdateUi = true,
+            Index = 255,
         });
         game.SendCommand(slot, new CommandChangeHazards {
             EditingItems = true,
             UpdateUi = true,
+            Index = 255,
         });
 
         // c'est fini, everyone clapped.

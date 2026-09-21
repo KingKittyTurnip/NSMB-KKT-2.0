@@ -17,7 +17,7 @@ namespace Quantum {
             //RandomStage
             //TODO: check if the stage is valid
             var stages = f.Context.GetAllAssets<Map>();
-            f.Global->Rules.Stage = stages[f.RNG->Next(0, stages.Count)];
+            f.Global->Rules.Stage = stages[13];
 
             // Support booting in the editor.
             if (!f.RuntimeConfig.IsRealGame) {

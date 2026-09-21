@@ -281,6 +281,8 @@ namespace Quantum {
             Dictionary<ItemChanceType, FP> sortchances = new Dictionary<ItemChanceType, FP>();
             byte MaxTypes = ((int) ItemChanceType.Invalid);
 
+            UnityEngine.Debug.LogError("has joke " + MarioHasJoke + " can spawn joke " + CanSpawnJoke);
+
             //sort random chance types
             for (int i = 0; i < MaxTypes; i++) {
                 // only spawn jokes if we haven't had one in a while, so players don't constantly get them
@@ -331,8 +333,9 @@ namespace Quantum {
                 } else {
                     //pick randomly for any chances above 0
                     FP rand = mario->RNG.Next(0, totalChance);
+                    FP chance = 0;
                     foreach (var i in sortchances) {
-                        FP chance = FPMath.Max(0, i.Value);
+                        chance += FPMath.Max(0, i.Value);
                         if (rand < chance) {
                             chancePick = i.Key;
                             break;
@@ -376,7 +379,7 @@ namespace Quantum {
                 ItemChanceType.Middling => new(2, -1, -1),//2nd stage powerups
                 ItemChanceType.LastCommon => new(-FP._0_20, 0, 3), //weaker catchup, not guerenteed
                 ItemChanceType.LastRare => new(-3, -1, 5), //strong catchup, guerenteed if yur very behind
-                ItemChanceType.Joke => new(FP._0_50, FP._0_50, -1), //jokes, first place should be able to get them
+                ItemChanceType.Joke => new(FP._0_50, 0, -1), //jokes, first place should be able to get them
                 _ => new(0, 0, 0),
             };
 

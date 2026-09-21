@@ -49,7 +49,7 @@ namespace Quantum {
                 if (rules.Count <= 1)
                     return;
                 rules.RemoveAt(Index);
-            } else {
+            } else if (Index != 255) {
                 if (Index >= rules.Count) {
                     //add rule
                     if (rules.Count >= 64)

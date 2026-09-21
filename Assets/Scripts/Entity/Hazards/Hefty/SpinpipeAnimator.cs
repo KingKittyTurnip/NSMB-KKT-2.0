@@ -2,12 +2,8 @@ using NSMB.Particles;
 using NSMB.UI.Game;
 using NSMB.Utilities;
 using Quantum;
-using System.Security.Policy;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
 using static NSMB.Utilities.QuantumViewUtils;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 public unsafe class SpinpipeAnimator : QuantumEntityViewComponent {
 

@@ -1,14 +1,9 @@
-using NSMB.UI.Game;
-using NSMB;
 using NSMB.Utilities.Extensions;
 using Quantum;
 using Quantum.Profiling;
-using System.Drawing.Drawing2D;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Scripting;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using UnityEngine.TextCore.Text;
 using System.Collections.Generic;
 
 public unsafe class WhompKingAnimator : QuantumEntityViewComponent {
